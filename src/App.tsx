@@ -68,8 +68,8 @@ function App() {
           <LogoImage src={viteLogo} alt="Vite logo" />
           <LogoImage src={reactLogo} alt="React logo" />
         </LogoContainer>
-        <Button 
-          variant="contained" 
+        <Button
+          variant="contained"
           onClick={() => setCount(prev => prev + 1)}
         >
           카운트 증가: {count}
@@ -80,4 +80,3 @@ function App() {
 }
 
 export default App;
-  
