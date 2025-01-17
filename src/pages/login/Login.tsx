@@ -1,22 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import { Button, TextField, Alert } from '@mui/material';
 import useAuthStore from '../../stores/AuthStore';
 import { useState } from 'react';
-import { styled } from '@mui/material/styles';
-
-const LoginContainer = styled('div')({
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '100vh',
-});
-
-const FormContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(2),
-    width: '300px',
-}));
+import AuthService from '../../services/authService';
+import { LoginContainer } from './components/LoginStyles';
+import LoginAlert from './components/LoginAlert';
+import LoginForm from './components/LoginForm';
+import { LoginError } from './types';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -25,7 +14,8 @@ const Login = () => {
         username: '',
         password: '',
     });
-    const [error, setError] = useState('');
+    const [error, setError] = useState<LoginError | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -33,45 +23,36 @@ const Login = () => {
             ...prev,
             [name]: value
         }));
-        setError('');
+        setError(null);
     };
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         if (!formData.username || !formData.password) {
-            setError('아이디와 비밀번호를 모두 입력해주세요.');
+            setError({ field: 'general', message: '아이디와 비밀번호를 모두 입력해주세요.' });
             return;
         }
-        login();
-        navigate('/', { replace: true });
+
+        try {
+            setIsLoading(true);
+            await AuthService.login(formData);
+            login();
+            navigate('/', { replace: true });
+        } catch (err: any) {
+            setError({ field: 'general', message: err.response?.data?.message || '로그인에 실패했습니다.' });
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
         <LoginContainer>
-            <FormContainer>
-                {error && <Alert severity="error">{error}</Alert>}
-                <TextField
-                    label="아이디"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    fullWidth
-                />
-                <TextField
-                    label="비밀번호"
-                    name="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    fullWidth
-                />
-                <Button
-                    variant="contained"
-                    onClick={handleLogin}
-                    fullWidth
-                >
-                    로그인
-                </Button>
-            </FormContainer>
+            <LoginAlert error={error} />
+            <LoginForm
+                formData={formData}
+                isLoading={isLoading}
+                onSubmit={handleLogin}
+                onChange={handleChange}
+            />
         </LoginContainer>
     );
 };
