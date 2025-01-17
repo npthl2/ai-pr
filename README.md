@@ -68,19 +68,51 @@ src/
 
 ## 시작하기
 
-### 1. 설치
+### 1. Node.js 설치
+
+#### Windows
+
+1. [Node.js 공식 웹사이트](https://nodejs.org/)에서 LTS 버전 다운로드
+2. 다운로드 받은 설치 파일 실행
+3. 설치 완료 후 터미널(PowerShell 또는 CMD)에서 버전 확인
 
 ```bash
+node --version
+npm --version
+```
+
+#### macOS
+
+1. Homebrew를 사용한 설치 (권장)
+
+```bash
+# Homebrew 설치 (이미 설치되어 있다면 생략)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Node.js 설치
+brew install node
+
+# 버전 확인
+node --version
+npm --version
+```
+
+2. 또는 [Node.js 공식 웹사이트](https://nodejs.org/)에서 macOS 인스톨러 다운로드 후 설치
+
+### 2. 프로젝트 설치
+
+```bash
+# 의존성 패키지 설치
 npm install
 ```
 
-### 2. 개발 서버 실행
+### 3. 개발 서버 실행
 
 ```bash
 npm run dev
 ```
 
-### 3. 빌드
+### 4. 빌드
 
 ```bash
 npm run build
