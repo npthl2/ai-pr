@@ -113,3 +113,20 @@ npm run build
 ### 인증 상태 관리
 
 `src/stores/AuthStore.ts`에서 Zustand store 설정한 것을 참고해 주세요:
+
+### 크로스 플랫폼 설정
+
+#### 1. Git 설정
+
+```bash
+# Windows에서 실행
+git config --global core.autocrlf true
+
+# macOS/Linux에서 실행
+git config --global core.autocrlf input
+```
+
+#### 2. 환경변수 설정
+
+- `.env.example` 파일을 복사하여 `.env` 파일 생성
+- 프로젝트에 맞는 환경변수 값 설정
