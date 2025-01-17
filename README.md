@@ -110,6 +110,25 @@ npm run build
 
 `src/api/axios.ts`에서 설정을 확인하세요:
 
+### API 연동 예시
+
+이 프로젝트는 [DummyJSON](https://dummyjson.com)을 사용하여 인증 시스템 예시를 구현했습니다.
+
+#### 테스트 계정
+
+```bash
+username: 'emilys'
+password: 'emilyspass'
+```
+
+#### API 엔드포인트
+
+- 로그인: `POST https://dummyjson.com/auth/login`
+- 사용자 정보: `GET https://dummyjson.com/auth/me`
+
+> DummyJSON은 테스트용 API로, 실제 프로젝트에서는 해당 프로젝트의 API로 교체하여 사용하시면 됩니다.
+> 자세한 API 문서는 [DummyJSON Auth API](https://dummyjson.com/docs/auth)를 참고해 주세요.
+
 ### 인증 상태 관리
 
 `src/stores/AuthStore.ts`에서 Zustand store 설정한 것을 참고해 주세요:
@@ -130,3 +149,4 @@ git config --global core.autocrlf input
 
 - `.env.example` 파일을 복사하여 `.env` 파일 생성
 - 프로젝트에 맞는 환경변수 값 설정
+- 환경변수 설정 후 프로젝트 재실행
