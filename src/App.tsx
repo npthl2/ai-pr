@@ -1,66 +1,56 @@
 import { useState, useMemo } from 'react';
-import { Button, Box, IconButton, createTheme, ThemeProvider } from '@mui/material';
+import { Box, IconButton, Button, ThemeProvider, CssBaseline } from '@mui/material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { styled } from '@mui/material/styles';
 import viteLogo from '/vite.svg';
 import reactLogo from './assets/react.svg';
-import { styled } from '@mui/material/styles';
+import useThemeStore from './stores/ThemeStore';
+import { getTheme } from './theme/theme';
 
-// Box 컴포넌트를 styled 방식으로 커스터마이징
 const StyledBox = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  gap: '40px',
+  gap: theme.spacing(5),
   backgroundColor: theme.palette.background.default,
-  color: theme.palette.text.primary
+  color: theme.palette.text.primary,
 }));
 
-// 로고들을 감싸는 컨테이너 추가
-const LogoContainer = styled(Box)({
+const LogoContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
-  gap: '20px',
-  alignItems: 'center'
-});
+  gap: theme.spacing(2.5),
+  alignItems: 'center',
+}));
 
-// 이미지를 위한 styled 컴포넌트 추가
-const LogoImage = styled('img')({
-  height: '6em'
-});
+const LogoImage = styled('img')(({ theme }) => ({
+  height: '6em',
+  '&:hover': {
+    filter: `drop-shadow(0 0 2em ${theme.palette.primary.main}80)`,
+  },
+}));
 
-// 테마 토글 버튼을 위한 컨테이너
-const ThemeToggleContainer = styled(Box)({
+const ThemeToggleContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
-  top: '20px',
-  right: '20px'
-});
+  top: theme.spacing(2.5),
+  right: theme.spacing(2.5),
+}));
 
 function App() {
   const [count, setCount] = useState(0);
-  const [mode, setMode] = useState<'light' | 'dark'>('dark');
+  const mode = useThemeStore((state) => state.mode);
+  const toggleMode = useThemeStore((state) => state.toggleMode);
 
-  // 테마 설정
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode,
-        },
-      }),
-    [mode]
-  );
-
-  const toggleTheme = () => {
-    setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
-  };
+  const theme = useMemo(() => getTheme(mode), [mode]);
 
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <StyledBox>
         <ThemeToggleContainer>
-          <IconButton onClick={toggleTheme} color="inherit">
+          <IconButton onClick={toggleMode} color="inherit">
             {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
         </ThemeToggleContainer>
@@ -71,6 +61,11 @@ function App() {
         <Button
           variant="contained"
           onClick={() => setCount(prev => prev + 1)}
+          sx={{
+            '&:hover': {
+              backgroundColor: theme.palette.primary.dark,
+            },
+          }}
         >
           카운트 증가: {count}
         </Button>
