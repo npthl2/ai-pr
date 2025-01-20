@@ -1,6 +1,6 @@
-import { useDialogStore } from '../stores/dialogStore';
+import { DialogOptions } from '@/model/dialog';
+import { useDialogStore } from '@stores/dialogStore';
 import { ReactNode } from 'react';
-import { DialogOptions } from '../model/dialog';
 
 export const useDialog = () => {
     const openDialog = useDialogStore((state) => state.openDialog);

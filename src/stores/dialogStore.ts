@@ -1,5 +1,17 @@
 import { create } from 'zustand';
-import { DialogState } from '../model/dialog';
+import { DialogOptions } from '@model/dialog';
+
+interface DialogState {
+    dialogs: {
+        id: string;
+        isOpen: boolean;
+        content: React.ReactNode;
+        zIndex: number;
+        options?: DialogOptions;
+    }[];
+    openDialog: (id: string, content: React.ReactNode, options?: DialogOptions) => void;
+    closeDialog: (id: string) => void;
+}
 
 export const useDialogStore = create<DialogState>()((set) => ({
     dialogs: [],

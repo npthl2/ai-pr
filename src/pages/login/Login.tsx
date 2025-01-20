@@ -2,10 +2,10 @@ import { useNavigate } from 'react-router-dom';
 import useAuthStore from '@stores/AuthStore';
 import { useState } from 'react';
 import AuthService from '@/services/AuthService';
-import { LoginContainer } from './components/LoginStyles';
+import { LoginContainer } from './Login.styled';
 import LoginAlert from './components/LoginAlert';
 import LoginForm from './components/LoginForm';
-import { LoginError } from '@model/auth';
+import { LoginError } from './Login.model';
 
 const Login = () => {
     const navigate = useNavigate();

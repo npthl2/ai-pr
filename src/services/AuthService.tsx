@@ -1,21 +1,6 @@
 import { AxiosResponse } from 'axios';
 import axiosInstance from '../api/axios';
-
-interface LoginRequest {
-    username: string;
-    password: string;
-}
-
-interface User {
-    id: number;
-    username: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    gender: string;
-    image: string;
-    token: string;
-}
+import { LoginRequest, User } from '@/model/auth';
 
 const AuthService = {
     async login(data: LoginRequest): Promise<User> {
