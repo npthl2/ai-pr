@@ -1,4 +1,4 @@
-import { DialogOptions } from '@/model/dialog';
+import { DialogOptions } from '@model/Dialog';
 import { useDialogStore } from '@stores/dialogStore';
 import { ReactNode } from 'react';
 

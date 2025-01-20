@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { DialogOptions } from '@model/dialog';
+import { DialogOptions } from '@model/Dialog';
 
 interface DialogState {
     dialogs: {

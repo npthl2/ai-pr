@@ -1,4 +1,4 @@
-import { DialogType } from "@/model/dialog";
+import { DialogType } from "@model/Dialog";
 
 export interface DialogLayoutProps {
     open: boolean;

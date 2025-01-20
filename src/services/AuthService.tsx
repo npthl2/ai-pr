@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import axiosInstance from '../api/axios';
-import { LoginRequest, User } from '@/model/auth';
+import { LoginRequest, User } from '@model/Auth';
 
 const AuthService = {
     async login(data: LoginRequest): Promise<User> {
