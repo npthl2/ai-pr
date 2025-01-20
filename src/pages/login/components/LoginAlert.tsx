@@ -1,10 +1,6 @@
 import { Alert } from '@mui/material';
 import { AlertContainer } from './LoginStyles';
-import { LoginError } from '../types';
-
-interface LoginAlertProps {
-    error: LoginError | null;
-}
+import { LoginAlertProps } from '@model/auth';
 
 const LoginAlert = ({ error }: LoginAlertProps) => {
     if (!error) return <AlertContainer />;

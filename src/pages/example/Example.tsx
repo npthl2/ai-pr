@@ -1,6 +1,6 @@
 import { Button, Stack } from '@mui/material';
-import { NestedDialog } from '../../components/NestedDialog';
-import { useDialog } from '../../hooks/useDialog';
+import { NestedDialog } from '@components/NestedDialog';
+import { useDialog } from '@hooks/useDialog';
 
 export const Example = () => {
     const { alert, confirm, custom, openDialog } = useDialog();

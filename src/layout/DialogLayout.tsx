@@ -1,8 +1,8 @@
 import { Dialog, DialogContent, DialogTitle, IconButton, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
-import { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { DialogLayoutProps } from '@model/dialog';
 
 const DialogStyled = styled(Dialog, {
     shouldForwardProp: (prop) => prop !== 'isTopmost'
@@ -44,23 +44,6 @@ const DialogActionsStyled = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
-
-type DialogType = 'alert' | 'confirm' | 'custom' | 'none';
-
-interface DialogLayoutProps {
-    open: boolean;
-    onClose: () => void;
-    title?: string;
-    children: ReactNode;
-    isTopmost: boolean;
-    type?: DialogType;
-    onConfirm?: () => void;
-    onCancel?: () => void;
-    onCloseDialog?: () => void;
-    customActions?: ReactNode;
-    confirmText?: string;
-    cancelText?: string;
-}
 
 export const DialogLayout = ({
     open,

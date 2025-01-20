@@ -1,10 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-interface ThemeState {
-    mode: 'light' | 'dark';
-    toggleMode: () => void;
-}
+import { ThemeState } from '../model/theme';
 
 const useThemeStore = create<ThemeState>()(
     persist(

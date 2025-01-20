@@ -1,10 +1,5 @@
 import { create } from 'zustand';
-
-interface AuthState {
-    isAuthenticated: boolean;
-    login: () => void;
-    logout: () => void;
-}
+import { AuthState } from '../model/auth';
 
 const useAuthStore = create<AuthState>((set) => ({
     isAuthenticated: false,

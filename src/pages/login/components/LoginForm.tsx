@@ -2,17 +2,7 @@ import { TextField, Button, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { FormContainer } from './LoginStyles';
 import { useState } from 'react';
-
-
-interface LoginFormProps {
-    formData: {
-        username: string;
-        password: string;
-    };
-    isLoading: boolean;
-    onSubmit: () => void;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
+import { LoginFormProps } from '@model/auth';
 
 const LoginForm = ({ formData, isLoading, onSubmit, onChange }: LoginFormProps) => {
     const [showPassword, setShowPassword] = useState(false);

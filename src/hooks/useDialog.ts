@@ -1,12 +1,6 @@
 import { useDialogStore } from '../stores/dialogStore';
 import { ReactNode } from 'react';
-
-interface DialogOptions {
-    title?: string;
-    confirmText?: string;
-    cancelText?: string;
-    onClose?: () => void;
-}
+import { DialogOptions } from '../model/dialog';
 
 export const useDialog = () => {
     const openDialog = useDialogStore((state) => state.openDialog);

@@ -1,5 +1,5 @@
-import { useDialogStore } from '../stores/dialogStore';
-import { DialogLayout } from '../layout/DialogLayout';
+import { useDialogStore } from '@stores/dialogStore';
+import { DialogLayout } from '@layout/DialogLayout';
 
 export const NestedDialog = () => {
     const dialogs = useDialogStore((state) => state.dialogs);

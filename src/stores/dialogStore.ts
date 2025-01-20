@@ -1,28 +1,5 @@
 import { create } from 'zustand';
-import { ReactNode } from 'react';
-
-interface DialogOptions {
-    type?: 'alert' | 'confirm' | 'custom' | 'none';
-    title?: string;
-    onConfirm?: () => void;
-    onCancel?: () => void;
-    onClose?: () => void;
-    customActions?: ReactNode;
-    confirmText?: string;
-    cancelText?: string;
-}
-
-interface DialogState {
-    dialogs: {
-        id: string;
-        isOpen: boolean;
-        content: React.ReactNode;
-        zIndex: number;
-        options?: DialogOptions;
-    }[];
-    openDialog: (id: string, content: React.ReactNode, options?: DialogOptions) => void;
-    closeDialog: (id: string) => void;
-}
+import { DialogState } from '../model/dialog';
 
 export const useDialogStore = create<DialogState>()((set) => ({
     dialogs: [],
