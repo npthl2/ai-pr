@@ -55,6 +55,8 @@ interface DialogLayoutProps {
     isTopmost: boolean;
     type?: DialogType;
     onConfirm?: () => void;
+    onCancel?: () => void;
+    onCloseDialog?: () => void;
     customActions?: ReactNode;
     confirmText?: string;
     cancelText?: string;
@@ -68,6 +70,8 @@ export const DialogLayout = ({
     isTopmost,
     type = 'none',
     onConfirm,
+    onCancel,
+    onCloseDialog,
     customActions,
     confirmText = '확인',
     cancelText = '취소'
@@ -76,12 +80,17 @@ export const DialogLayout = ({
 
     if (!modalRoot) return null;
 
+    const handleClose = () => {
+        onCloseDialog?.();
+        onClose();
+    };
+
     const renderActions = () => {
         switch (type) {
             case 'alert':
                 return (
                     <DialogActionsStyled>
-                        <Button variant="contained" onClick={onClose}>
+                        <Button variant="contained" onClick={handleClose}>
                             {confirmText}
                         </Button>
                     </DialogActionsStyled>
@@ -89,7 +98,13 @@ export const DialogLayout = ({
             case 'confirm':
                 return (
                     <DialogActionsStyled>
-                        <Button variant="outlined" onClick={onClose}>
+                        <Button
+                            variant="outlined"
+                            onClick={() => {
+                                onCancel?.();
+                                onClose();
+                            }}
+                        >
                             {cancelText}
                         </Button>
                         <Button
@@ -113,7 +128,7 @@ export const DialogLayout = ({
     return createPortal(
         <DialogStyled
             open={open}
-            onClose={onClose}
+            onClose={handleClose}
             maxWidth="sm"
             fullWidth
             isTopmost={isTopmost}
@@ -129,7 +144,7 @@ export const DialogLayout = ({
         >
             <DialogTitleStyled>
                 {title}
-                <CloseButton aria-label="close" onClick={onClose}>
+                <CloseButton aria-label="close" onClick={handleClose}>
                     <CloseIcon />
                 </CloseButton>
             </DialogTitleStyled>
