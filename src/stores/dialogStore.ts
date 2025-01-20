@@ -5,6 +5,8 @@ interface DialogOptions {
     type?: 'alert' | 'confirm' | 'custom' | 'none';
     title?: string;
     onConfirm?: () => void;
+    onCancel?: () => void;
+    onClose?: () => void;
     customActions?: ReactNode;
     confirmText?: string;
     cancelText?: string;
