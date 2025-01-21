@@ -1,4 +1,4 @@
 export interface LoginError {
-    field: 'username' | 'password' | 'general';
-    message: string;
+  field: 'username' | 'password' | 'general';
+  message: string;
 }

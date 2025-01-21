@@ -8,29 +8,29 @@ import { getTheme } from '@/theme/theme';
 import { useMemo } from 'react';
 
 const ThemeToggleContainer = styled(Box)(({ theme }) => ({
-    position: 'absolute',
-    top: theme.spacing(2.5),
-    right: theme.spacing(2.5),
+  position: 'absolute',
+  top: theme.spacing(2.5),
+  right: theme.spacing(2.5),
 }));
 
 const Layout = () => {
-    const mode = useThemeStore((state) => state.mode);
-    const toggleMode = useThemeStore((state) => state.toggleMode);
-    const theme = useMemo(() => getTheme(mode), [mode]);
+  const mode = useThemeStore((state) => state.mode);
+  const toggleMode = useThemeStore((state) => state.toggleMode);
+  const theme = useMemo(() => getTheme(mode), [mode]);
 
-    return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Box>
-                <ThemeToggleContainer>
-                    <IconButton onClick={toggleMode} color='inherit'>
-                        {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-                    </IconButton>
-                </ThemeToggleContainer>
-                <Outlet />
-            </Box>
-        </ThemeProvider>
-    );
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box>
+        <ThemeToggleContainer>
+          <IconButton onClick={toggleMode} color='inherit'>
+            {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
+        </ThemeToggleContainer>
+        <Outlet />
+      </Box>
+    </ThemeProvider>
+  );
 };
 
-export default Layout; 
+export default Layout;

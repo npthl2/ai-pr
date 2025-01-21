@@ -10,10 +10,10 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/dialog-example" element={<Example />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/dialog-example' element={<Example />} />
           <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<Home />} />
+            <Route path='/' element={<Home />} />
           </Route>
         </Route>
       </Routes>
