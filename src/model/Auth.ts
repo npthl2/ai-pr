@@ -1,4 +1,4 @@
-import CommonResponse from './common/CommonResponse';
+import { CommonResponse } from './common/CommonResponse';
 
 export interface LoginRequestParams {
   username: string;

@@ -17,13 +17,8 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // 완전한 URL(https://dummyjson.com)이 포함된 경우
-    if (config.url?.includes('https://dummyjson.com')) {
-      config.baseURL = ''; // baseURL을 비워서 전체 URL을 그대로 사용
-      config.withCredentials = false; // DummyJSON API는 쿠키 인증 사용 안함
-    } else {
-      config.baseURL = baseURL; // 기본 baseURL 사용
-      config.withCredentials = true; // 쿠키 인증 사용
-    }
+    config.baseURL = baseURL; // 기본 baseURL 사용
+    config.withCredentials = false; // 쿠키 인증 미사용
     return config;
   },
   (error) => {
