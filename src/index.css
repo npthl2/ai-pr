@@ -1,9 +1,29 @@
+@font-face {
+  font-family: 'Pretendard';
+  src: url('/fonts/Pretendard-Regular-subset.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('/fonts/Pretendard-Medium-subset.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('/fonts/Pretendard-Bold-subset.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
 * {
-  font-family: 'Noto Sans KR', sans-serif !important;
+  font-family: Pretendard, sans-serif !important;
 }
 
 body {
-  font-family: 'Noto Sans KR', sans-serif;
   margin: 0;
   padding: 0;
 }
