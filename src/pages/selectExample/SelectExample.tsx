@@ -6,7 +6,26 @@ import Select from '@components/Select';
 import { ComponentTitle, SelectExampleContainer, SelectWrapper } from './SelectExample.styled';
 
 const SelectExample = () => {
-  const [values, setValues] = useState<Record<string, string>>({});
+  const [values, setValues] = useState<Record<string, string>>({
+    smallWithHelper: '',
+    small: '',
+    mediumWithHelper: '',
+    medium: '',
+    inactiveWithHelper: '',
+    inactive: '',
+    activeWithHelper: '',
+    active: '',
+    errorWithHelper: '',
+    error: '',
+    disabledWithHelper: '',
+    disabled: '',
+    withIconHelper: '',
+    withIcon: '',
+    errorSmallIconWithHelper: '',
+    errorSmallIcon: '',
+    disabledMediumIconWithHelper: '',
+    disabledMediumIcon: '',
+  });
 
   const handleChange = (id: string) => (e: any) => {
     setValues((prev) => ({
