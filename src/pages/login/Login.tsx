@@ -6,12 +6,14 @@ import { LoginContainer } from './Login.styled';
 import LoginAlert from './components/LoginAlert';
 import LoginForm from './components/LoginForm';
 import { LoginError } from './Login.model';
+import { LoginRequestParams } from '@/model/Auth';
+import axios, { AxiosError } from 'axios';
 
 const Login = () => {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
-  const [formData, setFormData] = useState({
-    username: '',
+  const [formData, setFormData] = useState<LoginRequestParams>({
+    emailAddress: '',
     password: '',
   });
   const [error, setError] = useState<LoginError | null>(null);
@@ -27,21 +29,39 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
-    if (!formData.username || !formData.password) {
-      setError({ field: 'general', message: '아이디와 비밀번호를 모두 입력해주세요.' });
+    if (!formData.emailAddress || !formData.password) {
+      setError({ field: 'general', message: '이메일과 비밀번호를 모두 입력해주세요.' });
       return;
     }
 
     try {
       setIsLoading(true);
-      await AuthService.login(formData);
-      login();
-      navigate('/', { replace: true });
-    } catch (err: any) {
-      setError({
-        field: 'general',
-        message: err.response?.data?.message || '로그인에 실패했습니다.',
-      });
+      const response = await AuthService.login(formData);
+      if (response.successOrNot === 'Y' && response.data) {
+        login();
+        navigate('/', { replace: true });
+      } else {
+        setError({
+          field: 'general',
+          message: typeof response.data === 'string' ? response.data : '로그인에 실패했습니다.',
+        });
+      }
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        const axiosError = err as AxiosError<{ data?: string }>;
+        setError({
+          field: 'general',
+          message:
+            `로그인에 실패했습니다. (${axiosError.response?.data?.data})` ||
+            `로그인에 실패했습니다. (${axiosError.message})` ||
+            '로그인에 실패했습니다.',
+        });
+      } else {
+        setError({
+          field: 'general',
+          message: '로그인에 실패했습니다.',
+        });
+      }
     } finally {
       setIsLoading(false);
     }

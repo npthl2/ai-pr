@@ -2,14 +2,10 @@ import { TextField, Button, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { FormContainer } from '../Login.styled';
 import { useState } from 'react';
-
-interface LoginFormData {
-  username: string;
-  password: string;
-}
+import { LoginRequestParams } from '@/model/Auth';
 
 interface LoginFormProps {
-  formData: LoginFormData;
+  formData: LoginRequestParams;
   isLoading: boolean;
   onSubmit: () => void;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -26,8 +22,8 @@ const LoginForm = ({ formData, isLoading, onSubmit, onChange }: LoginFormProps) 
     <FormContainer>
       <TextField
         label='아이디'
-        name='username'
-        value={formData.username}
+        name='emailAddress'
+        value={formData.emailAddress}
         onChange={onChange}
         disabled={isLoading}
         fullWidth
