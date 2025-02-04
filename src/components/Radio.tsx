@@ -8,6 +8,16 @@ interface RadioProps extends Omit<MuiRadioProps, 'label'> {
   checked?: boolean;
 }
 
+const StyledLabel = styled(Typography)`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+
+  .Mui-disabled & {
+    color: ${({ theme }) => theme.palette.grey[400]};
+  }
+`;
+
 const StyledFormControlLabel = styled(FormControlLabel)({
   gap: 4,
 });
@@ -16,7 +26,7 @@ const StyledRadio = styled(MuiRadio)`
   size: 16px;
   padding: 0;
   .MuiSvgIcon-root {
-    color: ${({ theme }) => theme.palette.grey[300]};
+    color: ${({ theme }) => theme.palette.grey[400]};
   }
 
   &:hover {
@@ -53,7 +63,7 @@ const StyledRadio = styled(MuiRadio)`
 
 export const Radio = ({ label = '', showLabel = true, checked = false, ...props }: RadioProps) => (
   <StyledFormControlLabel
-    label={showLabel ? <Typography variant={'body1'}>{label}</Typography> : ''}
+    label={showLabel ? <StyledLabel>{label}</StyledLabel> : ''}
     control={<StyledRadio checked={checked} {...props} />}
   />
 );
