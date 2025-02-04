@@ -5,6 +5,7 @@ import Login from '@pages/login/Login';
 import ProtectedRoute from '@router/ProtectedRoute';
 import { Example } from '@pages/example/Example';
 import SelectExample from '@pages/selectExample/SelectExample';
+import ButtonExample from './pages/buttonExample/ButtonExample';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/dialog-ex' element={<Example />} />
           <Route path='/select-ex' element={<SelectExample />} />
+          <Route path='/button-ex' element={<ButtonExample />} />
           <Route element={<ProtectedRoute />}>
             <Route path='/' element={<Home />} />
           </Route>
