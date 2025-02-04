@@ -20,15 +20,17 @@ const StyledCheckbox = styled(MuiCheckbox)<CustomCheckboxProps>(({ theme, disabl
   '& .MuiSvgIcon-root': {
     fontSize: '16px',
   },
-  '.MuiSvgIcon-root': {
-    color: theme.palette.grey[300],
-  },
-  '&:hover .MuiSvgIcon-root': {
-    color: theme.palette.primary.main,
-  },
-  '&.Mui-checked .MuiSvgIcon-root': {
-    color: theme.palette.primary.main,
-  },
+  ...(!disabled && {
+    '.MuiSvgIcon-root': {
+      color: theme.palette.grey[300],
+    },
+    '&:hover .MuiSvgIcon-root': {
+      color: theme.palette.primary.main,
+    },
+    '&.Mui-checked .MuiSvgIcon-root': {
+      color: theme.palette.primary.main,
+    },
+  }),
 }));
 
 const StyledFormControlLabel = styled(FormControlLabel)({
