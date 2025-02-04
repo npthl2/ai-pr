@@ -1,8 +1,8 @@
 import { AxiosResponse } from 'axios';
-import axiosInstance from '../api/axios';
+import axiosInstance from '../axios';
 import { CommonResponse } from '@model/common/CommonResponse';
 
-export const baseService = {
+const baseService = {
   async get<T>(endpoint: string): Promise<CommonResponse<T>> {
     const response: AxiosResponse<CommonResponse<T>> = await axiosInstance.get(endpoint);
     return response.data;
@@ -13,3 +13,5 @@ export const baseService = {
     return response.data;
   },
 };
+
+export default baseService;
