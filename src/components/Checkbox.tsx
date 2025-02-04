@@ -2,6 +2,7 @@ import {
   Checkbox as MuiCheckbox,
   CheckboxProps as MuiCheckboxProps,
   FormControlLabel,
+  Typography,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -11,7 +12,7 @@ interface CustomCheckboxProps extends Omit<MuiCheckboxProps, 'color' | 'onChange
   onChange?: (checked: boolean) => void;
 }
 
-const StyledCheckbox = styled(MuiCheckbox)<CustomCheckboxProps>({
+const StyledCheckbox = styled(MuiCheckbox)<CustomCheckboxProps>(({ theme, disabled }) => ({
   padding: 0,
   '& .MuiCheckbox-root': {
     size: '16px',
@@ -19,15 +20,19 @@ const StyledCheckbox = styled(MuiCheckbox)<CustomCheckboxProps>({
   '& .MuiSvgIcon-root': {
     fontSize: '16px',
   },
-});
-
-const StyledCheckboxLabel = styled(FormControlLabel)<CustomCheckboxProps>({
-  gap: 4,
-  '& .MuiFormControlLabel-label': {
-    lineHeight: '21px',
-    fontSize: '14px',
-    fontWeight: '400px',
+  '.MuiSvgIcon-root': {
+    color: theme.palette.grey[300],
   },
+  '&:hover .MuiSvgIcon-root': {
+    color: theme.palette.primary.main,
+  },
+  '&.Mui-checked .MuiSvgIcon-root': {
+    color: theme.palette.primary.main,
+  },
+}));
+
+const StyledFormControlLabel = styled(FormControlLabel)({
+  gap: '4px',
 });
 
 const Checkbox = ({
@@ -42,9 +47,9 @@ const Checkbox = ({
   };
 
   return (
-    <StyledCheckboxLabel
+    <StyledFormControlLabel
       control={<StyledCheckbox checked={checked} onChange={handleOnChange} {...props} />}
-      label={showLabel ? label : ''}
+      label={showLabel ? <Typography variant='body1'>{label}</Typography> : ''}
     />
   );
 };
