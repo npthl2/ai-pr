@@ -5,6 +5,7 @@ import Login from '@pages/login/Login';
 import ProtectedRoute from '@router/ProtectedRoute';
 import { Example } from '@pages/example/Example';
 import SelectExample from '@pages/selectExample/SelectExample';
+import CheckboxExample from '@/pages/checkboxExample/CheckboxExample';
 import ButtonExample from './pages/buttonExample/ButtonExample';
 import RadioExample from './pages/radioExample/RadioExample';
 
@@ -16,6 +17,7 @@ function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/dialog-ex' element={<Example />} />
           <Route path='/select-ex' element={<SelectExample />} />
+          <Route path='/checkbox-ex' element={<CheckboxExample />} />
           <Route path='/button-ex' element={<ButtonExample />} />
           <Route path='/radio-ex' element={<RadioExample />} />
           <Route element={<ProtectedRoute />}>
