@@ -12,9 +12,9 @@ interface CustomCheckboxProps extends Omit<MuiCheckboxProps, 'color' | 'onChange
 }
 
 const StyledCheckbox = styled(MuiCheckbox)<CustomCheckboxProps>({
+  padding: 0,
   '& .MuiCheckbox-root': {
-    width: '16px',
-    height: '16px',
+    size: '16px',
   },
   '& .MuiSvgIcon-root': {
     fontSize: '16px',
@@ -22,6 +22,7 @@ const StyledCheckbox = styled(MuiCheckbox)<CustomCheckboxProps>({
 });
 
 const StyledCheckboxLabel = styled(FormControlLabel)<CustomCheckboxProps>({
+  gap: 4,
   '& .MuiFormControlLabel-label': {
     lineHeight: '21px',
     fontSize: '14px',
