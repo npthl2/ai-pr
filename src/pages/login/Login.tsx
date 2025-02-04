@@ -1,23 +1,19 @@
-import { useNavigate } from 'react-router-dom';
-import useAuthStore from '@stores/AuthStore';
 import { useState } from 'react';
-import AuthService from '@/services/AuthService';
+import { useLoginMutation } from '@/api/queries/auth/useLoginMutation';
 import { LoginContainer } from './Login.styled';
 import LoginAlert from './components/LoginAlert';
 import LoginForm from './components/LoginForm';
 import { LoginError } from './Login.model';
 import { LoginRequestParams } from '@/model/Auth';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 
 const Login = () => {
-  const navigate = useNavigate();
-  const login = useAuthStore((state) => state.login);
   const [formData, setFormData] = useState<LoginRequestParams>({
     emailAddress: '',
     password: '',
   });
   const [error, setError] = useState<LoginError | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const loginMutation = useLoginMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -35,26 +31,12 @@ const Login = () => {
     }
 
     try {
-      setIsLoading(true);
-      const response = await AuthService.login(formData);
-      if (response.successOrNot === 'Y' && response.data) {
-        login();
-        navigate('/', { replace: true });
-      } else {
-        setError({
-          field: 'general',
-          message: typeof response.data === 'string' ? response.data : '로그인에 실패했습니다.',
-        });
-      }
+      await loginMutation.mutateAsync(formData);
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        const axiosError = err as AxiosError<{ data?: string }>;
+      if (err instanceof AxiosError) {
         setError({
           field: 'general',
-          message:
-            `로그인에 실패했습니다. (${axiosError.response?.data?.data})` ||
-            `로그인에 실패했습니다. (${axiosError.message})` ||
-            '로그인에 실패했습니다.',
+          message: err.response?.data?.data || err.message || '로그인에 실패했습니다.',
         });
       } else {
         setError({
@@ -62,8 +44,6 @@ const Login = () => {
           message: '로그인에 실패했습니다.',
         });
       }
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -72,7 +52,7 @@ const Login = () => {
       <LoginAlert error={error} />
       <LoginForm
         formData={formData}
-        isLoading={isLoading}
+        isLoading={loginMutation.isPending}
         onSubmit={handleLogin}
         onChange={handleChange}
       />
