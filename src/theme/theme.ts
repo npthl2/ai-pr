@@ -1,28 +1,25 @@
 import { createTheme } from '@mui/material/styles';
 import typography from './config/typography';
+import { colors } from './config/colors';
 
 export const getTheme = (mode: 'light' | 'dark') => {
   return createTheme({
     palette: {
-      primary: {
-        main: mode === 'dark' ? '#3F51B5' : '#05151F',
-      },
-      grey: {
-        50: '#F7F9FA',
-        100: '#E5E8EB',
-        200: '#D1D6DA',
-        300: '#B8BFC6',
-        400: '#9FA7B0',
-        500: '#868F99',
-        600: '#6E7782',
-        700: '#585F69',
-        800: '#3F464E',
-        900: '#272E35',
-      },
       mode,
+      primary: {
+        main: mode === 'dark' ? '#1A2C37' : '#05151F',
+        light: mode === 'dark' ? '#2A3F4D' : '#1A2C37',
+        dark: mode === 'dark' ? '#05151F' : '#000F14',
+        contrastText: '#FFFFFF',
+      },
+      secondary: {
+        main: mode === 'dark' ? '#FF4D54' : '#FE2E36',
+        light: mode === 'dark' ? '#FF6B71' : '#FF4D54',
+        dark: mode === 'dark' ? '#FE2E36' : '#E62932',
+        contrastText: '#FFFFFF',
+      },
+      grey: colors.grey[mode],
     },
     typography,
   });
 };
-
-// lebel 추가 필요
