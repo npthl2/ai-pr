@@ -24,3 +24,10 @@ export const LogoImage = styled('img')(({ theme }) => ({
     filter: `drop-shadow(0 0 2em ${theme.palette.primary.main}80)`,
   },
 }));
+
+export const SpinnerContainer = styled('div')({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  minHeight: '100vh',
+});

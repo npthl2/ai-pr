@@ -1,6 +1,6 @@
 import { Alert } from '@mui/material';
-import { AlertContainer } from '../Login.styled';
-import { LoginError } from '../Login.model';
+import { AlertContainer } from '../LoginExample.styled';
+import { LoginError } from '../LoginExample.model';
 
 interface LoginAlertProps {
   error: LoginError | null;

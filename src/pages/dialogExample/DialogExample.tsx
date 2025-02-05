@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import { NestedDialog } from '@components/NestedDialog';
 import { useDialog } from '@hooks/useDialog';
-import { ExampleContainer } from './Example.styled';
+import { ExampleContainer } from './DialogExample.styled';
 import {
   AlertContent,
   ConfirmContent,
@@ -11,7 +11,7 @@ import {
   SecondNestedContent,
 } from './components/DialogContents';
 
-export const Example = () => {
+const DialogExample = () => {
   const { alert, confirm, custom, openDialog } = useDialog();
 
   const handleOpenAlert = () => {
@@ -71,3 +71,5 @@ export const Example = () => {
     </ExampleContainer>
   );
 };
+
+export default DialogExample;
