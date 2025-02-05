@@ -1,16 +1,16 @@
 import { Box, Typography } from '@mui/material';
 import Button from '@/components/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { ButtonExampleContainer } from './ButtonExample.styled';
 
 const ButtonExample = () => {
   return (
-    <Box>
-      <Typography variant='h4' gutterBottom>
+    <ButtonExampleContainer>
+      <Typography variant='h2' gutterBottom>
         Button 컴포넌트 예시
       </Typography>
 
       <Box>
-        <Typography variant='h6'>Button Variants</Typography>
         <Box>
           <Typography variant='subtitle1'>Contained Buttons</Typography>
           <Box>
@@ -219,8 +219,152 @@ const ButtonExample = () => {
             </Button>
           </Box>
         </Box>
+        <Box>
+          <Typography variant='subtitle1'>Icon Button</Typography>
+          <Box>
+            <Typography variant='caption' style={{ marginRight: 8, marginBottom: 8 }}>
+              contained primary large size32
+            </Typography>
+            <Button
+              variant='contained'
+              color='primary'
+              size='large'
+              iconSize={32}
+              iconComponent={<DeleteIcon />}
+              style={{ marginRight: 8, marginBottom: 8 }}
+            />
+            <Typography variant='caption' style={{ marginRight: 8, marginBottom: 8 }}>
+              contained primary large
+            </Typography>
+            <Button
+              variant='contained'
+              color='primary'
+              size='large'
+              iconComponent={<DeleteIcon />}
+              style={{ marginRight: 8, marginBottom: 8 }}
+            />
+            <Typography variant='caption' style={{ marginRight: 8, marginBottom: 8 }}>
+              contained primary medium
+            </Typography>
+            <Button
+              variant='contained'
+              color='primary'
+              size='medium'
+              iconComponent={<DeleteIcon />}
+              style={{ marginRight: 8, marginBottom: 8 }}
+            />
+            <Typography variant='caption' style={{ marginRight: 8, marginBottom: 8 }}>
+              contained primary small
+            </Typography>
+            <Button
+              variant='contained'
+              color='primary'
+              size='small'
+              iconComponent={<DeleteIcon />}
+              style={{ marginRight: 8, marginBottom: 8 }}
+            />
+            <Typography variant='caption' style={{ marginRight: 8, marginBottom: 8 }}>
+              contained primary small disabled
+            </Typography>
+            <Button
+              variant='contained'
+              color='primary'
+              size='small'
+              disabled
+              iconComponent={<DeleteIcon />}
+              style={{ marginRight: 8, marginBottom: 8 }}
+            />
+          </Box>
+          <Box>
+            <Typography variant='caption' style={{ marginRight: 8, marginBottom: 8 }}>
+              outlined primary large
+            </Typography>
+            <Button
+              variant='outlined'
+              color='primary'
+              size='large'
+              iconComponent={<DeleteIcon />}
+              style={{ marginRight: 8, marginBottom: 8 }}
+            />
+            <Typography variant='caption' style={{ marginRight: 8, marginBottom: 8 }}>
+              outlined primary medium
+            </Typography>
+            <Button
+              variant='outlined'
+              color='primary'
+              size='medium'
+              iconComponent={<DeleteIcon />}
+              style={{ marginRight: 8, marginBottom: 8 }}
+            />
+            <Typography variant='caption' style={{ marginRight: 8, marginBottom: 8 }}>
+              outlined primary small
+            </Typography>
+            <Button
+              variant='outlined'
+              color='primary'
+              size='small'
+              iconComponent={<DeleteIcon />}
+              style={{ marginRight: 8, marginBottom: 8 }}
+            />
+            <Typography variant='caption' style={{ marginRight: 8, marginBottom: 8 }}>
+              outlined primary small disabled
+            </Typography>
+            <Button
+              variant='outlined'
+              color='primary'
+              size='small'
+              disabled
+              iconComponent={<DeleteIcon />}
+              style={{ marginRight: 8, marginBottom: 8 }}
+            />
+
+            <Box>
+              <Typography variant='caption' style={{ marginRight: 8, marginBottom: 8 }}>
+                text primary large
+              </Typography>
+              <Button
+                variant='text'
+                color='primary'
+                size='large'
+                iconComponent={<DeleteIcon />}
+                style={{ marginRight: 8, marginBottom: 8 }}
+              />
+              <Typography variant='caption' style={{ marginRight: 8, marginBottom: 8 }}>
+                text primary medium
+              </Typography>
+              <Button
+                variant='text'
+                color='primary'
+                size='medium'
+                iconComponent={<DeleteIcon />}
+                style={{ marginRight: 8, marginBottom: 8 }}
+              />
+              <Typography variant='caption' style={{ marginRight: 8, marginBottom: 8 }}>
+                text primary small
+              </Typography>
+              <Button
+                variant='text'
+                color='primary'
+                size='small'
+                iconComponent={<DeleteIcon />}
+                style={{ marginRight: 8, marginBottom: 8 }}
+              />
+              <Typography variant='caption' style={{ marginRight: 8, marginBottom: 8 }}>
+                text primary small disabled
+              </Typography>
+              <Button
+                variant='text'
+                color='primary'
+                size='small'
+                disabled
+                iconComponent={<DeleteIcon />}
+                style={{ marginRight: 8, marginBottom: 8 }}
+              />
+            </Box>
+          </Box>
+        </Box>
       </Box>
-    </Box>
+    </ButtonExampleContainer>
   );
 };
 
