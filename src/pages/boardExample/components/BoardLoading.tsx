@@ -56,7 +56,6 @@ const BoardLoading = () => {
             borderRadius: 1,
             bgcolor:
               theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.02)' : 'rgba(255, 255, 255, 0.02)',
-            boxShadow: 1,
             '&:hover': {
               boxShadow: 3,
               bgcolor:

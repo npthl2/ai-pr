@@ -35,10 +35,13 @@ const mockBoardsData: CommonResponse<BoardsResponse> = {
 
 const boardService = {
   getBoards(): Promise<CommonResponse<BoardsResponse>> {
-    // 2초 지연 후 목업 데이터 반환
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve(mockBoardsData);
+        if (Math.random() <= 0.5) {
+          reject(new Error('데이터를 불러오는 중 오류가 발생했습니다.'));
+        } else {
+          resolve(mockBoardsData);
+        }
       }, 2000);
     });
   },
