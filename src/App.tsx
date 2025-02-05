@@ -12,6 +12,7 @@ import ButtonExample from './pages/buttonExample/ButtonExample';
 import RadioExample from './pages/radioExample/RadioExample';
 import HomeExample from '@/pages/homeExample/HomeExample';
 import LoginExample from '@/pages/loginExample/LoginExample';
+import TextFieldExample from '@/pages/textFieldExample/TextFieldExample';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
               <Route path='checkbox' element={<CheckboxExample />} />
               <Route path='button' element={<ButtonExample />} />
               <Route path='radio' element={<RadioExample />} />
+              <Route path='textField' element={<TextFieldExample />} />
             </Route>
             <Route element={<ProtectedRoute />}>
               <Route path='/' element={<HomeExample />} />
