@@ -11,10 +11,13 @@ export const BoardListContainer = styled('div')(({ theme }) => ({
 export const BoardItem = styled('div')(({ theme }) => ({
   padding: theme.spacing(2),
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor:
+    theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.02)' : 'rgba(255, 255, 255, 0.02)',
   boxShadow: theme.shadows[1],
   '&:hover': {
     boxShadow: theme.shadows[3],
+    backgroundColor:
+      theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)',
   },
 }));
 

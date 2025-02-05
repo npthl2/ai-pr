@@ -10,7 +10,7 @@ import SelectExample from '@pages/selectExample/SelectExample';
 import CheckboxExample from '@/pages/checkboxExample/CheckboxExample';
 import ButtonExample from './pages/buttonExample/ButtonExample';
 import RadioExample from './pages/radioExample/RadioExample';
-import HomeExample from '@/pages/homeExample/HomeExample';
+import BoardExample from '@/pages/boardExample/BoardExample';
 import LoginExample from '@/pages/loginExample/LoginExample';
 
 function App() {
@@ -26,9 +26,10 @@ function App() {
               <Route path='checkbox' element={<CheckboxExample />} />
               <Route path='button' element={<ButtonExample />} />
               <Route path='radio' element={<RadioExample />} />
+              <Route path='home' element={<BoardExample />} />
             </Route>
             <Route element={<ProtectedRoute />}>
-              <Route path='/' element={<HomeExample />} />
+              <Route path='/' element={<BoardExample />} />
             </Route>
           </Route>
         </Routes>
