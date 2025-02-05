@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-export const HomeContainer = styled(Box)(({ theme }) => ({
+export const BoardContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
   display: 'flex',
   flexDirection: 'column',
