@@ -5,13 +5,13 @@ import { queryClient } from '@api/queryClient';
 import Layout from '@layout/Layout';
 import ProtectedRoute from '@router/ProtectedRoute';
 
-import DialogExample from '@/pages/dialogExample/DialogExample';
-import SelectExample from '@pages/selectExample/SelectExample';
-import CheckboxExample from '@/pages/checkboxExample/CheckboxExample';
-import ButtonExample from './pages/buttonExample/ButtonExample';
-import RadioExample from './pages/radioExample/RadioExample';
-import BoardExample from '@/pages/boardExample/BoardExample';
-import LoginExample from '@/pages/loginExample/LoginExample';
+import DialogExample from '@pages/examples/dialog/DialogExample';
+import SelectExample from '@pages/examples/select/SelectExample';
+import CheckboxExample from '@pages/examples/checkbox/CheckboxExample';
+import ButtonExample from '@pages/examples/button/ButtonExample';
+import RadioExample from '@pages/examples/radio/RadioExample';
+import BoardExample from '@pages/examples/board/BoardExample';
+import LoginExample from '@pages/examples/login/LoginExample';
 
 function App() {
   return (
@@ -26,7 +26,7 @@ function App() {
               <Route path='checkbox' element={<CheckboxExample />} />
               <Route path='button' element={<ButtonExample />} />
               <Route path='radio' element={<RadioExample />} />
-              <Route path='home' element={<BoardExample />} />
+              <Route path='board' element={<BoardExample />} />
             </Route>
             <Route element={<ProtectedRoute />}>
               <Route path='/' element={<BoardExample />} />
