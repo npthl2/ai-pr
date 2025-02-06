@@ -50,7 +50,13 @@ const Checkbox = ({
 
   return (
     <StyledFormControlLabel
-      control={<StyledCheckbox checked={checked} onChange={handleOnChange} {...props} />}
+      control={
+        <StyledCheckbox
+          checked={checked}
+          onChange={(e) => handleOnChange(e as React.ChangeEvent<HTMLInputElement>)}
+          {...props}
+        />
+      }
       label={showLabel ? <Typography variant='body1'>{label}</Typography> : ''}
     />
   );

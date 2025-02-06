@@ -14,6 +14,8 @@ import BoardExample from '@pages/examples/board/BoardExample';
 import LoginExample from '@pages/examples/login/LoginExample';
 import AutocompleteExample from '@pages/examples/autocomplete/AutocompleteExample';
 import ChipExample from '@pages/examples/chip/ChipExample';
+import TextFieldExample from '@pages/examples/textField/TextFieldExample';
+import AlertExample from '@pages/examples/alert/AlertExample';
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
               <Route path='board' element={<BoardExample />} />
               <Route path='autocomplete' element={<AutocompleteExample />} />
               <Route path='chip' element={<ChipExample />} />
+              <Route path='textField' element={<TextFieldExample />} />
+              <Route path='alert' element={<AlertExample />} />
             </Route>
             <Route element={<ProtectedRoute />}>
               <Route path='/' element={<BoardExample />} />
