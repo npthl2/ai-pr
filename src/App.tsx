@@ -12,6 +12,8 @@ import ButtonExample from '@pages/examples/button/ButtonExample';
 import RadioExample from '@pages/examples/radio/RadioExample';
 import BoardExample from '@pages/examples/board/BoardExample';
 import LoginExample from '@pages/examples/login/LoginExample';
+import AutocompleteExample from '@pages/examples/autocomplete/AutocompleteExample';
+import ChipExample from '@pages/examples/chip/ChipExample';
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
               <Route path='button' element={<ButtonExample />} />
               <Route path='radio' element={<RadioExample />} />
               <Route path='board' element={<BoardExample />} />
+              <Route path='autocomplete' element={<AutocompleteExample />} />
+              <Route path='chip' element={<ChipExample />} />
             </Route>
             <Route element={<ProtectedRoute />}>
               <Route path='/' element={<BoardExample />} />
