@@ -1,10 +1,6 @@
 import { Alert as MuiAlert, AlertProps as MuiAlertProps, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
-import ErrorIcon from '@assets/icons/ErrorIcon.png';
-import WarningIcon from '@assets/icons/WarningIcon.png';
-import InfoIcon from '@assets/icons/InfoIcon.png';
-import SuccessIcon from '@assets/icons/SuccessIcon.png';
 import { Button } from './Button';
 
 interface AlertProps extends Omit<MuiAlertProps, 'action'> {
@@ -58,13 +54,6 @@ const ActionContainer = styled('div')`
   padding: 3px 0 3px 16px;
 `;
 
-const iconMapping = {
-  error: <img src={ErrorIcon} alt='error' />,
-  warning: <img src={WarningIcon} alt='warning' />,
-  info: <img src={InfoIcon} alt='info' />,
-  success: <img src={SuccessIcon} alt='success' />,
-};
-
 export const Alert = ({
   title,
   buttonText = '확인하기',
@@ -74,7 +63,6 @@ export const Alert = ({
   ...props
 }: AlertProps) => (
   <StyledAlert
-    iconMapping={iconMapping}
     {...props}
     action={
       (buttonAction || closeAction) && (
