@@ -13,6 +13,7 @@ import RadioExample from '@pages/examples/radio/RadioExample';
 import BoardExample from '@pages/examples/board/BoardExample';
 import LoginExample from '@pages/examples/login/LoginExample';
 import TextFieldExample from '@pages/examples/textField/TextFieldExample';
+import TooltipExample from '@pages/tooltipExample/TooltipExample';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
               <Route path='radio' element={<RadioExample />} />
               <Route path='board' element={<BoardExample />} />
               <Route path='textField' element={<TextFieldExample />} />
+              <Route path='tooltip' element={<TooltipExample />} />
             </Route>
             <Route element={<ProtectedRoute />}>
               <Route path='/' element={<BoardExample />} />
