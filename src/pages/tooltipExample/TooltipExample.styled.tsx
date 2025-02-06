@@ -6,11 +6,12 @@ export const TooltipExampleContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(4),
+  alignItems: 'center',
 }));
 
 export const TooltipWrapper = styled(Box)(({ theme }) => ({
   display: 'grid',
-  gridTemplateColumns: 'repeat(2, 1fr)',
+  gridTemplateColumns: 'repeat(3, 1fr)',
   gap: theme.spacing(4),
-  margin: 'auto',
+  justifyItems: 'center',
 }));
