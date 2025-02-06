@@ -74,6 +74,7 @@ const StyledButton = styled(MuiButton, {
         }
       : {
           ...(size === 'small' ? theme.typography.body2 : theme.typography.body1),
+          color: 'inherit',
           minHeight: {
             small: 28,
             medium: 32,
