@@ -14,7 +14,7 @@ import BoardExample from '@pages/examples/board/BoardExample';
 import LoginExample from '@pages/examples/login/LoginExample';
 import TextFieldExample from '@pages/examples/textField/TextFieldExample';
 import AlertExample from '@pages/examples/alert/AlertExample';
-
+import TabsExample from '@pages/examples/tabs/TabsExample';
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -31,6 +31,7 @@ function App() {
               <Route path='board' element={<BoardExample />} />
               <Route path='textField' element={<TextFieldExample />} />
               <Route path='alert' element={<AlertExample />} />
+              <Route path='tabs' element={<TabsExample />} />
             </Route>
             <Route element={<ProtectedRoute />}>
               <Route path='/' element={<BoardExample />} />
