@@ -11,9 +11,11 @@ import {
 const CheckboxExample = () => {
   const [checked, setChecked] = useState<Record<string, boolean>>({
     default: false,
+    checked: true,
     withLabel: false,
     disabled: false,
     checkedDisabled: true,
+    indeterminated: false,
   });
 
   const handleChange = (id: string) => (checked: boolean) => {
@@ -40,7 +42,19 @@ const CheckboxExample = () => {
         <Grid size={12}>
           <ComponentTitle variant='h6'>Checked</ComponentTitle>
           <CheckboxWrapper>
-            <Checkbox checked={true} onChange={handleChange('default')} />
+            <Checkbox checked={checked.checked} onChange={handleChange('checked')} />
+          </CheckboxWrapper>
+        </Grid>
+
+        <Grid size={12}>
+          <ComponentTitle variant='h6'>Indeterminated</ComponentTitle>
+          <CheckboxWrapper>
+            <Checkbox
+              checked={checked.indeterminated}
+              onChange={handleChange('indeterminated')}
+              indeterminate
+              disabled={false}
+            />
           </CheckboxWrapper>
         </Grid>
 
@@ -64,6 +78,12 @@ const CheckboxExample = () => {
               checked={checked.checkedDisabled}
               onChange={handleChange('checkedDisabled')}
               disabled
+            />
+            <Checkbox
+              checked={checked.withLabel}
+              onChange={handleChange('withLabel')}
+              disabled
+              indeterminate
             />
             <Checkbox
               checked={checked.withLabel}
