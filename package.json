@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
+    "test:health": "cypress run  --spec test/health/specs/*.health-spec.ts",
+    "test:module": "cypress run  --spec test/module/specs/*.module-spec.ts",
+    "test:smoke": "cypress run --spec test/smoke/specs/*.smoke-spec.ts",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -38,6 +42,7 @@
     "prettier": "^3.4.2",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.18.2",
-    "vite": "^6.0.5"
+    "vite": "^6.0.5",
+    "cypress": "^14.0.1"
   }
 }
