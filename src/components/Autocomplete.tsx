@@ -19,6 +19,7 @@ export const Autocomplete = <T,>(props: AutocompleteProps<T>) => {
           ({ index }) => ({
             ...getTagProps({ index }),
             variant: 'outlined',
+            size: 'xsmall',
           }),
           ownerState,
         )
