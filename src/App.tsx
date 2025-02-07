@@ -12,9 +12,13 @@ import ButtonExample from '@pages/examples/button/ButtonExample';
 import RadioExample from '@pages/examples/radio/RadioExample';
 import BoardExample from '@pages/examples/board/BoardExample';
 import LoginExample from '@pages/examples/login/LoginExample';
+import AutocompleteExample from '@pages/examples/autocomplete/AutocompleteExample';
+import ChipExample from '@pages/examples/chip/ChipExample';
 import TextFieldExample from '@pages/examples/textField/TextFieldExample';
+import TooltipExample from '@pages/tooltipExample/TooltipExample';
 import AlertExample from '@pages/examples/alert/AlertExample';
 import DialogExample from '@/pages/examples/dialog/DialogExample';
+import TabsExample from '@pages/examples/tabs/TabsExample';
 
 function App() {
   return (
@@ -30,9 +34,13 @@ function App() {
               <Route path='button' element={<ButtonExample />} />
               <Route path='radio' element={<RadioExample />} />
               <Route path='board' element={<BoardExample />} />
+              <Route path='autocomplete' element={<AutocompleteExample />} />
+              <Route path='chip' element={<ChipExample />} />
               <Route path='textField' element={<TextFieldExample />} />
+              <Route path='tooltip' element={<TooltipExample />} />
               <Route path='alert' element={<AlertExample />} />
               <Route path='dialog' element={<DialogExample />} />
+              <Route path='tabs' element={<TabsExample />} />
             </Route>
             <Route element={<ProtectedRoute />}>
               <Route path='/' element={<BoardExample />} />

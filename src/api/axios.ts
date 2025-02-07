@@ -30,4 +30,12 @@ axiosInstance.interceptors.response.use(
   },
 );
 
+axiosInstance.interceptors.request.use((config) => {
+  // URL에서 도메인과 쿼리스트링을 제외한 경로만 추출
+  const pathOnly = window.location.pathname + window.location.hash.replace(/\?.*$/, '');
+  // 현재 페이지의 경로를 헤더에 추가
+  config.headers['Source-Id'] = pathOnly;
+  return config;
+});
+
 export default axiosInstance;
