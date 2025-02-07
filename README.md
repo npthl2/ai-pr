@@ -187,7 +187,7 @@ git config --global core.autocrlf input
 
 ### 유닛 테스트 (vitest)
 
-- 테스트 파일은 `test/unit/specs` 폴더에 작성
+- 테스트 코드는 `test/unit/specs`에 작성
 
 ```bash
 # 테스트 1회 실행 후 자동종료
@@ -202,7 +202,7 @@ npm run test:unit:watch:ui
 
 ### 모듈 테스트 (cypress)
 
-- 테스트 파일은 `test/module/specs` 폴더에 작성
+- 테스트 코드는 `test/module/specs`에 작성
 
 ```bash
 # 모듈 테스트
