@@ -5,7 +5,7 @@ import { queryClient } from '@api/queryClient';
 import Layout from '@layout/Layout';
 import ProtectedRoute from '@router/ProtectedRoute';
 
-import DialogExample from '@pages/examples/dialog/DialogExample';
+import NestedDialogExample from '@/pages/examples/nestedDialog/DialogExample';
 import SelectExample from '@pages/examples/select/SelectExample';
 import CheckboxExample from '@pages/examples/checkbox/CheckboxExample';
 import ButtonExample from '@pages/examples/button/ButtonExample';
@@ -23,7 +23,7 @@ function App() {
           <Route element={<Layout />}>
             <Route path='example'>
               <Route path='login' element={<LoginExample />} />
-              <Route path='dialog' element={<DialogExample />} />
+              <Route path='nestedDialog' element={<NestedDialogExample />} />
               <Route path='select' element={<SelectExample />} />
               <Route path='checkbox' element={<CheckboxExample />} />
               <Route path='button' element={<ButtonExample />} />
