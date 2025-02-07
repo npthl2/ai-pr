@@ -14,6 +14,7 @@ import BoardExample from '@pages/examples/board/BoardExample';
 import LoginExample from '@pages/examples/login/LoginExample';
 import TextFieldExample from '@pages/examples/textField/TextFieldExample';
 import AlertExample from '@pages/examples/alert/AlertExample';
+import DialogExample from '@/pages/examples/dialog/DialogExample';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
               <Route path='board' element={<BoardExample />} />
               <Route path='textField' element={<TextFieldExample />} />
               <Route path='alert' element={<AlertExample />} />
+              <Route path='dialog' element={<DialogExample />} />
             </Route>
             <Route element={<ProtectedRoute />}>
               <Route path='/' element={<BoardExample />} />
