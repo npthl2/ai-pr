@@ -5,7 +5,7 @@ import { queryClient } from '@api/queryClient';
 import Layout from '@layout/Layout';
 import ProtectedRoute from '@router/ProtectedRoute';
 
-import DialogExample from '@pages/examples/dialog/DialogExample';
+import NestedDialogExample from '@/pages/examples/nestedDialog/DialogExample';
 import SelectExample from '@pages/examples/select/SelectExample';
 import CheckboxExample from '@pages/examples/checkbox/CheckboxExample';
 import ButtonExample from '@pages/examples/button/ButtonExample';
@@ -17,7 +17,9 @@ import ChipExample from '@pages/examples/chip/ChipExample';
 import TextFieldExample from '@pages/examples/textField/TextFieldExample';
 import TooltipExample from '@pages/tooltipExample/TooltipExample';
 import AlertExample from '@pages/examples/alert/AlertExample';
+import DialogExample from '@/pages/examples/dialog/DialogExample';
 import TabsExample from '@pages/examples/tabs/TabsExample';
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -26,7 +28,7 @@ function App() {
           <Route element={<Layout />}>
             <Route path='example'>
               <Route path='login' element={<LoginExample />} />
-              <Route path='dialog' element={<DialogExample />} />
+              <Route path='nestedDialog' element={<NestedDialogExample />} />
               <Route path='select' element={<SelectExample />} />
               <Route path='checkbox' element={<CheckboxExample />} />
               <Route path='button' element={<ButtonExample />} />
@@ -37,6 +39,7 @@ function App() {
               <Route path='textField' element={<TextFieldExample />} />
               <Route path='tooltip' element={<TooltipExample />} />
               <Route path='alert' element={<AlertExample />} />
+              <Route path='dialog' element={<DialogExample />} />
               <Route path='tabs' element={<TabsExample />} />
             </Route>
             <Route element={<ProtectedRoute />}>

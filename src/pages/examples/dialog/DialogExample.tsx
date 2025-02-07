@@ -1,74 +1,60 @@
-import { Button } from '@mui/material';
-import { NestedDialog } from '@components/NestedDialog';
-import { useDialog } from '@hooks/useDialog';
-import { ExampleContainer } from './DialogExample.styled';
-import {
-  AlertContent,
-  ConfirmContent,
-  CustomContent,
-  CustomButtons,
-  FirstNestedContent,
-  SecondNestedContent,
-} from './components/DialogContents';
+import { useState } from 'react';
+import { Button, Typography } from '@mui/material';
+import Dialog from '@components/Dialog';
+import { DialogExampleContainer, DialogWrapper } from './DialogExample.styled';
 
 const DialogExample = () => {
-  const { alert, confirm, custom, openDialog } = useDialog();
+  const [open, setOpen] = useState(false);
+  const [size, setSize] = useState<'small' | 'medium' | 'large'>('medium');
+  const [useConfirm, setUseConfirm] = useState(true);
 
-  const handleOpenAlert = () => {
-    alert(<AlertContent />, {
-      onClose: () => console.log('알림창이 닫혔습니다.'),
-    });
+  const handleOpen = (dialogSize: 'small' | 'medium' | 'large', useConfirm: boolean) => {
+    setSize(dialogSize);
+    setOpen(true);
+    setUseConfirm(useConfirm);
   };
 
-  const handleOpenConfirm = () => {
-    confirm(
-      <ConfirmContent />,
-      () => {
-        console.log('삭제 확인됨');
-        // 여기에 삭제 로직 추가
-      },
-      {
-        title: '삭제 확인',
-        onCancel: () => console.log('삭제가 취소되었습니다.'),
-        onClose: () => console.log('확인 창이 닫혔습니다.'),
-      },
-    );
-  };
-
-  const handleOpenCustom = () => {
-    custom(<CustomContent />, <CustomButtons />, { title: '커스텀 다이얼로그' });
-  };
-
-  const handleOpenNested = () => {
-    const openSecondDialog = () => {
-      openDialog(
-        'dialog2',
-        <SecondNestedContent
-          onOpenAlert={() => alert(<AlertContent />, { title: '마지막 알림' })}
-        />,
-        { type: 'none' },
-      );
-    };
-
-    openDialog('dialog1', <FirstNestedContent onOpenNext={openSecondDialog} />, { type: 'none' });
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
-    <ExampleContainer>
-      <Button variant='contained' onClick={handleOpenAlert}>
-        Alert 다이얼로그
-      </Button>
-      <Button variant='contained' onClick={handleOpenConfirm}>
-        Confirm 다이얼로그
-      </Button>
-      <Button variant='contained' onClick={handleOpenCustom}>
-        Custom 다이얼로그
-      </Button>
-      <Button variant='contained' onClick={handleOpenNested}>
-        중첩 다이얼로그
-      </Button>
-      <NestedDialog />
-    </ExampleContainer>
+    <DialogExampleContainer>
+      <Typography variant='h4' gutterBottom>
+        Dialog 컴포넌트 예시
+      </Typography>
+      <DialogWrapper>
+        <Button variant='outlined' onClick={() => handleOpen('small', true)}>
+          Small
+        </Button>
+        <Button variant='outlined' onClick={() => handleOpen('medium', true)}>
+          Medium
+        </Button>
+        <Button variant='outlined' onClick={() => handleOpen('large', true)}>
+          Large
+        </Button>
+      </DialogWrapper>
+      <DialogWrapper>
+        <Button variant='outlined' onClick={() => handleOpen('small', false)}>
+          Small (No Confirm)
+        </Button>
+        <Button variant='outlined' onClick={() => handleOpen('medium', false)}>
+          Medium (No Confirm)
+        </Button>
+        <Button variant='outlined' onClick={() => handleOpen('large', false)}>
+          Large (No Confirm)
+        </Button>
+      </DialogWrapper>
+      <Dialog
+        open={open}
+        size={size}
+        title='Dialog Title'
+        content='This is the content of the dialog.'
+        closeLabel='Close'
+        onClose={handleClose}
+        onConfirm={useConfirm ? () => alert('Confirmed!') : undefined}
+      />
+    </DialogExampleContainer>
   );
 };
 
