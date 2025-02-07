@@ -25,6 +25,7 @@ const TextFieldExample = () => {
     withLabelAndPrefix: '',
     withLabelAndSuffix: '',
     withLabelAndActive: '',
+    withLabelAndActive1: '',
     withLabelAndError: '',
     withLabelAndDisabled: '',
   });
@@ -163,12 +164,23 @@ const TextFieldExample = () => {
           </TextFieldWrapper>
           <TextFieldWrapper sx={{ marginTop: '15px' }}>
             <TextField
-              value={values.withLabelAndActive}
-              onChange={handleChange('withLabelAndActive')}
-              label='라벨'
+              value={values.withLabelAndActive1}
+              onChange={handleChange('withLabelAndActive1')}
+              label='small'
               state='active'
+              size='small'
+              multiline
               helperText='라벨이 있는 경우 (활성화 상태)'
             />
+            <TextField
+              value={values.withLabelAndActive}
+              onChange={handleChange('withLabelAndActive')}
+              label='medium'
+              state='active'
+              multiline
+              helperText='라벨이 있는 경우 (활성화 상태)'
+            />
+
             <TextField
               value={values.withLabelAndError}
               onChange={handleChange('withLabelAndError')}

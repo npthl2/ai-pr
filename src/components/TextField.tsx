@@ -31,19 +31,21 @@ const getBorderColor = (theme: any, state: TextFieldState) =>
   })[state];
 
 const StyledTextField = styled(MuiTextField, {
-  shouldForwardProp: (prop) => prop !== 'size' && prop !== 'state',
+  shouldForwardProp: (prop) => prop !== 'state',
 })<{ size: TextFieldSize; state: TextFieldState }>(({ theme, size, state }) => ({
   backgroundColor: state === 'disabled' ? theme.palette.grey[100] : 'none',
-  '.MuiInputBase-input': { borderRadius: '24px' },
+  '& .MuiInputBase-root': {
+    minHeight: size === 'small' ? 28 : 32,
+    padding: size === 'small' ? '0px 8px' : '0px 10px',
+  },
   '& .MuiInputBase-input': {
-    height: {
-      small: 28,
-      medium: 32,
-    }[size],
-    padding: '0 8px',
-    margin: 0,
-    boxSizing: 'border-box',
+    padding: 0,
+    minHeight: 'inherit',
+    height: 'auto',
     color: state === 'error' ? theme.palette.error.main : theme.palette.text.primary,
+    '&.MuiInputBase-inputMultiline': {
+      alignContent: 'center',
+    },
   },
   '& .MuiOutlinedInput-notchedOutline': {
     borderColor: getBorderColor(theme, state),
@@ -82,12 +84,15 @@ const TextField = ({
   error,
   disabled,
   onChange,
+  InputProps,
+  InputLabelProps,
   ...props
 }: CustomTextFieldProps) => {
   const currentState: TextFieldState = disabled ? 'disabled' : state;
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
+
   return (
     <FormControl fullWidth error={error}>
       <StyledTextField
@@ -97,6 +102,7 @@ const TextField = ({
         disabled={disabled}
         onChange={(e) => handleOnChange(e as React.ChangeEvent<HTMLInputElement>)}
         InputProps={{
+          ...InputProps,
           startAdornment: prefix && (
             <InputAdornment position='start'>
               <Typography variant='body2'>{prefix}</Typography>
@@ -105,11 +111,14 @@ const TextField = ({
           endAdornment: suffix && <InputAdornment position='end'>{suffix}</InputAdornment>,
         }}
         InputLabelProps={{
+          ...InputLabelProps,
           shrink: false,
           sx: (theme) => ({
+            top: '50%',
+            left: '10px',
+            transform: 'translateY(-50%)',
             color: theme.palette.grey[600],
             display: value || prefix ? 'none' : 'block',
-            top: size === 'medium' ? '-10px' : '-13px',
           }),
         }}
         {...props}
