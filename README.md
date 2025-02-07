@@ -190,9 +190,14 @@ git config --global core.autocrlf input
 - 테스트 파일은 `test/unit/specs` 폴더에 작성
 
 ```bash
-npm run test:unit # 테스트 1회 실행 후 자동종료
-npm run test:unit:watch # 테스트 실행하고 변경 감지되면 재실행. 자동종료 안됨
-npm run test:unit:watch:ui # 테스트 실행하고 변경 감지되면 재실행. 자동종료 안됨. 브라우저 UI 표시
+# 테스트 1회 실행 후 자동종료
+npm run test:unit 
+
+# 테스트 실행하고 변경 감지되면 재실행
+npm run test:unit:watch 
+
+# 테스트 실행하고 변경 감지되면 재실행 & 브라우저 UI 표시
+npm run test:unit:watch:ui
 ```
 
 ### 모듈 테스트 (cypress)
@@ -200,8 +205,15 @@ npm run test:unit:watch:ui # 테스트 실행하고 변경 감지되면 재실�
 - 테스트 파일은 `test/module/specs` 폴더에 작성
 
 ```bash
-npm run test:module # 모듈 테스트
-npm run test:health # 헬스 체크
-npm run test:smoke # 스모크 테스트
-npm run cypress:open # cypress open
+# 모듈 테스트
+npm run test:module 
+
+# 헬스 체크
+npm run test:health 
+
+# 스모크 테스트
+npm run test:smoke 
+
+# cypress open
+npm run cypress:open 
 ```
