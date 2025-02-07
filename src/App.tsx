@@ -17,7 +17,7 @@ import ChipExample from '@pages/examples/chip/ChipExample';
 import TextFieldExample from '@pages/examples/textField/TextFieldExample';
 import TooltipExample from '@pages/tooltipExample/TooltipExample';
 import AlertExample from '@pages/examples/alert/AlertExample';
-
+import TabsExample from '@pages/examples/tabs/TabsExample';
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -37,6 +37,7 @@ function App() {
               <Route path='textField' element={<TextFieldExample />} />
               <Route path='tooltip' element={<TooltipExample />} />
               <Route path='alert' element={<AlertExample />} />
+              <Route path='tabs' element={<TabsExample />} />
             </Route>
             <Route element={<ProtectedRoute />}>
               <Route path='/' element={<BoardExample />} />
