@@ -182,3 +182,27 @@ git config --global core.autocrlf input
 - `.env.example` 파일을 복사하여 `.env` 파일 생성
 - 프로젝트에 맞는 환경변수 값 설정
 - 환경변수 설정 후 프로젝트 재실행
+
+## 테스트 실행
+
+### 유닛 테스트 (vitest)
+
+- 테스트 파일은 `test/unit/specs` 폴더에 작성
+
+```bash
+test:unit # 테스트 1회 실행 후 자동종료
+test:unit:watch # 테스트 실행하고 변경 감지되면 재실행. 자동종료 안됨
+test:unit:watch:ui # 테스트 실행하고 변경 감지되면 재실행. 자동종료 안됨. 브라우저 UI 표시
+```
+
+### 모듈 테스트 (cypress)
+
+- 테스트 파일은 `test/module/specs` 폴더에 작성
+
+```bash
+test:module # 모듈 테스트
+test:health # 헬스 체크
+test:smoke # 스모크 테스트
+cypress:open # cypress open
+```
+
