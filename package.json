@@ -11,8 +11,8 @@
     "test:unit": "vitest --run --globals",
     "test:unit:watch": "vitest --globals",
     "test:unit:watch:ui": "vitest --globals --ui",
-    "test:health": "cypress run  --spec test/health/specs/*.health-spec.ts",
-    "test:module": "cypress run  --spec test/module/specs/*.module-spec.ts",
+    "test:health": "cypress run --spec test/health/specs/*.health-spec.ts",
+    "test:module": "cypress run --spec test/module/specs/*.module-spec.ts",
     "test:smoke": "cypress run --spec test/smoke/specs/*.smoke-spec.ts",
     "cypress:open": "cypress open"
   },
