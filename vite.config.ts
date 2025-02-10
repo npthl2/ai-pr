@@ -6,18 +6,21 @@ import { defineConfig as defineVitestConfig } from 'vitest/config';
 const vitestConfig = defineVitestConfig({
   test: {
     globals: true,
-    environment: "jsdom",
-    setupFiles: "./src/test/setup.ts",
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.ts',
     include: [
       'src/pages/**/components/**/*.spec.{ts,tsx}',
-      'src/pages/**/components/**/*.test.{ts,tsx}'
+      'src/pages/**/components/**/*.test.{ts,tsx}',
     ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       reportsDirectory: './test/unit/coverage',
       include: ['src/pages/**/components/**/*.{ts,tsx}'],
-      exclude: ['src/pages/**/components/**/*.spec.{ts,tsx}', 'src/pages/**/components/**/*.test.{ts,tsx}']
+      exclude: [
+        'src/pages/**/components/**/*.spec.{ts,tsx}',
+        'src/pages/**/components/**/*.test.{ts,tsx}',
+      ],
     },
   },
 });
@@ -44,7 +47,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:7070',
+        target: 'http://localhost:8080',
         changeOrigin: true,
         secure: false,
       },
