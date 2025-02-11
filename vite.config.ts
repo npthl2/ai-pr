@@ -41,6 +41,7 @@ export default defineConfig({
       '@assets': path.resolve(__dirname, './src/assets'),
       '@router': path.resolve(__dirname, './src/router'),
       '@layout': path.resolve(__dirname, './src/layout'),
+      '@theme': path.resolve(__dirname, './src/theme'),
     },
   },
   server: {
@@ -51,13 +52,13 @@ export default defineConfig({
         secure: false,
       },
       '/cca-be': {
-        target: 'http://localhost:8080',
+        target: 'http://localhost:8081',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/cca-be/, ''),
       },
       '/stg-be': {
-        target: 'http://localhost:8081',
+        target: 'http://localhost:8087',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/stg-be/, ''),
