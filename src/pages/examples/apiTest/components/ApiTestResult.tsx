@@ -5,7 +5,7 @@ interface ApiTestResultProps {
   isLoading: boolean;
   isError: boolean;
   error: Error | null;
-  data?: string;
+  data: string | null;
 }
 
 const ApiTestResult = ({ title, isLoading, isError, error, data }: ApiTestResultProps) => {
