@@ -1,7 +1,7 @@
 import axios from 'axios';
 //import useAuthStore from '../stores/AuthStore';
 
-const baseURL = import.meta.env.VITE_API_URL || '/api';
+const baseURL = import.meta.env.VITE_API_URL;
 
 // 토큰은 시큐어 쿠키에 저장되어있다고 가정하여 withCredentials 옵션을 추가함
 export const axiosInstance = axios.create({

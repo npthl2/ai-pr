@@ -19,6 +19,7 @@ import TooltipExample from '@pages/tooltipExample/TooltipExample';
 import AlertExample from '@pages/examples/alert/AlertExample';
 import DialogExample from '@/pages/examples/dialog/DialogExample';
 import TabsExample from '@pages/examples/tabs/TabsExample';
+import ApiTestExample from './pages/examples/apiTest/ApiTestExample';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
               <Route path='alert' element={<AlertExample />} />
               <Route path='dialog' element={<DialogExample />} />
               <Route path='tabs' element={<TabsExample />} />
+              <Route path='api-test' element={<ApiTestExample />} />
             </Route>
             <Route element={<ProtectedRoute />}>
               <Route path='/' element={<BoardExample />} />

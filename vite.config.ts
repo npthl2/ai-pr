@@ -51,6 +51,18 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      '/cca-be': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/cca-be/, ''),
+      },
+      '/stg-be': {
+        target: 'http://localhost:8081',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/stg-be/, ''),
+      },
     },
   },
 });
