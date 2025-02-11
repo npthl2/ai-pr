@@ -1,8 +1,8 @@
 import { Box, TextField, Typography } from '@mui/material';
 import { AutocompleteContainer } from './Autocomplete.styled';
 import top100Films from './AutocompleteSampleData';
-import Autocomplete from '@/components/Autocomplete';
-import { Chip } from '@/components/Chip';
+import Autocomplete from '@components/Autocomplete';
+import { Chip } from '@components/Chip';
 
 const AutocompleteExample = () => {
   return (

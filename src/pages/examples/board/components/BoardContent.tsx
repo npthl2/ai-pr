@@ -1,4 +1,4 @@
-import { useBoardsQuery } from '@/api/queries/board/useBoardsQuery';
+import { useBoardsQuery } from '@api/queries/board/useBoardsQuery';
 import { BoardContainer } from '../BoardExample.styled';
 import BoardList from './BoardList';
 

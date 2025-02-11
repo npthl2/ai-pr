@@ -5,7 +5,7 @@ import { queryClient } from '@api/queryClient';
 import Layout from '@layout/Layout';
 import ProtectedRoute from '@router/ProtectedRoute';
 
-import NestedDialogExample from '@/pages/examples/nestedDialog/DialogExample';
+import NestedDialogExample from '@pages/examples/nestedDialog/DialogExample';
 import SelectExample from '@pages/examples/select/SelectExample';
 import CheckboxExample from '@pages/examples/checkbox/CheckboxExample';
 import ButtonExample from '@pages/examples/button/ButtonExample';
@@ -17,7 +17,7 @@ import ChipExample from '@pages/examples/chip/ChipExample';
 import TextFieldExample from '@pages/examples/textField/TextFieldExample';
 import TooltipExample from '@pages/tooltipExample/TooltipExample';
 import AlertExample from '@pages/examples/alert/AlertExample';
-import DialogExample from '@/pages/examples/dialog/DialogExample';
+import DialogExample from '@pages/examples/dialog/DialogExample';
 import TabsExample from '@pages/examples/tabs/TabsExample';
 import ApiTestExample from './pages/examples/apiTest/ApiTestExample';
 

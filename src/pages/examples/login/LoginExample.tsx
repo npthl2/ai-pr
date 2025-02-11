@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { useLoginMutation } from '@/api/queries/auth/useLoginMutation';
+import { useLoginMutation } from '@api/queries/auth/useLoginMutation';
 import { LoginContainer } from './LoginExample.styled';
 import LoginAlert from './components/LoginAlert';
 import LoginForm from './components/LoginForm';
 import { LoginError } from './LoginExample.model';
-import { LoginRequestParams } from '@/model/Auth';
+import { LoginRequestParams } from '@model/Auth';
 import { AxiosError } from 'axios';
 
 const Login = () => {

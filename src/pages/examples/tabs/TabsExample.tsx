@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { Tab } from '@/components/Tab';
-import { Tabs } from '@/components/Tabs';
+import { Tab } from '@components/Tab';
+import { Tabs } from '@components/Tabs';
 import { TabsExampleContainer, ComponentTitle } from './TabsExample.styled';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';

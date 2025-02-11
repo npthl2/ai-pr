@@ -1,5 +1,5 @@
 import { Container, Typography } from '@mui/material';
-import { useApiTestQueries } from '@/api/queries/apiTest/useApiTestQueries';
+import { useApiTestQueries } from '@api/queries/apiTest/useApiTestQueries';
 import ApiTestResult from './components/ApiTestResult';
 
 const ApiTestExample = () => {

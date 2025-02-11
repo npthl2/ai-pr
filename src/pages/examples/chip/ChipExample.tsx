@@ -1,6 +1,6 @@
 import { Stack, Typography } from '@mui/material';
 import { ChipExampleContainer } from './ChipExample.styled';
-import { Chip } from '@/components/Chip';
+import { Chip } from '@components/Chip';
 
 const ChipExample = () => {
   const handleDelete = () => {

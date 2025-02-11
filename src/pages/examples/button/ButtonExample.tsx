@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import Button from '@/components/Button';
+import Button from '@components/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ButtonExampleContainer } from './ButtonExample.styled';
 

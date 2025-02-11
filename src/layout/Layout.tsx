@@ -4,7 +4,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { styled } from '@mui/material/styles';
 import useThemeStore from '@stores/ThemeStore';
-import { getTheme } from '@/theme/theme';
+import { getTheme } from '@theme/theme';
 import { useMemo } from 'react';
 
 const ThemeToggleContainer = styled(Box)(({ theme }) => ({

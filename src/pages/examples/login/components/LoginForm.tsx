@@ -2,7 +2,7 @@ import { TextField, Button, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { FormContainer } from '../LoginExample.styled';
 import { useState } from 'react';
-import { LoginRequestParams } from '@/model/Auth';
+import { LoginRequestParams } from '@model/Auth';
 
 interface LoginFormProps {
   formData: LoginRequestParams;
