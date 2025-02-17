@@ -27,10 +27,12 @@ const LoginForm = ({ formData, isLoading, onSubmit, onChange }: LoginFormProps) 
         onChange={onChange}
         disabled={isLoading}
         fullWidth
+        data-testid='id'
       />
       <TextField
         label='비밀번호'
         name='password'
+        data-testid='pw'
         type={showPassword ? 'text' : 'password'}
         value={formData.password}
         onChange={onChange}
@@ -53,7 +55,7 @@ const LoginForm = ({ formData, isLoading, onSubmit, onChange }: LoginFormProps) 
           },
         }}
       />
-      <Button variant='contained' onClick={onSubmit} disabled={isLoading} fullWidth>
+      <Button variant='contained' onClick={onSubmit} disabled={isLoading} fullWidth data-testid='login'>
         {isLoading ? '로그인 중...' : '로그인'}
       </Button>
     </FormContainer>

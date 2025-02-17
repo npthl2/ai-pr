@@ -20,6 +20,8 @@ import AlertExample from '@pages/examples/alert/AlertExample';
 import DialogExample from '@pages/examples/dialog/DialogExample';
 import TabsExample from '@pages/examples/tabs/TabsExample';
 import ApiTestExample from './pages/examples/apiTest/ApiTestExample';
+import Board from '@pages/test/board/Board';
+import RegistBoard from '@pages/test/board/component/RegistBoard';
 
 function App() {
   return (
@@ -43,6 +45,10 @@ function App() {
               <Route path='dialog' element={<DialogExample />} />
               <Route path='tabs' element={<TabsExample />} />
               <Route path='api-test' element={<ApiTestExample />} />
+            </Route>
+            <Route path='test'>
+              <Route path='board' element={<Board />} />
+              <Route path='board/regist' element={<RegistBoard />} />
             </Route>
             <Route element={<ProtectedRoute />}>
               <Route path='/' element={<BoardExample />} />
