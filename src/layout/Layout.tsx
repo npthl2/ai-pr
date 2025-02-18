@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { Box, IconButton, ThemeProvider, CssBaseline } from '@mui/material';
+import { Box, IconButton, ThemeProvider } from '@mui/material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { styled } from '@mui/material/styles';
@@ -20,7 +20,6 @@ const Layout = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
       <Box>
         <ThemeToggleContainer>
           <IconButton onClick={toggleMode} color='inherit'>
