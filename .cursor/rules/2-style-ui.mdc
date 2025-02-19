@@ -1,0 +1,59 @@
+# MUI Theme System and Styling Guidelines
+
+1. Theme Configuration Priority:
+
+   - Use theme tokens from src/theme/* configuration
+   - Follow typography scale defined in theme.typography
+   - Use spacing units from theme.spacing
+   - Use color palette from theme.palette
+   - Support dark/light mode with theme.palette.mode
+   - Use theme.shape for consistent border radius
+   - Use theme.shadows for elevation
+
+2. Component Structure:
+
+   - Use semantic HTML elements
+   - Use Box for basic layouts
+   - Use Stack for flex layouts
+   - Use Grid for grid layouts
+   - Use Typography for text styling
+   - Keep components small and focused
+   - Follow mobile-first approach
+
+3. Styled Components Best Practices:
+
+   - Use MUI's styled API with theme prop
+   - Create styled components at file level
+   - Follow naming convention: Styled[ComponentName]
+   - Keep styled components close to their usage
+   - Extend existing styled components when possible
+   - Avoid nested selectors beyond 2 levels
+
+4. Style Property Order:
+
+   - Layout properties first (display, position, width, height)
+   - Spacing properties second (margin, padding)
+   - Visual properties last (color, background, border)
+   - Group related properties together
+   - Use theme values for consistency
+
+5. Performance & Accessibility:
+
+   - Minimize style recalculations
+   - Avoid unnecessary nesting
+   - Ensure proper color contrast
+   - Implement proper focus states
+   - Support keyboard navigation
+   - Use proper ARIA attributes
+   - Follow WCAG guidelines
+
+6. Common Patterns:
+
+   - Implement consistent spacing rhythm
+   - Follow typography hierarchy
+   - Use proper color contrast ratios
+   - Use theme.transitions for animations
+   - Consider RTL support
+   - Use proper error states
+   - Handle loading states
+   - Implement responsive designs 

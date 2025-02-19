@@ -1,0 +1,44 @@
+# first: document your search process
+
+    1. Search for all Components with HTML structure and props matched the Figma design exactly:
+
+        - Search by feature name (e.g., "Emotion", "Modal", "Dialog")
+        - Search by UI pattern (e.g., "Card", "TextField")
+        - Search by business domain (e.g., "UserProfile", "ProductList")
+        - Search by component name from Figma (e.g., "Card", "TextField")
+        - Search by layout pattern (e.g., "Grid", "Flex", "Stack")
+        - Search by component hierarchy (e.g., parent-child relationships)
+        - Search by style properties (colors, typography, spacing)
+
+    2. search locations in directories below for all similar Components and Identitfy the source codes of the components on only HTML code (in order ):
+
+       - src/components/\* (common components)
+       - src/pages/\* (page components)
+       - src/layouts/\* (layout components)
+       - src/templates/\* (template components)
+       - src/hooks/\* (custom hooks)
+       - src/utils/\* (utility components)
+       - src/theme/* (theme configurations)
+       - src/styles/* (shared styles)
+       - src/constants/* (style constants)
+
+    3. search all components wich have veryu similar structure on only HTML code even if it has a different content, analyze it for resuse or as a reference.
+
+       - Analyze component nesting structure
+       - Document component variants
+       - Identify shared style properties
+       - Map Figma constraints to CSS/styled-components
+
+# Second: create a component matches the Figma design exactly.
+
+    1. create codes following these guidelines and search result:
+
+       - Prioritize using custom MUI components from src/components over original MUI components
+       - show the relevant code and reuse exising components.
+       - verify the 90% similarity on only HTML code first. if so, use and import it itself.
+       - Make sure about resuability.
+       - Follow project patterns.
+       - Avoid code duplication.
+       - Use proper path aliases.
+       - Follow consistent component structure.
+       - Consider UDL(Universal Design for Learning)
