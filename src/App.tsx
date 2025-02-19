@@ -5,9 +5,7 @@ import { queryClient } from '@api/queryClient';
 import Layout from '@layout/Layout';
 import ProtectedRoute from '@router/ProtectedRoute';
 import { CssBaseline, ThemeProvider } from '@mui/material';
-import useThemeStore from '@stores/ThemeStore';
 import { getTheme } from '@theme/theme';
-import { useMemo } from 'react';
 
 import NestedDialogExample from '@pages/examples/nestedDialog/DialogExample';
 import SelectExample from '@pages/examples/select/SelectExample';
@@ -15,7 +13,7 @@ import CheckboxExample from '@pages/examples/checkbox/CheckboxExample';
 import ButtonExample from '@pages/examples/button/ButtonExample';
 import RadioExample from '@pages/examples/radio/RadioExample';
 import BoardExample from '@pages/examples/board/BoardExample';
-import LoginExample from '@pages/examples/login/LoginExample';
+import LoginExample from '@pages/login/Login';
 import AutocompleteExample from '@pages/examples/autocomplete/AutocompleteExample';
 import ChipExample from '@pages/examples/chip/ChipExample';
 import TextFieldExample from '@pages/examples/textField/TextFieldExample';
@@ -28,12 +26,9 @@ import Board from '@pages/test/board/Board';
 import RegistBoard from '@pages/test/board/component/RegistBoard';
 
 function App() {
-  const mode = useThemeStore((state) => state.mode);
-  const theme = useMemo(() => getTheme(mode), [mode]);
-
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={getTheme('light')}>
         <CssBaseline />
         <BrowserRouter>
           <Routes>
