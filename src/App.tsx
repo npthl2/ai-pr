@@ -13,7 +13,7 @@ import CheckboxExample from '@pages/examples/checkbox/CheckboxExample';
 import ButtonExample from '@pages/examples/button/ButtonExample';
 import RadioExample from '@pages/examples/radio/RadioExample';
 import BoardExample from '@pages/examples/board/BoardExample';
-import LoginExample from '@pages/login/Login';
+import LoginExample from '@pages/examples/login/LoginExample';
 import AutocompleteExample from '@pages/examples/autocomplete/AutocompleteExample';
 import ChipExample from '@pages/examples/chip/ChipExample';
 import TextFieldExample from '@pages/examples/textField/TextFieldExample';
