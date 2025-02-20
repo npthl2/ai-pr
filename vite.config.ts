@@ -6,18 +6,21 @@ import { defineConfig as defineVitestConfig } from 'vitest/config';
 const vitestConfig = defineVitestConfig({
   test: {
     globals: true,
-    environment: "jsdom",
-    setupFiles: "./src/test/setup.ts",
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.ts',
     include: [
       'src/pages/**/components/**/*.spec.{ts,tsx}',
-      'src/pages/**/components/**/*.test.{ts,tsx}'
+      'src/pages/**/components/**/*.test.{ts,tsx}',
     ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       reportsDirectory: './test/unit/coverage',
       include: ['src/pages/**/components/**/*.{ts,tsx}'],
-      exclude: ['src/pages/**/components/**/*.spec.{ts,tsx}', 'src/pages/**/components/**/*.test.{ts,tsx}']
+      exclude: [
+        'src/pages/**/components/**/*.spec.{ts,tsx}',
+        'src/pages/**/components/**/*.test.{ts,tsx}',
+      ],
     },
   },
 });
@@ -28,7 +31,6 @@ export default defineConfig({
   ...vitestConfig,
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
       '@api': path.resolve(__dirname, './src/api'),
       '@components': path.resolve(__dirname, './src/components'),
       '@pages': path.resolve(__dirname, './src/pages'),
@@ -39,14 +41,27 @@ export default defineConfig({
       '@assets': path.resolve(__dirname, './src/assets'),
       '@router': path.resolve(__dirname, './src/router'),
       '@layout': path.resolve(__dirname, './src/layout'),
+      '@theme': path.resolve(__dirname, './src/theme'),
     },
   },
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:7070',
+        target: 'http://localhost:8080',
         changeOrigin: true,
         secure: false,
+      },
+      '/cca-be': {
+        target: 'http://localhost:8081',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/cca-be/, ''),
+      },
+      '/stg-be': {
+        target: 'http://localhost:8087',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/stg-be/, ''),
       },
     },
   },

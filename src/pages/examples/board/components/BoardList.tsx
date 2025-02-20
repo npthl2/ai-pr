@@ -1,4 +1,4 @@
-import { Board } from '@/model/Board';
+import { Board } from '@model/Board';
 import { BoardListContainer, BoardItem, BoardTitle, BoardInfo } from './BoardList.styled';
 
 interface BoardListProps {

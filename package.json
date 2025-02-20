@@ -13,8 +13,8 @@
     "test:unit:watch:ui": "vitest --globals --ui",
     "test:unit:coverage": "vitest --run --globals --coverage",
     "test:health": "cypress run --spec test/health/specs/*.health-spec.ts",
-    "test:module": "cypress run --spec test/module/specs/*.module-spec.ts",
-    "test:smoke": "cypress run --spec test/smoke/specs/*.smoke-spec.ts",
+    "test:module": "cypress run --spec test/module/specs/**/*.module-spec.ts",
+    "test:smoke": "cypress run --spec test/smoke/specs/**/*.smoke-spec.ts",
     "cypress:open": "cypress open"
   },
   "dependencies": {
@@ -29,6 +29,7 @@
     "react-dom": "^18.3.1",
     "react-error-boundary": "^5.0.0",
     "react-router-dom": "^7.1.2",
+    "simple-zustand-devtools": "^1.1.0",
     "zustand": "^5.0.3"
   },
   "devDependencies": {

@@ -1,3 +1,4 @@
+import { mountStoreDevtool } from 'simple-zustand-devtools';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -20,5 +21,9 @@ const useThemeStore = create<ThemeState>()(
     },
   ),
 );
+
+if (import.meta.env.DEV) {
+  mountStoreDevtool('Theme Store', useThemeStore); // 개발도구에 노출될 적절한 문자열을 지정해 주세요.
+}
 
 export default useThemeStore;

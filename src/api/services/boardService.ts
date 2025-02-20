@@ -1,4 +1,4 @@
-import { BoardsResponse } from '@/model/Board';
+import { BoardsResponse } from '@model/Board';
 //import baseService from './baseService';
 import { CommonResponse, CommonStatus } from '@model/common/CommonResponse';
 
