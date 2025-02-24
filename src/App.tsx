@@ -17,11 +17,12 @@ import LoginExample from '@pages/examples/login/LoginExample';
 import AutocompleteExample from '@pages/examples/autocomplete/AutocompleteExample';
 import ChipExample from '@pages/examples/chip/ChipExample';
 import TextFieldExample from '@pages/examples/textField/TextFieldExample';
-import TooltipExample from '@pages/tooltipExample/TooltipExample';
+import TooltipExample from '@pages/examples/tooltip/TooltipExample';
 import AlertExample from '@pages/examples/alert/AlertExample';
 import DialogExample from '@pages/examples/dialog/DialogExample';
 import TabsExample from '@pages/examples/tabs/TabsExample';
 import TableExample from '@pages/examples/table/TableExample';
+import ToastExample from '@pages/examples/toast/ToastExmple';
 import ApiTestExample from './pages/examples/apiTest/ApiTestExample';
 import Board from '@pages/test/board/Board';
 import RegistBoard from '@pages/test/board/component/RegistBoard';
@@ -50,6 +51,7 @@ function App() {
                 <Route path='dialog' element={<DialogExample />} />
                 <Route path='tabs' element={<TabsExample />} />
                 <Route path='table' element={<TableExample />} />
+                <Route path='toast' element={<ToastExample />} />
                 <Route path='api-test' element={<ApiTestExample />} />
               </Route>
               <Route path='test'>

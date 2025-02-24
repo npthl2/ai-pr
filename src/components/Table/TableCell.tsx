@@ -19,7 +19,7 @@ const StyledTableCell = styled(MuiTableCell, {
     '& .MuiTypography-root': {
       color: theme.palette.text.secondary,
       fontSize: 14,
-      weight: 600,
+      fontWeight: 600,
     },
   },
   '&.MuiTableCell-body': {
