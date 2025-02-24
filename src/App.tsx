@@ -26,6 +26,7 @@ import ToastExample from '@pages/examples/toast/ToastExmple';
 import ApiTestExample from './pages/examples/apiTest/ApiTestExample';
 import Board from '@pages/test/board/Board';
 import RegistBoard from '@pages/test/board/component/RegistBoard';
+import MemoTestPage from '@pages/memoAndSendHistory/MemoTestPage';
 
 function App() {
   return (
@@ -53,6 +54,8 @@ function App() {
                 <Route path='table' element={<TableExample />} />
                 <Route path='toast' element={<ToastExample />} />
                 <Route path='api-test' element={<ApiTestExample />} />
+                {/* TO-DO : 레이아웃 구성전 임시 페이지. 삭제 필요 */}
+                <Route path='memo-test' element={<MemoTestPage />} />
               </Route>
               <Route path='test'>
                 <Route path='board' element={<Board />} />

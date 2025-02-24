@@ -63,6 +63,12 @@ export default defineConfig({
         secure: false,
         rewrite: (path) => path.replace(/^\/stg-be/, ''),
       },
+      '/adm-be': {
+        target: 'http://localhost:8086',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/adm-be/, ''),
+      },
     },
   },
 });
