@@ -18,6 +18,7 @@ import {
   ContentHeader,
 } from './ContentsLayout.styled';
 import useCustomerStore from '../stores/CustomerStore';
+import Breadcrumb from '@components/Breadcrumb';
 
 const ContentsLayout = () => {
   const selectedCustomer = useCustomerStore((state) => state.selectedCustomer);
@@ -109,14 +110,12 @@ const ContentsLayout = () => {
           <Typography variant='h6'>
             {customerTabs.tabs.find((tab) => tab.id === customerTabs.activeTab)?.label}
           </Typography>
-          <Breadcrumbs separator={'/'} aria-label='breadcrumb'>
-            <Typography variant='body2' color='text.secondary'>
-              Home
-            </Typography>
-            <Typography variant='body2' color='text.secondary'>
-              {customerTabs.tabs.find((tab) => tab.id === customerTabs.activeTab)?.label}
-            </Typography>
-          </Breadcrumbs>
+          <Breadcrumb
+            activeTabLabel={[
+              'Home',
+              customerTabs.tabs.find((tab) => tab.id === customerTabs.activeTab)?.label || '',
+            ]}
+          />
         </ContentHeader>
         <ContentsBG>
           {customerTabs.tabs.map((tab) => (
