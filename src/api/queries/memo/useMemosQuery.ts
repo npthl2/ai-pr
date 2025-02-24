@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import memoService from '@api/services/memoService';
 import { isMemosResponse } from '@model/Memo';
 
-export const useMemosQuery = (customerId: number) => {
+export const useMemosQuery = (customerId: string) => {
   return useQuery({
     queryKey: ['memos', customerId],
     queryFn: () => memoService.getMemos(customerId),

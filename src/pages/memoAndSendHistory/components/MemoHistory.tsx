@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, TableContainer, TableHead, TableBody, Box, Grid, Typography } from '@mui/material';
+import { Table, TableHead, TableBody, Box, Grid, Typography } from '@mui/material';
 import TableCell from '@components/Table/TableCell';
 import TableRow from '@components/Table/TableRow';
 import Button from '@components/Button';
@@ -16,11 +16,13 @@ import {
   MemoContentsTypography,
   MemoEditorBox,
   MemoEditorTextarea,
+  MemoHistoryTableContainer,
 } from './MemoHistory.styled';
 
 const MemoHistory: React.FC = () => {
   // To-Do: 고객 ID 가져오기
-  const testCustomerId = 1234567890;
+  const testCustomerId = '1234567890';
+  const testCustomerIp = '123.123.123.123';
   const [memoContents, setMemoContents] = useState<string>('');
   const { openToast } = useToastStore();
   const queryClient = useQueryClient();
@@ -44,7 +46,8 @@ const MemoHistory: React.FC = () => {
         // To-Do: 로그인 후 사용자 이름 가져오기
         authorName: '체리체리',
         // To-Do: 로그인 후 사용자 아이디 가져오기
-        loginMemberId: 1,
+        loginMemberId: 'Id-01',
+        loginMemberIp: testCustomerIp,
       });
 
       if (typeof result.data === 'string') {
@@ -68,21 +71,14 @@ const MemoHistory: React.FC = () => {
           메모이력
         </Typography>
 
-        <TableContainer
-          style={{
-            maxHeight: '220px',
-            minHeight: '220px',
-            overflowY: 'auto',
-            position: 'relative',
-          }}
-        >
+        <MemoHistoryTableContainer>
           <Table style={{ borderCollapse: 'separate', borderSpacing: 0 }}>
             <TableHead style={{ position: 'sticky', top: 0 }}>
               <TableRow variant='head'>
-                <TableCell>
+                <TableCell sx={{ width: '18%' }}>
                   <Typography>작성일시</Typography>
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ width: '13%' }}>
                   <Typography>작성자</Typography>
                 </TableCell>
                 <TableCell>
@@ -95,7 +91,7 @@ const MemoHistory: React.FC = () => {
                 memos.map((memo) => (
                   <TableRow key={memo.memoId} disableEffect={true}>
                     <TableCell sx={{ minWidth: '180px' }}>
-                      <Typography>{memo.createdDatetime}</Typography>
+                      <Typography>{memo.firstCreateDatetime}</Typography>
                     </TableCell>
                     <TableCell sx={{ minWidth: '100px' }}>
                       <Typography>{memo.authorName}</Typography>
@@ -108,15 +104,15 @@ const MemoHistory: React.FC = () => {
                   </TableRow>
                 ))
               ) : (
-                <TableRow>
-                  <TableCell colSpan={3} align='center'>
+                <TableRow disableEffect>
+                  <TableCell colSpan={3} align='center' hideborder={true}>
                     <Typography>메모가 없습니다.</Typography>
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
-        </TableContainer>
+        </MemoHistoryTableContainer>
       </Box>
 
       {/* 메모작성 섹션 */}

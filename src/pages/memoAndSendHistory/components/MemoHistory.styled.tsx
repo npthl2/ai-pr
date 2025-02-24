@@ -1,4 +1,4 @@
-import { Box, TextareaAutosize, Typography } from '@mui/material';
+import { Box, TextareaAutosize, Typography, TableContainer } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const HighlightedTypography = styled(Typography)(({ theme }) => ({
@@ -31,4 +31,12 @@ export const MemoEditorTextarea = styled(TextareaAutosize)(({ theme }) => ({
   border: `1px solid ${theme.palette.primary.main}`,
   resize: 'none',
   borderRadius: '4px',
+}));
+
+export const MemoHistoryTableContainer = styled(TableContainer)(({ theme }) => ({
+  maxHeight: '220px',
+  minHeight: '220px',
+  overflowY: 'auto',
+  position: 'relative',
+  borderBottom: `1px solid ${theme.palette.grey[200]}`,
 }));

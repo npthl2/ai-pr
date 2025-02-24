@@ -6,11 +6,12 @@ export enum MemoType {
 }
 
 export interface MemoRequestParams {
-  customerId: number;
+  customerId: string;
   memoType: MemoType;
   contents: string;
   authorName: string;
-  loginMemberId: number;
+  loginMemberId: string;
+  loginMemberIp: string;
 }
 
 export interface Memo {
@@ -18,8 +19,7 @@ export interface Memo {
   memoType: MemoType;
   contents: string;
   authorName: string;
-  createdDatetime: string;
-  createMemberId: number;
+  firstCreateDatetime: string;
 }
 
 export interface GetMemosResponse extends CommonResponse<Memo[]> {}
