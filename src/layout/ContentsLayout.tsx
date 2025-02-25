@@ -1,4 +1,4 @@
-import { Typography, Breadcrumbs } from '@mui/material';
+import { Typography, Box, useTheme } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
@@ -16,17 +16,25 @@ import {
   ActionButton,
   CloseAllButton,
   ContentHeader,
+  StarIconButton,
 } from './ContentsLayout.styled';
 import useCustomerStore from '../stores/CustomerStore';
 import Breadcrumb from '@components/Breadcrumb';
+import FavoriteIcon from '@components/FavoriteIcon';
+import { amber } from '@mui/material/colors';
+import useMenuStore from '@stores/MenuStore';
+import { SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
+import { useBookmark } from '@hooks/useBookmark';
 
 const ContentsLayout = () => {
+  const theme = useTheme();
   const selectedCustomer = useCustomerStore((state) => state.selectedCustomer);
   const customerTabs = useCustomerStore((state) =>
     selectedCustomer ? state.customerTabs[selectedCustomer] : null,
   );
   const { setActiveTab, closeCustomerTab, closeAllCustomerTabs } = useCustomerStore();
-
+  const { menuItems } = useMenuStore();
+  const { handleBookmarkClick } = useBookmark();
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     if (selectedCustomer) {
       setActiveTab(selectedCustomer, newValue);
@@ -62,6 +70,10 @@ const ContentsLayout = () => {
   };
 
   if (!customerTabs) return null;
+
+  const currentTab = customerTabs.tabs.find((tab) => tab.id === customerTabs.activeTab);
+  const isBookmarked = menuItems.bookmarks.some((item) => item.name === currentTab?.label);
+  const currentTabId = SUBSCRIPTION_MENUS.find((menu) => menu.name === currentTab?.label)?.id;
 
   return (
     <ContentsContainer>
@@ -107,15 +119,25 @@ const ContentsLayout = () => {
           </TabActions>
         </Header>
         <ContentHeader>
-          <Typography variant='h6'>
-            {customerTabs.tabs.find((tab) => tab.id === customerTabs.activeTab)?.label}
-          </Typography>
-          <Breadcrumb
-            activeTabLabel={[
-              'Home',
-              customerTabs.tabs.find((tab) => tab.id === customerTabs.activeTab)?.label || '',
-            ]}
-          />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant='h3'>{currentTab?.label}</Typography>
+            {currentTab?.label !== '고객조회' && (
+              <StarIconButton
+                variant='text'
+                onClick={(e) => {
+                  if (!currentTab?.label || !currentTabId) return;
+                  handleBookmarkClick(e, currentTabId);
+                }}
+              >
+                {isBookmarked ? (
+                  <FavoriteIcon fillColor={amber[600]} size='small' />
+                ) : (
+                  <FavoriteIcon borderColor={theme.palette.action.active} size='small' />
+                )}
+              </StarIconButton>
+            )}
+          </Box>
+          <Breadcrumb activeTabLabel={['Home', currentTab?.label || '']} />
         </ContentHeader>
         <ContentsBG>
           {customerTabs.tabs.map((tab) => (

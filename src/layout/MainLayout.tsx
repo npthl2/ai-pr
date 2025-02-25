@@ -9,17 +9,17 @@ import LNBMenu from './LNBMenu';
 import DraggableFloatingButton from './component/DraggableFloatingButton';
 
 const MainLayout = () => {
-  const [selectedMenu, setSelectedMenu] = useState<string | null>('home');
   const theme = useTheme();
 
+  const [selectedMenu, setSelectedMenu] = useState<string | null>('home');
   const menus = [
     { id: 'home', icon: <HomeIcon /> },
     { id: 'menu', icon: <MenuIcon />, name: '메뉴' },
     {
-      id: 'favorite',
+      id: 'bookmarks',
       icon: (
         <FavoriteIcon
-          borderColor={selectedMenu === 'favorite' ? theme.palette.common.white : undefined}
+          borderColor={selectedMenu === 'bookmarks' ? theme.palette.common.white : undefined}
         />
       ),
       name: '즐겨찾는 메뉴',

@@ -1,8 +1,8 @@
 import { Box, Typography, Divider, Slide, useTheme } from '@mui/material';
 import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
 import { useNavigate } from 'react-router-dom';
-
 import { useEffect, useState } from 'react';
+
 import {
   LNBMenuContainer,
   MainMenu,
@@ -19,6 +19,9 @@ import { amber } from '@mui/material/colors';
 import FavoriteIcon from '@components/FavoriteIcon';
 import useCustomerStore from '@stores/CustomerStore';
 import LNBCustomerList from '@layout/component/LNBCustomerList';
+import { useBookmarksQuery } from '@api/queries/bookmark/useBookmarksQuery';
+import useMenuStore from '@stores/MenuStore';
+import { useBookmark } from '@hooks/useBookmark';
 
 interface LNBMenuProps {
   menus: Array<{
@@ -30,48 +33,40 @@ interface LNBMenuProps {
   onMenuSelect?: (menuId: string) => void;
 }
 
+type MenuType = 'bookmarks' | 'menu';
+
 type SubMenuItem = {
   id: string;
   name: string;
+  bookmark?: boolean;
   selected?: boolean;
 };
 
-type SubMenuItems = {
-  [key: string]: SubMenuItem[];
-};
-
 const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
-  const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
-  const [mountSubmenu, setMountSubmenu] = useState<string | null>(null);
-  const [selectedBookmarks, setSelectedBookmarks] = useState<Set<string>>(new Set());
-  const [selectedSubItem, setSelectedSubItem] = useState<string | null>(null);
-  const [tabValue, setTabValue] = useState<string | null>(null);
-  const { customers, selectedCustomer, selectCustomer, removeCustomer } = useCustomerStore();
   const theme = useTheme();
   const navigate = useNavigate();
+  const [openSubMenu, setOpenSubMenu] = useState<MenuType | null>(null);
+  const [mountSubmenu, setMountSubmenu] = useState<MenuType | null>(null);
+  const [selectedSubItem, setSelectedSubItem] = useState<string | null>(null);
+
+  const { menuItems, setMenuItems } = useMenuStore();
+
+  const { customers, selectedCustomer, selectCustomer, removeCustomer } = useCustomerStore();
+  const { handleBookmarkClick } = useBookmark();
+  const { data: bookmarks } = useBookmarksQuery();
 
   useEffect(() => {
-    setTabValue(selectedCustomer);
-  }, [selectedCustomer]);
-
-  const subMenuItems: SubMenuItems = {
-    menu: [
-      { id: 'menu1', name: '신규가입' },
-      { id: 'menu2', name: '요금제/부가서비스 변경' },
-    ],
-    favorite: [
-      { id: 'favorite1', name: '즐겨찾기 1' },
-      { id: 'favorite2', name: '즐겨찾기 2' },
-      { id: 'favorite3', name: '즐겨찾기 3' },
-    ],
-  };
+    if (bookmarks) {
+      setMenuItems(bookmarks);
+    }
+  }, [bookmarks]);
 
   const handleMenuClick = (menuId: string) => {
     if (openSubMenu === menuId) {
       setOpenSubMenu(null);
     } else {
-      setOpenSubMenu(menuId);
-      setMountSubmenu(menuId);
+      setOpenSubMenu(menuId as MenuType);
+      setMountSubmenu(menuId as MenuType);
     }
     onMenuSelect?.(menuId);
   };
@@ -87,21 +82,7 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
     setSelectedSubItem(itemId);
   };
 
-  const handleBookmarkClick = (event: React.MouseEvent<HTMLButtonElement>, itemId: string) => {
-    event.stopPropagation();
-    setSelectedBookmarks((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(itemId)) {
-        newSet.delete(itemId);
-      } else {
-        newSet.add(itemId);
-      }
-      return newSet;
-    });
-  };
-
   const handleTabChange = (_: React.SyntheticEvent, newValue: string) => {
-    setTabValue(newValue);
     selectCustomer(newValue);
     navigate('/');
   };
@@ -127,7 +108,7 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
           <Divider sx={{ my: 1, width: '100%' }} />
 
           <LNBCustomerList
-            value={tabValue || ''}
+            value={selectedCustomer || ''}
             onChange={handleTabChange}
             customers={customers}
             onRemove={handleRemoveCustomer}
@@ -135,7 +116,7 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
         </MainMenu>
 
         <Box sx={{ overflow: 'hidden' }}>
-          {mountSubmenu && subMenuItems[mountSubmenu] && (
+          {mountSubmenu && menuItems[mountSubmenu] && (
             <Slide
               direction='right'
               in={openSubMenu === mountSubmenu}
@@ -155,7 +136,7 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
                   />
                 </SubMenuHeader>
                 <SubMenuContent>
-                  {subMenuItems[mountSubmenu].map((item) => (
+                  {menuItems[mountSubmenu].map((item) => (
                     <SubMenuItem
                       key={item.id}
                       variant='text'
@@ -167,7 +148,7 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
                         variant='text'
                         onClick={(e) => handleBookmarkClick(e, item.id)}
                       >
-                        {selectedBookmarks.has(item.id) ? (
+                        {item.bookmark ? (
                           <FavoriteIcon fillColor={amber[600]} size='small' />
                         ) : (
                           <FavoriteIcon borderColor={theme.palette.action.active} size='small' />
