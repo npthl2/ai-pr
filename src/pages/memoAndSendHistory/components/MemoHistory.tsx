@@ -21,8 +21,7 @@ import {
 import useCustomerStore from '@stores/CustomerStore';
 
 const MemoHistory: React.FC = () => {
-  // To-Do: 고객 ID 가져오기
-  const activeCustomerId = useCustomerStore((state) => state.activeCustomerId) || '';
+  const activeCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
   const [memoContents, setMemoContents] = useState<string>('');
   const openToast = useToastStore((state) => state.openToast);
   const queryClient = useQueryClient();
@@ -106,7 +105,7 @@ const MemoHistory: React.FC = () => {
                   </TableRow>
                 ))
               ) : (
-                <TableRow disableEffect>
+                <TableRow disableEffect sx={{ height: '180px' }}>
                   <TableCell colSpan={3} align='center' hideborder={true}>
                     <Typography>메모가 없습니다.</Typography>
                   </TableCell>

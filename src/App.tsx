@@ -26,16 +26,20 @@ import ToastExample from '@pages/examples/toast/ToastExmple';
 import ApiTestExample from './pages/examples/apiTest/ApiTestExample';
 import Board from '@pages/test/board/Board';
 import RegistBoard from '@pages/test/board/component/RegistBoard';
-import MemoTestPage from '@pages/memoAndSendHistory/MemoTestPage';
-
+import MainLayout from '@layout/MainLayout';
+import ContentsLayout from '@layout/ContentsLayout';
+import MemoAndHistoryPanel from '@pages/memoAndSendHistory/MemoAndSendHistoryPanel';
+import { useState } from 'react';
 function App() {
+  const [isMemoPanelOpen, setIsMemoPanelOpen] = useState(false);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={getTheme('light')}>
         <CssBaseline />
         <BrowserRouter>
           <Routes>
-            <Route element={<Layout />}>
+            <Route element={<Layout handleMemoPanelOpen={() => setIsMemoPanelOpen(true)} />}>
               <Route path='example'>
                 <Route path='login' element={<LoginExample />} />
                 <Route path='nestedDialog' element={<NestedDialogExample />} />
@@ -54,19 +58,22 @@ function App() {
                 <Route path='table' element={<TableExample />} />
                 <Route path='toast' element={<ToastExample />} />
                 <Route path='api-test' element={<ApiTestExample />} />
-                {/* TO-DO : 레이아웃 구성전 임시 페이지. 삭제 필요 */}
-                <Route path='memo-test' element={<MemoTestPage />} />
               </Route>
               <Route path='test'>
                 <Route path='board' element={<Board />} />
                 <Route path='board/regist' element={<RegistBoard />} />
               </Route>
               <Route element={<ProtectedRoute />}>
-                <Route path='/' element={<BoardExample />} />
+                <Route element={<MainLayout />}>
+                  <Route element={<ContentsLayout />}>
+                    <Route path='/' element={<TooltipExample />} />
+                  </Route>
+                </Route>
               </Route>
             </Route>
           </Routes>
         </BrowserRouter>
+        <MemoAndHistoryPanel open={isMemoPanelOpen} onClose={() => setIsMemoPanelOpen(false)} />
         <Toast />
       </ThemeProvider>
       <ReactQueryDevtools />

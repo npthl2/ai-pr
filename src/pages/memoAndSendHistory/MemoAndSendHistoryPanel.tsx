@@ -1,15 +1,15 @@
 import React from 'react';
-import { Drawer, Container, Typography } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 import MemoHistory from './components/MemoHistory';
 import DoubleArrow from '@mui/icons-material/DoubleArrow';
-import { PanelCloseButton, PanelBox } from './MemoAndSendHistoryPanel.styled';
+import { PanelCloseButton, PanelBox, PanelDrawer } from './MemoAndSendHistoryPanel.styled';
 
 const MemoAndHistoryPanel: React.FC<{ open: boolean; onClose: () => void }> = ({
   open,
   onClose,
 }) => {
   return (
-    <Drawer anchor='right' open={open} onClose={onClose}>
+    <PanelDrawer anchor='right' open={open} onClose={onClose}>
       <Container
         sx={{
           width: {
@@ -31,7 +31,7 @@ const MemoAndHistoryPanel: React.FC<{ open: boolean; onClose: () => void }> = ({
           {/* <SendHistory /> */}
         </PanelBox>
       </Container>
-    </Drawer>
+    </PanelDrawer>
   );
 };
 
