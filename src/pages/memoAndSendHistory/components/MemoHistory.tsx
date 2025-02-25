@@ -13,7 +13,7 @@ import { useRef, useEffect } from 'react';
 import {
   HighlightedTypography,
   MemoHistoryBox,
-  MemoContentsTypography,
+  MemoContentTypography,
   MemoEditorBox,
   MemoEditorTextarea,
   MemoHistoryTableContainer,
@@ -22,7 +22,7 @@ import useCustomerStore from '@stores/CustomerStore';
 
 const MemoHistory: React.FC = () => {
   const activeCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
-  const [memoContents, setMemoContents] = useState<string>('');
+  const [memoContent, setMemoContent] = useState<string>('');
   const openToast = useToastStore((state) => state.openToast);
   const queryClient = useQueryClient();
   const memoEditorRef = useRef<HTMLTextAreaElement>(null);
@@ -42,7 +42,7 @@ const MemoHistory: React.FC = () => {
       const result = await saveMemoMutation.mutateAsync({
         customerId: activeCustomerId,
         memoType: MemoType.MEMBER,
-        contents: memoContents,
+        content: memoContent,
         // To-Do: 로그인 후 사용자 이름 가져오기
         authorName: '체리체리',
         // To-Do: 로그인 후 사용자 아이디 가져오기
@@ -54,7 +54,7 @@ const MemoHistory: React.FC = () => {
         openToast('저장에 실패했습니다. 다시 시도해 주세요.');
         return;
       }
-      setMemoContents('');
+      setMemoContent('');
       openToast('저장되었습니다.');
       // 메모추가로 인한 조회 캐시 무효화
       queryClient.invalidateQueries({ queryKey: ['memos', activeCustomerId] });
@@ -98,8 +98,8 @@ const MemoHistory: React.FC = () => {
                       <Typography>{memo.authorName}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Tooltip title={memo.contents} placement='bottom' arrow>
-                        <MemoContentsTypography>{memo.contents}</MemoContentsTypography>
+                      <Tooltip title={memo.content} placement='bottom' arrow>
+                        <MemoContentTypography>{memo.content}</MemoContentTypography>
                       </Tooltip>
                     </TableCell>
                   </TableRow>
@@ -138,8 +138,8 @@ const MemoHistory: React.FC = () => {
           minRows={4}
           maxRows={4}
           maxLength={500}
-          value={memoContents}
-          onChange={(e) => setMemoContents(e.target.value)}
+          value={memoContent}
+          onChange={(e) => setMemoContent(e.target.value)}
         />
         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button
@@ -147,7 +147,7 @@ const MemoHistory: React.FC = () => {
             variant='contained'
             size='medium'
             onClick={handleSaveMemo}
-            disabled={memoContents.length === 0}
+            disabled={memoContent.length === 0}
           >
             저장
           </Button>

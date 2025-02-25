@@ -8,7 +8,7 @@ export enum MemoType {
 export interface MemoRequestParams {
   customerId: string;
   memoType: MemoType;
-  contents: string;
+  content: string;
   authorName: string;
   loginMemberId: string;
 }
@@ -16,7 +16,7 @@ export interface MemoRequestParams {
 export interface Memo {
   memoId: string;
   memoType: MemoType;
-  contents: string;
+  content: string;
   authorName: string;
   firstCreateDatetime: string;
 }
@@ -27,7 +27,7 @@ export function isMemo(value: unknown): value is Memo {
   return (
     typeof value === 'object' &&
     value !== null &&
-    ['memoId', 'memoType', 'contents', 'authorName', 'firstCreateDatetime'].every(
+    ['memoId', 'memoType', 'content', 'authorName', 'firstCreateDatetime'].every(
       (key) => key in value,
     )
   );

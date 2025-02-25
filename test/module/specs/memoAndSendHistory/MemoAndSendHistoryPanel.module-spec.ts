@@ -21,7 +21,7 @@ describe('KAN-201 메모 및 작성이력 화면 진입', () => {
   });
 
   it('KAN-201-4 메모 작성을 할 경우 저장 버튼이 활성화 되어야 한다', () => {
-    page.inputMemoTextarea('test');
+    page.inputMemoTextarea('메모 내용');
     page.assertMemoSaveButtonEnabled();
   });
 

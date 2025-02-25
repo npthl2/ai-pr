@@ -17,7 +17,7 @@ export const MemoEditorBox = styled(Box)({
   gap: '4px',
 });
 
-export const MemoContentsTypography = styled(Typography)(({ theme }) => ({
+export const MemoContentTypography = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.primary,
   display: '-webkit-box',
   WebkitBoxOrient: 'vertical',

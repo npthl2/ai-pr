@@ -5,8 +5,8 @@ const memoList = [
   {
     memoId: '1',
     memoType: 'MEMBER',
-    contents: '메모 내용',
-    authorName: 'test',
+    content: '메모 내용',
+    authorName: 'member-id-01',
     firstCreateDatetime: '2025-02-01 12:00:00',
   },
 ];
