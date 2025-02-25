@@ -25,7 +25,6 @@ interface CustomerState {
   setCustomerTabs: (id: string, tabs: Tab[]) => void;
   setActiveTab: (id: string, tabId: number) => void;
   closeCustomerTab: (id: string, tabId: number) => void;
-  closeAllCustomerTabs: (id: string) => void;
 }
 
 const useCustomerStore = create<CustomerState>((set, get) => ({
@@ -66,9 +65,31 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
     set((state) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { [id]: removed, ...remainingTabs } = state.customerTabs;
+      // customers 배열에서 해당 id를 가진 고객 제거
+      // 고객 배열에서 해당 id의 인덱스를 찾음
+      const index = state.customers.findIndex((c) => c.id === id);
+
+      // 인덱스를 이용해 새로운 배열 생성 (삭제할 요소를 제외)
+      const newCustomers =
+        index !== -1
+          ? [...state.customers.slice(0, index), ...state.customers.slice(index + 1)]
+          : state.customers;
+
+      let newSelectedCustomerId = state.selectedCustomerId;
+
+      // 삭제 전 배열에서 삭제할 고객의 인덱스 구하기
+      if (newCustomers.length === 0) {
+        newSelectedCustomerId = null;
+      } else if (index < newCustomers.length) {
+        newSelectedCustomerId = newCustomers[index].id;
+      } else {
+        newSelectedCustomerId = newCustomers[newCustomers.length - 1].id;
+      }
+
       return {
-        customers: state.customers.filter((c) => c.id !== id),
-        selectedCustomerId: state.selectedCustomerId === id ? null : state.selectedCustomerId,
+        ...state,
+        customers: newCustomers,
+        selectedCustomerId: newSelectedCustomerId,
         customerTabs: remainingTabs,
       };
     }),
@@ -127,17 +148,6 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
         },
       };
     }),
-
-  closeAllCustomerTabs: (id) =>
-    set((state) => ({
-      customerTabs: {
-        ...state.customerTabs,
-        [id]: {
-          tabs: DEFAULT_TABS.filter((tab) => !tab.closeable),
-          activeTab: 0,
-        },
-      },
-    })),
 }));
 
 if (import.meta.env.DEV) {

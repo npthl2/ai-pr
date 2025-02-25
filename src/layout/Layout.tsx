@@ -92,7 +92,7 @@ const Layout = () => {
           }}
         >
           <CustomerSearchModal>
-            <CustomerSearch></CustomerSearch>
+            <CustomerSearch onCloseModal={() => setOpen(false)}></CustomerSearch>
           </CustomerSearchModal>
         </Modal>
       </LayoutContainer>

@@ -23,7 +23,11 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { grey } from '@mui/material/colors';
 
-export default function CustomerSearch() {
+interface CustomerSearchProps {
+  onCloseModal: () => void;
+}
+
+const CustomerSearch = ({ onCloseModal }: CustomerSearchProps) => {
   // -- 공통 에러 메시지 --
   const errorMessages = {
     name: '이름을 입력해주세요.',
@@ -62,7 +66,7 @@ export default function CustomerSearch() {
   // 권한자 체크 여부
   const [isAuthority, setAuthority] = useState<boolean>(false);
   // Dialog (최대 10명 초과 시) 열림 상태
-  const [open, setOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const { addCustomer } = useCustomerStore();
 
@@ -203,7 +207,9 @@ export default function CustomerSearch() {
 
         // store에서 10명 이상 추가 불가 시 false 반환
         if (!result) {
-          setOpen(true);
+          setDialogOpen(true);
+        } else {
+          onCloseModal();
         }
       } else {
         setSearchResult({
@@ -316,14 +322,14 @@ export default function CustomerSearch() {
       )}
 
       <Dialog
-        open={open}
+        open={dialogOpen}
         size='small' // Dialog 사이즈: small, medium, large 중 선택
         title='고객 조회 제한 알림'
         content='고객은 최대 10명까지 조회할 수 있습니다\n더 이상 조회하지 않는 고객을 닫아주세요.'
         confirmLabel='확인'
         closeLabel=''
-        onClose={() => setOpen(false)}
-        onConfirm={() => setOpen(false)}
+        onClose={() => setDialogOpen(false)}
+        onConfirm={() => setDialogOpen(false)}
       />
 
       {/* 버튼 영역 */}
@@ -341,4 +347,6 @@ export default function CustomerSearch() {
       </CustomerSearchButton>
     </CustomerSearchContainer>
   );
-}
+};
+
+export default CustomerSearch;

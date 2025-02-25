@@ -25,7 +25,7 @@ const ContentsLayout = () => {
   const customerTabs = useCustomerStore((state) =>
     selectedCustomerId ? state.customerTabs[selectedCustomerId] : null,
   );
-  const { setActiveTab, closeCustomerTab, closeAllCustomerTabs } = useCustomerStore();
+  const { setActiveTab, closeCustomerTab, removeCustomer } = useCustomerStore();
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     if (selectedCustomerId) {
@@ -42,7 +42,7 @@ const ContentsLayout = () => {
 
   const handleCloseAll = () => {
     if (selectedCustomerId) {
-      closeAllCustomerTabs(selectedCustomerId);
+      removeCustomer(selectedCustomerId);
     }
   };
 
