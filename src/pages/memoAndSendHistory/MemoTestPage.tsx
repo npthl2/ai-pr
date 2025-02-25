@@ -8,7 +8,12 @@ const MemoTestPage: React.FC = () => {
   return (
     <Box>
       {/* TO-DO : 레이아웃 구성전 임시 페이지. 삭제 필요 */}
-      <Button variant='contained' color='primary' onClick={() => setIsMemoPanelOpen(true)}>
+      <Button
+        data-testid='memoOpenButton'
+        variant='contained'
+        color='primary'
+        onClick={() => setIsMemoPanelOpen(true)}
+      >
         메모 및 발송이력 열기
       </Button>
       <MemoAndHistoryPanel open={isMemoPanelOpen} onClose={() => setIsMemoPanelOpen(false)} />

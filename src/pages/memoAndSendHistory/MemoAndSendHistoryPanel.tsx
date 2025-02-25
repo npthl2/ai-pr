@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Typography } from '@mui/material';
+import { Container, Typography, Box } from '@mui/material';
 import MemoHistory from './components/MemoHistory';
 import DoubleArrow from '@mui/icons-material/DoubleArrow';
 import { PanelCloseButton, PanelBox, PanelDrawer } from './MemoAndSendHistoryPanel.styled';
@@ -9,7 +9,19 @@ const MemoAndHistoryPanel: React.FC<{ open: boolean; onClose: () => void }> = ({
   onClose,
 }) => {
   return (
-    <PanelDrawer anchor='right' open={open} onClose={onClose}>
+    <PanelDrawer data-testid='memoPanel' anchor='right' open={open} onClose={onClose}>
+      <Box
+        data-testid='memoOverlay'
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: -1,
+        }}
+        onClick={onClose}
+      />
       <Container
         sx={{
           width: {
@@ -19,6 +31,7 @@ const MemoAndHistoryPanel: React.FC<{ open: boolean; onClose: () => void }> = ({
         }}
       >
         <PanelCloseButton
+          data-testid='memoCloseButton'
           variant='text'
           color='primary'
           size='small'

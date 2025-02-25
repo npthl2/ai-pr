@@ -10,12 +10,12 @@ export const Toast = () => {
   return (
     <Snackbar
       id='Toast'
-      data-testid='toast'
       className='toast'
+      sx={{ zIndex: 3000 }}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       open={open}
       onClose={onClose}
-      autoHideDuration={3000}
+      autoHideDuration={10000}
       message={message}
     />
   );

@@ -29,7 +29,13 @@ const GNBCustomer = ({ name, id, gender, age, handleMemoPanelOpen }: GNBCustomer
         <Button variant='outlined' size='small' color='grey'>
           마스킹 해제
         </Button>
-        <Button variant='outlined' size='small' color='grey' onClick={handleMemoPanelOpen}>
+        <Button
+          data-testid='memoOpenButton'
+          variant='outlined'
+          size='small'
+          color='grey'
+          onClick={handleMemoPanelOpen}
+        >
           메모 및 발송이력
         </Button>
       </Navigation>

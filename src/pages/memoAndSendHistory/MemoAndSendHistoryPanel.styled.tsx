@@ -3,7 +3,7 @@ import { Box, Drawer } from '@mui/material';
 import { Button } from '@components/Button';
 
 export const PanelDrawer = styled(Drawer)({
-  zIndex: 10000,
+  zIndex: 2000,
 });
 
 export const PanelCloseButton = styled(Button)({

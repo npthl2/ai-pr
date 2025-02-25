@@ -105,7 +105,7 @@ const MemoHistory: React.FC = () => {
                   </TableRow>
                 ))
               ) : (
-                <TableRow disableEffect sx={{ height: '180px' }}>
+                <TableRow data-testid='memoEmptyTableRow' disableEffect sx={{ height: '180px' }}>
                   <TableCell colSpan={3} align='center' hideborder={true}>
                     <Typography>메모가 없습니다.</Typography>
                   </TableCell>
@@ -132,6 +132,7 @@ const MemoHistory: React.FC = () => {
           <HighlightedTypography>*</HighlightedTypography>
         </Box>
         <MemoEditorTextarea
+          data-testid='memoTextarea'
           ref={memoEditorRef}
           placeholder='표시할 데이터가 없습니다'
           minRows={4}
@@ -142,6 +143,7 @@ const MemoHistory: React.FC = () => {
         />
         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button
+            data-testid='memoSaveButton'
             variant='contained'
             size='medium'
             onClick={handleSaveMemo}
