@@ -10,16 +10,18 @@ export const LNBCustomerListContainer = styled(Box)({
 export const StyledTabList = styled(TabList)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  //   width: '76px',
   '& .MuiTabs-indicator': {
     display: 'none',
   },
   '& .MuiTabs-flexContainer': {
     gap: '20px',
   },
+
   '& .MuiTab-root': {
     minHeight: 53,
     padding: '16px 0',
+    borderLeft: '4px solid white',
+    borderRight: '4px solid white',
     borderRadius: '8px',
     alignItems: 'center',
     justifyContent: 'flex-start',
