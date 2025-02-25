@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import {
+  CustomerSearchModal,
   CustomerSearchContainer,
   SearchTitle,
   RowWrapper,
@@ -19,15 +20,15 @@ import Dialog from '@components/Dialog';
 import useCustomerStore from '@stores/CustomerStore';
 import customerService from '@api/services/customerService';
 import { CommonResponse } from '@model/common/CommonResponse';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
 import { grey } from '@mui/material/colors';
+import { Modal, Divider, Typography } from '@mui/material';
 
 interface CustomerSearchProps {
+  open: boolean;
   onCloseModal: () => void;
 }
 
-const CustomerSearch = ({ onCloseModal }: CustomerSearchProps) => {
+const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
   // -- 공통 에러 메시지 --
   const errorMessages = {
     name: '이름을 입력해주세요.',
@@ -227,125 +228,137 @@ const CustomerSearch = ({ onCloseModal }: CustomerSearchProps) => {
   };
 
   return (
-    <CustomerSearchContainer>
-      {/* 제목 영역 */}
-      <SearchTitle>고객조회</SearchTitle>
+    <Modal
+      open={open}
+      onClose={onCloseModal}
+      slotProps={{
+        backdrop: {
+          sx: { backgroundColor: 'transparent' },
+        },
+      }}
+    >
+      <CustomerSearchModal>
+        <CustomerSearchContainer>
+          {/* 제목 영역 */}
+          <SearchTitle>고객조회</SearchTitle>
 
-      {/* 입력 요소 영역 */}
-      {isAuthority && (
-        <RowWrapper>
-          <TextField
-            state={validation.phoneNumber.state}
-            error={validation.phoneNumber.error}
-            helperText={validation.phoneNumber.helperText}
-            value={searchData.phoneNumber}
-            onChange={(value: string) => handlePhoneNumberChange(value)}
-            onBlur={() => handleBlur('phoneNumber')}
-            slotProps={{
-              htmlInput: {
-                maxLength: 14,
-                inputMode: 'numeric',
-                pattern: '[0-9]*',
-              },
-            }}
-            placeholder='* 전화번호 (숫자만 입력)'
+          {/* 입력 요소 영역 */}
+          {isAuthority && (
+            <RowWrapper>
+              <TextField
+                state={validation.phoneNumber.state}
+                error={validation.phoneNumber.error}
+                helperText={validation.phoneNumber.helperText}
+                value={searchData.phoneNumber}
+                onChange={(value: string) => handlePhoneNumberChange(value)}
+                onBlur={() => handleBlur('phoneNumber')}
+                slotProps={{
+                  htmlInput: {
+                    maxLength: 14,
+                    inputMode: 'numeric',
+                    pattern: '[0-9]*',
+                  },
+                }}
+                placeholder='* 전화번호 (숫자만 입력)'
+              />
+            </RowWrapper>
+          )}
+          {isAuthority && (
+            <Divider>
+              <Typography variant='body2' sx={{ color: grey[400] }}>
+                Or
+              </Typography>
+            </Divider>
+          )}
+
+          <RowWrapper>
+            <TextField
+              state={validation.name.state}
+              error={validation.name.error}
+              helperText={validation.name.helperText}
+              value={searchData.name}
+              onChange={(value: string) => handleNameChange(value)}
+              onBlur={() => handleBlur('name')}
+              slotProps={{
+                htmlInput: {
+                  maxLength: 50,
+                },
+              }}
+              placeholder='* 이름'
+            />
+            <TextField
+              state={validation.birthDate.state}
+              error={validation.birthDate.error}
+              helperText={validation.birthDate.helperText}
+              value={searchData.birthDate}
+              onChange={(value: string) => handleBirthDateChange(value)}
+              onBlur={() => handleBlur('birthDate')}
+              slotProps={{
+                htmlInput: {
+                  maxLength: 6,
+                  inputMode: 'numeric',
+                  pattern: '[0-9]*',
+                },
+              }}
+              placeholder='* 생년월일 (yymmdd)'
+            />
+            {/* 라디오 버튼 그룹 */}
+            <RadioGroupContainer>
+              {/* 남 */}
+              <RadioButtonWrapper onClick={() => handleGenderChange(Gender.MALE)}>
+                <Radio
+                  checked={searchData.gender === Gender.MALE}
+                  size='small'
+                  color='primary'
+                  label='남'
+                  // Radio 컴포넌트 내부에서 hover, disabled 등 기본값이 처리되어 있다고 가정
+                />
+              </RadioButtonWrapper>
+              {/* 여 */}
+              <RadioButtonWrapper onClick={() => handleGenderChange(Gender.FEMALE)}>
+                <Radio
+                  checked={searchData.gender === Gender.FEMALE}
+                  size='small'
+                  color='primary'
+                  label='여'
+                />
+              </RadioButtonWrapper>
+            </RadioGroupContainer>
+          </RowWrapper>
+
+          {searchResult.error && (
+            <Alert variant='standard' severity='error'>
+              {searchResult.message}
+            </Alert>
+          )}
+
+          <Dialog
+            open={dialogOpen}
+            size='small' // Dialog 사이즈: small, medium, large 중 선택
+            title='고객 조회 제한 알림'
+            content='고객은 최대 10명까지 조회할 수 있습니다\n더 이상 조회하지 않는 고객을 닫아주세요.'
+            confirmLabel='확인'
+            closeLabel=''
+            onClose={() => setDialogOpen(false)}
+            onConfirm={() => setDialogOpen(false)}
           />
-        </RowWrapper>
-      )}
-      {isAuthority && (
-        <Divider>
-          <Typography variant='body2' sx={{ color: grey[400] }}>
-            Or
-          </Typography>
-        </Divider>
-      )}
 
-      <RowWrapper>
-        <TextField
-          state={validation.name.state}
-          error={validation.name.error}
-          helperText={validation.name.helperText}
-          value={searchData.name}
-          onChange={(value: string) => handleNameChange(value)}
-          onBlur={() => handleBlur('name')}
-          slotProps={{
-            htmlInput: {
-              maxLength: 50,
-            },
-          }}
-          placeholder='* 이름'
-        />
-        <TextField
-          state={validation.birthDate.state}
-          error={validation.birthDate.error}
-          helperText={validation.birthDate.helperText}
-          value={searchData.birthDate}
-          onChange={(value: string) => handleBirthDateChange(value)}
-          onBlur={() => handleBlur('birthDate')}
-          slotProps={{
-            htmlInput: {
-              maxLength: 6,
-              inputMode: 'numeric',
-              pattern: '[0-9]*',
-            },
-          }}
-          placeholder='* 생년월일 (yymmdd)'
-        />
-        {/* 라디오 버튼 그룹 */}
-        <RadioGroupContainer>
-          {/* 남 */}
-          <RadioButtonWrapper onClick={() => handleGenderChange(Gender.MALE)}>
-            <Radio
-              checked={searchData.gender === Gender.MALE}
-              size='small'
-              color='primary'
-              label='남'
-              // Radio 컴포넌트 내부에서 hover, disabled 등 기본값이 처리되어 있다고 가정
-            />
-          </RadioButtonWrapper>
-          {/* 여 */}
-          <RadioButtonWrapper onClick={() => handleGenderChange(Gender.FEMALE)}>
-            <Radio
-              checked={searchData.gender === Gender.FEMALE}
-              size='small'
-              color='primary'
-              label='여'
-            />
-          </RadioButtonWrapper>
-        </RadioGroupContainer>
-      </RowWrapper>
-
-      {searchResult.error && (
-        <Alert variant='standard' severity='error'>
-          {searchResult.message}
-        </Alert>
-      )}
-
-      <Dialog
-        open={dialogOpen}
-        size='small' // Dialog 사이즈: small, medium, large 중 선택
-        title='고객 조회 제한 알림'
-        content='고객은 최대 10명까지 조회할 수 있습니다\n더 이상 조회하지 않는 고객을 닫아주세요.'
-        confirmLabel='확인'
-        closeLabel=''
-        onClose={() => setDialogOpen(false)}
-        onConfirm={() => setDialogOpen(false)}
-      />
-
-      {/* 버튼 영역 */}
-      <CustomerSearchButton
-        variant='contained'
-        size='small'
-        color='primary'
-        iconComponent={<SearchIcon />}
-        iconPosition='left'
-        iconSize={12}
-        onClick={handleSearch}
-        disabled={isButtonDisabled}
-      >
-        고객조회
-      </CustomerSearchButton>
-    </CustomerSearchContainer>
+          {/* 버튼 영역 */}
+          <CustomerSearchButton
+            variant='contained'
+            size='small'
+            color='primary'
+            iconComponent={<SearchIcon />}
+            iconPosition='left'
+            iconSize={12}
+            onClick={handleSearch}
+            disabled={isButtonDisabled}
+          >
+            고객조회
+          </CustomerSearchButton>
+        </CustomerSearchContainer>
+      </CustomerSearchModal>
+    </Modal>
   );
 };
 

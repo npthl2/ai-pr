@@ -53,11 +53,3 @@ export const HeaderRight = styled(Box)(({ theme }) => ({
     },
   },
 }));
-
-export const CustomerSearchModal = styled(Box)({
-  position: 'absolute',
-  top: '64px',
-  right: '92px',
-  width: '474px',
-  height: '181px',
-});

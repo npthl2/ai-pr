@@ -4,7 +4,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { getTheme } from '@theme/theme';
 import { useState } from 'react';
-import { LayoutContainer, Header, Logo, HeaderRight, CustomerSearchModal } from './Layout.styled';
+import { LayoutContainer, Header, Logo, HeaderRight } from './Layout.styled';
 import Button from '@components/Button';
 import Tooltip from '@components/Tooltip';
 import useCustomerStore from '@stores/CustomerStore';
@@ -82,19 +82,7 @@ const Layout = () => {
         </Header>
         <Outlet />
 
-        <Modal
-          open={open}
-          onClose={() => setOpen(false)}
-          slotProps={{
-            backdrop: {
-              sx: { backgroundColor: 'transparent' },
-            },
-          }}
-        >
-          <CustomerSearchModal>
-            <CustomerSearch onCloseModal={() => setOpen(false)}></CustomerSearch>
-          </CustomerSearchModal>
-        </Modal>
+        <CustomerSearch open={open} onCloseModal={() => setOpen(false)} />
       </LayoutContainer>
     </ThemeProvider>
   );
