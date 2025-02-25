@@ -18,20 +18,21 @@ import {
   MemoEditorTextarea,
   MemoHistoryTableContainer,
 } from './MemoHistory.styled';
+import useCustomerStore from '@stores/CustomerStore';
 
 const MemoHistory: React.FC = () => {
   // To-Do: 고객 ID 가져오기
-  const testCustomerId = '1234567890';
-  const testCustomerIp = '123.123.123.123';
+  const activeCustomerId = useCustomerStore((state) => state.activeCustomerId) || '';
   const [memoContents, setMemoContents] = useState<string>('');
-  const { openToast } = useToastStore();
+  const openToast = useToastStore((state) => state.openToast);
   const queryClient = useQueryClient();
   const memoEditorRef = useRef<HTMLTextAreaElement>(null);
 
-  const { data: memos } = useMemosQuery(testCustomerId);
+  const { data: memos } = useMemosQuery(activeCustomerId);
   const saveMemoMutation = useMemosMutation();
 
   useEffect(() => {
+    // 진입시 Textarea 포커스
     if (memoEditorRef.current) {
       memoEditorRef.current.focus();
     }
@@ -40,23 +41,26 @@ const MemoHistory: React.FC = () => {
   const handleSaveMemo = async () => {
     try {
       const result = await saveMemoMutation.mutateAsync({
-        customerId: testCustomerId,
+        customerId: activeCustomerId,
         memoType: MemoType.MEMBER,
         contents: memoContents,
         // To-Do: 로그인 후 사용자 이름 가져오기
         authorName: '체리체리',
         // To-Do: 로그인 후 사용자 아이디 가져오기
         loginMemberId: 'Id-01',
-        loginMemberIp: testCustomerIp,
+        // To-Do: 로그인 후 사용자 IP 가져오기
+        loginMemberIp: '123.123.123.123',
       });
 
+      // BusinessException시 실패 메세지 출력
       if (typeof result.data === 'string') {
         openToast('저장에 실패했습니다. 다시 시도해 주세요.');
         return;
       }
       setMemoContents('');
       openToast('저장되었습니다.');
-      queryClient.invalidateQueries({ queryKey: ['memos', testCustomerId] });
+      // 메모추가로 인한 조회 캐시 무효화
+      queryClient.invalidateQueries({ queryKey: ['memos', activeCustomerId] });
     } catch (error) {
       console.error(error);
       openToast('저장에 실패했습니다. 다시 시도해 주세요.');

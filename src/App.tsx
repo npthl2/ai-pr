@@ -6,7 +6,7 @@ import Layout from '@layout/Layout';
 import ProtectedRoute from '@router/ProtectedRoute';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { getTheme } from '@theme/theme';
-
+import { Toast } from '@components/Toast';
 import NestedDialogExample from '@pages/examples/nestedDialog/DialogExample';
 import SelectExample from '@pages/examples/select/SelectExample';
 import CheckboxExample from '@pages/examples/checkbox/CheckboxExample';
@@ -67,6 +67,7 @@ function App() {
             </Route>
           </Routes>
         </BrowserRouter>
+        <Toast />
       </ThemeProvider>
       <ReactQueryDevtools />
     </QueryClientProvider>

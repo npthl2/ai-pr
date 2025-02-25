@@ -7,7 +7,7 @@ interface CustomerStore {
 
 const useCustomerStore = create<CustomerStore>((set) => ({
   // TO-DO: 추후 수정
-  activeCustomerId: 'Id-01',
+  activeCustomerId: '1234567890',
   setActiveCustomerId: (id: string) => set({ activeCustomerId: id }),
 }));
 
