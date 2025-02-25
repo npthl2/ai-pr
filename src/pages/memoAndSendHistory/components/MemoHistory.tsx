@@ -48,8 +48,6 @@ const MemoHistory: React.FC = () => {
         authorName: '체리체리',
         // To-Do: 로그인 후 사용자 아이디 가져오기
         loginMemberId: 'Id-01',
-        // To-Do: 로그인 후 사용자 IP 가져오기
-        loginMemberIp: '123.123.123.123',
       });
 
       // BusinessException시 실패 메세지 출력

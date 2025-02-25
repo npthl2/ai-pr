@@ -11,11 +11,10 @@ export interface MemoRequestParams {
   contents: string;
   authorName: string;
   loginMemberId: string;
-  loginMemberIp: string;
 }
 
 export interface Memo {
-  memoId: number;
+  memoId: string;
   memoType: MemoType;
   contents: string;
   authorName: string;
@@ -28,8 +27,9 @@ export function isMemo(value: unknown): value is Memo {
   return (
     typeof value === 'object' &&
     value !== null &&
-    'memoId' in value &&
-    typeof (value as Memo).memoId === 'number'
+    ['memoId', 'memoType', 'contents', 'authorName', 'firstCreateDatetime'].every(
+      (key) => key in value,
+    )
   );
 }
 
