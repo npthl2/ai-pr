@@ -12,7 +12,7 @@ import TextField from '@components/TextField';
 import Radio from '@components/Radio';
 import SearchIcon from '@mui/icons-material/Search';
 
-import { Customer, Gender } from '@model/Customer';
+import { Gender, CustomerSearchResponse } from '@model/Customer';
 import Alert from '@components/Alert';
 import Dialog from '@components/Dialog';
 
@@ -58,12 +58,13 @@ export default function CustomerSearch() {
 
   // 버튼 활성화 여부
   const [isButtonDisabled, setButtonDisabled] = useState<boolean>(true);
-  // 임시 권한 여부
+
+  // 권한자 체크 여부
   const [isAuthority, setAuthority] = useState<boolean>(false);
   // Dialog (최대 10명 초과 시) 열림 상태
   const [open, setOpen] = useState(false);
 
-  const { addOrActivateCustomer } = useCustomerStore();
+  const { addCustomer } = useCustomerStore();
 
   // -- 버튼 활성화: 이름과 생년월일이 모두 입력되거나 전화번호가 입력되면 활성화 --
   useEffect(() => {
@@ -162,7 +163,7 @@ export default function CustomerSearch() {
   const handleSearch = async () => {
     try {
       // API 호출
-      const response: CommonResponse<Customer> = await customerService.fetchCustomer({
+      const response: CommonResponse<CustomerSearchResponse> = await customerService.fetchCustomer({
         customerName: searchData.name,
         birthDate: searchData.birthDate,
         gender: searchData.gender,
@@ -188,11 +189,16 @@ export default function CustomerSearch() {
         });
 
         // store에 고객 추가 또는 활성화
-        const data: Customer = response.data;
-        const result = addOrActivateCustomer({
-          ...data,
-          activeTab: 'tab',
-          tabs: [],
+        const data: CustomerSearchResponse = response.data;
+        const result = addCustomer({
+          id: data.customerId,
+          name: data.customerName,
+          encryptedName: data.encryptedCustomerName,
+          rrno: data.rrno,
+          encryptedRrno: data.encryptedRrno,
+          age: data.age,
+          gender: data.gender === 'M' ? Gender.MALE : Gender.FEMALE,
+          contractId: data.contractId,
         });
 
         // store에서 10명 이상 추가 불가 시 false 반환
@@ -332,17 +338,6 @@ export default function CustomerSearch() {
         disabled={isButtonDisabled}
       >
         고객조회
-      </CustomerSearchButton>
-      <CustomerSearchButton
-        variant='contained'
-        size='small'
-        color='primary'
-        iconComponent={<SearchIcon />}
-        iconPosition='left'
-        iconSize={12}
-        onClick={() => setAuthority((prev) => !prev)}
-      >
-        임시권한자버튼
       </CustomerSearchButton>
     </CustomerSearchContainer>
   );

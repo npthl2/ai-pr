@@ -70,11 +70,3 @@ export const RadioButtonWrapper = styled.div`
   align-items: center;
   cursor: pointer;
 `;
-
-export const ModalContainer = styled(Box)({
-  position: 'absolute',
-  top: '64px',
-  right: '92px',
-  width: '474px',
-  height: '181px',
-});

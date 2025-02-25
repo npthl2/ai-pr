@@ -17,13 +17,15 @@ import LoginExample from '@pages/examples/login/LoginExample';
 import AutocompleteExample from '@pages/examples/autocomplete/AutocompleteExample';
 import ChipExample from '@pages/examples/chip/ChipExample';
 import TextFieldExample from '@pages/examples/textField/TextFieldExample';
-import TooltipExample from '@pages/tooltipExample/TooltipExample';
 import AlertExample from '@pages/examples/alert/AlertExample';
 import DialogExample from '@pages/examples/dialog/DialogExample';
 import TabsExample from '@pages/examples/tabs/TabsExample';
 import ApiTestExample from './pages/examples/apiTest/ApiTestExample';
 import Board from '@pages/test/board/Board';
 import RegistBoard from '@pages/test/board/component/RegistBoard';
+import TooltipExample from '@pages/examples/tooltip/TooltipExample';
+import MainLayout from '@layout/MainLayout';
+import ContentsLayout from '@layout/ContentsLayout';
 
 function App() {
   return (
@@ -55,7 +57,11 @@ function App() {
                 <Route path='board/regist' element={<RegistBoard />} />
               </Route>
               <Route element={<ProtectedRoute />}>
-                <Route path='/' element={<BoardExample />} />
+                <Route element={<MainLayout />}>
+                  <Route element={<ContentsLayout />}>
+                    <Route path='/' element={<TooltipExample />} />
+                  </Route>
+                </Route>
               </Route>
             </Route>
           </Routes>
