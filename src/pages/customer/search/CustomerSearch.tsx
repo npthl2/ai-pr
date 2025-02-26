@@ -268,6 +268,7 @@ const CustomerSearch = ({ isAuthority, open, onCloseModal }: CustomerSearchProps
               <TextField
                 state={validation.phoneNumber.state}
                 error={validation.phoneNumber.error}
+                absoluteHelperText={true}
                 helperText={validation.phoneNumber.helperText}
                 value={searchData.phoneNumber}
                 onChange={(value: string) => handlePhoneNumberChange(value)}
@@ -296,6 +297,7 @@ const CustomerSearch = ({ isAuthority, open, onCloseModal }: CustomerSearchProps
             <TextField
               state={validation.name.state}
               error={validation.name.error}
+              absoluteHelperText={true}
               helperText={validation.name.helperText}
               value={searchData.name}
               onChange={(value: string) => handleNameChange(value)}
@@ -309,8 +311,10 @@ const CustomerSearch = ({ isAuthority, open, onCloseModal }: CustomerSearchProps
               data-testid='customer-name'
             />
             <TextField
+              size='medium'
               state={validation.birthDate.state}
               error={validation.birthDate.error}
+              absoluteHelperText={true}
               helperText={validation.birthDate.helperText}
               value={searchData.birthDate}
               onChange={(value: string) => handleBirthDateChange(value)}

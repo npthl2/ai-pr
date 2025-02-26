@@ -15,7 +15,7 @@ class CustomerSearchServiceMock {
     });
   }
   notFoundCustomer() {
-    cy.intercept('GET', '**/v1/customers', {
+    cy.intercept('GET', '**/v1/customers?**', {
       statusCode: 200,
       body: {
         successOrNot: 'N',
@@ -26,7 +26,7 @@ class CustomerSearchServiceMock {
   }
 
   successFindCustomer() {
-    cy.intercept('GET', '**/v1/customers', {
+    cy.intercept('GET', '**/v1/customers?**', {
       statusCode: 200,
       body: {
         successOrNot: 'Y',
