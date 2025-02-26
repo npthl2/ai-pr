@@ -94,13 +94,14 @@ jobs:
       - name: Run CD actions
         uses: kt-bybc-rnr/rnr-apps-cicd/.github/actions/cd@develop
         with:
-          gitops_repo_name: ${{ vars.GITOPS_REPO_NAME }}
-          gitops_token: ${{ secrets.GITOPS_TOKEN }}
+          gitops_token: ${{ secrets.PAT_GITHUB_TOKEN }}
+          #gitops_repo_name: ${{ vars.ARGOCD_APPS_GIT_REPO }}
+
           branch: ${{ needs.ci.outputs.branch }}
-          argocd_server: ${{ vars.ARGOCD_SERVER }}
-          argocd_admin_user: ${{ secrets.ARGOCD_ADMIN_USER }}
-          argocd_admin_pass: ${{ secrets.ARGOCD_ADMIN_PASS }}
+
+          argocd_server: ${{ vars.ARGOCD_APPS_SERVER }}
+          argocd_auth_token: ${{ secrets.ARGOCD_APPS_TOKEN }}
           argocd_app_name: ${{ github.event.repository.name }}
+
           acr_login_server: ${{ secrets.ACR_LOGIN_SERVER }}
           image_tag: ${{ needs.ci.outputs.image_tag }}
-          repo_tag: ${{ needs.ci.outputs.repo_tag }}
