@@ -5,6 +5,7 @@ import {
     AuthoritiesResponse
 } from '@model/Auth';
 import { CommonResponse } from '@model/common/CommonResponse';
+
 import baseService from './baseService';
 
 const API_AUTH_URL = '/cca-be/v1/auth';
@@ -21,6 +22,7 @@ const authService = {
     getAuthorities(memberId: string): Promise<CommonResponse<AuthoritiesResponse>> {
         return baseService.get<AuthoritiesResponse>(`${API_AUTH_URL}/authorities/${memberId}`);
     }
+
 };
 
 export default authService;

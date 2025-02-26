@@ -16,7 +16,7 @@ const ApiTestExample = () => {
         isLoading={ccaResult.isLoading}
         isError={ccaResult.isError}
         error={ccaResult.error as Error}
-        data={ccaResult.data}
+        data={ccaResult.data ?? null}
       />
 
       <ApiTestResult
@@ -24,7 +24,7 @@ const ApiTestExample = () => {
         isLoading={stgResult.isLoading}
         isError={stgResult.isError}
         error={stgResult.error as Error}
-        data={stgResult.data}
+        data={stgResult.data ?? null}
       />
     </Container>
   );
