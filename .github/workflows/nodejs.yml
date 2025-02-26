@@ -1,0 +1,106 @@
+name: Build and Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  ci:
+    name: Build and push container image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    outputs:
+      branch: ${{ steps.extract_branch.outputs.branch }}
+      image_tag: ${{ steps.set_tag.outputs.image_tag }}
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      # Tagging rule
+      # [yy].[m].[d].[H][M].v[actions build number]
+      - name: Set Tag for Build and Artifacts
+        run: |
+          echo "IMAGE_TAG=${{ github.event.repository.name }}.$(TZ=UTC-9 date +'%y%m%d.%H%M').$(printf 'v%03d' ${{github.run_number}})" >> $GITHUB_ENV
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.14
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Run linters
+        run: npm run lint
+
+      - name: ACR login
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.6.1
+
+      - name: Build and push Container image
+        uses: docker/build-push-action@v6.5.0
+        env:
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          cache-from: type=registry,ref=${{ secrets.ACR_LOGIN_SERVER }}/${{ github.event.repository.name }}-cache
+          cache-to: type=registry,ref=${{ secrets.ACR_LOGIN_SERVER }}/${{ github.event.repository.name }}-cache,mode=max
+          tags: |
+            ${{ secrets.ACR_LOGIN_SERVER }}/${{ github.event.repository.name }}-${{ steps.extract_branch.outputs.branch }}:${{ env.IMAGE_TAG }}
+            ${{ secrets.ACR_LOGIN_SERVER }}/${{ github.event.repository.name }}-${{ steps.extract_branch.outputs.branch }}:latest
+
+      - name: Add Git tag to source repository and setup output"
+        env:
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+        run: |
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git config --global user.name "${{ github.actor }}"
+          git tag -a "${{ env.IMAGE_TAG }}" -m "Push tag ${{ env.IMAGE_TAG }}"
+          git push origin "${{ env.IMAGE_TAG }}"
+          
+          echo "image_tag=$(echo ${{ env.IMAGE_TAG }})" >> $GITHUB_OUTPUT
+        id: set_tag
+
+  cd:
+    name: Update manifests and sync argocd app
+    needs: ci
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+
+      - name: Run CD actions
+        uses: kt-bybc-rnr/rnr-apps-cicd/.github/actions/cd@develop
+        with:
+          gitops_repo_name: ${{ vars.GITOPS_REPO_NAME }}
+          gitops_token: ${{ secrets.GITOPS_TOKEN }}
+          branch: ${{ needs.ci.outputs.branch }}
+          argocd_server: ${{ vars.ARGOCD_SERVER }}
+          argocd_admin_user: ${{ secrets.ARGOCD_ADMIN_USER }}
+          argocd_admin_pass: ${{ secrets.ARGOCD_ADMIN_PASS }}
+          argocd_app_name: ${{ github.event.repository.name }}
+          acr_login_server: ${{ secrets.ACR_LOGIN_SERVER }}
+          image_tag: ${{ needs.ci.outputs.image_tag }}
+          repo_tag: ${{ needs.ci.outputs.repo_tag }}
