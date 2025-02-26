@@ -28,8 +28,9 @@ export const useLoginMutation = () => {
     },
     onSuccess: (response: CommonResponse<LoginResponse>) => {
       if (response.data && typeof response.data !== 'string') {
-        setAccessToken(response.data.accessToken);
-        setMemberInfo(response.data.memberInfo);
+        const { accessToken, memberInfo } = response.data;
+        setAccessToken(accessToken, memberInfo);
+        setMemberInfo(memberInfo);
         navigate('/', { replace: true });
       }
     },
