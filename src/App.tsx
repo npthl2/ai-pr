@@ -32,6 +32,7 @@ function App() {
       <ThemeProvider theme={getTheme('light')}>
         <CssBaseline />
         <BrowserRouter>
+          <Route path='login' element={<Login />} />
           <Routes>
             <Route element={<Layout />}>
               <Route path='example'>
@@ -55,7 +56,6 @@ function App() {
                 <Route path='board' element={<Board />} />
                 <Route path='board/regist' element={<RegistBoard />} />
               </Route>
-              <Route path='login' element={<Login />} />
               <Route element={<ProtectedRoute />}>
                 <Route path='/' element={<BoardExample />} />
               </Route>
