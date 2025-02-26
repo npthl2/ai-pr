@@ -7,7 +7,7 @@ import { styled } from '@mui/material/styles';
 import { UnmaskingRequestDto, UnmaskingResponseDto, UnmaskingProps } from '@model/Unmasking';
 import unmaskingService from '@api/services/unmaskingService';
 import useCustomerStore from '@stores/CustomerStore';
-import useMemberStore from '@stores/Member';
+import useMemberStore from '@stores/MemberStore';
 
 const CharCount = styled(Typography)({
   position: 'absolute',
@@ -16,7 +16,7 @@ const CharCount = styled(Typography)({
   fontSize: '12px',
 });
 
-const Unmasking: React.FC<UnmaskingProps> = ({ onClose, onUnmask, requestData }) => {
+const Unmasking = <T,>({ onClose, onUnmask, requestData }: UnmaskingProps<T>) => {
   const [reason, setReason] = useState('');
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
   const inputTextRef = useRef<HTMLTextAreaElement>(null); // multi line 일 경우
@@ -59,21 +59,23 @@ cleanup 함수를 추가하여 컴포넌트가 언마운트될 때 타이머를 
       console.error('고객 ID 또는 회원 ID가 없습니다.');
       return;
     }
+    console.log(requestData);
 
     const unmaskingRequestDto: UnmaskingRequestDto = {
       ...requestData,
       requestUnmaskingReason: reason, // key in 사유
-      requestUnmaskingDatetime: new Date().toISOString(),//'2025-02-26 10:00:00', // 요청일시
+      requestUnmaskingDatetime : new Date().toISOString(),//'2025-02-26 10:00:00', // 요청일시
       requestMemberId: memberId, // 로그인 ID -> kyle 님이 로그인 사용자 정보 저장한거를 꺼내오면 됨
       requestMemberConnectedIp: '10.231.58.61',// 이건 시간되면 local ip 가져와서 채우는 거 넣어보자
       customerId: selectedCustomerId, // 고객검색하면 현재 선택된 고객의 ID. CustomerStore에서 selectedCustomerId를 꺼내오면 됨
     };
 
     try {
-      const response: UnmaskingResponseDto = await unmaskingService.unmasking(unmaskingRequestDto).then(response => response.data);
+      const response: UnmaskingResponseDto<T> = await unmaskingService.unmasking(unmaskingRequestDto).then(response => response.data);
       
-      console.log(response.unmaskedItem) ;
-      onUnmask(response.unmaskedItem);
+      // console.log("unmasking unmaskedItem : " + response.unmaskedItem);
+      // console.log("unmasking param : " + response.param);
+      onUnmask(response.unmaskedItem, requestData.param as T);
       onClose();
     } catch (error: unknown) {
       console.error('마스킹 해제 중 오류가 발생했습니다.', error);

@@ -9,18 +9,20 @@ export interface UnmaskingRequestDto {
   requestUnmaskingReason: string;
 }
 
-export interface UnmaskingResponseDto {
+export interface UnmaskingResponseDto<T> {
   resultMessage: string;
   unmaskedItem: string;
+  param?: T;
 }
 
 export interface Unmasking<T> {
-  param: T;
+  param?: T;
   encryptedItem: string;
+  itemTypeCode: string;
 }
 
-export interface UnmaskingProps {
+export interface UnmaskingProps<T> {
   onClose: () => void;
-  onUnmask: (unmaskedItem: string) => void;
-  requestData: Unmasking<any>;
+  onUnmask: (unmaskedItem: string, param: T) => void;
+  requestData: Unmasking<T>;
 }
