@@ -60,9 +60,7 @@ function App() {
               <Route element={<ProtectedRoute />}>
                 <Route element={<MainLayout />}>
                   <Route path='/' element={<Home />} />
-                  <Route element={<ContentsLayout />}>
-                    <Route path='/customer' element={<TooltipExample />} />
-                  </Route>
+                  <Route path='/customer' element={<ContentsLayout />} />
                 </Route>
               </Route>
             </Route>
