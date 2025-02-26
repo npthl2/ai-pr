@@ -16,7 +16,7 @@ const TabsExample = () => {
   const [scrollValue, setScrollValue] = useState(0);
 
   const handleChange =
-    (setter: (value: number) => void) => (event: React.SyntheticEvent, newValue: number) => {
+    (setter: (value: number) => void) => (_event: React.SyntheticEvent, newValue: number) => {
       setter(newValue);
     };
 
