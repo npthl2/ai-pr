@@ -10,19 +10,17 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
-
 type DialogSize = 'small' | 'medium' | 'large';
-
-interface DialogProps extends MuiDialogProps {
+interface DialogProps extends Omit<MuiDialogProps, 'content'> {
   size?: DialogSize;
   title: string;
-  content: string;
+  content: string | React.ReactNode;
   closeLabel?: string;
   confirmLabel?: string;
+  isConfirmDisabled?: boolean;
   onClose: () => void;
   onConfirm?: () => void;
 }
-
 const StyledDialog = styled(MuiDialog, { shouldForwardProp: (prop) => prop !== 'size' })<{
   size: DialogSize;
 }>(({ theme, size }) => ({
@@ -35,23 +33,18 @@ const StyledDialog = styled(MuiDialog, { shouldForwardProp: (prop) => prop !== '
     }[size],
   },
 }));
-
 const StyledDialogTitle = styled(DialogTitle)({
   padding: '16px 24px',
 });
-
 const StyledButton = styled(Button)({
   padding: '5px 8px',
 });
-
 const StyledDialogContent = styled(DialogContent)({
   padding: '10px 24px',
 });
-
 const StyledDialogActions = styled(DialogActions)({
   padding: '18px 24px',
 });
-
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   position: 'absolute',
   right: '24px',
@@ -62,7 +55,6 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     fontSize: '16px',
   },
 }));
-
 const Dialog = ({
   open,
   size = 'medium',
@@ -72,6 +64,7 @@ const Dialog = ({
   confirmLabel = '확인',
   onClose,
   onConfirm,
+  isConfirmDisabled = false,
 }: DialogProps) => {
   return (
     <StyledDialog open={open} size={size} onClose={onClose}>
@@ -83,11 +76,7 @@ const Dialog = ({
           <CloseIcon />
         </StyledIconButton>
       </StyledDialogTitle>
-      <StyledDialogContent>
-        <Typography variant='body1' sx={(theme) => ({ color: theme.palette.text.primary })}>
-          {content}
-        </Typography>
-      </StyledDialogContent>
+      <StyledDialogContent>{content}</StyledDialogContent>
       <StyledDialogActions>
         <StyledButton
           onClick={onClose}
@@ -99,7 +88,12 @@ const Dialog = ({
           </Typography>
         </StyledButton>
         {onConfirm && (
-          <StyledButton onClick={onConfirm} color='primary' variant='contained'>
+          <StyledButton
+            onClick={onConfirm}
+            color='primary'
+            variant='contained'
+            disabled={isConfirmDisabled}
+          >
             <Typography
               variant='body1'
               sx={(theme) => ({ color: theme.palette.primary.contrastText })}
@@ -112,5 +106,4 @@ const Dialog = ({
     </StyledDialog>
   );
 };
-
 export default Dialog;
