@@ -9,17 +9,25 @@ type MenuItem = {
 };
 
 type MenuState = {
+  selectedMainMenu: string;
   menuItems: {
     bookmarks: MenuItem[];
     menu: MenuItem[];
   };
+  setSelectedMainMenu: (mainMenu: string) => void;
   setMenuItems: (bookmarks: string[]) => void;
 };
 
 const useMenuStore = create<MenuState>((set) => ({
+  selectedMainMenu: 'home',
   menuItems: {
     bookmarks: [],
     menu: [],
+  },
+  setSelectedMainMenu: (selectedMainMenu: string) => {
+    set(() => ({
+      selectedMainMenu,
+    }));
   },
   setMenuItems: (bookmarks: string[]) => {
     set(() => ({

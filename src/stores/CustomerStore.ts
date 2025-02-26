@@ -25,7 +25,6 @@ interface CustomerState {
   setCustomerTabs: (id: string, tabs: Tab[]) => void;
   setActiveTab: (id: string, tabId: number) => void;
   closeCustomerTab: (id: string, tabId: number) => void;
-  closeAllCustomerTabs: (customerId: string) => void;
 }
 
 const useCustomerStore = create<CustomerState>((set, get) => ({
@@ -152,17 +151,6 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
         },
       };
     }),
-
-  closeAllCustomerTabs: (customerId) =>
-    set((state) => ({
-      customerTabs: {
-        ...state.customerTabs,
-        [customerId]: {
-          tabs: DEFAULT_TABS.filter((tab) => !tab.closeable),
-          activeTab: 0,
-        },
-      },
-    })),
 }));
 
 if (import.meta.env.DEV) {

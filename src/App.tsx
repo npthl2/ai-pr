@@ -26,6 +26,7 @@ import RegistBoard from '@pages/test/board/component/RegistBoard';
 import TooltipExample from '@pages/examples/tooltip/TooltipExample';
 import MainLayout from '@layout/MainLayout';
 import ContentsLayout from '@layout/ContentsLayout';
+import Home from '@pages/home/Home';
 
 function App() {
   return (
@@ -58,8 +59,9 @@ function App() {
               </Route>
               <Route element={<ProtectedRoute />}>
                 <Route element={<MainLayout />}>
+                  <Route path='/' element={<Home />} />
                   <Route element={<ContentsLayout />}>
-                    <Route path='/' element={<TooltipExample />} />
+                    <Route path='/customer' element={<TooltipExample />} />
                   </Route>
                 </Route>
               </Route>

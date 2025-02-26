@@ -22,6 +22,9 @@ import customerService from '@api/services/customerService';
 import { CommonResponse } from '@model/common/CommonResponse';
 import { grey } from '@mui/material/colors';
 import { Modal, Divider, Typography } from '@mui/material';
+import { useNavigate, useNavigation } from 'react-router-dom';
+import useMenuStore from '@stores/MenuStore';
+import { MainMenu } from '@constants/CommonConstant';
 
 interface CustomerSearchProps {
   open: boolean;
@@ -70,7 +73,8 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { addCustomer } = useCustomerStore();
-
+  const navigate = useNavigate();
+  const { setSelectedMainMenu } = useMenuStore();
   // -- 버튼 활성화: 이름과 생년월일이 모두 입력되거나 전화번호가 입력되면 활성화 --
   useEffect(() => {
     const enable =
@@ -210,6 +214,8 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
         if (!result) {
           setDialogOpen(true);
         } else {
+          navigate('/customer');
+          setSelectedMainMenu(MainMenu.MENU);
           onCloseModal();
         }
       } else {

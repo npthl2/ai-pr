@@ -91,6 +91,7 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
 
     if (!selectedCustomerId) return;
 
+    navigate('/customer');
     const targetMenu = SUBSCRIPTION_MENUS.find((menu) => menu.id === itemId);
     if (!targetMenu) return;
 
@@ -111,12 +112,11 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
 
     setCustomerTabs(selectedCustomerId, [...currentTabs, newTab]);
     setActiveTab(selectedCustomerId, newTab.id);
-    navigate('/');
   };
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: string) => {
+    navigate('/customer');
     selectCustomer(newValue);
-    navigate('/');
   };
 
   const handleRemoveCustomer = (id: string) => {

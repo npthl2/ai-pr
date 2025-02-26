@@ -12,13 +12,23 @@ import useAuthStore from '@stores/AuthStore';
 import GNBCustomer from './component/GNBCustomer';
 import { useHotkeys } from 'react-hotkeys-hook';
 import CustomerSearch from '@pages/customer/search/CustomerSearch';
+import { MainMenu } from '@constants/CommonConstant';
+import useMenuStore from '@stores/MenuStore';
 
 const Layout = () => {
   const navigate = useNavigate();
+  const { setSelectedMainMenu } = useMenuStore();
+  const { selectCustomer } = useCustomerStore();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const selectedCustomer = useCustomerStore((state) =>
     state.customers.find((c) => c.id === state.selectedCustomerId),
   );
+
+  const handleLogoClick = () => {
+    setSelectedMainMenu(MainMenu.HOME);
+    selectCustomer('');
+    navigate('/');
+  };
 
   // 고객 검색 Modal 출력 및 단축키 설정
   const [open, setOpen] = useState(false);
@@ -38,7 +48,7 @@ const Layout = () => {
     <ThemeProvider theme={getTheme('light')}>
       <LayoutContainer>
         <Header>
-          <Logo onClick={() => navigate('/')}>
+          <Logo onClick={handleLogoClick}>
             <h1>R & R</h1>
           </Logo>
 

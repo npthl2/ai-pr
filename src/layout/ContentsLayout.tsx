@@ -32,7 +32,7 @@ const ContentsLayout = () => {
   const customerTabs = useCustomerStore((state) =>
     selectedCustomerId ? state.customerTabs[selectedCustomerId] : null,
   );
-  const { setActiveTab, closeCustomerTab, closeAllCustomerTabs } = useCustomerStore();
+  const { setActiveTab, closeCustomerTab, removeCustomer } = useCustomerStore();
   const { menuItems } = useMenuStore();
   const { handleBookmarkClick } = useBookmark();
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
@@ -50,7 +50,7 @@ const ContentsLayout = () => {
 
   const handleCloseAll = () => {
     if (selectedCustomerId) {
-      closeAllCustomerTabs(selectedCustomerId);
+      removeCustomer(selectedCustomerId);
     }
   };
 

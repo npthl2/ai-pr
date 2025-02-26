@@ -10,3 +10,9 @@ export const SUBSCRIPTION_MENUS = [
   { id: 'NEW_SUBSCRIPTION', name: '신규가입' },
   { id: 'SERVICE_MODIFICATION', name: '요금제/부가서비스 변경' },
 ];
+
+export enum MainMenu {
+  HOME = 'home',
+  MENU = 'menu',
+  BOOKMARKS = 'bookmarks',
+}
