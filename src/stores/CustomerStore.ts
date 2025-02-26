@@ -34,7 +34,7 @@ interface CustomerState {
 const useCustomerStore = create<CustomerState>((set, get) => ({
   customers: [],
   // TO-DO : 추후수정
-  selectedCustomerId: '1234567890',
+  selectedCustomerId: 'module-customer-id',
   customerTabs: {},
 
   addCustomer: (customer) =>

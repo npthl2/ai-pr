@@ -35,6 +35,8 @@ axiosInstance.interceptors.request.use((config) => {
   const pathOnly = window.location.pathname + window.location.hash.replace(/\?.*$/, '');
   // 현재 페이지의 경로를 헤더에 추가
   config.headers['Source-Id'] = pathOnly;
+  // TO-DO : 수정필요
+  config.headers['X-Authorization-Id'] = 'cherry test';
   return config;
 });
 

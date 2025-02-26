@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Table, TableHead, TableBody, Box, Grid, Typography } from '@mui/material';
 import TableCell from '@components/Table/TableCell';
 import TableRow from '@components/Table/TableRow';
@@ -9,7 +9,6 @@ import { useMemosQuery } from '@api/queries/memo/useMemosQuery';
 import { useMemosMutation } from '@api/queries/memo/useMemosMutation';
 import { MemoType } from '@model/Memo';
 import { useQueryClient } from '@tanstack/react-query';
-import { useRef, useEffect } from 'react';
 import {
   HighlightedTypography,
   MemoHistoryBox,
@@ -19,23 +18,67 @@ import {
   MemoHistoryTableContainer,
 } from './MemoHistory.styled';
 import useCustomerStore from '@stores/CustomerStore';
+import { Memo } from '@model/Memo';
 
 const MemoHistory: React.FC = () => {
   const activeCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
   const [memoContent, setMemoContent] = useState<string>('');
+  const [page, setPage] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
   const openToast = useToastStore((state) => state.openToast);
   const queryClient = useQueryClient();
   const memoEditorRef = useRef<HTMLTextAreaElement>(null);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  const { data: memos } = useMemosQuery(activeCustomerId);
+  const { data: memos, refetch } = useMemosQuery(activeCustomerId, page);
+  const [totalMemos, setTotalMemos] = useState<Memo[]>([]);
   const saveMemoMutation = useMemosMutation();
+
+  useEffect(() => {
+    if (memos) {
+      if (page === 1) {
+        setTotalMemos(memos);
+      } else {
+        setTotalMemos((prevMemos) => [...prevMemos, ...memos]);
+      }
+    }
+  }, [memos]);
 
   useEffect(() => {
     // 진입시 Textarea 포커스
     if (memoEditorRef.current) {
       memoEditorRef.current.focus();
     }
+    // setTotalMemos(memos);
   }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !loading) {
+          setLoading(true);
+          setPage((prevPage) => prevPage + 1);
+        }
+      },
+      { threshold: 1.0 },
+    );
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
+      }
+    };
+  }, [loading]);
+
+  useEffect(() => {
+    if (memos) {
+      setLoading(false);
+    }
+  }, [memos]);
 
   const handleSaveMemo = async () => {
     try {
@@ -53,9 +96,10 @@ const MemoHistory: React.FC = () => {
         return;
       }
       setMemoContent('');
+      setPage(1);
       openToast('저장되었습니다.');
-      // 메모추가로 인한 조회 캐시 무효화
       queryClient.invalidateQueries({ queryKey: ['memos', activeCustomerId] });
+      refetch();
     } catch (error) {
       console.error(error);
       openToast('저장에 실패했습니다. 다시 시도해 주세요.');
@@ -86,9 +130,9 @@ const MemoHistory: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody style={{ height: memos && memos.length === 0 ? '180px' : 'auto' }}>
-              {memos && memos.length > 0 ? (
-                memos.map((memo) => (
-                  <TableRow key={memo.memoId} disableEffect={true}>
+              {totalMemos && totalMemos.length > 0 ? (
+                totalMemos.map((memo, index) => (
+                  <TableRow key={memo.memoId + index} disableEffect={true}>
                     <TableCell sx={{ minWidth: '180px' }}>
                       <Typography>{memo.firstCreateDatetime}</Typography>
                     </TableCell>
@@ -109,6 +153,7 @@ const MemoHistory: React.FC = () => {
                   </TableCell>
                 </TableRow>
               )}
+              <div ref={loadMoreRef} style={{ height: '0px' }} />
             </TableBody>
           </Table>
         </MemoHistoryTableContainer>
