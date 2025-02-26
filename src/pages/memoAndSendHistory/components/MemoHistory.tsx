@@ -55,7 +55,7 @@ const MemoHistory: React.FC = () => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !loading && !isLast) {
+        if (entries[0].isIntersecting && !loading && isLast === false) {
           setLoading(true);
           setPage((prevPage) => prevPage + 1);
         }
