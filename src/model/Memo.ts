@@ -10,7 +10,6 @@ export interface MemoRequestParams {
   memoType: MemoType;
   content: string;
   authorName: string;
-  loginMemberId: string;
 }
 
 export interface Memo {

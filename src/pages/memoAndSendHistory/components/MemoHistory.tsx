@@ -45,8 +45,6 @@ const MemoHistory: React.FC = () => {
         content: memoContent,
         // To-Do: 로그인 후 사용자 이름 가져오기
         authorName: '체리체리',
-        // To-Do: 로그인 후 사용자 아이디 가져오기
-        loginMemberId: 'Id-01',
       });
 
       // BusinessException시 실패 메세지 출력

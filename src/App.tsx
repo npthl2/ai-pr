@@ -40,7 +40,7 @@ function App() {
         <CssBaseline />
         <BrowserRouter>
           <Routes>
-            <Route element={<Layout handleMemoPanelOpen={() => setIsMemoPanelOpen(true)} />}>
+            <Route element={<Layout />}>
               <Route path='example'>
                 <Route path='login' element={<LoginExample />} />
                 <Route path='nestedDialog' element={<NestedDialogExample />} />
@@ -76,7 +76,7 @@ function App() {
             </Route>
           </Routes>
         </BrowserRouter>
-        <MemoAndHistoryPanel open={isMemoPanelOpen} onClose={() => setIsMemoPanelOpen(false)} />
+        <MemoAndHistoryPanel />
         <Toast />
       </ThemeProvider>
       <ReactQueryDevtools />
