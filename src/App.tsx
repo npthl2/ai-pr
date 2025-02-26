@@ -76,7 +76,8 @@ function App() {
             </Route>
           </Routes>
         </BrowserRouter>
-        <MemoAndHistoryPanel />
+        {/* TO-DO : cypress 에서 test id 중복으로 오류 발생해서 임시 주석 처리 */}
+        {/* <MemoAndHistoryPanel /> */}
         <Toast />
       </ThemeProvider>
       <ReactQueryDevtools />
