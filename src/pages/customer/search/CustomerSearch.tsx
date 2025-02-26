@@ -22,16 +22,17 @@ import customerService from '@api/services/customerService';
 import { CommonResponse } from '@model/common/CommonResponse';
 import { grey } from '@mui/material/colors';
 import { Modal, Divider, Typography } from '@mui/material';
-import { useNavigate, useNavigation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useMenuStore from '@stores/MenuStore';
 import { MainMenu } from '@constants/CommonConstant';
 
 interface CustomerSearchProps {
+  isAuthority: boolean; // 권한 체크
   open: boolean;
   onCloseModal: () => void;
 }
 
-const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
+const CustomerSearch = ({ isAuthority, open, onCloseModal }: CustomerSearchProps) => {
   // -- 공통 에러 메시지 --
   const errorMessages = {
     name: '이름을 입력해주세요.',
@@ -66,9 +67,6 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
 
   // 버튼 활성화 여부
   const [isButtonDisabled, setButtonDisabled] = useState<boolean>(true);
-
-  // 권한자 체크 여부
-  const [isAuthority, setAuthority] = useState<boolean>(false);
   // Dialog (최대 10명 초과 시) 열림 상태
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -82,11 +80,6 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
       searchData.phoneNumber.trim() !== '';
     setButtonDisabled(!enable);
   }, [searchData]);
-
-  // -- 초기 렌더링 시 사용자 권한 체크 (추후 로직 추가) --
-  useEffect(() => {
-    console.log('TODO : 사용자 권한 체크 후 전화번호 입력 인풋 표시 여부 결정');
-  }, []);
 
   /**
    * 검색 폼 상태 업데이트 함수.
@@ -216,7 +209,7 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
         } else {
           navigate('/customer');
           setSelectedMainMenu(MainMenu.MENU);
-          onCloseModal();
+          onClose();
         }
       } else {
         setSearchResult({
@@ -233,15 +226,36 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
     }
   };
 
+  const onClose = () => {
+    setSearchData({
+      name: '',
+      birthDate: '',
+      gender: Gender.MALE,
+      phoneNumber: '',
+    });
+    // 필드 validation초기화
+    resetFieldValidation('name');
+    resetFieldValidation('birthDate');
+    resetFieldValidation('phoneNumber');
+
+    // 에러메세지 초기화
+    setSearchResult({
+      error: false,
+      message: '',
+    });
+    onCloseModal();
+  };
+
   return (
     <Modal
       open={open}
-      onClose={onCloseModal}
+      onClose={onClose}
       slotProps={{
         backdrop: {
           sx: { backgroundColor: 'transparent' },
         },
       }}
+      data-testid='customer-search-modal'
     >
       <CustomerSearchModal>
         <CustomerSearchContainer>
@@ -266,6 +280,7 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
                   },
                 }}
                 placeholder='* 전화번호 (숫자만 입력)'
+                data-testid='customer-phone'
               />
             </RowWrapper>
           )}
@@ -291,6 +306,7 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
                 },
               }}
               placeholder='* 이름'
+              data-testid='customer-name'
             />
             <TextField
               state={validation.birthDate.state}
@@ -307,6 +323,7 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
                 },
               }}
               placeholder='* 생년월일 (yymmdd)'
+              data-testid='customer-birthdate'
             />
             {/* 라디오 버튼 그룹 */}
             <RadioGroupContainer>
@@ -359,6 +376,7 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
             iconSize={12}
             onClick={handleSearch}
             disabled={isButtonDisabled}
+            data-testid='customer-search-button'
           >
             고객조회
           </CustomerSearchButton>

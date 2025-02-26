@@ -70,7 +70,11 @@ const Layout = () => {
                   placement='left'
                   open={true}
                 >
-                  <IconButton size='small' onClick={handleSearch}>
+                  <IconButton
+                    size='small'
+                    onClick={handleSearch}
+                    data-testid='customer-search-modal-button'
+                  >
                     <SearchIcon color='primary' />
                   </IconButton>
                 </Tooltip>
@@ -91,7 +95,7 @@ const Layout = () => {
         </Header>
         <Outlet />
 
-        <CustomerSearch open={open} onCloseModal={() => setOpen(false)} />
+        <CustomerSearch isAuthority={false} open={open} onCloseModal={() => setOpen(false)} />
       </LayoutContainer>
     </ThemeProvider>
   );
