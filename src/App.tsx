@@ -27,7 +27,6 @@ import ApiTestExample from './pages/examples/apiTest/ApiTestExample';
 import Board from '@pages/test/board/Board';
 import RegistBoard from '@pages/test/board/component/RegistBoard';
 import TooltipExample from '@pages/examples/tooltip/TooltipExample';
-import ContentsLayout from '@layout/ContentsLayout';
 
 function App() {
   return (

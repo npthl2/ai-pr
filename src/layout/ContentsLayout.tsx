@@ -70,7 +70,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
     }
   };
 
-  if (!customerTabs) return null;
+  if (!customerTabs?.tabs?.length) return null;
 
   const currentTab = customerTabs.tabs.find((tab) => tab.id === customerTabs.activeTab);
   const isBookmarked = menuItems.bookmarks.some((item) => item.name === currentTab?.label);

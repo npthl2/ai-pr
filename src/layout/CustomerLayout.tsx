@@ -5,6 +5,8 @@ import ContentsLayout from './ContentsLayout';
 const CustomerLayout = () => {
   const { customers, selectedCustomerId } = useCustomerStore();
 
+  if (!selectedCustomerId) return null;
+
   return (
     <>
       {customers.map((customer) => (
