@@ -1,24 +1,41 @@
 import { useMutation } from '@tanstack/react-query';
 import authService from '@api/services/authService';
-import { LoginRequestParams } from '@model/Auth';
+import { LoginRequestParams, LoginResponse } from '@model/Auth';
 import { AxiosError } from 'axios';
 import useAuthStore from '@stores/AuthStore';
+import useMemberStore from '@stores/MemberStore';
 import { useNavigate } from 'react-router-dom';
+import { CommonResponse } from '@model/common/CommonResponse';
+
+type LoginErrorResponse = {
+  errorMessage: string;
+};
 
 export const useLoginMutation = () => {
-  const login = useAuthStore((state) => state.login);
+  const { setAccessToken } = useAuthStore();
+  const { setMemberInfo } = useMemberStore();
   const navigate = useNavigate();
 
   return useMutation({
-    mutationFn: (data: LoginRequestParams) => authService.login(data),
-    onSuccess: (response) => {
-      if (response.successOrNot === 'Y' && response.data) {
-        login();
+    mutationFn: async (data: LoginRequestParams) => {
+      const response = await authService.login(data);
+      if (response.successOrNot !== 'Y') {
+        const errorData = response.data as unknown as LoginErrorResponse;
+        const errorMessage = errorData?.errorMessage || '아이디 또는 비밀번호가 일치하지 않습니다.';
+        throw new Error(errorMessage);
+      }
+      return response;
+    },
+    onSuccess: (response: CommonResponse<LoginResponse>) => {
+      if (response.data && typeof response.data !== 'string') {
+        const { accessToken, memberInfo } = response.data;
+        setAccessToken(accessToken, memberInfo);
+        setMemberInfo(memberInfo);
         navigate('/', { replace: true });
       }
     },
-    onError: (error: AxiosError) => {
-      console.error('Login failed:', error);
+    onError: (_error: AxiosError) => {
+      throw new Error('아이디 또는 비밀번호가 일치하지 않습니다.');
     },
   });
 };
