@@ -1,7 +1,14 @@
 import { useState } from 'react';
 import { useLoginMutation } from '@api/queries/auth/useLoginMutation';
 import { LoginRequestParams } from '@model/Auth';
-import { LoginContainer } from './Login.styled';
+import { 
+    LoginContainer, 
+    LogoText,
+    FormContainer,
+    TitleContainer,
+    Title,
+    Subtitle
+} from './Login.styled';
 import LoginForm from './components/LoginForm';
 import { AxiosError } from 'axios';
 import { LoginError } from './Login.model';
@@ -40,41 +47,48 @@ const Login = () => {
 
     // 로그인 버튼 클릭 시 실행되는 핸들러
     const handleLogin = async () => {
-        // 값이 비어 있는 경우 일반 오류 메시지 설정
-        if (!formData.loginId || !formData.password) {
+        // 입력값 검증
+        if (!formData.loginId && !formData.password) {
             setErrors({ general: 'ID와 Password를 모두 입력해주세요.' });
+            return;
+        }
+        if (!formData.loginId) {
+            setErrors({ loginId: 'ID를 입력해주세요.' });
+            return;
+        }
+        if (!formData.password) {
+            setErrors({ password: 'Password를 입력해주세요.' });
             return;
         }
 
         try {
             await loginMutation.mutateAsync(formData);
-            // 로그인 성공 후의 처리는 useLoginMutation 내부에서 처리됨
-            // - accessToken 저장
-            // - memberInfo 저장
-            // - 페이지 이동
         } catch (err) {
-            if (err instanceof AxiosError) {
-                setErrors({
-                    general: err.response?.data?.message || err.message || '로그인에 실패했습니다.',
-                });
+            if (err instanceof Error) {
+                setErrors({ general: err.message });
             } else {
-                setErrors({
-                    general: '로그인에 실패했습니다.',
-                });
+                setErrors({ general: '시스템 오류가 발생했습니다. 잠시 후 다시 시도해주세요.' });
             }
         }
     };
 
     return (
         <LoginContainer>
-            <LoginForm
-                formData={formData}
-                isLoading={loginMutation.isPending}
-                errors={errors}
-                onSubmit={handleLogin}
-                onChange={handleChange}
-                onBlur={handleBlur}
-            />
+            <LogoText>R&R</LogoText>
+            <FormContainer>
+                <TitleContainer>
+                    <Title>Welcome to R&R!</Title>
+                    <Subtitle>Log in</Subtitle>
+                </TitleContainer>
+                <LoginForm
+                    formData={formData}
+                    isLoading={loginMutation.isPending}
+                    errors={errors}
+                    onSubmit={handleLogin}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                />
+            </FormContainer>
         </LoginContainer>
     );
 };

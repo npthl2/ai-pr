@@ -1,1 +1,5 @@
-export type LoginError = Partial<Record<'loginId' | 'password' | 'general', string>>;
+export interface LoginError {
+    loginId?: string;
+    password?: string;
+    general?: string;
+}
