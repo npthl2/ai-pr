@@ -14,13 +14,13 @@ export interface UnmaskingResponseDto {
   unmaskedItem: string;
 }
 
-export interface Unmasking {
-  itemTypeCode: string;
+export interface Unmasking<T> {
+  param: T;
   encryptedItem: string;
 }
 
 export interface UnmaskingProps {
   onClose: () => void;
   onUnmask: (unmaskedItem: string) => void;
-  requestData: Unmasking;
+  requestData: Unmasking<any>;
 }
