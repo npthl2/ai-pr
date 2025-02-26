@@ -1,20 +1,40 @@
 import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
+import { MemberInfo } from '@model/Auth';
+import { persist } from 'zustand/middleware';
 
 interface AuthState {
-  isAuthenticated: boolean;
-  login: () => void;
-  logout: () => void;
+    isAuthenticated: boolean;
+    accessToken: string | null;
+    memberInfo: MemberInfo | null;
+    setAccessToken: (token: string) => void;
+    setAuth: (memberInfo: MemberInfo) => void;
+    logout: () => void;
 }
 
-const useAuthStore = create<AuthState>((set) => ({
-  isAuthenticated: false,
-  login: () => set({ isAuthenticated: true }),
-  logout: () => set({ isAuthenticated: false }),
-}));
+const useAuthStore = create<AuthState>()(
+    persist(
+        (set) => ({
+            isAuthenticated: false,
+            accessToken: null,
+            memberInfo: null,
+            setAccessToken: (token: string) => set({ accessToken: token, isAuthenticated: true }),
+            setAuth: (memberInfo: MemberInfo) => set({ memberInfo }),
+            logout: () => set({ isAuthenticated: false, accessToken: null, memberInfo: null }),
+        }),
+        {
+            name: 'auth-storage',
+            partialize: (state) => ({
+                accessToken: state.accessToken,
+                memberInfo: state.memberInfo,
+                isAuthenticated: state.isAuthenticated,
+            }),
+        }
+    )
+);
 
 if (import.meta.env.DEV) {
-  mountStoreDevtool('Auth Store', useAuthStore); // 개발도구에 노출될 적절한 문자열을 지정해 주세요.
+    mountStoreDevtool('Auth Store', useAuthStore);
 }
 
 export default useAuthStore;

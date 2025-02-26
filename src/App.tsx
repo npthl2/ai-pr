@@ -24,7 +24,7 @@ import TabsExample from '@pages/examples/tabs/TabsExample';
 import ApiTestExample from './pages/examples/apiTest/ApiTestExample';
 import Board from '@pages/test/board/Board';
 import RegistBoard from '@pages/test/board/component/RegistBoard';
-import Login from '@pages/login/Login';
+import Login from '@pages/auth/Login';
 
 function App() {
   return (

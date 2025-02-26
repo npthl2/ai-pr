@@ -1,17 +1,17 @@
 import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
-import { User } from '@model/Auth'; // 예: { memberId, memberGroup, classOfPosition } 등
+import { MemberInfo } from '@model/Auth';
 
 interface MemberState {
-  user: User | null;
-  setUser: (user: User) => void;
-  clearUser: () => void;
+  memberInfo: MemberInfo | null;
+  setMemberInfo: (info: MemberInfo) => void;
+  clearMemberInfo: () => void;
 }
 
 const useMemberStore = create<MemberState>((set) => ({
-  user: null,
-  setUser: (user: User) => set({ user }),
-  clearUser: () => set({ user: null }),
+  memberInfo: null,
+  setMemberInfo: (info: MemberInfo) => set({ memberInfo: info }),
+  clearMemberInfo: () => set({ memberInfo: null })
 }));
 
 if (import.meta.env.DEV) {
