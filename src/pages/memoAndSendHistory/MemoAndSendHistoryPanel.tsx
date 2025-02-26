@@ -3,13 +3,13 @@ import { Container, Typography, Box } from '@mui/material';
 import MemoHistory from './components/MemoHistory';
 import DoubleArrow from '@mui/icons-material/DoubleArrow';
 import { PanelCloseButton, PanelBox, PanelDrawer } from './MemoAndSendHistoryPanel.styled';
+import { useHistoryPanelStore } from '@stores/HistoryPanelStore';
 
-const MemoAndHistoryPanel: React.FC<{ open: boolean; onClose: () => void }> = ({
-  open,
-  onClose,
-}) => {
+const MemoAndHistoryPanel: React.FC = () => {
+  const { open, toggleOpen } = useHistoryPanelStore();
+
   return (
-    <PanelDrawer data-testid='memoPanel' anchor='right' open={open} onClose={onClose}>
+    <PanelDrawer data-testid='memoPanel' anchor='right' open={open} onClose={toggleOpen}>
       <Box
         data-testid='memoOverlay'
         sx={{
@@ -20,7 +20,7 @@ const MemoAndHistoryPanel: React.FC<{ open: boolean; onClose: () => void }> = ({
           height: '100%',
           zIndex: -1,
         }}
-        onClick={onClose}
+        onClick={toggleOpen}
       />
       <Container
         sx={{
@@ -36,7 +36,7 @@ const MemoAndHistoryPanel: React.FC<{ open: boolean; onClose: () => void }> = ({
           color='primary'
           size='small'
           iconComponent={<DoubleArrow />}
-          onClick={onClose}
+          onClick={toggleOpen}
         />
         <PanelBox>
           <Typography variant='h2'>메모 및 발송이력</Typography>

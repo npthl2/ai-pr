@@ -1,15 +1,16 @@
 import { Typography } from '@mui/material';
 import { Navigation, UserSection } from './GNBCustomer.styled';
 import Button from '@components/Button';
+import { useHistoryPanelStore } from '@stores/HistoryPanelStore';
 interface GNBCustomerProps {
   name: string; // 이름
   id: string; // 주민번호
   gender: string; // 성별
   age: number; // 나이
-  handleMemoPanelOpen: () => void;
 }
 
-const GNBCustomer = ({ name, id, gender, age, handleMemoPanelOpen }: GNBCustomerProps) => {
+const GNBCustomer = ({ name, id, gender, age }: GNBCustomerProps) => {
+  const toggleOpen = useHistoryPanelStore((state) => state.toggleOpen);
   return (
     <>
       <UserSection>
@@ -34,7 +35,7 @@ const GNBCustomer = ({ name, id, gender, age, handleMemoPanelOpen }: GNBCustomer
           variant='outlined'
           size='small'
           color='grey'
-          onClick={handleMemoPanelOpen}
+          onClick={toggleOpen}
         >
           메모 및 발송이력
         </Button>

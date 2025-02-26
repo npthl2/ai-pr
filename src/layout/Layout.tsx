@@ -12,11 +12,7 @@ import useCustomerStore from '@stores/CustomerStore';
 import useAuthStore from '@stores/AuthStore';
 import GNBCustomer from './component/GNBCustomer';
 
-interface LayoutProps {
-  handleMemoPanelOpen: () => void;
-}
-
-const Layout = ({ handleMemoPanelOpen }: LayoutProps) => {
+const Layout = () => {
   const mode = useThemeStore((state) => state.mode);
   const theme = useMemo(() => getTheme(mode), [mode]);
   const navigate = useNavigate();
@@ -66,13 +62,7 @@ const Layout = ({ handleMemoPanelOpen }: LayoutProps) => {
           {isAuthenticated && (
             <>
               {/* TODO : 고객 정보 추가 - 검색 정보가 있다면 */}
-              <GNBCustomer
-                name='홍길*'
-                id='020314-3******'
-                gender='남'
-                age={21}
-                handleMemoPanelOpen={handleMemoPanelOpen}
-              />
+              <GNBCustomer name='홍길*' id='020314-3******' gender='남' age={21} />
 
               <HeaderRight>
                 <Tooltip

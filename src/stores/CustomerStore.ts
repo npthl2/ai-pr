@@ -45,7 +45,7 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
       }
       return {
         customers: newCustomers,
-        selectedCustomer: customer.id,
+        selectedCustomerId: customer.id,
         customerTabs: {
           ...state.customerTabs,
           [customer.id]: { tabs: [...DEFAULT_TABS], activeTab: 0 },
@@ -58,7 +58,7 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
       const { [id]: removed, ...remainingTabs } = state.customerTabs;
       return {
         customers: state.customers.filter((c) => c.id !== id),
-        selectedCustomer: state.selectedCustomerId === id ? null : state.selectedCustomer,
+        selectedCustomerId: state.selectedCustomerId === id ? null : state.selectedCustomerId,
         customerTabs: remainingTabs,
       };
     }),

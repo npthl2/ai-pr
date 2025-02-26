@@ -15,7 +15,7 @@ export const Toast = () => {
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       open={open}
       onClose={onClose}
-      autoHideDuration={10000}
+      autoHideDuration={4000}
       message={message}
     />
   );
