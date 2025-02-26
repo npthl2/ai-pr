@@ -6,6 +6,9 @@ import Layout from '@layout/Layout';
 import ProtectedRoute from '@router/ProtectedRoute';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { getTheme } from '@theme/theme';
+import MainLayout from '@layout/MainLayout';
+import CustomerLayout from '@layout/CustomerLayout';
+import Home from '@pages/home/Home';
 
 import NestedDialogExample from '@pages/examples/nestedDialog/DialogExample';
 import SelectExample from '@pages/examples/select/SelectExample';
@@ -24,9 +27,7 @@ import ApiTestExample from './pages/examples/apiTest/ApiTestExample';
 import Board from '@pages/test/board/Board';
 import RegistBoard from '@pages/test/board/component/RegistBoard';
 import TooltipExample from '@pages/examples/tooltip/TooltipExample';
-import MainLayout from '@layout/MainLayout';
 import ContentsLayout from '@layout/ContentsLayout';
-import Home from '@pages/home/Home';
 
 function App() {
   return (
@@ -60,7 +61,7 @@ function App() {
               <Route element={<ProtectedRoute />}>
                 <Route element={<MainLayout />}>
                   <Route path='/' element={<Home />} />
-                  <Route path='/customer' element={<ContentsLayout />} />
+                  <Route path='/customer' element={<CustomerLayout />} />
                 </Route>
               </Route>
             </Route>
