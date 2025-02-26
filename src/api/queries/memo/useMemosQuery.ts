@@ -8,9 +8,9 @@ export const useMemosQuery = (customerId: string, page: number) => {
     queryFn: () => memoService.getMemos(customerId, page),
     select: (response) => {
       if (isMemosResponse(response.data)) {
-        return response.data;
+        return { memos: response.data.memos, isLast: response.data.isLast };
       }
-      return [];
+      return { memos: [], isLast: null };
     },
   });
 };

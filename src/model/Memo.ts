@@ -20,7 +20,12 @@ export interface Memo {
   firstCreateDatetime: string;
 }
 
-export interface GetMemosResponse extends CommonResponse<Memo[]> {}
+export interface MemoResponse {
+  memos: Memo[];
+  isLast: boolean;
+}
+
+export interface GetMemosResponse extends CommonResponse<MemoResponse> {}
 
 export function isMemo(value: unknown): value is Memo {
   return (
@@ -32,11 +37,12 @@ export function isMemo(value: unknown): value is Memo {
   );
 }
 
-export function isMemosResponse(value: unknown): value is Memo[] {
+export function isMemosResponse(value: unknown): value is MemoResponse {
   return (
     typeof value === 'object' &&
     value !== null &&
-    Array.isArray(value as Memo[]) &&
-    (value as Memo[]).every((item) => isMemo(item))
+    ['memos', 'isLast'].every((key) => key in value) &&
+    Array.isArray((value as MemoResponse).memos) &&
+    (value as MemoResponse).memos.every((item) => isMemo(item))
   );
 }

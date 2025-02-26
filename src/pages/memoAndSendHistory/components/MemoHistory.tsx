@@ -30,7 +30,8 @@ const MemoHistory: React.FC = () => {
   const memoEditorRef = useRef<HTMLTextAreaElement>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  const { data: memos, refetch } = useMemosQuery(activeCustomerId, page);
+  const { data, refetch } = useMemosQuery(activeCustomerId, page);
+  const { memos, isLast } = data || {};
   const [totalMemos, setTotalMemos] = useState<Memo[]>([]);
   const saveMemoMutation = useMemosMutation();
 
@@ -49,13 +50,12 @@ const MemoHistory: React.FC = () => {
     if (memoEditorRef.current) {
       memoEditorRef.current.focus();
     }
-    // setTotalMemos(memos);
   }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !loading) {
+        if (entries[0].isIntersecting && !loading && !isLast) {
           setLoading(true);
           setPage((prevPage) => prevPage + 1);
         }
@@ -96,8 +96,9 @@ const MemoHistory: React.FC = () => {
         return;
       }
       setMemoContent('');
-      setPage(1);
       openToast('저장되었습니다.');
+
+      setPage(1);
       queryClient.invalidateQueries({ queryKey: ['memos', activeCustomerId] });
       refetch();
     } catch (error) {
