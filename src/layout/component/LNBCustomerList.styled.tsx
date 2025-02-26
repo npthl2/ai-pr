@@ -10,6 +10,7 @@ export const LNBCustomerListContainer = styled(Box)({
 export const StyledTabList = styled(TabList)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
+  //   width: '76px',
   '& .MuiTabs-indicator': {
     display: 'none',
   },

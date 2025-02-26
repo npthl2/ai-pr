@@ -2,7 +2,6 @@ import { Box, Typography, Divider, Slide, useTheme } from '@mui/material';
 import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-
 import {
   LNBMenuContainer,
   MainMenu,
@@ -22,6 +21,7 @@ import LNBCustomerList from '@layout/component/LNBCustomerList';
 import { useBookmarksQuery } from '@api/queries/bookmark/useBookmarksQuery';
 import useMenuStore from '@stores/MenuStore';
 import { useBookmark } from '@hooks/useBookmark';
+import { SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
 
 interface LNBMenuProps {
   menus: Array<{
@@ -51,7 +51,15 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
 
   const { menuItems, setMenuItems } = useMenuStore();
 
-  const { customers, selectedCustomer, selectCustomer, removeCustomer } = useCustomerStore();
+  const {
+    customers,
+    selectedCustomerId,
+    selectCustomer,
+    removeCustomer,
+    customerTabs,
+    setCustomerTabs,
+    setActiveTab,
+  } = useCustomerStore();
   const { handleBookmarkClick } = useBookmark();
   const { data: bookmarks } = useBookmarksQuery();
 
@@ -80,6 +88,30 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
 
   const handleSubMenuItemClick = (itemId: string) => {
     setSelectedSubItem(itemId);
+
+    if (!selectedCustomerId) return;
+
+    const targetMenu = SUBSCRIPTION_MENUS.find((menu) => menu.id === itemId);
+    if (!targetMenu) return;
+
+    const currentTabs = customerTabs[selectedCustomerId]?.tabs;
+    if (!currentTabs) return;
+
+    const existingTab = currentTabs.find((tab) => tab.label === targetMenu.name);
+    if (existingTab) {
+      setActiveTab(selectedCustomerId, existingTab.id);
+      return;
+    }
+
+    const newTab = {
+      id: currentTabs.length,
+      label: targetMenu.name,
+      closeable: true,
+    };
+
+    setCustomerTabs(selectedCustomerId, [...currentTabs, newTab]);
+    setActiveTab(selectedCustomerId, newTab.id);
+    navigate('/');
   };
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: string) => {
@@ -108,7 +140,7 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
           <Divider sx={{ my: 1, width: '100%' }} />
 
           <LNBCustomerList
-            value={selectedCustomer || ''}
+            value={selectedCustomerId || ''}
             onChange={handleTabChange}
             customers={customers}
             onRemove={handleRemoveCustomer}

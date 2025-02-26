@@ -28,42 +28,42 @@ import { useBookmark } from '@hooks/useBookmark';
 
 const ContentsLayout = () => {
   const theme = useTheme();
-  const selectedCustomer = useCustomerStore((state) => state.selectedCustomer);
+  const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId);
   const customerTabs = useCustomerStore((state) =>
-    selectedCustomer ? state.customerTabs[selectedCustomer] : null,
+    selectedCustomerId ? state.customerTabs[selectedCustomerId] : null,
   );
   const { setActiveTab, closeCustomerTab, closeAllCustomerTabs } = useCustomerStore();
   const { menuItems } = useMenuStore();
   const { handleBookmarkClick } = useBookmark();
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
-    if (selectedCustomer) {
-      setActiveTab(selectedCustomer, newValue);
+    if (selectedCustomerId) {
+      setActiveTab(selectedCustomerId, newValue);
     }
   };
 
   const handleCloseTab = (event: React.MouseEvent, tabId: number) => {
     event.stopPropagation();
-    if (selectedCustomer) {
-      closeCustomerTab(selectedCustomer, tabId);
+    if (selectedCustomerId) {
+      closeCustomerTab(selectedCustomerId, tabId);
     }
   };
 
   const handleCloseAll = () => {
-    if (selectedCustomer) {
-      closeAllCustomerTabs(selectedCustomer);
+    if (selectedCustomerId) {
+      closeAllCustomerTabs(selectedCustomerId);
     }
   };
 
   const handleMoveLeft = () => {
-    if (selectedCustomer && customerTabs) {
-      setActiveTab(selectedCustomer, Math.max(0, customerTabs.activeTab - 1));
+    if (selectedCustomerId && customerTabs) {
+      setActiveTab(selectedCustomerId, Math.max(0, customerTabs.activeTab - 1));
     }
   };
 
   const handleMoveRight = () => {
-    if (selectedCustomer && customerTabs && customerTabs.tabs.length > 0) {
+    if (selectedCustomerId && customerTabs && customerTabs.tabs.length > 0) {
       setActiveTab(
-        selectedCustomer,
+        selectedCustomerId,
         Math.min(customerTabs.tabs.length - 1, customerTabs.activeTab + 1),
       );
     }
