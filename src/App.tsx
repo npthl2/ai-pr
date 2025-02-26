@@ -24,6 +24,7 @@ import TabsExample from '@pages/examples/tabs/TabsExample';
 import ApiTestExample from './pages/examples/apiTest/ApiTestExample';
 import Board from '@pages/test/board/Board';
 import RegistBoard from '@pages/test/board/component/RegistBoard';
+import Login from '@pages/login/Login';
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
                 <Route path='board' element={<Board />} />
                 <Route path='board/regist' element={<RegistBoard />} />
               </Route>
+              <Route path='login' element={<Login />} />
               <Route element={<ProtectedRoute />}>
                 <Route path='/' element={<BoardExample />} />
               </Route>
