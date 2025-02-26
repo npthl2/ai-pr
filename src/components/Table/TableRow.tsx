@@ -24,7 +24,7 @@ const StyledTableHeadRow = styled(MuiTableRow, {
   '& .MuiTypography-root': {
     color: theme.palette.text.secondary,
     fontSize: 14,
-    weight: 600,
+    fontWeight: 600,
   },
 }));
 
@@ -51,7 +51,7 @@ const StyledTableCellRow = styled(MuiTableRow, {
   '& .MuiTypography-root': {
     color: theme.palette.text.primary,
     fontSize: 14,
-    weight: 400,
+    fontWeight: 400,
   },
 }));
 
