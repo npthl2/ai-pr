@@ -141,14 +141,29 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
           <Breadcrumb activeTabLabel={['Home', currentTab?.label || '']} />
         </ContentHeader>
         <ContentsBG>
-          <Box sx={{ display: customerTabs.activeTab === 0 ? 'block' : 'none', height: '100%' }}>
+          <Box
+            sx={{
+              display: customerTabs.tabs[customerTabs.activeTab].id === 0 ? 'block' : 'none',
+              height: '100%',
+            }}
+          >
             <CustomerView customerId={customerId} />
           </Box>
-          <Box sx={{ display: customerTabs.activeTab === 1 ? 'block' : 'none', height: '100%' }}>
-            <NewSubscription />
-          </Box>
-          <Box sx={{ display: customerTabs.activeTab === 2 ? 'block' : 'none', height: '100%' }}>
+          <Box
+            sx={{
+              display: customerTabs.tabs[customerTabs.activeTab].id === 1 ? 'block' : 'none',
+              height: '100%',
+            }}
+          >
             <ServiceModification />
+          </Box>
+          <Box
+            sx={{
+              display: customerTabs.tabs[customerTabs.activeTab].id === 2 ? 'block' : 'none',
+              height: '100%',
+            }}
+          >
+            <NewSubscription />
           </Box>
         </ContentsBG>
       </TabContext>
