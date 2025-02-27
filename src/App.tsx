@@ -22,6 +22,7 @@ import TextFieldExample from '@pages/examples/textField/TextFieldExample';
 import AlertExample from '@pages/examples/alert/AlertExample';
 import DialogExample from '@pages/examples/dialog/DialogExample';
 import TabsExample from '@pages/examples/tabs/TabsExample';
+import TableExample from '@pages/examples/table/TableExample';
 import ApiTestExample from './pages/examples/apiTest/ApiTestExample';
 import Board from '@pages/test/board/Board';
 import RegistBoard from '@pages/test/board/component/RegistBoard';
@@ -50,6 +51,7 @@ function App() {
                 <Route path='alert' element={<AlertExample />} />
                 <Route path='dialog' element={<DialogExample />} />
                 <Route path='tabs' element={<TabsExample />} />
+                <Route path='table' element={<TableExample />} />
                 <Route path='api-test' element={<ApiTestExample />} />
               </Route>
               <Route path='test'>
