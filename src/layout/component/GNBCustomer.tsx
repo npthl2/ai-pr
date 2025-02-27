@@ -6,7 +6,6 @@ import useMemberStore from '@stores/MemberStore';
 import useCustomerStore from '@stores/CustomerStore';
 import { AUTH_UNMASKING } from '@constants/CommonConstant';
 import Unmasking from '@pages/unmasking/Unmasking';
-import { UnmaskingResponseDto } from '@model/Unmasking';
 import unmaskingService from '@api/services/unmaskingService';
 
 interface GNBCustomerProps {
