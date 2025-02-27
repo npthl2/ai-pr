@@ -16,9 +16,11 @@ const MemoAndHistoryPanel: React.FC = () => {
           position: 'fixed',
           top: 0,
           left: 0,
-          width: '100%',
+          width: {
+            sm: 'calc(100% - 700px)',
+            lg: 'calc(100% - 900px)',
+          },
           height: '100%',
-          zIndex: -1,
         }}
         onClick={toggleOpen}
       />
