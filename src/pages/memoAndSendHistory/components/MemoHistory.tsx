@@ -36,6 +36,7 @@ const MemoHistory: React.FC = () => {
   const saveMemoMutation = useMemosMutation();
 
   useEffect(() => {
+    // 이전 memo와 스크롤 후 memos 데이터 합치기
     if (memos) {
       if (page === 1) {
         setTotalMemos(memos);
@@ -53,6 +54,7 @@ const MemoHistory: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // 스크롤 후 데이터 로드 시 데이터 로드 완료 확인을 위한 인터섹션 옵저버
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !loading && isLast === false) {
@@ -72,7 +74,7 @@ const MemoHistory: React.FC = () => {
         observer.unobserve(loadMoreRef.current);
       }
     };
-  }, [loading]);
+  }, [loading, isLast]);
 
   useEffect(() => {
     if (memos) {
@@ -133,7 +135,7 @@ const MemoHistory: React.FC = () => {
             <TableBody style={{ height: memos && memos.length === 0 ? '180px' : 'auto' }}>
               {totalMemos && totalMemos.length > 0 ? (
                 totalMemos.map((memo, index) => (
-                  <TableRow key={memo.memoId + index} disableEffect={true}>
+                  <TableRow key={index} disableEffect={true}>
                     <TableCell sx={{ minWidth: '180px' }}>
                       <Typography>{memo.firstCreateDatetime}</Typography>
                     </TableCell>
@@ -154,6 +156,7 @@ const MemoHistory: React.FC = () => {
                   </TableCell>
                 </TableRow>
               )}
+              {/* 스크롤 후 데이터 로드 시 데이터 로드 완료 확인을 위한 더미 div */}
               <div ref={loadMoreRef} style={{ height: '0px' }} />
             </TableBody>
           </Table>
