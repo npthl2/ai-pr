@@ -69,14 +69,18 @@ const Dialog = ({
   return (
     <StyledDialog open={open} size={size} onClose={onClose}>
       <StyledDialogTitle>
-        <Typography variant='h6' sx={(theme) => ({ color: theme.palette.text.primary })}>
+        <Typography
+          variant='h6'
+          sx={(theme) => ({ color: theme.palette.text.primary })}
+          data-testid='component-dialog-title'
+        >
           {title}
         </Typography>
         <StyledIconButton onClick={onClose}>
           <CloseIcon />
         </StyledIconButton>
       </StyledDialogTitle>
-      <StyledDialogContent>{content}</StyledDialogContent>
+      <StyledDialogContent data-testid='component-dialog-content'>{content}</StyledDialogContent>
       <StyledDialogActions>
         {closeLabel && (
           <StyledButton

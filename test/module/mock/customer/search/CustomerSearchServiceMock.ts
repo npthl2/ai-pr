@@ -14,7 +14,7 @@ export class LoginServiceMock {
             memberName: '김콜센터',
             classOfPosition: '대리',
             memberGroup: '콜센터',
-            authorities: ['A-0001', 'A-0002'],
+            authorities: ['ROLE_SEARCH_TEL_NO', 'ROLE_UNMASKING'],
           },
         },
       },
@@ -259,6 +259,26 @@ export class CustomerSearchServiceMock {
           encryptedCustomerName: '조윤성',
           rrno: '001225-3470123',
           encryptedRrno: '001225-3470123',
+          gender: 'M',
+          age: 49,
+          contractId: null,
+        },
+      },
+    });
+  }
+
+  successFindCustomer11() {
+    cy.intercept('GET', '**/v1/customers?**', {
+      statusCode: 200,
+      body: {
+        successOrNot: 'Y',
+        statusCode: 'SUCCESS',
+        data: {
+          customerId: '100000000011',
+          customerName: '배수진',
+          encryptedCustomerName: '배수진',
+          rrno: '951013-2876543',
+          encryptedRrno: '951013-2876543',
           gender: 'M',
           age: 49,
           contractId: null,

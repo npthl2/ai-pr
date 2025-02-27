@@ -29,6 +29,10 @@ class CustomerSearchPage {
     return cy.get('[data-testid="customer-search-modal"]');
   }
 
+  getAlertDialogTitle() {
+    return cy.get('[data-testid="component-dialog-title"]');
+  }
+
   getGNBCustomerArea() {
     return cy.get('[data-testid="gnb-customer-area"]');
   }
@@ -47,6 +51,14 @@ class CustomerSearchPage {
 
   getGNBCustomerGender() {
     return cy.get('[data-testid="gnb-customer-gender"]');
+  }
+
+  getGNBUnmaskingButton() {
+    return cy.get('[data-testid="gnb-unmasking-button"]');
+  }
+
+  getLogoutButton() {
+    return cy.get('[data-testid="logout-button"]');
   }
 
   getLNBCustomerList() {

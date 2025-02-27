@@ -71,7 +71,13 @@ const GNBCustomer = ({ name, rrno, gender, age }: GNBCustomerProps) => {
 
       <Navigation>
         {memberInfo?.authorities.includes(ROLE_UNMASKING) && (
-          <Button variant='outlined' size='small' color='grey' onClick={openUnmasking}>
+          <Button
+            variant='outlined'
+            size='small'
+            color='grey'
+            onClick={openUnmasking}
+            data-testid='gnb-unmasking-button'
+          >
             마스킹 해제
           </Button>
         )}

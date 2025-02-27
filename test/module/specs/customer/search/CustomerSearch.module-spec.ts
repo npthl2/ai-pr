@@ -78,36 +78,111 @@ describe('KAN-18 고객검색 Modal - 일반유저', () => {
     customerSearch.getLNBCustomerRemoveButton('100000000001').should('be.visible');
   });
 
-  it('LNB 고객 리스트를를 클릭하면 GNB의 고객 정보 변경', () => {
+  it('LNB 고객 리스트를 클릭하면 GNB의 고객 정보 변경', () => {
     customerSearch.getOpenModalButton().click();
     customerSearch.typeName('이영희');
     customerSearch.typeBirthDate('781012');
     customerSearchServiceMock.successFindCustomer02();
+    customerSearch.clickSearch();
     customerSearch.getLNBCustomer('100000000002').click();
-    customerSearch.getGNBCustomerName().should('have.value', '이영*');
+    customerSearch.getGNBCustomerName().should('have.text', '이영희');
   });
 
-  // it('탭을 클릭하면 onChange가 호출되어야 한다', () => {
-  //   cy.get('[data-testid="customer-tab-lee"]').click();
-  //   cy.get('@onChange').should('have.been.called');
-  // });
+  it('LNB 고객 리스트에 10명 있으면 경고 모달이 표시되어야 한다', () => {
+    customerSearch.getOpenModalButton().click();
+    customerSearch.typeName('이영희');
+    customerSearch.typeBirthDate('781012');
+    customerSearchServiceMock.successFindCustomer02();
+    customerSearch.clickSearch();
 
-  // it('삭제 버튼을 클릭하면 onRemove가 호출된다', () => {
-  //   cy.get('[data-testid="customer-tab-kim"]').trigger('mouseenter');
-  //   cy.get('[data-testid="remove-btn-kim"]').click();
-  //   cy.get('@onRemove').should('have.been.calledWith', 'kim');
-  // });
+    customerSearch.getOpenModalButton().click();
+    customerSearch.typeName('박지훈');
+    customerSearch.typeBirthDate('891203');
+    customerSearchServiceMock.successFindCustomer03();
+    customerSearch.clickSearch();
 
-  // it('권한자일 경우 전화번호 조회 조건이 추가로 보여야 한다', () => {
-  //   // 권한자 모드 토글하는 버튼을 클릭하는 등, 권한자 상태를 활성화시킨 후 검사
-  //   cy.get('[data-testid="toggle-authority"]').click();
-  //   customerSearch.getPhoneNumberInput().should('be.visible');
-  // });
+    customerSearch.getOpenModalButton().click();
+    customerSearch.typeName('최민서');
+    customerSearch.typeBirthDate('991105');
+    customerSearchServiceMock.successFindCustomer04();
+    customerSearch.clickSearch();
 
-  // it('적절한 전화번호를 입력했을 때 고객 조회 버튼이 활성화된다', () => {
-  //   // 권한자 모드를 활성화해서 전화번호 입력 필드가 나타난 상황
-  //   cy.get('[data-testid="toggle-authority"]').click();
-  //   customerSearch.typePhoneNumber('01012345678');
-  //   customerSearch.getSearchButton().should('not.be.disabled');
-  // });
+    customerSearch.getOpenModalButton().click();
+    customerSearch.typeName('한동욱');
+    customerSearch.typeBirthDate('851230');
+    customerSearchServiceMock.successFindCustomer05();
+    customerSearch.clickSearch();
+
+    customerSearch.getOpenModalButton().click();
+    customerSearch.typeName('정다은');
+    customerSearch.typeBirthDate('950315');
+    customerSearchServiceMock.successFindCustomer06();
+    customerSearch.clickSearch();
+
+    customerSearch.getOpenModalButton().click();
+    customerSearch.typeName('오지훈');
+    customerSearch.typeBirthDate('701122');
+    customerSearchServiceMock.successFindCustomer07();
+    customerSearch.clickSearch();
+
+    customerSearch.getOpenModalButton().click();
+    customerSearch.typeName('서준혁');
+    customerSearch.typeBirthDate('001001');
+    customerSearchServiceMock.successFindCustomer08();
+    customerSearch.clickSearch();
+
+    customerSearch.getOpenModalButton().click();
+    customerSearch.typeName('강예진');
+    customerSearch.typeBirthDate('891105');
+    customerSearchServiceMock.successFindCustomer09();
+    customerSearch.clickSearch();
+
+    customerSearch.getOpenModalButton().click();
+    customerSearch.typeName('조윤성');
+    customerSearch.typeBirthDate('001225');
+    customerSearchServiceMock.successFindCustomer10();
+    customerSearch.clickSearch();
+
+    customerSearch.getOpenModalButton().click();
+    customerSearch.typeName('배수진');
+    customerSearch.typeBirthDate('951013');
+    customerSearchServiceMock.successFindCustomer11();
+    customerSearch.clickSearch();
+
+    customerSearch.getAlertDialogTitle().should('be.visible');
+  });
+});
+
+describe('KAN-18 고객검색 Modal - 관리자', () => {
+  const customerSearch = new CustomerSearchTestPage();
+  const customerSearchServiceMock = new CustomerSearchServiceMock();
+  const loginServiceMock = new LoginServiceMock();
+
+  before(() => {
+    customerSearch.visit();
+    customerSearch.inputId('user1');
+    customerSearch.inputPw('new1234');
+    loginServiceMock.adminLogin();
+    customerSearch.clickLoginButton();
+    customerSearchServiceMock.homeBookmark();
+  });
+
+  it('권한자일 경우 전화번호 조회 조건이 추가로 보여야 한다', () => {
+    customerSearch.getOpenModalButton().click();
+    customerSearch.getPhoneNumberInput().should('be.visible');
+  });
+
+  it('적절한 전화번호를 입력했을 때 고객 조회 버튼이 활성화된다', () => {
+    customerSearch.typePhoneNumber('01012345678');
+    customerSearch.getSearchButton().should('not.be.disabled');
+  });
+
+  it('권한자일 경우 마스킹 해제 버튼이 보이고 클릭 시 마스킹 해제 창이 보여야 한다', () => {
+    customerSearch.typePhoneNumber('01012345678');
+    customerSearchServiceMock.successFindCustomer01();
+    customerSearch.clickSearch();
+    customerSearch.getGNBUnmaskingButton().should('be.visible');
+    customerSearch.getGNBUnmaskingButton().click();
+    customerSearch.getAlertDialogTitle().should('be.visible');
+  });
 });
