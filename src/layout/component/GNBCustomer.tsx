@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Typography } from '@mui/material';
 import { Navigation, UserSection } from './GNBCustomer.styled';
 import Button from '@components/Button';
-import useMemberStore from '@stores/MemberStore';
+import useAuthStore from '@stores/AuthStore';
 import useCustomerStore from '@stores/CustomerStore';
 import { ROLE_UNMASKING } from '@constants/CommonConstant';
 import Unmasking from '@pages/unmasking/Unmasking';
@@ -20,7 +20,7 @@ const GNBCustomer = ({ name, rrno, gender, age }: GNBCustomerProps) => {
 
   const { updateCustomer } = useCustomerStore();
 
-  const memberInfo = useMemberStore((state) => state.memberInfo);
+  const memberInfo = useAuthStore((state) => state.memberInfo);
   const selectedCustomer = useCustomerStore((state) =>
     state.customers.find((c) => c.id === state.selectedCustomerId),
   );

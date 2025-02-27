@@ -3,10 +3,10 @@ export const mockAuthStore = (initialState = {}) => {
     isAuthenticated: true,
     accessToken: 'mock-token',
     memberInfo: {
-      id: 'test-id',
-      username: 'testuser',
-      role: ['ROLE_SEARCH_TEL_NO'] // 필요한 권한 추가
-    }
+      memberId: 'user1',
+      memberName: 'user1',
+      authorities: ['ROLE_SEARCH_TEL_NO', 'ROLE_UNMASKING'],
+    },
   };
 
   const state = { ...defaultState, ...initialState };
@@ -19,9 +19,9 @@ export const mockAuthStore = (initialState = {}) => {
         state: {
           isAuthenticated: state.isAuthenticated,
           accessToken: state.accessToken,
-          memberInfo: state.memberInfo
-        }
-      })
+          memberInfo: state.memberInfo,
+        },
+      }),
     );
   });
-}; 
+};

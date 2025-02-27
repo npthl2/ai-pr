@@ -10,20 +10,15 @@ describe('KAN-18 고객검색 Modal - 일반유저', () => {
   const customerSearchServiceMock = new CustomerSearchServiceMock();
   const loginServiceMock = new LoginServiceMock();
 
-  beforeEach(() => {
+  before(() => {
     mockAuthStore({
       memberInfo: {
-        id: 'user2',
-        username: 'user2',
-        role: ['ROLE_USER']
-      }
+        memberId: 'user2',
+        memberName: 'user2',
+        authorities: [''],
+      },
     });
-    
-    // customerSearch.visit();
-    // customerSearch.inputId('user2');
-    // customerSearch.inputPw('new1234');
-    // loginServiceMock.normalLogin();
-    // customerSearch.clickLoginButton();
+
     customerSearchServiceMock.homeBookmark();
   });
 
@@ -169,11 +164,14 @@ describe('KAN-18 고객검색 Modal - 관리자', () => {
   const loginServiceMock = new LoginServiceMock();
 
   before(() => {
-    customerSearch.visit();
-    customerSearch.inputId('user1');
-    customerSearch.inputPw('new1234');
-    loginServiceMock.adminLogin();
-    customerSearch.clickLoginButton();
+    mockAuthStore({
+      memberInfo: {
+        memberId: 'user1',
+        memberName: 'user1',
+        authorities: ['ROLE_SEARCH_TEL_NO', 'ROLE_UNMASKING'],
+      },
+    });
+    customerSearch.visitCustomerSearch();
     customerSearchServiceMock.homeBookmark();
   });
 
