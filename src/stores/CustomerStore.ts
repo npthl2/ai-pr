@@ -25,6 +25,7 @@ interface CustomerState {
   setCustomerTabs: (id: string, tabs: Tab[]) => void;
   setActiveTab: (id: string, tabId: number) => void;
   closeCustomerTab: (id: string, tabId: number) => void;
+  reset: () => void;
 }
 
 const useCustomerStore = create<CustomerState>((set, get) => ({
