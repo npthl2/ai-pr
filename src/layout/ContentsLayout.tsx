@@ -3,7 +3,7 @@ import { Typography, Box, useTheme } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { TabContext, TabPanel } from '@mui/lab';
+import { TabContext } from '@mui/lab';
 import {
   ContentsContainer,
   Header,
@@ -143,7 +143,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
         <ContentsBG>
           <Box
             sx={{
-              display: customerTabs.tabs[customerTabs.activeTab].id === 0 ? 'block' : 'none',
+              display: currentTab?.id === 0 ? 'block' : 'none',
               height: '100%',
             }}
           >
@@ -151,7 +151,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
           </Box>
           <Box
             sx={{
-              display: customerTabs.tabs[customerTabs.activeTab].id === 1 ? 'block' : 'none',
+              display: currentTab?.id === 1 ? 'block' : 'none',
               height: '100%',
             }}
           >
@@ -159,7 +159,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
           </Box>
           <Box
             sx={{
-              display: customerTabs.tabs[customerTabs.activeTab].id === 2 ? 'block' : 'none',
+              display: currentTab?.id === 2 ? 'block' : 'none',
               height: '100%',
             }}
           >

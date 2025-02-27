@@ -20,7 +20,7 @@ import LNBCustomerList from '@layout/component/LNBCustomerList';
 import { useBookmarksQuery } from '@api/queries/bookmark/useBookmarksQuery';
 import useMenuStore from '@stores/MenuStore';
 import { useBookmark } from '@hooks/useBookmark';
-import { MainMenu, SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
+import { DEFAULT_TABS, MainMenu, SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
 
 interface LNBMenuProps {
   menus: Array<{
@@ -103,7 +103,7 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
     }
 
     const newTab = {
-      id: currentTabs.length,
+      id: DEFAULT_TABS.find((tab) => tab.label === targetMenu.name)?.id ?? currentTabs.length,
       label: targetMenu.name,
       closeable: true,
     };
