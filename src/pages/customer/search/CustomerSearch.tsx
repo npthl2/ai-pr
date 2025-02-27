@@ -22,16 +22,17 @@ import customerService from '@api/services/customerService';
 import { CommonResponse } from '@model/common/CommonResponse';
 import { grey } from '@mui/material/colors';
 import { Modal, Divider, Typography } from '@mui/material';
-import { useNavigate, useNavigation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useMenuStore from '@stores/MenuStore';
-import { MainMenu } from '@constants/CommonConstant';
+import { MainMenu, ROLE_SEARCH_TEL_NO } from '@constants/CommonConstant';
 
 interface CustomerSearchProps {
+  authority: string[] | undefined; // 권한 목록
   open: boolean;
   onCloseModal: () => void;
 }
 
-const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
+const CustomerSearch = ({ authority, open, onCloseModal }: CustomerSearchProps) => {
   // -- 공통 에러 메시지 --
   const errorMessages = {
     name: '이름을 입력해주세요.',
@@ -64,17 +65,25 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
     message: '',
   });
 
+  const [isAuthority, setAuthority] = useState<boolean>(false);
+
   // 버튼 활성화 여부
   const [isButtonDisabled, setButtonDisabled] = useState<boolean>(true);
-
-  // 권한자 체크 여부
-  const [isAuthority, setAuthority] = useState<boolean>(false);
   // Dialog (최대 10명 초과 시) 열림 상태
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { addCustomer } = useCustomerStore();
   const navigate = useNavigate();
   const { setSelectedMainMenu } = useMenuStore();
+
+  useEffect(() => {
+    if (authority !== undefined) {
+      setAuthority(authority.includes(ROLE_SEARCH_TEL_NO));
+    } else {
+      setAuthority(false);
+    }
+  }, []);
+
   // -- 버튼 활성화: 이름과 생년월일이 모두 입력되거나 전화번호가 입력되면 활성화 --
   useEffect(() => {
     const enable =
@@ -82,11 +91,6 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
       searchData.phoneNumber.trim() !== '';
     setButtonDisabled(!enable);
   }, [searchData]);
-
-  // -- 초기 렌더링 시 사용자 권한 체크 (추후 로직 추가) --
-  useEffect(() => {
-    console.log('TODO : 사용자 권한 체크 후 전화번호 입력 인풋 표시 여부 결정');
-  }, []);
 
   /**
    * 검색 폼 상태 업데이트 함수.
@@ -203,8 +207,10 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
           id: data.customerId,
           name: data.customerName,
           encryptedName: data.encryptedCustomerName,
+          unmaskingName: '',
           rrno: data.rrno,
           encryptedRrno: data.encryptedRrno,
+          unmaskingRrno: '',
           age: data.age,
           gender: data.gender === 'M' ? Gender.MALE : Gender.FEMALE,
           contractId: data.contractId,
@@ -216,7 +222,7 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
         } else {
           // navigate('/customer');
           setSelectedMainMenu(MainMenu.MENU);
-          onCloseModal();
+          onClose();
         }
       } else {
         setSearchResult({
@@ -233,15 +239,36 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
     }
   };
 
+  const onClose = () => {
+    setSearchData({
+      name: '',
+      birthDate: '',
+      gender: Gender.MALE,
+      phoneNumber: '',
+    });
+    // 필드 validation초기화
+    resetFieldValidation('name');
+    resetFieldValidation('birthDate');
+    resetFieldValidation('phoneNumber');
+
+    // 에러메세지 초기화
+    setSearchResult({
+      error: false,
+      message: '',
+    });
+    onCloseModal();
+  };
+
   return (
     <Modal
       open={open}
-      onClose={onCloseModal}
+      onClose={onClose}
       slotProps={{
         backdrop: {
           sx: { backgroundColor: 'transparent' },
         },
       }}
+      data-testid='customer-search-modal'
     >
       <CustomerSearchModal>
         <CustomerSearchContainer>
@@ -254,6 +281,7 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
               <TextField
                 state={validation.phoneNumber.state}
                 error={validation.phoneNumber.error}
+                absoluteHelperText={true}
                 helperText={validation.phoneNumber.helperText}
                 value={searchData.phoneNumber}
                 onChange={(value: string) => handlePhoneNumberChange(value)}
@@ -266,6 +294,7 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
                   },
                 }}
                 placeholder='* 전화번호 (숫자만 입력)'
+                data-testid='customer-phone'
               />
             </RowWrapper>
           )}
@@ -281,6 +310,7 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
             <TextField
               state={validation.name.state}
               error={validation.name.error}
+              absoluteHelperText={true}
               helperText={validation.name.helperText}
               value={searchData.name}
               onChange={(value: string) => handleNameChange(value)}
@@ -291,10 +321,13 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
                 },
               }}
               placeholder='* 이름'
+              data-testid='customer-name'
             />
             <TextField
+              size='medium'
               state={validation.birthDate.state}
               error={validation.birthDate.error}
+              absoluteHelperText={true}
               helperText={validation.birthDate.helperText}
               value={searchData.birthDate}
               onChange={(value: string) => handleBirthDateChange(value)}
@@ -307,6 +340,7 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
                 },
               }}
               placeholder='* 생년월일 (yymmdd)'
+              data-testid='customer-birthdate'
             />
             {/* 라디오 버튼 그룹 */}
             <RadioGroupContainer>
@@ -359,6 +393,7 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
             iconSize={12}
             onClick={handleSearch}
             disabled={isButtonDisabled}
+            data-testid='customer-search-button'
           >
             고객조회
           </CustomerSearchButton>

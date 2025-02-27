@@ -26,6 +26,7 @@ import TableExample from '@pages/examples/table/TableExample';
 import ApiTestExample from './pages/examples/apiTest/ApiTestExample';
 import Board from '@pages/test/board/Board';
 import RegistBoard from '@pages/test/board/component/RegistBoard';
+import Login from '@pages/auth/Login';
 import TooltipExample from '@pages/examples/tooltip/TooltipExample';
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
         <CssBaseline />
         <BrowserRouter>
           <Routes>
+          <Route path='/login' element={<Login />} />
             <Route element={<Layout />}>
               <Route path='example'>
                 <Route path='login' element={<LoginExample />} />

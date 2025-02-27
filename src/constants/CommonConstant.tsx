@@ -16,3 +16,6 @@ export enum MainMenu {
   MENU = 'menu',
   BOOKMARKS = 'bookmarks',
 }
+
+export const ROLE_SEARCH_TEL_NO = 'ROLE_SEARCH_TEL_NO';
+export const ROLE_UNMASKING = 'ROLE_UNMASKING';

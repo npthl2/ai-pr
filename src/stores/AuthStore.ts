@@ -49,6 +49,7 @@ const useAuthStore = create<AuthState>()(
           set(initialState);
           return;
         }
+
         set({
           accessToken: token,
           memberInfo,
@@ -60,6 +61,7 @@ const useAuthStore = create<AuthState>()(
           set(initialState);
           return;
         }
+
         set((state) => ({
           ...state,
           memberInfo,

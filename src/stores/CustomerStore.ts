@@ -25,6 +25,8 @@ interface CustomerState {
   setCustomerTabs: (id: string, tabs: Tab[]) => void;
   setActiveTab: (id: string, tabId: number) => void;
   closeCustomerTab: (id: string, tabId: number) => void;
+  updateCustomer: (id: string, partialUpdate: Partial<Customer>) => void;
+  reset: () => void;
 }
 
 const useCustomerStore = create<CustomerState>((set, get) => ({
@@ -33,7 +35,19 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
   customerTabs: {},
 
   addCustomer: (customer: Customer) => {
-    const { customers } = get();
+    const { customers, selectedCustomerId } = get();
+
+    // 이미 10명의 고객이 존재하면 신규 추가하지 않고 false 반환
+    if (customers.length >= MAX_CUSTOMERS) {
+      return false;
+    }
+
+    const updatedCustomers = selectedCustomerId
+      ? customers.map((c) =>
+          c.id === selectedCustomerId ? { ...c, unmaskingRrno: '', unmaskingName: '' } : c,
+        )
+      : customers;
+
     // 고객이 이미 존재하는지 확인 (id 기준)
     const exists = customers.some((c) => c.id === customer.id);
     if (exists) {
@@ -41,18 +55,14 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
       set((state) => ({
         ...state,
         selectedCustomerId: customer.id,
+        customers: [...updatedCustomers],
       }));
       return true;
     }
 
-    // 이미 10명의 고객이 존재하면 신규 추가하지 않고 false 반환
-    if (customers.length >= MAX_CUSTOMERS) {
-      return false;
-    }
-
     set((state) => ({
       ...state,
-      customers: [...state.customers, customer],
+      customers: [...updatedCustomers, customer],
       selectedCustomerId: customer.id,
       customerTabs: {
         ...state.customerTabs,
@@ -97,7 +107,19 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
       };
     }),
 
-  selectCustomer: (id) => set({ selectedCustomerId: id }),
+  selectCustomer: (id) =>
+    set((state) => {
+      const customer = state.customers.find((c) => c.id === id);
+      if (!customer) return state;
+
+      return {
+        ...state,
+        selectedCustomerId: id,
+        customers: state.customers.map((c) =>
+          c.id === id ? { ...c, unmaskingRrno: '', unmaskingName: '' } : c,
+        ),
+      };
+    }),
 
   getCustomerName: (id) => {
     const customer = get().customers.find((c) => c.id === id);
@@ -150,6 +172,20 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
           [id]: { tabs: newTabs, activeTab: newActiveTab },
         },
       };
+    }),
+
+  updateCustomer: (id, partialUpdate) =>
+    set((state) => ({
+      customers: state.customers.map((customer) =>
+        customer.id === id ? { ...customer, ...partialUpdate } : customer,
+      ),
+    })),
+
+  reset: () =>
+    set({
+      customers: [],
+      selectedCustomerId: null,
+      customerTabs: {},
     }),
 }));
 
