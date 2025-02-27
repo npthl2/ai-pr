@@ -1,7 +1,7 @@
 // pages/unmasking/Unmasking.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import Dialog from '@components/Dialog';
-import TextField from '@components/TextField';  // 커스텀 TextField 컴포넌트 임포트
+import TextField from '@components/TextField'; // 커스텀 TextField 컴포넌트 임포트
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { UnmaskingRequestDto, UnmaskingResponseDto, UnmaskingProps } from '@model/Unmasking';
@@ -53,7 +53,7 @@ cleanup 함수를 추가하여 컴포넌트가 언마운트될 때 타이머를 
 
   const handleUnmask = async () => {
     const selectedCustomerId = useCustomerStore.getState().selectedCustomerId;
-    const memberId = useMemberStore.getState().memberId;
+    const memberId = useMemberStore.getState().memberInfo?.memberId;
 
     if (!selectedCustomerId || !memberId) {
       console.error('고객 ID 또는 회원 ID가 없습니다.');
@@ -64,15 +64,17 @@ cleanup 함수를 추가하여 컴포넌트가 언마운트될 때 타이머를 
     const unmaskingRequestDto: UnmaskingRequestDto = {
       ...requestData,
       requestUnmaskingReason: reason, // key in 사유
-      requestUnmaskingDatetime : new Date().toISOString(),//'2025-02-26 10:00:00', // 요청일시
+      requestUnmaskingDatetime: new Date().toISOString(), //'2025-02-26 10:00:00', // 요청일시
       requestMemberId: memberId, // 로그인 ID -> kyle 님이 로그인 사용자 정보 저장한거를 꺼내오면 됨
-      requestMemberConnectedIp: '10.231.58.61',// 이건 시간되면 local ip 가져와서 채우는 거 넣어보자
+      requestMemberConnectedIp: '10.231.58.61', // 이건 시간되면 local ip 가져와서 채우는 거 넣어보자
       customerId: selectedCustomerId, // 고객검색하면 현재 선택된 고객의 ID. CustomerStore에서 selectedCustomerId를 꺼내오면 됨
     };
 
     try {
-      const response: UnmaskingResponseDto<T> = await unmaskingService.unmasking(unmaskingRequestDto).then(response => response.data);
-      
+      const response: UnmaskingResponseDto<T> = await unmaskingService
+        .unmasking(unmaskingRequestDto)
+        .then((response) => response.data);
+
       // console.log("unmasking unmaskedItem : " + response.unmaskedItem);
       // console.log("unmasking param : " + response.param);
       onUnmask(response.unmaskedItem, requestData.param as T);
@@ -85,7 +87,8 @@ cleanup 함수를 추가하여 컴포넌트가 언마운트될 때 타이머를 
   const customContent = (
     <div style={{ position: 'relative' }}>
       <Typography variant='body1' sx={{ mb: 2, lineHeight: 1.2 }}>
-        마스킹을 해제하시겠습니까?<br/>
+        마스킹을 해제하시겠습니까?
+        <br />
         마스킹 해제 사유를 입력해주세요. (최대 50자 입력 가능)
       </Typography>
       <TextField
@@ -93,12 +96,12 @@ cleanup 함수를 추가하여 컴포넌트가 언마운트될 때 타이머를 
         value={reason}
         onChange={handleReasonChange}
         state={reason.length > 50 ? 'error' : 'inactive'}
-        size="medium"
+        size='medium'
         multiline
         rows={2}
         autoFocus
         suffix={
-          <CharCount variant="caption" color="textSecondary">
+          <CharCount variant='caption' color='textSecondary'>
             {reason.length}/50
           </CharCount>
         }
@@ -110,11 +113,11 @@ cleanup 함수를 추가하여 컴포넌트가 언마운트될 때 타이머를 
   return (
     <Dialog
       open={true}
-      size="small"
-      title="마스킹 해제"
+      size='small'
+      title='마스킹 해제'
       content={customContent}
-      closeLabel="취소"
-      confirmLabel="마스킹 해제"
+      closeLabel='취소'
+      confirmLabel='마스킹 해제'
       onClose={onClose}
       onConfirm={handleUnmask}
       isConfirmDisabled={!isButtonEnabled}

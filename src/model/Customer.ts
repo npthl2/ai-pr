@@ -25,8 +25,10 @@ export interface Customer {
   id: string;
   name: string;
   encryptedName: string;
+  unmaskingName: string;
   rrno: string;
   encryptedRrno: string;
+  unmaskingRrno: string;
   age: number;
   gender: Gender;
   contractId: string;
