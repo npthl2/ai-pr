@@ -151,6 +151,13 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
         },
       };
     }),
+
+  reset: () =>
+    set({
+      customers: [],
+      selectedCustomerId: null,
+      customerTabs: {},
+    }),
 }));
 
 if (import.meta.env.DEV) {

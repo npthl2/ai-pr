@@ -29,50 +29,48 @@ import CustomerView from '@pages/customer/view/CustomerView';
 import NewSubscription from '@pages/customer/subscription/NewSubscription';
 import ServiceModification from '@pages/customer/subscription/ServiceModification';
 
-const ContentsLayout = () => {
+interface ContentsLayoutProps {
+  customerId: string;
+}
+
+const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
   const theme = useTheme();
-  const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId);
-  const customerTabs = useCustomerStore((state) =>
-    selectedCustomerId ? state.customerTabs[selectedCustomerId] : null,
-  );
+  const customerTabs = useCustomerStore((state) => state.customerTabs[customerId]);
   const { setActiveTab, closeCustomerTab, removeCustomer } = useCustomerStore();
   const { menuItems } = useMenuStore();
   const { handleBookmarkClick } = useBookmark();
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
-    if (selectedCustomerId) {
-      setActiveTab(selectedCustomerId, newValue);
+    if (customerId) {
+      setActiveTab(customerId, newValue);
     }
   };
 
   const handleCloseTab = (event: React.MouseEvent, tabId: number) => {
     event.stopPropagation();
-    if (selectedCustomerId) {
-      closeCustomerTab(selectedCustomerId, tabId);
+    if (customerId) {
+      closeCustomerTab(customerId, tabId);
     }
   };
 
   const handleCloseAll = () => {
-    if (selectedCustomerId) {
-      removeCustomer(selectedCustomerId);
+    if (customerId) {
+      removeCustomer(customerId);
     }
   };
 
   const handleMoveLeft = () => {
-    if (selectedCustomerId && customerTabs) {
-      setActiveTab(selectedCustomerId, Math.max(0, customerTabs.activeTab - 1));
+    if (customerId && customerTabs) {
+      setActiveTab(customerId, Math.max(0, customerTabs.activeTab - 1));
     }
   };
 
   const handleMoveRight = () => {
-    if (selectedCustomerId && customerTabs && customerTabs.tabs.length > 0) {
-      setActiveTab(
-        selectedCustomerId,
-        Math.min(customerTabs.tabs.length - 1, customerTabs.activeTab + 1),
-      );
+    if (customerId && customerTabs && customerTabs.tabs.length > 0) {
+      setActiveTab(customerId, Math.min(customerTabs.tabs.length - 1, customerTabs.activeTab + 1));
     }
   };
 
-  if (!customerTabs) return null;
+  if (!customerTabs?.tabs?.length) return null;
 
   const currentTab = customerTabs.tabs.find((tab) => tab.id === customerTabs.activeTab);
   const isBookmarked = menuItems.bookmarks.some((item) => item.name === currentTab?.label);
@@ -82,7 +80,7 @@ const ContentsLayout = () => {
     switch (id) {
       // 고객조회
       case DEFAULT_TABS[0].id:
-        return <CustomerView />;
+        return <CustomerView customerId={customerId} />;
       // 신규가입
       case DEFAULT_TABS[1].id:
         return <NewSubscription />;

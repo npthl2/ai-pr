@@ -18,7 +18,7 @@ const LNBCustomerList = ({ value, onChange, customers, onRemove }: LNBCustomerLi
   return (
     <LNBCustomerListContainer>
       <TabContext value={value}>
-        <StyledTabList orientation='vertical' onChange={onChange}>
+        <StyledTabList orientation='vertical' onChange={onChange} data-testid='lnb-customer-list'>
           {customers.map((customer) => (
             <Tab
               key={customer.id}
@@ -31,6 +31,7 @@ const LNBCustomerList = ({ value, onChange, customers, onRemove }: LNBCustomerLi
                     alignItems: 'center',
                     position: 'relative',
                   }}
+                  data-testid={`customer-tab-${customer.id}`}
                 >
                   <Typography noWrap sx={{ textAlign: 'center' }}>
                     {customer.name}
@@ -48,6 +49,7 @@ const LNBCustomerList = ({ value, onChange, customers, onRemove }: LNBCustomerLi
                         right: 4,
                         '&:hover': { backgroundColor: 'transparent' },
                       }}
+                      data-testid={`remove-btn-${customer.id}`}
                     >
                       <CloseIcon
                         fontSize='small'

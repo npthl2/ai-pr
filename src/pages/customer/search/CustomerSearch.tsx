@@ -24,15 +24,15 @@ import { grey } from '@mui/material/colors';
 import { Modal, Divider, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import useMenuStore from '@stores/MenuStore';
-import { MainMenu } from '@constants/CommonConstant';
+import { MainMenu, AUTH_PHONE_NUMBER_LOOKUP } from '@constants/CommonConstant';
 
 interface CustomerSearchProps {
-  isAuthority: boolean; // 권한 체크
+  authority: string[] | undefined; // 권한 목록
   open: boolean;
   onCloseModal: () => void;
 }
 
-const CustomerSearch = ({ isAuthority, open, onCloseModal }: CustomerSearchProps) => {
+const CustomerSearch = ({ authority, open, onCloseModal }: CustomerSearchProps) => {
   // -- 공통 에러 메시지 --
   const errorMessages = {
     name: '이름을 입력해주세요.',
@@ -65,6 +65,8 @@ const CustomerSearch = ({ isAuthority, open, onCloseModal }: CustomerSearchProps
     message: '',
   });
 
+  const [isAuthority, setAuthority] = useState<boolean>(false);
+
   // 버튼 활성화 여부
   const [isButtonDisabled, setButtonDisabled] = useState<boolean>(true);
   // Dialog (최대 10명 초과 시) 열림 상태
@@ -73,6 +75,15 @@ const CustomerSearch = ({ isAuthority, open, onCloseModal }: CustomerSearchProps
   const { addCustomer } = useCustomerStore();
   const navigate = useNavigate();
   const { setSelectedMainMenu } = useMenuStore();
+
+  useEffect(() => {
+    if (authority !== undefined) {
+      setAuthority(authority.includes(AUTH_PHONE_NUMBER_LOOKUP));
+    } else {
+      setAuthority(false);
+    }
+  }, []);
+
   // -- 버튼 활성화: 이름과 생년월일이 모두 입력되거나 전화번호가 입력되면 활성화 --
   useEffect(() => {
     const enable =

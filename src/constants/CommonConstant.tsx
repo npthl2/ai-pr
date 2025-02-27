@@ -16,3 +16,6 @@ export enum MainMenu {
   MENU = 'menu',
   BOOKMARKS = 'bookmarks',
 }
+
+export const AUTH_PHONE_NUMBER_LOOKUP = 'A-0001';
+export const AUTH_UNMASKING = 'A-0002';

@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
-import LoginPage from '../../pages/login/LoginPage';
-import LoginServiceMock from '../../module/mock/login/LoginServiceMock';
+import LoginPage from '../../login/LoginPage';
+import LoginServiceMock from '../../../module/mock/login/LoginServiceMock';
+import CustomerSearchServiceMock from '../../../module/mock/customer/search/CustomerSearchServiceMock';
 
 class CustomerSearchPage {
   // CustomerSearch 컴포넌트를 모달 상태(open=true)로 마운트합니다.
@@ -8,9 +9,11 @@ class CustomerSearchPage {
     cy.visit('/');
     const page = new LoginPage();
     const service = new LoginServiceMock();
+    const customerSearchServiceMock = new CustomerSearchServiceMock();
     page.inputId('admin');
     page.inputPw('1234');
     service.successWhenLogin();
+    customerSearchServiceMock.homeBookmark();
     page.clickLoginButton();
   }
 
@@ -36,6 +39,18 @@ class CustomerSearchPage {
 
   getModal() {
     return cy.get('[data-testid="customer-search-modal"]');
+  }
+
+  getGNBCustomerArea() {
+    return cy.get('[data-testid="gnb-customer-area"]');
+  }
+
+  getLNBCustomerList() {
+    return cy.get('[data-testid="lnb-customer-list"]');
+  }
+
+  getLNBCustomer(customerId: string) {
+    return cy.get(`[data-testid="customer-tab-${customerId}"]`);
   }
 
   // 필요한 추가 동작들을 메서드로 정의할 수 있음
