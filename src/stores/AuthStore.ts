@@ -1,20 +1,90 @@
 import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
+import { MemberInfo } from '@model/Auth';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface AuthState {
   isAuthenticated: boolean;
-  login: () => void;
+  accessToken: string | null;
+  memberInfo: MemberInfo | null;
+  setAccessToken: (token: string, memberInfo: MemberInfo) => void;
+  setAuth: (memberInfo: MemberInfo) => void;
   logout: () => void;
 }
 
-const useAuthStore = create<AuthState>((set) => ({
+const initialState = {
   isAuthenticated: false,
-  login: () => set({ isAuthenticated: true }),
-  logout: () => set({ isAuthenticated: false }),
-}));
+  accessToken: null,
+  memberInfo: null,
+};
+
+// localStorage에서 상태 확인
+const checkStoredState = () => {
+  try {
+    const storedData = localStorage.getItem('auth-storage');
+    if (!storedData) return initialState;
+
+    const { state } = JSON.parse(storedData);
+
+    // 상태가 불완전하면 초기화
+    if (state.isAuthenticated && (!state.accessToken || !state.memberInfo)) {
+      localStorage.removeItem('auth-storage');
+      return initialState;
+    }
+
+    return state;
+  } catch (error) {
+    console.error('Error checking stored state:', error);
+    localStorage.removeItem('auth-storage');
+    return initialState;
+  }
+};
+
+const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      ...checkStoredState(),
+      setAccessToken: (token: string, memberInfo: MemberInfo) => {
+        if (!token || !memberInfo) {
+          set(initialState);
+          return;
+        }
+        set({
+          accessToken: token,
+          memberInfo,
+          isAuthenticated: true,
+        });
+      },
+      setAuth: (memberInfo: MemberInfo) => {
+        if (!memberInfo) {
+          set(initialState);
+          return;
+        }
+        set((state) => ({
+          ...state,
+          memberInfo,
+          isAuthenticated: Boolean(state.accessToken),
+        }));
+      },
+      logout: () => {
+        set(initialState);
+        localStorage.removeItem('auth-storage');
+      },
+    }),
+    {
+      name: 'auth-storage',
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        accessToken: state.accessToken,
+        memberInfo: state.memberInfo,
+        isAuthenticated: state.isAuthenticated,
+      }),
+    },
+  ),
+);
 
 if (import.meta.env.DEV) {
-  mountStoreDevtool('Auth Store', useAuthStore); // 개발도구에 노출될 적절한 문자열을 지정해 주세요.
+  mountStoreDevtool('Auth Store', useAuthStore);
 }
 
 export default useAuthStore;

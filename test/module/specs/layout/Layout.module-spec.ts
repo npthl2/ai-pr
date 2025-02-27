@@ -1,4 +1,5 @@
 import LayoutPage from '../../../pages/layout/LayoutPage';
+import { mockAuthStore } from '../../../support/helpers/mockAuthStore';
 import BookmarkServiceMock from '../../mock/bookmark/BookmarkServiceMock';
 
 describe('KAN-16 Home Layout', () => {
@@ -6,8 +7,14 @@ describe('KAN-16 Home Layout', () => {
   const service = new BookmarkServiceMock();
 
   before(() => {
-    page.visit();
+    mockAuthStore();
+
     service.successWhenGetBookmarkList();
+  });
+
+  it('KAN-16 LNB에 홈 버튼이 보여야 한다', () => {
+    page.visit();
+    page.expectHomeButtonToBeVisible();
   });
 
   it('KAN-16 LNB에 홈 버튼이 보여야 한다', () => {

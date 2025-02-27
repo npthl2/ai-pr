@@ -9,12 +9,6 @@ class LayoutPage {
 
   visit() {
     cy.visit('/');
-    const page = new LoginPage();
-    const service = new LoginServiceMock();
-    page.inputId('admin');
-    page.inputPw('1234');
-    service.successWhenLogin();
-    page.clickLoginButton();
   }
 
   clickHomeButton() {
