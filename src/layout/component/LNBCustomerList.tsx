@@ -31,7 +31,6 @@ const LNBCustomerList = ({ value, onChange, customers, onRemove }: LNBCustomerLi
                     alignItems: 'center',
                     position: 'relative',
                   }}
-                  data-testid={`customer-tab-${customer.id}`}
                 >
                   <Typography noWrap sx={{ textAlign: 'center' }}>
                     {customer.name}
@@ -64,6 +63,7 @@ const LNBCustomerList = ({ value, onChange, customers, onRemove }: LNBCustomerLi
               value={customer.id}
               onMouseEnter={() => setHoveredTab(customer.id)}
               onMouseLeave={() => setHoveredTab(null)}
+              data-testid={`customer-tab-${customer.id}`}
             />
           ))}
         </StyledTabList>

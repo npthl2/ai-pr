@@ -1,20 +1,8 @@
 /// <reference types="cypress" />
-import LoginPage from '../../login/LoginPage';
-import LoginServiceMock from '../../../module/mock/login/LoginServiceMock';
-import CustomerSearchServiceMock from '../../../module/mock/customer/search/CustomerSearchServiceMock';
-
 class CustomerSearchPage {
   // CustomerSearch 컴포넌트를 모달 상태(open=true)로 마운트합니다.
   visit() {
-    cy.visit('/');
-    const page = new LoginPage();
-    const service = new LoginServiceMock();
-    const customerSearchServiceMock = new CustomerSearchServiceMock();
-    page.inputId('admin');
-    page.inputPw('1234');
-    service.successWhenLogin();
-    customerSearchServiceMock.homeBookmark();
-    page.clickLoginButton();
+    cy.visit('/login');
   }
 
   getOpenModalButton() {
@@ -45,12 +33,31 @@ class CustomerSearchPage {
     return cy.get('[data-testid="gnb-customer-area"]');
   }
 
+  getGNBCustomerName() {
+    return cy.get('[data-testid="gnb-customer-name"]');
+  }
+
+  getGNBCustomerAge() {
+    return cy.get('[data-testid="gnb-customer-age"]');
+  }
+
+  getGNBCustomerRrno() {
+    return cy.get('[data-testid="gnb-customer-rrno"]');
+  }
+
+  getGNBCustomerGender() {
+    return cy.get('[data-testid="gnb-customer-gender"]');
+  }
+
   getLNBCustomerList() {
     return cy.get('[data-testid="lnb-customer-list"]');
   }
 
   getLNBCustomer(customerId: string) {
     return cy.get(`[data-testid="customer-tab-${customerId}"]`);
+  }
+  getLNBCustomerRemoveButton(customerId: string) {
+    return cy.get(`[data-testid="remove-btn-${customerId}"]`);
   }
 
   // 필요한 추가 동작들을 메서드로 정의할 수 있음
@@ -68,6 +75,18 @@ class CustomerSearchPage {
 
   clickSearch() {
     this.getSearchButton().click();
+  }
+
+  inputId(text: string) {
+    cy.get('[data-testid="id"]').type(text);
+  }
+
+  inputPw(text: string) {
+    cy.get('[data-testid="pw"]').type(text);
+  }
+
+  clickLoginButton() {
+    cy.get('[data-testid="login"]').click();
   }
 }
 

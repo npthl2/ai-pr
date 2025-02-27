@@ -1,12 +1,21 @@
 import CustomerSearchTestPage from '../../../../pages/customer/search/CustomerSearch';
-import CustomerSearchServiceMock from '../../../mock/customer/search/CustomerSearchServiceMock';
+import {
+  CustomerSearchServiceMock,
+  LoginServiceMock,
+} from '../../../mock/customer/search/CustomerSearchServiceMock';
 
 describe('KAN-18 고객검색 Modal - 일반유저', () => {
   const customerSearch = new CustomerSearchTestPage();
   const customerSearchServiceMock = new CustomerSearchServiceMock();
+  const loginServiceMock = new LoginServiceMock();
 
   before(() => {
     customerSearch.visit();
+    customerSearch.inputId('user2');
+    customerSearch.inputPw('new1234');
+    loginServiceMock.normalLogin();
+    customerSearch.clickLoginButton();
+    customerSearchServiceMock.homeBookmark();
   });
 
   it('사용자가 고객 조회 버튼 클릭', () => {
@@ -54,35 +63,33 @@ describe('KAN-18 고객검색 Modal - 일반유저', () => {
     cy.contains('등록된 고객 정보가 없습니다.').should('be.visible');
   });
 
-  it('고객 조회 성공', () => {
+  it('고객 조회 성공 && LNB에 고객 리스트 표시 && 조회된 고객 선택', () => {
     customerSearch.typeName('김철수');
     customerSearch.typeBirthDate('781012');
-    customerSearchServiceMock.successFindCustomer();
+    customerSearchServiceMock.successFindCustomer01();
     customerSearch.clickSearch();
 
     customerSearch.getGNBCustomerArea().should('be.visible');
     customerSearch.getLNBCustomer('100000000001').should('have.attr', 'aria-selected', 'true');
   });
 
-  // it('LNB에 고객 리스트가 표시되어야 한다', () => {
-  //   cy.get('[data-testid="lnb-customer-list"]').should('exist');
-  //   customers.forEach((customer) => {
-  //     cy.get(`[data-testid="customer-tab-${customer.id}"]`).should('contain', customer.name);
-  //   });
-  // });
+  it('탭에 마우스를 올리면 삭제 버튼이 표시된다', () => {
+    customerSearch.getLNBCustomer('100000000001').trigger('mouseover');
+    customerSearch.getLNBCustomerRemoveButton('100000000001').should('be.visible');
+  });
 
-  // it('김철수가 선택된 상태여야 한다', () => {
-  //   cy.get('[data-testid="customer-tab-kim"]').should('have.attr', 'aria-selected', 'true');
-  // });
+  it('LNB 고객 리스트를를 클릭하면 GNB의 고객 정보 변경', () => {
+    customerSearch.getOpenModalButton().click();
+    customerSearch.typeName('이영희');
+    customerSearch.typeBirthDate('781012');
+    customerSearchServiceMock.successFindCustomer02();
+    customerSearch.getLNBCustomer('100000000002').click();
+    customerSearch.getGNBCustomerName().should('have.value', '이영*');
+  });
 
   // it('탭을 클릭하면 onChange가 호출되어야 한다', () => {
   //   cy.get('[data-testid="customer-tab-lee"]').click();
   //   cy.get('@onChange').should('have.been.called');
-  // });
-
-  // it('탭에 마우스를 올리면 삭제 버튼이 표시된다', () => {
-  //   cy.get('[data-testid="customer-tab-kim"]').trigger('mouseenter');
-  //   cy.get('[data-testid="remove-btn-kim"]').should('be.visible');
   // });
 
   // it('삭제 버튼을 클릭하면 onRemove가 호출된다', () => {

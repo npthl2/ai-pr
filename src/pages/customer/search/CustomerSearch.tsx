@@ -24,7 +24,7 @@ import { grey } from '@mui/material/colors';
 import { Modal, Divider, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import useMenuStore from '@stores/MenuStore';
-import { MainMenu, AUTH_PHONE_NUMBER_LOOKUP } from '@constants/CommonConstant';
+import { MainMenu, ROLE_SEARCH_TEL_NO } from '@constants/CommonConstant';
 
 interface CustomerSearchProps {
   authority: string[] | undefined; // 권한 목록
@@ -78,7 +78,7 @@ const CustomerSearch = ({ authority, open, onCloseModal }: CustomerSearchProps) 
 
   useEffect(() => {
     if (authority !== undefined) {
-      setAuthority(authority.includes(AUTH_PHONE_NUMBER_LOOKUP));
+      setAuthority(authority.includes(ROLE_SEARCH_TEL_NO));
     } else {
       setAuthority(false);
     }

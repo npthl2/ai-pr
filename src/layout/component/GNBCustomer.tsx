@@ -4,7 +4,7 @@ import { Navigation, UserSection } from './GNBCustomer.styled';
 import Button from '@components/Button';
 import useMemberStore from '@stores/MemberStore';
 import useCustomerStore from '@stores/CustomerStore';
-import { AUTH_UNMASKING } from '@constants/CommonConstant';
+import { ROLE_UNMASKING } from '@constants/CommonConstant';
 import Unmasking from '@pages/unmasking/Unmasking';
 import unmaskingService from '@api/services/unmaskingService';
 
@@ -55,22 +55,22 @@ const GNBCustomer = ({ name, rrno, gender, age }: GNBCustomerProps) => {
   return (
     <>
       <UserSection data-testid='gnb-customer-area'>
-        <Typography variant='h1'>
+        <Typography variant='h1' data-testid='gnb-customer-name'>
           {selectedCustomer?.unmaskingName ? selectedCustomer?.unmaskingName : name}
         </Typography>
-        <Typography variant='caption' color='textSecondary'>
+        <Typography variant='caption' color='textSecondary' data-testid='gnb-customer-rrno'>
           주민번호 {selectedCustomer?.unmaskingRrno ? selectedCustomer?.unmaskingRrno : rrno}
         </Typography>
-        <Typography variant='caption' color='textSecondary'>
+        <Typography variant='caption' color='textSecondary' data-testid='gnb-customer-age'>
           (만 {age}세)
         </Typography>
-        <Typography variant='caption' color='textSecondary'>
+        <Typography variant='caption' color='textSecondary' data-testid='gnb-customer-gender'>
           {gender}
         </Typography>
       </UserSection>
 
       <Navigation>
-        {memberInfo?.authorities.includes(AUTH_UNMASKING) && (
+        {memberInfo?.authorities.includes(ROLE_UNMASKING) && (
           <Button variant='outlined' size='small' color='grey' onClick={openUnmasking}>
             마스킹 해제
           </Button>
