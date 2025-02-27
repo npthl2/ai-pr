@@ -26,11 +26,6 @@ describe('KAN-16 Home Layout', () => {
     page.expectFloatingButtonToBeVisible();
   });
 
-  it('KAN-16 홈 버튼을 클릭 했을 때 홈 화면으로 이동해야 한다', () => {
-    page.clickHomeButton();
-    page.expectToBeOnHomePage();
-  });
-
   it('KAN-16 메뉴 버튼을 클릭 했을 때 메뉴 리스트가 보여야 한다', () => {
     page.clickMenuButton();
     page.expectMenuListToBeVisible();

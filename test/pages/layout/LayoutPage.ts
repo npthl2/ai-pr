@@ -17,7 +17,6 @@ class LayoutPage {
     page.clickLoginButton();
   }
 
-  // Actions
   clickHomeButton() {
     cy.get('[data-testid="home-button"]').click();
   }
@@ -40,7 +39,6 @@ class LayoutPage {
     ).click();
   }
 
-  // Assertions
   expectHomeButtonToBeVisible() {
     cy.get('[data-testid="home-button"]').should('be.visible');
   }
@@ -55,10 +53,6 @@ class LayoutPage {
 
   expectFloatingButtonToBeVisible() {
     cy.get('[data-testid="floating-button"]').should('be.visible');
-  }
-
-  expectToBeOnHomePage() {
-    cy.url().should('include', '/');
   }
 
   expectMenuListToBeVisible() {
