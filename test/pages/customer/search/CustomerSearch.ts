@@ -5,6 +5,10 @@ class CustomerSearchPage {
     cy.visit('/login');
   }
 
+  visitCustomerSearch() {
+    cy.visit('/customer');
+  }
+
   getOpenModalButton() {
     return cy.get('[data-testid="customer-search-modal-button"]');
   }

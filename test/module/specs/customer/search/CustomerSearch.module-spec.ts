@@ -3,22 +3,32 @@ import {
   CustomerSearchServiceMock,
   LoginServiceMock,
 } from '../../../mock/customer/search/CustomerSearchServiceMock';
+import { mockAuthStore } from '../../../../support/helpers/mockAuthStore';
 
 describe('KAN-18 고객검색 Modal - 일반유저', () => {
   const customerSearch = new CustomerSearchTestPage();
   const customerSearchServiceMock = new CustomerSearchServiceMock();
   const loginServiceMock = new LoginServiceMock();
 
-  before(() => {
-    customerSearch.visit();
-    customerSearch.inputId('user2');
-    customerSearch.inputPw('new1234');
-    loginServiceMock.normalLogin();
-    customerSearch.clickLoginButton();
+  beforeEach(() => {
+    mockAuthStore({
+      memberInfo: {
+        id: 'user2',
+        username: 'user2',
+        role: ['ROLE_USER']
+      }
+    });
+    
+    // customerSearch.visit();
+    // customerSearch.inputId('user2');
+    // customerSearch.inputPw('new1234');
+    // loginServiceMock.normalLogin();
+    // customerSearch.clickLoginButton();
     customerSearchServiceMock.homeBookmark();
   });
 
   it('사용자가 고객 조회 버튼 클릭', () => {
+    customerSearch.visitCustomerSearch();
     customerSearch.getModal().should('not.exist');
     customerSearch.getOpenModalButton().click();
     customerSearch.getModal().should('be.visible');
