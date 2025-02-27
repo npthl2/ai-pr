@@ -143,7 +143,7 @@ const MemoHistory: React.FC = () => {
                       <Typography>{memo.authorName}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Tooltip title={memo.content} placement='bottom' arrow>
+                      <Tooltip sx={{ zIndex: 10000 }} title={memo.content} placement='bottom' arrow>
                         <MemoContentTypography>{memo.content}</MemoContentTypography>
                       </Tooltip>
                     </TableCell>
