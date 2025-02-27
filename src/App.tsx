@@ -31,7 +31,6 @@ import Board from '@pages/test/board/Board';
 import RegistBoard from '@pages/test/board/component/RegistBoard';
 import MemoTestPage from '@pages/memoAndSendHistory/MemoTestPage';
 import MemoAndHistoryPanel from '@pages/memoAndSendHistory/MemoAndSendHistoryPanel';
-import { useState } from 'react';
 
 function App() {
   return (
