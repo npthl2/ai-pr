@@ -1,3 +1,4 @@
+import Button from '@components/Button';
 import { Box, IconButton, Tabs, Tab } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -143,4 +144,14 @@ export const ContentHeader = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   padding: theme.spacing(2),
   borderBottom: `1px solid ${theme.palette.divider}`,
+  height: 59,
+}));
+
+export const StarIconButton = styled(Button)(({ theme }) => ({
+  minWidth: 'auto',
+  padding: '1px 4px 2px 4px',
+  color: theme.palette.action.active,
+  '&:hover': {
+    backgroundColor: 'transparent',
+  },
 }));

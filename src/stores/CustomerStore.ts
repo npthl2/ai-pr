@@ -1,10 +1,7 @@
-import { DEFAULT_TABS, MAX_CUSTOMERS } from '@constants/CommonConstant';
 import { create } from 'zustand';
-
-interface Customer {
-  id: string;
-  name: string;
-}
+import { mountStoreDevtool } from 'simple-zustand-devtools';
+import { DEFAULT_TABS, MAX_CUSTOMERS } from '@constants/CommonConstant';
+import { Customer, Gender } from '@model/Customer';
 
 interface Tab {
   id: number;
@@ -16,49 +13,100 @@ interface CustomerState {
   customers: Customer[];
   selectedCustomerId: string | null;
   customerTabs: {
-    [customerId: string]: {
+    [id: string]: {
       tabs: Tab[];
       activeTab: number;
     };
   };
-  addCustomer: (customer: Customer) => void;
+  addCustomer: (customer: Customer) => boolean;
   removeCustomer: (id: string) => void;
   selectCustomer: (id: string) => void;
   getCustomerName: (id: string) => string;
-  setCustomerTabs: (customerId: string, tabs: Tab[]) => void;
-  setActiveTab: (customerId: string, tabId: number) => void;
-  closeCustomerTab: (customerId: string, tabId: number) => void;
-  closeAllCustomerTabs: (customerId: string) => void;
+  setCustomerTabs: (id: string, tabs: Tab[]) => void;
+  setActiveTab: (id: string, tabId: number) => void;
+  closeCustomerTab: (id: string, tabId: number) => void;
 }
 
 const useCustomerStore = create<CustomerState>((set, get) => ({
-  customers: [],
   // TO-DO : 추후수정
+  // customers: [],
+  // selectedCustomerId: null,
+  customers: [
+    {
+      id: 'module-customer-id',
+      name: '케이티',
+      encryptedName: '케이티',
+      rrno: '123456-1234567',
+      encryptedRrno: '123456-1234567',
+      age: 30,
+      gender: Gender.MALE,
+      contractId: '1234567890',
+    },
+  ],
   selectedCustomerId: 'module-customer-id',
   customerTabs: {},
 
-  addCustomer: (customer) =>
-    set((state) => {
-      const newCustomers = [customer, ...state.customers];
-      if (newCustomers.length > MAX_CUSTOMERS) {
-        newCustomers.pop();
-      }
-      return {
-        customers: newCustomers,
+  addCustomer: (customer: Customer) => {
+    const { customers } = get();
+    // 고객이 이미 존재하는지 확인 (id 기준)
+    const exists = customers.some((c) => c.id === customer.id);
+    if (exists) {
+      // 기존 고객이면 활성화 업데이트
+      set((state) => ({
+        ...state,
         selectedCustomerId: customer.id,
-        customerTabs: {
-          ...state.customerTabs,
-          [customer.id]: { tabs: [...DEFAULT_TABS], activeTab: 0 },
-        },
-      };
-    }),
+      }));
+      return true;
+    }
 
+    // 이미 10명의 고객이 존재하면 신규 추가하지 않고 false 반환
+    if (customers.length >= MAX_CUSTOMERS) {
+      return false;
+    }
+
+    set((state) => ({
+      ...state,
+      customers: [...state.customers, customer],
+      selectedCustomerId: customer.id,
+      customerTabs: {
+        ...state.customerTabs,
+        [customer.id]: {
+          tabs: [DEFAULT_TABS[0]],
+          activeTab: 0,
+        },
+      },
+    }));
+    return true;
+  },
   removeCustomer: (id) =>
     set((state) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { [id]: removed, ...remainingTabs } = state.customerTabs;
+      // customers 배열에서 해당 id를 가진 고객 제거
+      // 고객 배열에서 해당 id의 인덱스를 찾음
+      const index = state.customers.findIndex((c) => c.id === id);
+
+      // 인덱스를 이용해 새로운 배열 생성 (삭제할 요소를 제외)
+      const newCustomers =
+        index !== -1
+          ? [...state.customers.slice(0, index), ...state.customers.slice(index + 1)]
+          : state.customers;
+
+      let newSelectedCustomerId = state.selectedCustomerId;
+
+      // 삭제 전 배열에서 삭제할 고객의 인덱스 구하기
+      if (newCustomers.length === 0) {
+        newSelectedCustomerId = null;
+      } else if (index < newCustomers.length) {
+        newSelectedCustomerId = newCustomers[index].id;
+      } else {
+        newSelectedCustomerId = newCustomers[newCustomers.length - 1].id;
+      }
+
       return {
-        customers: state.customers.filter((c) => c.id !== id),
-        selectedCustomerId: state.selectedCustomerId === id ? null : state.selectedCustomerId,
+        ...state,
+        customers: newCustomers,
+        selectedCustomerId: newSelectedCustomerId,
         customerTabs: remainingTabs,
       };
     }),
@@ -70,25 +118,25 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
     return customer?.name || '';
   },
 
-  setCustomerTabs: (customerId, tabs) =>
+  setCustomerTabs: (id, tabs) =>
     set((state) => ({
       customerTabs: {
         ...state.customerTabs,
-        [customerId]: { ...state.customerTabs[customerId], tabs },
+        [id]: { ...state.customerTabs[id], tabs },
       },
     })),
 
-  setActiveTab: (customerId, tabId) =>
+  setActiveTab: (id, tabId) =>
     set((state) => ({
       customerTabs: {
         ...state.customerTabs,
-        [customerId]: { ...state.customerTabs[customerId], activeTab: tabId },
+        [id]: { ...state.customerTabs[id], activeTab: tabId },
       },
     })),
 
-  closeCustomerTab: (customerId, tabId) =>
+  closeCustomerTab: (id, tabId) =>
     set((state) => {
-      const customerTab = state.customerTabs[customerId];
+      const customerTab = state.customerTabs[id];
       if (!customerTab) return state;
 
       const newTabs = customerTab.tabs.filter((tab) => tab.id !== tabId);
@@ -113,21 +161,14 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
       return {
         customerTabs: {
           ...state.customerTabs,
-          [customerId]: { tabs: newTabs, activeTab: newActiveTab },
+          [id]: { tabs: newTabs, activeTab: newActiveTab },
         },
       };
     }),
-
-  closeAllCustomerTabs: (customerId) =>
-    set((state) => ({
-      customerTabs: {
-        ...state.customerTabs,
-        [customerId]: {
-          tabs: DEFAULT_TABS.filter((tab) => !tab.closeable),
-          activeTab: 0,
-        },
-      },
-    })),
 }));
+
+if (import.meta.env.DEV) {
+  mountStoreDevtool('Customer Store', useCustomerStore);
+}
 
 export default useCustomerStore;

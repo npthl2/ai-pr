@@ -7,6 +7,9 @@ import ProtectedRoute from '@router/ProtectedRoute';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { getTheme } from '@theme/theme';
 import { Toast } from '@components/Toast';
+import MainLayout from '@layout/MainLayout';
+import CustomerLayout from '@layout/CustomerLayout';
+
 import NestedDialogExample from '@pages/examples/nestedDialog/DialogExample';
 import SelectExample from '@pages/examples/select/SelectExample';
 import CheckboxExample from '@pages/examples/checkbox/CheckboxExample';
@@ -27,13 +30,10 @@ import ApiTestExample from './pages/examples/apiTest/ApiTestExample';
 import Board from '@pages/test/board/Board';
 import RegistBoard from '@pages/test/board/component/RegistBoard';
 import MemoTestPage from '@pages/memoAndSendHistory/MemoTestPage';
-import MainLayout from '@layout/MainLayout';
-import ContentsLayout from '@layout/ContentsLayout';
 import MemoAndHistoryPanel from '@pages/memoAndSendHistory/MemoAndSendHistoryPanel';
 import { useState } from 'react';
-function App() {
-  const [isMemoPanelOpen, setIsMemoPanelOpen] = useState(false);
 
+function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={getTheme('light')}>
@@ -68,9 +68,7 @@ function App() {
               </Route>
               <Route element={<ProtectedRoute />}>
                 <Route element={<MainLayout />}>
-                  <Route element={<ContentsLayout />}>
-                    <Route path='/' element={<TooltipExample />} />
-                  </Route>
+                  <Route path='/' element={<CustomerLayout />} />
                 </Route>
               </Route>
             </Route>

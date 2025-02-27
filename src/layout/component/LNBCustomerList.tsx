@@ -3,14 +3,12 @@ import { TabContext } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
 import { LNBCustomerListContainer, StyledTabList } from './LNBCustomerList.styled';
 import { useState } from 'react';
+import { Customer } from '@model/Customer';
 
 interface LNBCustomerListProps {
   value: string;
   onChange: (event: React.SyntheticEvent, newValue: string) => void;
-  customers: Array<{
-    id: string;
-    name: string;
-  }>;
+  customers: Customer[];
   onRemove: (id: string) => void;
 }
 

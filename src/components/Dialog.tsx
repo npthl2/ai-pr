@@ -87,15 +87,17 @@ const Dialog = ({
       </StyledDialogTitle>
       <StyledDialogContent>{content}</StyledDialogContent>
       <StyledDialogActions>
-        <StyledButton
-          onClick={onClose}
-          variant='outlined'
-          sx={(theme) => ({ borderColor: theme.palette.grey[200] })}
-        >
-          <Typography variant='body1' sx={(theme) => ({ color: theme.palette.text.primary })}>
-            {closeLabel}
-          </Typography>
-        </StyledButton>
+        {closeLabel && (
+          <StyledButton
+            onClick={onClose}
+            variant='outlined'
+            sx={(theme) => ({ borderColor: theme.palette.grey[200] })}
+          >
+            <Typography variant='body1' sx={(theme) => ({ color: theme.palette.text.primary })}>
+              {closeLabel}
+            </Typography>
+          </StyledButton>
+        )}
         {onConfirm && (
           <StyledButton
             onClick={onConfirm}

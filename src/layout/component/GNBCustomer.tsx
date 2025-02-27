@@ -4,19 +4,19 @@ import Button from '@components/Button';
 import { useHistoryPanelStore } from '@stores/HistoryPanelStore';
 interface GNBCustomerProps {
   name: string; // 이름
-  id: string; // 주민번호
+  rrno: string; // 주민번호
   gender: string; // 성별
   age: number; // 나이
 }
 
-const GNBCustomer = ({ name, id, gender, age }: GNBCustomerProps) => {
+const GNBCustomer = ({ name, rrno, gender, age }: GNBCustomerProps) => {
   const toggleOpen = useHistoryPanelStore((state) => state.toggleOpen);
   return (
     <>
       <UserSection>
         <Typography variant='h1'>{name}</Typography>
         <Typography variant='caption' color='textSecondary'>
-          주민번호 {id}
+          주민번호 {rrno}
         </Typography>
         <Typography variant='caption' color='textSecondary'>
           (만 {age}세)

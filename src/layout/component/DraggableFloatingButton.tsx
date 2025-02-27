@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { Box } from '@mui/material';
-import Draggable from 'react-draggable';
+import Draggable, { DraggableEventHandler } from 'react-draggable';
 import CloseIcon from '@mui/icons-material/Close';
 import HistoryIcon from '@mui/icons-material/History';
 import History from '@layout/History';
@@ -18,7 +18,7 @@ const DraggableFloatingButton = () => {
     }
   };
 
-  const handleDrag = (_: any, data: any) => {
+  const handleDrag: DraggableEventHandler = (_, data) => {
     setPositionY(data.y);
     setIsDragging(true);
   };

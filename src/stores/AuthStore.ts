@@ -8,7 +8,8 @@ interface AuthState {
 }
 
 const useAuthStore = create<AuthState>((set) => ({
-  isAuthenticated: false,
+  // TO-DO : 추후수정
+  isAuthenticated: true,
   login: () => set({ isAuthenticated: true }),
   logout: () => set({ isAuthenticated: false }),
 }));
