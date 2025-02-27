@@ -129,6 +129,7 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
             <LNBMenuItem
               key={menu.id}
               variant='text'
+              data-testid={`${menu.id}-button`}
               iconComponent={menu.icon}
               className={selectedMenu === menu.id ? 'selected' : ''}
               onClick={() => handleMenuClick(menu.id)}
@@ -154,7 +155,7 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
               mountOnEnter
               unmountOnExit
             >
-              <SubMenu>
+              <SubMenu data-testid={`${mountSubmenu}-list`}>
                 <SubMenuHeader>
                   <SubMenuTitle>
                     {menus.find((menu) => menu.id === mountSubmenu)?.name || '메뉴'}
@@ -169,6 +170,7 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
                   {menuItems[mountSubmenu].map((item) => (
                     <SubMenuItem
                       key={item.id}
+                      data-testid={`menu-item-${item.name}`}
                       variant='text'
                       onClick={() => handleSubMenuItemClick(item.id)}
                       className={selectedSubItem === item.id ? 'selected' : ''}
@@ -176,6 +178,7 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
                       <Typography>{item.name}</Typography>
                       <StarIconButton
                         variant='text'
+                        data-testid={`bookmark-button-${item.name}`}
                         onClick={(e) => handleBookmarkClick(e, item.id)}
                       >
                         {item.bookmark ? (

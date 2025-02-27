@@ -41,7 +41,12 @@ const DraggableFloatingButton = () => {
     >
       <Box ref={nodeRef}>
         <HistoryWrapper className={showHistory ? 'show' : ''} style={{ bottom: 80 }}>
-          <FloatingButton onClick={handleOpen} size='large' className='drag-handle'>
+          <FloatingButton
+            onClick={handleOpen}
+            size='large'
+            className='drag-handle'
+            data-testid='floating-button'
+          >
             {showHistory ? <CloseIcon /> : <HistoryIcon />}
           </FloatingButton>
           <History />

@@ -1,43 +1,97 @@
 /// <reference types="cypress" />
 
+import LoginServiceMock from '../../module/mock/login/LoginServiceMock';
+import LoginPage from '../login/LoginPage';
+import { amber } from '@mui/material/colors';
+
 class LayoutPage {
   constructor() {}
 
-  // 게시글 화면 진입
-  visitHomePage() {
+  visit() {
     cy.visit('/');
+    const page = new LoginPage();
+    const service = new LoginServiceMock();
+    page.inputId('admin');
+    page.inputPw('1234');
+    service.successWhenLogin();
+    page.clickLoginButton();
   }
 
-  //   // 게시글 목록 조회 확인
-  //   assertBoardList(length: number) {
-  //     cy.get('[data-testid="boardItem"]').should('have.length', length);
-  //   }
+  // Actions
+  clickHomeButton() {
+    cy.get('[data-testid="home-button"]').click();
+  }
 
-  //   // 게시글 등록 버튼 클릭
-  //   clickRegistBoardButton() {
-  //     cy.get('[data-testid="registBoard"]').click({ force: true });
-  //   }
+  clickMenuButton() {
+    cy.get('[data-testid="menu-button"]').click();
+  }
 
-  //   // 게시글 등록 폼 확인
-  //   assertBoardRegistFormVisible() {
-  //     cy.get('[data-testid="boardTitle"]').should('be.visible');
-  //     cy.get('[data-testid="boardContent"]').should('be.visible');
-  //     cy.get('[data-testid="boardRegistConfirm"]').should('be.visible');
-  //   }
+  clickBookmarkButton() {
+    cy.get('[data-testid="bookmarks-button"]').click();
+  }
 
-  //   // 게시글 제목 입력
-  //   inputBoardTitle(text: string) {
-  //     cy.get('[data-testid="boardTitle"]').type(text);
-  //   }
+  clickFloatingButton() {
+    cy.get('[data-testid="floating-button"]').click();
+  }
 
-  //   // 게시글 내용 입력
-  //   inputBoardContent(text: string) {
-  //     cy.get('[data-testid="boardContent"]').type(text);
-  //   }
+  toggleBookmarkForMenuItem(menuName: string) {
+    cy.get(
+      `[data-testid="menu-item-${menuName}"] [data-testid="bookmark-button-${menuName}"]`,
+    ).click();
+  }
 
-  //   // 게시글 등록 확인 버튼 클릭
-  //   clickConfirmRegistBoardButton() {
-  //     cy.get('[data-testid="boardRegistConfirm"]').click();
-  //   }
+  // Assertions
+  expectHomeButtonToBeVisible() {
+    cy.get('[data-testid="home-button"]').should('be.visible');
+  }
+
+  expectMenuButtonToBeVisible() {
+    cy.get('[data-testid="menu-button"]').should('be.visible');
+  }
+
+  expectBookmarkButtonToBeVisible() {
+    cy.get('[data-testid="bookmarks-button"]').should('be.visible');
+  }
+
+  expectFloatingButtonToBeVisible() {
+    cy.get('[data-testid="floating-button"]').should('be.visible');
+  }
+
+  expectToBeOnHomePage() {
+    cy.url().should('include', '/');
+  }
+
+  expectMenuListToBeVisible() {
+    cy.get('[data-testid="menu-list"]').should('be.visible');
+  }
+
+  expectBookmarkListToBeVisible() {
+    cy.get('[data-testid="bookmarks-list"]').should('be.visible');
+  }
+
+  expectHistoryAreaToBeVisible() {
+    cy.get('[data-testid="history-area"]').should('be.visible');
+  }
+
+  expectHistoryAreaNotToBeVisible() {
+    cy.get('[data-testid="history-area"]').should('not.be.visible');
+  }
+
+  expectMenuItemToBeBookmarked(menuName: string) {
+    cy.get(`[data-testid="bookmark-button-${menuName}"] svg g path`).should(
+      'have.css',
+      'fill',
+      'none',
+    );
+  }
+
+  expectMenuItemNotToBeBookmarked(menuName: string) {
+    cy.get(`[data-testid="bookmark-button-${menuName}"] svg g path`).should(
+      'not.have.css',
+      'fill',
+      'none',
+    );
+  }
 }
+
 export default LayoutPage;
