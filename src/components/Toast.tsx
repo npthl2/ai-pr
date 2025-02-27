@@ -17,6 +17,14 @@ export const Toast = () => {
       onClose={onClose}
       autoHideDuration={4000}
       message={message}
+      ContentProps={{
+        sx: {
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+        },
+      }}
     />
   );
 };
