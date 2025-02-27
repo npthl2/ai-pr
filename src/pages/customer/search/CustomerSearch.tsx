@@ -214,7 +214,7 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
         if (!result) {
           setDialogOpen(true);
         } else {
-          navigate('/customer');
+          // navigate('/customer');
           setSelectedMainMenu(MainMenu.MENU);
           onCloseModal();
         }

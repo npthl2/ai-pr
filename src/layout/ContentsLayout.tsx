@@ -23,7 +23,7 @@ import Breadcrumb from '@components/Breadcrumb';
 import FavoriteIcon from '@components/FavoriteIcon';
 import { amber } from '@mui/material/colors';
 import useMenuStore from '@stores/MenuStore';
-import { DEFAULT_TABS, SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
+import { SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
 import { useBookmark } from '@hooks/useBookmark';
 import CustomerView from '@pages/customer/view/CustomerView';
 import NewSubscription from '@pages/customer/subscription/NewSubscription';
@@ -75,22 +75,6 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
   const currentTab = customerTabs.tabs.find((tab) => tab.id === customerTabs.activeTab);
   const isBookmarked = menuItems.bookmarks.some((item) => item.name === currentTab?.label);
   const currentTabId = SUBSCRIPTION_MENUS.find((menu) => menu.name === currentTab?.label)?.id;
-
-  const getTabContent = (id: number) => {
-    switch (id) {
-      // 고객조회
-      case DEFAULT_TABS[0].id:
-        return <CustomerView customerId={customerId} />;
-      // 신규가입
-      case DEFAULT_TABS[1].id:
-        return <NewSubscription />;
-      // 요금제/부가서비스 변경
-      case DEFAULT_TABS[2].id:
-        return <ServiceModification />;
-      default:
-        return null;
-    }
-  };
 
   return (
     <ContentsContainer>
@@ -157,16 +141,15 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
           <Breadcrumb activeTabLabel={['Home', currentTab?.label || '']} />
         </ContentHeader>
         <ContentsBG>
-          {customerTabs.tabs.map((tab) => (
-            <TabPanel
-              key={tab.id}
-              value={tab.id.toString()}
-              keepMounted
-              sx={{ height: '100%', padding: 0 }}
-            >
-              {getTabContent(tab.id)}
-            </TabPanel>
-          ))}
+          <Box sx={{ display: customerTabs.activeTab === 0 ? 'block' : 'none', height: '100%' }}>
+            <CustomerView customerId={customerId} />
+          </Box>
+          <Box sx={{ display: customerTabs.activeTab === 1 ? 'block' : 'none', height: '100%' }}>
+            <NewSubscription />
+          </Box>
+          <Box sx={{ display: customerTabs.activeTab === 2 ? 'block' : 'none', height: '100%' }}>
+            <ServiceModification />
+          </Box>
         </ContentsBG>
       </TabContext>
     </ContentsContainer>

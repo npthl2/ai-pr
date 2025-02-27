@@ -1,10 +1,9 @@
 import { Box, Typography, Divider, Slide, useTheme } from '@mui/material';
 import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
-import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   LNBMenuContainer,
-  MainMenu,
+  MainMenu as MainMenuContainer,
   SubMenu,
   SubMenuHeader,
   SubMenuTitle,
@@ -21,7 +20,7 @@ import LNBCustomerList from '@layout/component/LNBCustomerList';
 import { useBookmarksQuery } from '@api/queries/bookmark/useBookmarksQuery';
 import useMenuStore from '@stores/MenuStore';
 import { useBookmark } from '@hooks/useBookmark';
-import { SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
+import { MainMenu, SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
 
 interface LNBMenuProps {
   menus: Array<{
@@ -44,12 +43,12 @@ type SubMenuItem = {
 
 const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
   const theme = useTheme();
-  const navigate = useNavigate();
+
   const [openSubMenu, setOpenSubMenu] = useState<MenuType | null>(null);
   const [mountSubmenu, setMountSubmenu] = useState<MenuType | null>(null);
   const [selectedSubItem, setSelectedSubItem] = useState<string | null>(null);
 
-  const { menuItems, setMenuItems } = useMenuStore();
+  const { menuItems, setMenuItems, setSelectedMainMenu } = useMenuStore();
 
   const {
     customers,
@@ -91,7 +90,6 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
 
     if (!selectedCustomerId) return;
 
-    navigate('/customer');
     const targetMenu = SUBSCRIPTION_MENUS.find((menu) => menu.id === itemId);
     if (!targetMenu) return;
 
@@ -115,7 +113,7 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
   };
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: string) => {
-    navigate('/customer');
+    setSelectedMainMenu(MainMenu.MENU);
     selectCustomer(newValue);
   };
 
@@ -126,7 +124,7 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
   return (
     <>
       <LNBMenuContainer>
-        <MainMenu>
+        <MainMenuContainer>
           {menus.map((menu) => (
             <LNBMenuItem
               key={menu.id}
@@ -145,7 +143,7 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
             customers={customers}
             onRemove={handleRemoveCustomer}
           />
-        </MainMenu>
+        </MainMenuContainer>
 
         <Box sx={{ overflow: 'hidden' }}>
           {mountSubmenu && menuItems[mountSubmenu] && (
