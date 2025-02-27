@@ -30,8 +30,9 @@ const GNBCustomer = ({ name, rrno, gender, age }: GNBCustomerProps) => {
         <Button variant='outlined' size='small' color='grey'>
           마스킹 해제
         </Button>
+        {/* TO-DO: 추후 Id 수정 -test 삭제 */}
         <Button
-          data-testid='memoOpenButton'
+          data-testid='memoOpenButton-test'
           variant='outlined'
           size='small'
           color='grey'
