@@ -6,6 +6,14 @@ class MemoHistoryPage {
   visitMemoHistoryPage() {
     // TO-DO : 수정
     cy.visit('/example/memo-test');
+    cy.intercept('GET', '**/adm-be/v1/memos/module-customer-id?**', {
+      statusCode: 200,
+      body: {
+        successOrNot: 'Y',
+        statusCode: 'SUCCESS',
+        data: { memos: [], isLast: true },
+      },
+    });
   }
 
   clickMemoOpenButton() {
@@ -21,6 +29,14 @@ class MemoHistoryPage {
   }
 
   assertMemoEmptyTableRowVisible() {
+    cy.intercept('GET', '**/adm-be/v1/memos/module-customer-id?**', {
+      statusCode: 200,
+      body: {
+        successOrNot: 'Y',
+        statusCode: 'SUCCESS',
+        data: { memos: [], isLast: true },
+      },
+    });
     cy.get('[data-testid="memoEmptyTableRow"]').should('be.visible');
   }
 

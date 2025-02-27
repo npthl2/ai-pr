@@ -25,20 +25,20 @@ describe('KAN-201 메모 및 작성이력 화면 진입', () => {
     page.assertMemoSaveButtonEnabled();
   });
 
-  it('KAN-201-4 저장 버튼을 클릭할 경우 toast 메시지가 보여야 한다', () => {
-    service.successWhenSaveMemo();
+  it('KAN-201-5 저장 버튼을 클릭할 경우 toast 메시지가 보여야 한다', () => {
     service.successWhenGetMemoList();
+    service.successWhenSaveMemo();
     page.clickMemoSaveButton();
     page.assertToastVisible();
     page.assertToastMessage('저장되었습니다.');
   });
 
-  it('KAN-201-5 메모 및 작성이력 화면 외부를 클릭할 경우 메모 및 작성이력 화면이 닫혀야 한다', () => {
+  it('KAN-201-6 메모 및 작성이력 화면 외부를 클릭할 경우 메모 및 작성이력 화면이 닫혀야 한다', () => {
     page.clickMemoOverlay();
     page.assertMemoPanelInvisible();
   });
 
-  it('KAN-201-6 닫힘 버튼을 클릭할 경우 메모 및 작성이력 화면이 닫혀야 한다', () => {
+  it('KAN-201-7 닫힘 버튼을 클릭할 경우 메모 및 작성이력 화면이 닫혀야 한다', () => {
     service.successWhenGetMemoList();
     page.clickMemoOpenButton();
     page.clickMemoCloseButton();

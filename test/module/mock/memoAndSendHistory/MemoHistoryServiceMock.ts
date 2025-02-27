@@ -18,7 +18,7 @@ class MemoHistoryServiceMock {
       body: {
         successOrNot: 'Y',
         statusCode: 'SUCCESS',
-        data: { memos: emptyMemoList, isLast: false },
+        data: { memos: emptyMemoList, isLast: true },
       },
     }).as('getEmptyMemoList');
   }
@@ -29,7 +29,7 @@ class MemoHistoryServiceMock {
       body: {
         successOrNot: 'Y',
         statusCode: 'SUCCESS',
-        data: { memos: memoList, isLast: false },
+        data: { memos: memoList, isLast: true },
       },
     }).as('getMemoList');
   }
