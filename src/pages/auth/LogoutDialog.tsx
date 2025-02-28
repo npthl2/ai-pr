@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { DialogLayout } from './LogoutDialogLayout';
 import { Snackbar, Box, Typography } from '@mui/material';
-import Button from '@components/Button';
+// import Button from '@components/Button';
 
 interface LogoutDialogProps {
   isConfirmOpen: boolean;
