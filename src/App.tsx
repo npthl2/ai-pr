@@ -6,6 +6,8 @@ import Layout from '@layout/Layout';
 import ProtectedRoute from '@router/ProtectedRoute';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { getTheme } from '@theme/theme';
+import MainLayout from '@layout/MainLayout';
+import CustomerLayout from '@layout/CustomerLayout';
 
 import NestedDialogExample from '@pages/examples/nestedDialog/DialogExample';
 import SelectExample from '@pages/examples/select/SelectExample';
@@ -17,7 +19,6 @@ import LoginExample from '@pages/examples/login/LoginExample';
 import AutocompleteExample from '@pages/examples/autocomplete/AutocompleteExample';
 import ChipExample from '@pages/examples/chip/ChipExample';
 import TextFieldExample from '@pages/examples/textField/TextFieldExample';
-import TooltipExample from '@pages/tooltipExample/TooltipExample';
 import AlertExample from '@pages/examples/alert/AlertExample';
 import DialogExample from '@pages/examples/dialog/DialogExample';
 import TabsExample from '@pages/examples/tabs/TabsExample';
@@ -25,6 +26,8 @@ import TableExample from '@pages/examples/table/TableExample';
 import ApiTestExample from './pages/examples/apiTest/ApiTestExample';
 import Board from '@pages/test/board/Board';
 import RegistBoard from '@pages/test/board/component/RegistBoard';
+import Login from '@pages/auth/Login';
+import TooltipExample from '@pages/examples/tooltip/TooltipExample';
 
 function App() {
   return (
@@ -33,6 +36,7 @@ function App() {
         <CssBaseline />
         <BrowserRouter>
           <Routes>
+          <Route path='/login' element={<Login />} />
             <Route element={<Layout />}>
               <Route path='example'>
                 <Route path='login' element={<LoginExample />} />
@@ -57,7 +61,9 @@ function App() {
                 <Route path='board/regist' element={<RegistBoard />} />
               </Route>
               <Route element={<ProtectedRoute />}>
-                <Route path='/' element={<BoardExample />} />
+                <Route element={<MainLayout />}>
+                  <Route path='/' element={<CustomerLayout />} />
+                </Route>
               </Route>
             </Route>
           </Routes>

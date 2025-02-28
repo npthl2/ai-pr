@@ -20,6 +20,7 @@ interface CustomTextFieldProps
   suffix?: React.ReactNode;
   helperText?: string;
   onChange: (value: string) => void;
+  absoluteHelperText?: boolean;
 }
 
 const getBorderColor = (theme: any, state: TextFieldState) =>
@@ -45,6 +46,25 @@ const StyledTextField = styled(MuiTextField, {
     color: state === 'error' ? theme.palette.error.main : theme.palette.text.primary,
     '&.MuiInputBase-inputMultiline': {
       alignContent: 'center',
+    },
+    // 자동완성 시 기본 적용되는 배경/여백 제거
+    '&:-webkit-autofill': {
+      // 배경색 덮어쓰기 (100px 또는 더 큰 값으로 inset box-shadow)
+      boxShadow: `0 0 0 100px ${state === 'disabled' ? theme.palette.grey[100] : '#fff'} inset`,
+      '-webkit-box-shadow': `0 0 0 100px ${
+        state === 'disabled' ? theme.palette.grey[100] : '#fff'
+      } inset`,
+
+      // 불필요한 border-radius 제거
+      borderRadius: 0,
+
+      // 불필요한 내부 여백 제거
+      padding: '0 !important',
+      margin: '0 !important',
+
+      // 텍스트 색상 (오류 상태 시 빨간색, 아니면 기본 텍스트)
+      '-webkit-text-fill-color':
+        state === 'error' ? theme.palette.error.main : theme.palette.text.primary,
     },
   },
   '& .MuiOutlinedInput-notchedOutline': {
@@ -86,6 +106,7 @@ const TextField = ({
   onChange,
   InputProps,
   InputLabelProps,
+  absoluteHelperText = false,
   ...props
 }: CustomTextFieldProps) => {
   const currentState: TextFieldState = disabled ? 'disabled' : state;
@@ -94,7 +115,7 @@ const TextField = ({
   };
 
   return (
-    <FormControl fullWidth error={error}>
+    <FormControl fullWidth error={error} sx={absoluteHelperText ? { position: 'relative' } : {}}>
       <StyledTextField
         value={value}
         size={size}
@@ -123,7 +144,21 @@ const TextField = ({
         }}
         {...props}
       />
-      {helperText && <StyledFormHelperText state={currentState}>{helperText}</StyledFormHelperText>}
+      {helperText &&
+        (absoluteHelperText ? (
+          <StyledFormHelperText
+            state={currentState}
+            sx={{
+              position: 'absolute',
+              bottom: -20,
+              left: 0,
+            }}
+          >
+            {helperText}
+          </StyledFormHelperText>
+        ) : (
+          <StyledFormHelperText state={currentState}>{helperText || ' '}</StyledFormHelperText>
+        ))}
     </FormControl>
   );
 };
