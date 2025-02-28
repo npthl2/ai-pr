@@ -1,9 +1,4 @@
-import {
-  LoginRequestParams,
-  LoginResponse,
-  LogoutResponse,
-  AuthoritiesResponse,
-} from '@model/Auth';
+import { LoginRequestParams, LogoutResponse, AuthoritiesResponse } from '@model/Auth';
 import { CommonResponse } from '@model/common/CommonResponse';
 
 import baseService from './baseService';
@@ -20,7 +15,7 @@ const authService = {
       data: {
         accessToken: 'mock-token',
         memberInfo: {
-          memberId: 'test-id',
+          memberId: data.loginId,
           memberName: 'testuser',
           classOfPosition: 'test-class',
           memberGroup: 'test-group',
