@@ -12,6 +12,20 @@ const memoList = [
 ];
 
 class MemoHistoryServiceMock {
+  successWhenGetHomeBookmark() {
+    cy.intercept('GET', '**/v1/member/bookmark', {
+      statusCode: 200,
+      body: {
+        successOrNot: 'Y',
+        statusCode: 'SUCCESS',
+        data: {
+          memberId: '0',
+          bookmarks: [],
+        },
+      },
+    });
+  }
+
   successWhenGetEmptyMemoList() {
     cy.intercept('GET', '**/v1/memos/**', {
       statusCode: 200,

@@ -3,9 +3,8 @@
 class MemoHistoryPage {
   constructor() {}
 
-  visitMemoHistoryPage() {
-    // TO-DO : 수정
-    cy.visit('/example/memo-test');
+  visitHome() {
+    cy.visit('/');
     cy.intercept('GET', '**/adm-be/v1/memos/module-customer-id?**', {
       statusCode: 200,
       body: {
