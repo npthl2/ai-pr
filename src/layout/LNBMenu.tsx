@@ -21,13 +21,10 @@ import { useBookmarksQuery } from '@api/queries/bookmark/useBookmarksQuery';
 import useMenuStore from '@stores/MenuStore';
 import { useBookmark } from '@hooks/useBookmark';
 import { DEFAULT_TABS, MainMenu, SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
+import HomeIcon from '@mui/icons-material/Home';
+import MenuIcon from '@mui/icons-material/Menu';
 
 interface LNBMenuProps {
-  menus: Array<{
-    id: string;
-    name?: string;
-    icon: React.ReactElement;
-  }>;
   selectedMenu?: string | null;
   onMenuSelect?: (menuId: string) => void;
 }
@@ -41,14 +38,14 @@ type SubMenuItem = {
   selected?: boolean;
 };
 
-const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
+const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
   const theme = useTheme();
 
   const [openSubMenu, setOpenSubMenu] = useState<MenuType | null>(null);
   const [mountSubmenu, setMountSubmenu] = useState<MenuType | null>(null);
   const [selectedSubItem, setSelectedSubItem] = useState<string | null>(null);
 
-  const { menuItems, setMenuItems, setSelectedMainMenu } = useMenuStore();
+  const { menuItems, setMenuItems } = useMenuStore();
 
   const {
     customers,
@@ -62,11 +59,30 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
   const { handleBookmarkClick } = useBookmark();
   const { data: bookmarks } = useBookmarksQuery();
 
+  const menus = [
+    { id: MainMenu.HOME, icon: <HomeIcon /> },
+    { id: MainMenu.MENU, icon: <MenuIcon />, name: '메뉴' },
+    {
+      id: MainMenu.BOOKMARKS,
+      icon: (
+        <FavoriteIcon
+          borderColor={openSubMenu === 'bookmarks' ? theme.palette.common.white : undefined}
+        />
+      ),
+      name: '즐겨찾는 메뉴',
+    },
+  ];
+
   useEffect(() => {
     if (bookmarks) {
       setMenuItems(bookmarks);
     }
   }, [bookmarks]);
+
+  useEffect(() => {
+    if (selectedCustomerId && openSubMenu !== null && mountSubmenu === null) {
+    }
+  }, [selectedCustomerId]);
 
   const handleMenuClick = (menuId: string) => {
     if (openSubMenu === menuId) {
@@ -113,7 +129,6 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
   };
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: string) => {
-    setSelectedMainMenu(MainMenu.MENU);
     selectCustomer(newValue);
   };
 
@@ -131,7 +146,14 @@ const LNBMenu = ({ selectedMenu, menus, onMenuSelect }: LNBMenuProps) => {
               variant='text'
               data-testid={`${menu.id}-button`}
               iconComponent={menu.icon}
-              className={selectedMenu === menu.id ? 'selected' : ''}
+              className={
+                (menu.id === MainMenu.HOME && selectedMenu === MainMenu.HOME) ||
+                ((menu.id === MainMenu.MENU || menu.id === MainMenu.BOOKMARKS) &&
+                  openSubMenu === menu.id) ||
+                (menu.id === MainMenu.CUSTOMERS && selectedMenu === MainMenu.CUSTOMERS)
+                  ? 'selected'
+                  : ''
+              }
               onClick={() => handleMenuClick(menu.id)}
             />
           ))}

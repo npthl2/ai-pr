@@ -22,7 +22,6 @@ import customerService from '@api/services/customerService';
 import { CommonResponse } from '@model/common/CommonResponse';
 import { grey } from '@mui/material/colors';
 import { Modal, Divider, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import useMenuStore from '@stores/MenuStore';
 import { MainMenu, ROLE_SEARCH_TEL_NO } from '@constants/CommonConstant';
 
@@ -73,7 +72,6 @@ const CustomerSearch = ({ authority, open, onCloseModal }: CustomerSearchProps) 
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { addCustomer } = useCustomerStore();
-  const navigate = useNavigate();
   const { setSelectedMainMenu } = useMenuStore();
 
   useEffect(() => {
@@ -220,8 +218,7 @@ const CustomerSearch = ({ authority, open, onCloseModal }: CustomerSearchProps) 
         if (!result) {
           setDialogOpen(true);
         } else {
-          // navigate('/customer');
-          setSelectedMainMenu(MainMenu.MENU);
+          setSelectedMainMenu(MainMenu.CUSTOMERS);
           onClose();
         }
       } else {
