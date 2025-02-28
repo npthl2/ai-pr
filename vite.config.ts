@@ -42,6 +42,7 @@ export default defineConfig({
       '@router': path.resolve(__dirname, './src/router'),
       '@layout': path.resolve(__dirname, './src/layout'),
       '@theme': path.resolve(__dirname, './src/theme'),
+      '@constants': path.resolve(__dirname, './src/constants'),
     },
   },
   server: {
@@ -62,6 +63,12 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/stg-be/, ''),
+      },
+      '/adm-be': {
+        target: 'http://localhost:8086',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/adm-be/, ''),
       },
     },
   },
