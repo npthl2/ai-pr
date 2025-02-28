@@ -1,9 +1,8 @@
-import { LoginRequestParams, User } from '@model/Auth';
+import { User } from '@model/Auth';
 import { CommonResponse, CommonStatus } from '@model/common/CommonResponse';
-import baseService from './baseService';
 
 const authService = {
-  login(data: LoginRequestParams): Promise<CommonResponse<User>> {
+  login(): Promise<CommonResponse<User>> {
     // return baseService.post<User, LoginRequestParams>('/api/v1/session', data);
     const user: CommonResponse<User> = {
       successOrNot: 'Y',

@@ -22,7 +22,6 @@ import customerService from '@api/services/customerService';
 import { CommonResponse } from '@model/common/CommonResponse';
 import { grey } from '@mui/material/colors';
 import { Modal, Divider, Typography } from '@mui/material';
-import { useNavigate, useNavigation } from 'react-router-dom';
 import useMenuStore from '@stores/MenuStore';
 import { MainMenu } from '@constants/CommonConstant';
 
@@ -68,12 +67,11 @@ const CustomerSearch = ({ open, onCloseModal }: CustomerSearchProps) => {
   const [isButtonDisabled, setButtonDisabled] = useState<boolean>(true);
 
   // 권한자 체크 여부
-  const [isAuthority, setAuthority] = useState<boolean>(false);
+  const [isAuthority] = useState<boolean>(false);
   // Dialog (최대 10명 초과 시) 열림 상태
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { addCustomer } = useCustomerStore();
-  const navigate = useNavigate();
   const { setSelectedMainMenu } = useMenuStore();
   // -- 버튼 활성화: 이름과 생년월일이 모두 입력되거나 전화번호가 입력되면 활성화 --
   useEffect(() => {
