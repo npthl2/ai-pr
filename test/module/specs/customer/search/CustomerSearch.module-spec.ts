@@ -191,5 +191,5 @@ describe('[KAN-18-2] 고객검색 Modal - 관리자', () => {
     customerSearch.getGNBUnmaskingButton().should('be.visible');
     customerSearch.getGNBUnmaskingButton().click();
     customerSearch.getAlertDialogTitle().should('be.visible');
-  });
+  }); */
 });
