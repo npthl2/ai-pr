@@ -4,7 +4,6 @@ import { Navigation, UserSection } from './GNBCustomer.styled';
 import Button from '@components/Button';
 import useAuthStore from '@stores/AuthStore';
 import { useHistoryPanelStore } from '@stores/HistoryPanelStore';
-import useMemberStore from '@stores/MemberStore';
 import useCustomerStore from '@stores/CustomerStore';
 import { ROLE_UNMASKING } from '@constants/CommonConstant';
 import Unmasking from '@pages/unmasking/Unmasking';

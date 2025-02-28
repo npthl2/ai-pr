@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 class CustomerSearchPage {
   visitCustomerSearch() {
-    cy.visit('/customer');
+    cy.visit('/');
   }
 
   getOpenModalButton() {

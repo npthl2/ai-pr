@@ -1,14 +1,12 @@
 import CustomerSearchTestPage from '../../../../pages/customer/search/CustomerSearch';
 import {
-  CustomerSearchServiceMock,
-  LoginServiceMock,
+  CustomerSearchServiceMock
 } from '../../../mock/customer/search/CustomerSearchServiceMock';
 import { mockAuthStore } from '../../../../support/helpers/mockAuthStore';
 
 describe('[KAN-18-1] 고객검색 Modal - 일반유저', () => {
   const customerSearch = new CustomerSearchTestPage();
   const customerSearchServiceMock = new CustomerSearchServiceMock();
-  const loginServiceMock = new LoginServiceMock();
 
   before(() => {
     mockAuthStore({
