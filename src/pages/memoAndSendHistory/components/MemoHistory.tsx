@@ -139,6 +139,7 @@ const MemoHistory: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody style={{ height: memos && memos.length === 0 ? '180px' : 'auto' }}>
+              {/* 메모 저장시 테이블 맨 위로 스크롤하기 위함 */}
               <div ref={tableTopRef} style={{ position: 'absolute', top: '-50px' }} />
               {totalMemos && totalMemos.length > 0 ? (
                 totalMemos.map((memo, index) => (
