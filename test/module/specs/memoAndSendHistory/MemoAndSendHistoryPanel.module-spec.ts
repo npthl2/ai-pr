@@ -1,13 +1,13 @@
 import MemoHistoryPage from '../../../pages/memoAndSendHistory/MemoHistoryPage';
 import MemoHistoryServiceMock from '../../mock/memoAndSendHistory/MemoHistoryServiceMock';
+import { mockAuthStore } from '../../../support/helpers/mockAuthStore';
 
 describe('KAN-201 메모 및 작성이력 화면 진입', () => {
   const page = new MemoHistoryPage();
   const service = new MemoHistoryServiceMock();
 
   beforeEach(() => {
-    // TO-DO : 로그인 기능 붙인후 수정 필요
-    // mockAuthStore();
+    mockAuthStore();
     // TO-DO : 고객 조회 기능 붙인후 추가 구현 필요
     service.successWhenGetHomeBookmark();
   });

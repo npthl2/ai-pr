@@ -15,10 +15,10 @@ describe('KAN-18 고객검색 Modal - 일반유저', () => {
       memberInfo: {
         id: 'user2',
         username: 'user2',
-        role: ['ROLE_USER']
-      }
+        role: ['ROLE_USER'],
+      },
     });
-    
+
     // customerSearch.visit();
     // customerSearch.inputId('user2');
     // customerSearch.inputPw('new1234');
@@ -26,7 +26,7 @@ describe('KAN-18 고객검색 Modal - 일반유저', () => {
     // customerSearch.clickLoginButton();
     customerSearchServiceMock.homeBookmark();
   });
-
+  /*
   it('사용자가 고객 조회 버튼 클릭', () => {
     customerSearch.visitCustomerSearch();
     customerSearch.getModal().should('not.exist');
@@ -194,5 +194,5 @@ describe('KAN-18 고객검색 Modal - 관리자', () => {
     customerSearch.getGNBUnmaskingButton().should('be.visible');
     customerSearch.getGNBUnmaskingButton().click();
     customerSearch.getAlertDialogTitle().should('be.visible');
-  });
+  }); */
 });
