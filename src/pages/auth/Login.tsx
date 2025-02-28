@@ -10,7 +10,6 @@ import {
     Subtitle
 } from './Login.styled';
 import LoginForm from './components/LoginForm';
-import { AxiosError } from 'axios';
 import { LoginError } from './Login.model';
 
 const Login = () => {
