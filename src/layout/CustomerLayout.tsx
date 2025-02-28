@@ -10,37 +10,43 @@ const CustomerLayout = () => {
   const { customers, selectedCustomerId } = useCustomerStore();
   const selectedMainMenu = useMenuStore((state) => state.selectedMainMenu);
   const setSelectedMainMenu = useMenuStore((state) => state.setSelectedMainMenu);
-  const [lastDisplayMode, setLastDisplayMode] = useState<'home' | 'customer'>('home');
-
+  const [lastDisplayMode, setLastDisplayMode] = useState<MainMenu.HOME | MainMenu.CUSTOMERS>(
+    MainMenu.HOME,
+  );
+  const setDisplayMode = useMenuStore((state) => state.setDisplayMode);
   useEffect(() => {
     if (customers.length === 0) {
       setSelectedMainMenu(MainMenu.HOME);
-      setLastDisplayMode('home');
+      setLastDisplayMode(MainMenu.HOME);
     }
   }, [customers]);
 
   useEffect(() => {
     if (selectedMainMenu === MainMenu.HOME) {
-      setLastDisplayMode('home');
+      setLastDisplayMode(MainMenu.HOME);
     } else if (selectedMainMenu === MainMenu.CUSTOMERS) {
-      setLastDisplayMode('customer');
+      setLastDisplayMode(MainMenu.CUSTOMERS);
     }
   }, [selectedMainMenu]);
 
-  // 메뉴나 북마크 상태일 때는 마지막 디스플레이 모드를 유지
-  const displayMode =
-    selectedMainMenu === MainMenu.HOME
-      ? 'home'
-      : selectedMainMenu === MainMenu.CUSTOMERS
-        ? 'customer'
-        : lastDisplayMode;
+  const handleDisplayMode = () => {
+    return selectedMainMenu !== MainMenu.HOME && selectedMainMenu !== MainMenu.CUSTOMERS
+      ? lastDisplayMode
+      : selectedMainMenu;
+  };
+
+  useEffect(() => {
+    setDisplayMode(handleDisplayMode());
+  }, [lastDisplayMode]);
+
+  const displayMode = handleDisplayMode();
 
   return (
     <>
       <Box
         key={selectedMainMenu}
         sx={{
-          display: displayMode === 'home' ? 'block' : 'none',
+          display: displayMode === MainMenu.HOME ? 'block' : 'none',
           height: '100%',
         }}
       >
@@ -51,7 +57,7 @@ const CustomerLayout = () => {
           key={customer.id}
           sx={{
             display:
-              displayMode === 'home'
+              displayMode === MainMenu.HOME
                 ? 'none'
                 : selectedCustomerId === customer.id
                   ? 'block'

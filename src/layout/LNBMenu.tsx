@@ -45,7 +45,7 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
   const [mountSubmenu, setMountSubmenu] = useState<MenuType | null>(null);
   const [selectedSubItem, setSelectedSubItem] = useState<string | null>(null);
 
-  const { menuItems, setMenuItems } = useMenuStore();
+  const { menuItems, displayMode, setMenuItems } = useMenuStore();
 
   const {
     customers,
@@ -87,6 +87,10 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
   const handleMenuClick = (menuId: string) => {
     if (openSubMenu === menuId) {
       setOpenSubMenu(null);
+      if (displayMode === MainMenu.HOME) {
+        onMenuSelect?.(MainMenu.HOME);
+        return;
+      }
     } else {
       setOpenSubMenu(menuId as MenuType);
       setMountSubmenu(menuId as MenuType);
