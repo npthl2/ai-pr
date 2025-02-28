@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { DialogLayout } from './LogoutDialogLayout';
-import { Snackbar, Box, Typography } from '@mui/material';
-// import Button from '@components/Button';
+import { DialogLayout } from '../LogoutDialogLayout';
+import { StyledSnackbar, SnackbarContentBox, SnackbarText } from '../LogoutSnackbar.styled';
 
 interface LogoutDialogProps {
   isConfirmOpen: boolean;
@@ -26,7 +25,7 @@ const LogoutDialog = ({
       const timer = setTimeout(() => {
         setOpenSnackbar(false);
         onCompleteClose();
-      }, 3000); // 3초 후 자동 닫힘
+      }, 1000);
 
       return () => clearTimeout(timer);
     }
@@ -48,8 +47,8 @@ const LogoutDialog = ({
         로그아웃 하시겠습니까?
       </DialogLayout>
 
-      {/* 로그아웃 완료 스낵바 (커스텀 스타일 적용) */}
-      <Snackbar
+      {/* 로그아웃 완료 스낵바 */}
+      <StyledSnackbar
         open={openSnackbar}
         autoHideDuration={3000}
         onClose={() => {
@@ -57,26 +56,11 @@ const LogoutDialog = ({
           onCompleteClose();
         }}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        sx={{
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          minWidth: '300px',
-          backgroundColor: '#333', // 검정 배경
-          borderRadius: '8px',
-          textAlign: 'center',
-          boxShadow: 3,
-          padding: '16px 24px',
-        }}
       >
-        {/* ✅ 텍스트를 Typography로 감싸 해결 */}
-        <Box>
-          <Typography sx={{ color: '#fff', fontSize: '16px' }}>
-            로그아웃 되었습니다.
-          </Typography>
-        </Box>
-      </Snackbar>
+        <SnackbarContentBox>
+          <SnackbarText>로그아웃 되었습니다.</SnackbarText>
+        </SnackbarContentBox>
+      </StyledSnackbar>
     </>
   );
 };

@@ -1,86 +1,106 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import LoginForm from './LoginForm';
+import { LoginRequestParams } from '@model/Auth';
+import { LoginError } from '../Login.model';
 
-describe('로그인 페이지에서', () => {
-  const mockOnChange = vi.fn();
-  const mockOnSubmit = vi.fn();
-  const defaultProps = {
-    formData: { emailAddress: '', password: '' },
-    isLoading: false,
-    onSubmit: mockOnSubmit,
-    onChange: mockOnChange,
+describe('LoginForm 컴포넌트', () => {
+  let mockOnChange: ReturnType<typeof vi.fn>;
+  let mockOnBlur: ReturnType<typeof vi.fn>;
+  let mockOnSubmit: ReturnType<typeof vi.fn>;
+  let defaultProps: {
+    formData: LoginRequestParams;
+    isLoading: boolean;
+    errors: LoginError;
+    onSubmit: () => void;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   };
 
-  it('최초 진입할 때 로그인 폼이 렌더링 되어야 한다.', () => {
+  beforeEach(() => {
+    mockOnChange = vi.fn();
+    mockOnBlur = vi.fn();
+    mockOnSubmit = vi.fn();
+
+    defaultProps = {
+      formData: { loginId: '', password: '' },
+      isLoading: false,
+      errors: { loginId: '', password: '' },
+      onSubmit: mockOnSubmit,
+      onChange: mockOnChange,
+      onBlur: mockOnBlur,
+    };
+  });
+
+  it('초기 렌더링 시 입력 필드와 버튼이 존재해야 한다.', () => {
     render(<LoginForm {...defaultProps} />);
     
-    expect(screen.getByLabelText('아이디')).toBeInTheDocument();
-    expect(screen.getByLabelText('비밀번호')).toBeInTheDocument();
+    expect(screen.getByLabelText('ID')).toBeInTheDocument();
+    expect(screen.getByLabelText('Password')).toBeInTheDocument();
     expect(screen.getByText('로그인')).toBeInTheDocument();
   });
 
-  it('로그인 중 일때 로그인 중 텍스트가 표시되어야 한다.', () => {
-    render(<LoginForm {...defaultProps} isLoading={true} />);
-    
-    expect(screen.getByText('로그인 중...')).toBeInTheDocument();
-    expect(screen.getByLabelText('아이디')).toBeDisabled();
-    expect(screen.getByLabelText('비밀번호')).toBeDisabled();
+  it('입력값 변경 시 onChange 핸들러가 호출되어야 한다.', () => {
+    render(<LoginForm {...defaultProps} />);
+
+    const idInput = screen.getByLabelText('ID');
+    const pwInput = screen.getByLabelText('Password');
+
+    fireEvent.change(idInput, { target: { value: 'testUser' } });
+    fireEvent.change(pwInput, { target: { value: 'securePass' } });
+
+    expect(mockOnChange).toHaveBeenCalledTimes(2);
   });
 
-  it('비밀번호 보기 토글 버튼을 눌렀을 때 비밀번호 입력한 비밀번호가 보여야 한다.', () => {
-    const passwordText = 'a1234567';
-    defaultProps.formData.password = passwordText;
+  it('입력 필드에서 포커스를 잃을 때 onBlur 핸들러가 호출되어야 한다.', () => {
+    render(<LoginForm {...defaultProps} />);
+
+    const idInput = screen.getByLabelText('ID');
+    fireEvent.blur(idInput);
+
+    expect(mockOnBlur).toHaveBeenCalled();
+  });
+
+  it('로그인 버튼 클릭 시 onSubmit 핸들러가 호출되어야 한다.', () => {
+    render(<LoginForm {...defaultProps} />);
+
+    const loginButton = screen.getByTestId('login');
+    fireEvent.click(loginButton);
+
+    expect(mockOnSubmit).toHaveBeenCalled();
+  });
+
+  it('로그인 중일 때 입력 필드와 버튼이 비활성화 되어야 한다.', () => {
+    render(<LoginForm {...defaultProps} isLoading={true} />);
+
+    expect(screen.getByLabelText('ID')).toBeDisabled();
+    expect(screen.getByLabelText('Password')).toBeDisabled();
+    expect(screen.getByTestId('login')).toBeDisabled();
+  });
+
+  it('비밀번호 보기 토글 버튼을 누르면 비밀번호가 보였다가 숨겨져야 한다.', () => {
     render(<LoginForm {...defaultProps} />);
     
-    const passwordInput = screen.getByLabelText('비밀번호');
+    const passwordInput = screen.getByLabelText('Password');
     const toggleButton = screen.getByLabelText('비밀번호 보기 토글');
 
     expect(passwordInput).toHaveAttribute('type', 'password');
-    
+
     fireEvent.click(toggleButton);
     expect(passwordInput).toHaveAttribute('type', 'text');
-    
+
     fireEvent.click(toggleButton);
     expect(passwordInput).toHaveAttribute('type', 'password');
   });
 
-  it('should call onChange when input values change', () => {
-    render(<LoginForm {...defaultProps} />);
-    
-    const emailInput = screen.getByLabelText('아이디');
-    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
-    
-    expect(mockOnChange).toHaveBeenCalled();
-  });
-
-  it('should call onSubmit when login button is clicked', () => {
-    render(<LoginForm {...defaultProps} />);
-    
-    const loginButton = screen.getByText('로그인');
-    fireEvent.click(loginButton);
-    
-    expect(mockOnSubmit).toHaveBeenCalled();
-  });
-});
-
-describe('로그인중 일때', () => {
-  it('로그인 중 텍스트가 표시되어야 한다.', () => {
-    const mockOnChange = vi.fn();
-    const mockOnSubmit = vi.fn();
-    const defaultProps = {
-      formData: { emailAddress: '', password: '' },
-      isLoading: false,
-      onSubmit: mockOnSubmit,
-      onChange: mockOnChange,
+  it('입력값에 오류가 있을 경우 helperText가 표시되어야 한다.', () => {
+    const errorProps = {
+      ...defaultProps,
+      errors: { loginId: 'ID를 입력해주세요.', password: '비밀번호를 입력해주세요.' },
     };
+    render(<LoginForm {...errorProps} />);
 
-    render(<LoginForm {...defaultProps} isLoading={true} />);
-    
-    expect(screen.getByText('로그인 중...')).toBeInTheDocument();
-    expect(screen.getByLabelText('아이디')).toBeDisabled();
-    expect(screen.getByLabelText('비밀번호')).toBeDisabled();
+    expect(screen.getByText('ID를 입력해주세요.')).toBeInTheDocument();
+    expect(screen.getByText('비밀번호를 입력해주세요.')).toBeInTheDocument();
   });
 });
-
-
