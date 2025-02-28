@@ -1,6 +1,9 @@
 import { Button, Typography } from '@mui/material';
 import Tooltip from '@components/Tooltip';
-import { TooltipExampleContainer, TooltipWrapper } from './TooltipExample.styled';
+import {
+  TooltipExampleContainer,
+  TooltipWrapper,
+} from '@pages/examples/tooltip/TooltipExample.styled';
 
 const TooltipExample = () => {
   return (

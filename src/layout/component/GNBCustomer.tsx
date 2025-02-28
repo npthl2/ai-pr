@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Typography } from '@mui/material';
 import { Navigation, UserSection } from './GNBCustomer.styled';
 import Button from '@components/Button';
+import { useHistoryPanelStore } from '@stores/HistoryPanelStore';
 import useMemberStore from '@stores/MemberStore';
 import useCustomerStore from '@stores/CustomerStore';
 import { ROLE_UNMASKING } from '@constants/CommonConstant';
@@ -17,6 +18,7 @@ interface GNBCustomerProps {
 
 const GNBCustomer = ({ name, rrno, gender, age }: GNBCustomerProps) => {
   const [unmasking, setUnmasking] = useState<boolean>(false);
+  const toggleOpen = useHistoryPanelStore((state) => state.toggleOpen);
 
   const { updateCustomer } = useCustomerStore();
 
@@ -81,7 +83,13 @@ const GNBCustomer = ({ name, rrno, gender, age }: GNBCustomerProps) => {
             마스킹 해제
           </Button>
         )}
-        <Button variant='outlined' size='small' color='grey'>
+        <Button
+          data-testid='memoOpenButton'
+          variant='outlined'
+          size='small'
+          color='grey'
+          onClick={toggleOpen}
+        >
           메모 및 발송이력
         </Button>
       </Navigation>
