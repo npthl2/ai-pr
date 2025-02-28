@@ -8,7 +8,6 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import { getTheme } from '@theme/theme';
 import MainLayout from '@layout/MainLayout';
 import CustomerLayout from '@layout/CustomerLayout';
-import Home from '@pages/home/Home';
 
 import NestedDialogExample from '@pages/examples/nestedDialog/DialogExample';
 import SelectExample from '@pages/examples/select/SelectExample';
@@ -63,8 +62,7 @@ function App() {
               </Route>
               <Route element={<ProtectedRoute />}>
                 <Route element={<MainLayout />}>
-                  <Route path='/' element={<Home />} />
-                  <Route path='/customer' element={<CustomerLayout />} />
+                  <Route path='/' element={<CustomerLayout />} />
                 </Route>
               </Route>
             </Route>

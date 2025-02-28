@@ -4,7 +4,7 @@ import { CommonResponse, CommonStatus } from '@model/common/CommonResponse';
 
 const mockBoardsData: CommonResponse<BoardsResponse> = {
   successOrNot: 'Y',
-  status: CommonStatus.SUCCESS,
+  statusCode: CommonStatus.SUCCESS,
   data: {
     boards: [
       {
