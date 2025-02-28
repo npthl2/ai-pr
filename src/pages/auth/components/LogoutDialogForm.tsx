@@ -10,7 +10,7 @@ interface LogoutDialogProps {
   onCompleteClose: () => void;
 }
 
-const LogoutDialog = ({
+const LogoutDialogForm = ({
   isConfirmOpen,
   isCompleteOpen,
   onConfirm,
@@ -65,4 +65,4 @@ const LogoutDialog = ({
   );
 };
 
-export default LogoutDialog;
+export default LogoutDialogForm;

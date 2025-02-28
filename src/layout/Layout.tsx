@@ -11,7 +11,7 @@ import useCustomerStore from '@stores/CustomerStore';
 import useAuthStore from '@stores/AuthStore';
 import useMemberStore from '@stores/MemberStore';
 import GNBCustomer from './component/GNBCustomer';
-import LogoutDialog from '../pages/auth/components/LogoutDialogForm';
+import LogoutDialogForm from '../pages/auth/components/LogoutDialogForm';
 import { useHotkeys } from 'react-hotkeys-hook';
 import CustomerSearch from '@pages/customer/search/CustomerSearch';
 import { MainMenu } from '@constants/CommonConstant';
@@ -139,7 +139,7 @@ const Layout = () => {
           onCloseModal={() => setOpen(false)}
         />
 
-        <LogoutDialog
+        <LogoutDialogForm
           isConfirmOpen={isLogoutDialogOpen}
           isCompleteOpen={isLogoutCompleteDialogOpen}
           onConfirm={handleLogout}
