@@ -3,12 +3,12 @@ import authService from '@api/services/authService';
 import { AxiosError } from 'axios';
 import useAuthStore from '@stores/AuthStore';
 import useMemberStore from '@stores/MemberStore';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 export const useLogoutMutation = () => {
     const { logout } = useAuthStore();
     const { clearMemberInfo } = useMemberStore();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     return useMutation({
         mutationFn: () => authService.logout(),
@@ -16,7 +16,7 @@ export const useLogoutMutation = () => {
             if (response.successOrNot === 'Y') {
                 logout();
                 clearMemberInfo();
-                navigate('/login', { replace: true });
+                // navigate('/login', { replace: true });
             }
         },
         onError: (error: AxiosError<{ message: string }>) => {
