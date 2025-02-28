@@ -12,5 +12,13 @@ export interface User {
   memberName: string;
 }
 
+export interface MemberInfo {
+  memberId: string;
+  memberName: string;
+  classOfPosition: string;
+  memberGroup: string;
+  authorities: string[];
+}
+
 export interface GetUserResponse extends CommonResponse<User> {}
 export interface LogoutResponse extends CommonResponse<void> {}

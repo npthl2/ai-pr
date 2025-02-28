@@ -18,10 +18,12 @@ import {
   MemoHistoryTableContainer,
 } from './MemoHistory.styled';
 import useCustomerStore from '@stores/CustomerStore';
+import useAuthStore from '@stores/AuthStore';
 import { Memo } from '@model/Memo';
 
 const MemoHistory: React.FC = () => {
   const activeCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
+  const memberInfo = useAuthStore((state) => state.memberInfo);
   const [memoContent, setMemoContent] = useState<string>('');
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
@@ -88,8 +90,7 @@ const MemoHistory: React.FC = () => {
         customerId: activeCustomerId,
         memoType: MemoType.MEMBER,
         content: memoContent,
-        // To-Do: 로그인 후 사용자 이름 가져오기
-        authorName: '체리체리',
+        authorName: memberInfo?.memberName || '',
       });
 
       // BusinessException시 실패 메세지 출력
