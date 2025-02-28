@@ -31,6 +31,7 @@ const MemoHistory: React.FC = () => {
   const queryClient = useQueryClient();
   const memoEditorRef = useRef<HTMLTextAreaElement>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
+  const tableTopRef = useRef<HTMLDivElement>(null);
 
   const { data, refetch } = useMemosQuery(activeCustomerId, page);
   const { memos, isLast } = data || {};
@@ -98,6 +99,10 @@ const MemoHistory: React.FC = () => {
         openToast('저장에 실패했습니다. 다시 시도해 주세요.');
         return;
       }
+      // 테이블 맨 위로 스크롤
+      if (tableTopRef.current) {
+        tableTopRef.current.scrollIntoView();
+      }
       setMemoContent('');
       openToast('저장되었습니다.');
 
@@ -134,6 +139,7 @@ const MemoHistory: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody style={{ height: memos && memos.length === 0 ? '180px' : 'auto' }}>
+              <div ref={tableTopRef} style={{ position: 'absolute', top: '-50px' }} />
               {totalMemos && totalMemos.length > 0 ? (
                 totalMemos.map((memo, index) => (
                   <TableRow key={index} disableEffect={true}>
