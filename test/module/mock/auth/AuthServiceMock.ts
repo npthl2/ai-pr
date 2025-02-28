@@ -15,7 +15,7 @@ export const successLoginResponse = {
     }
 };
 
-const getBookmark = {
+export const getBookmark = {
     successOrNot: 'Y',
     statusCode: 'SUCCESS',
     data: {
@@ -24,7 +24,7 @@ const getBookmark = {
     }
 };
 
-const failLoginResponse = {
+export const failLoginResponse = {
     successOrNot: 'N',
     statusCode: 'FAIL',
     data: {
@@ -35,7 +35,7 @@ const failLoginResponse = {
 export class AuthServiceMock {
     // 로그인 성공 Mock
     successWhenLogin() {
-        cy.intercept('GET', '**/v1/auth/login', {
+        cy.intercept('POST', '**/v1/auth/login', {
             statusCode: 200,
             body: successLoginResponse
         });
@@ -54,6 +54,14 @@ export class AuthServiceMock {
             statusCode: 200,
             body: failLoginResponse
         });
+    }
+
+    // 로그아웃 실패 Mock (200 응답이지만 실패 데이터 반환)
+    successWhenLogout() {
+        cy.intercept('POST', '**/v1/auth/logout', {
+            statusCode: 200,
+            body: { successOrNot: 'Y', statusCode: 'SUCCESS' }
+        }).as('logoutRequest');
     }
 }
 

@@ -43,22 +43,24 @@ const LogoutDialogForm = ({
         confirmText="확인"
         cancelText="취소"
         isTopmost={false}
+        data-testid="logout-dialog"
       >
-        로그아웃 하시겠습니까?
+        <div data-testid="logout-dialog-message">로그아웃 하시겠습니까?</div>
       </DialogLayout>
 
       {/* 로그아웃 완료 스낵바 */}
       <StyledSnackbar
         open={openSnackbar}
-        autoHideDuration={3000}
+        autoHideDuration={10000}
         onClose={() => {
           setOpenSnackbar(false);
           onCompleteClose();
         }}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        data-testid="logout-snackbar"
       >
         <SnackbarContentBox>
-          <SnackbarText>로그아웃 되었습니다.</SnackbarText>
+          <SnackbarText data-testid="logout-snackbar-message">로그아웃 되었습니다.</SnackbarText>
         </SnackbarContentBox>
       </StyledSnackbar>
     </>

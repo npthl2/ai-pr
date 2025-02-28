@@ -1,18 +1,14 @@
 import LoginPage from '../../../pages/auth/LoginPage';
 import AuthServiceMock from '../../mock/auth/AuthServiceMock';
-import { successLoginResponse } from '../../mock/auth/AuthServiceMock';
 
 describe('KAN-44 로그인 기능 테스트', () => {
     const loginPage = new LoginPage();
     const authMock = new AuthServiceMock();
 
     beforeEach(() => {
-        cy.intercept('POST', '**/v1/auth/login', (req) => {
-            console.log('🚀 Cypress Intercepted Request:', req);
-        }).as('loginRequest');
-    
         authMock.successWhenLogin(); // ✅ Mock을 먼저 실행
         loginPage.visitLoginPage();  // ✅ 그 후 로그인 페이지 방문
+        authMock.getBookmark();
     });
 
     it('KAN-44-1 정확한 ID와 PW 입력 후 로그인 버튼 클릭 시 로그인 성공 후 홈 화면으로 이동하고 로그인한 유저 정보가 보여야 한다', () => {
@@ -21,7 +17,8 @@ describe('KAN-44 로그인 기능 테스트', () => {
         loginPage.inputPw('new1234');
         loginPage.clickLoginButton();
 
-        authMock.getBookmark();
+        // authMock.getBookmark();
+        // cy.wait('@bookmarkRequest');
 
         loginPage.assertRedirectedToHome();
         loginPage.assertUserInfoDisplayed('김콜센터', '대리');
@@ -54,6 +51,56 @@ describe('KAN-44 로그인 기능 테스트', () => {
         loginPage.clickLoginButton();
 
         loginPage.assertLoginErrorMessage('아이디 또는 비밀번호가 일치하지 않습니다.');
+    });
+
+
+    it('KAN-44-4 로그아웃 버튼을 클릭하면 로그아웃 모달이 표시되어야 한다', () => {
+        loginPage.inputId('user1');
+        loginPage.inputPw('new1234');
+        loginPage.clickLoginButton();
+
+        loginPage.assertRedirectedToHome();
+
+        cy.get('[data-testid="logout-button"]').click(); // ✅ 로그아웃 버튼 클릭
+        cy.get('[data-testid="logout-dialog"]').should('be.visible'); // ✅ 로그아웃 모달이 표시되는지 확인
+    });
+
+    it('KAN-44-5 로그아웃 모달에서 확인 버튼을 클릭하면 로그아웃이 정상적으로 처리되어야 한다', () => {
+        authMock.successWhenLogout();
+
+        loginPage.inputId('user1');
+        loginPage.inputPw('new1234');
+        loginPage.clickLoginButton();
+
+        loginPage.assertRedirectedToHome();
+
+        cy.get('[data-testid="logout-button"]').click();
+        cy.get('[data-testid="logout-dialog"]').should('be.visible');
+
+        cy.get('[data-testid="logout-confirm-button"]').click();
+        cy.wait('@logoutRequest');
+
+        cy.url().should('eq', `${Cypress.config().baseUrl}/login`);
+    });
+
+    it('KAN-44-6 로그아웃 성공 후 스낵바가 표시되어야 한다', () => {
+        loginPage.inputId('user1');
+        loginPage.inputPw('new1234');
+        loginPage.clickLoginButton();
+
+        loginPage.assertRedirectedToHome();
+
+        cy.get('[data-testid="logout-button"]').click();
+        cy.get('[data-testid="logout-dialog"]').should('be.visible');
+
+        // ✅ 페이지 이동 전에 Cypress가 스낵바를 먼저 확인할 수 있도록 함
+        cy.on('window:before:unload', () => {
+            
+            cy.get('[data-testid="logout-snackbar"]').should('be.visible');
+            cy.contains('로그아웃 되었습니다.').should('be.visible');
+        });
+    
+        cy.get('[data-testid="logout-confirm-button"]').click(); // ✅ 로그아웃 확인 버튼 클릭
     });
 
     

@@ -126,6 +126,7 @@ const Layout = () => {
                   color='primary'
                   size='large'
                   iconComponent={<LogoutIcon />}
+                  data-testid="logout-button"
                   onClick={handleLogoutClick}
                 />
               </HeaderRight>
