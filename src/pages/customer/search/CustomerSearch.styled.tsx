@@ -27,7 +27,7 @@ export const SearchTitle = styled.div`
 
 export const RowWrapper = styled.div`
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 16px;
 `;
 

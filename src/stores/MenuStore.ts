@@ -9,16 +9,19 @@ type MenuItem = {
 };
 
 type MenuState = {
+  displayMode: string;
   selectedMainMenu: string;
   menuItems: {
     bookmarks: MenuItem[];
     menu: MenuItem[];
   };
+  setDisplayMode: (displayMode: string) => void;
   setSelectedMainMenu: (mainMenu: string) => void;
   setMenuItems: (bookmarks: string[]) => void;
 };
 
 const useMenuStore = create<MenuState>((set) => ({
+  displayMode: 'home',
   selectedMainMenu: 'home',
   menuItems: {
     bookmarks: [],
@@ -27,6 +30,11 @@ const useMenuStore = create<MenuState>((set) => ({
   setSelectedMainMenu: (selectedMainMenu: string) => {
     set(() => ({
       selectedMainMenu,
+    }));
+  },
+  setDisplayMode: (displayMode: string) => {
+    set(() => ({
+      displayMode,
     }));
   },
   setMenuItems: (bookmarks: string[]) => {

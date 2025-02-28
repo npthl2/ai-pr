@@ -30,6 +30,7 @@ import ApiTestExample from './pages/examples/apiTest/ApiTestExample';
 import Board from '@pages/test/board/Board';
 import RegistBoard from '@pages/test/board/component/RegistBoard';
 import MemoAndHistoryPanel from '@pages/memoAndSendHistory/MemoAndSendHistoryPanel';
+import Login from '@pages/auth/Login';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
         <CssBaseline />
         <BrowserRouter>
           <Routes>
+            <Route path='/login' element={<Login />} />
             <Route element={<Layout />}>
               <Route path='example'>
                 <Route path='login' element={<LoginExample />} />

@@ -1,15 +1,8 @@
 import { CommonResponse } from './common/CommonResponse';
 
 export interface LoginRequestParams {
-  emailAddress: string;
+  loginId: string;
   password: string;
-}
-
-export interface User {
-  emailAddress: string;
-  memberId: number;
-  sessionId: string;
-  memberName: string;
 }
 
 export interface MemberInfo {
@@ -20,5 +13,30 @@ export interface MemberInfo {
   authorities: string[];
 }
 
-export interface GetUserResponse extends CommonResponse<User> {}
-export interface LogoutResponse extends CommonResponse<void> {}
+export interface LoginResponse {
+  accessToken: string;
+  memberInfo: MemberInfo;
+}
+
+export interface Authority {
+  authorityId: string;
+  authorityName: string;
+  description: string;
+}
+
+export interface AuthoritiesResponse {
+  memberId: string;
+  authorities: Authority[];
+}
+
+export interface ApiError {
+  message: string;
+}
+
+export interface LogoutResponse {
+  message: string;
+}
+
+export interface LoginApiResponse extends CommonResponse<LoginResponse> {}
+export interface LogoutApiResponse extends CommonResponse<LogoutResponse> {}
+export interface AuthoritiesApiResponse extends CommonResponse<AuthoritiesResponse> {}

@@ -4,6 +4,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { LNBCustomerListContainer, StyledTabList } from './LNBCustomerList.styled';
 import { useState } from 'react';
 import { Customer } from '@model/Customer';
+import useMenuStore from '@stores/MenuStore';
+import { MainMenu } from '@constants/CommonConstant';
 
 interface LNBCustomerListProps {
   value: string;
@@ -14,11 +16,17 @@ interface LNBCustomerListProps {
 
 const LNBCustomerList = ({ value, onChange, customers, onRemove }: LNBCustomerListProps) => {
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
+  const { setSelectedMainMenu } = useMenuStore();
 
   return (
     <LNBCustomerListContainer>
       <TabContext value={value}>
-        <StyledTabList orientation='vertical' onChange={onChange}>
+        <StyledTabList
+          orientation='vertical'
+          onClick={() => setSelectedMainMenu(MainMenu.CUSTOMERS)}
+          onChange={onChange}
+          data-testid='lnb-customer-list'
+        >
           {customers.map((customer) => (
             <Tab
               key={customer.id}
@@ -48,6 +56,7 @@ const LNBCustomerList = ({ value, onChange, customers, onRemove }: LNBCustomerLi
                         right: 4,
                         '&:hover': { backgroundColor: 'transparent' },
                       }}
+                      data-testid={`remove-btn-${customer.id}`}
                     >
                       <CloseIcon
                         fontSize='small'
@@ -62,6 +71,7 @@ const LNBCustomerList = ({ value, onChange, customers, onRemove }: LNBCustomerLi
               value={customer.id}
               onMouseEnter={() => setHoveredTab(customer.id)}
               onMouseLeave={() => setHoveredTab(null)}
+              data-testid={`customer-tab-${customer.id}`}
             />
           ))}
         </StyledTabList>

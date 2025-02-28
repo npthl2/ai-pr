@@ -1,20 +1,36 @@
-import { User } from '@model/Auth';
-import { CommonResponse, CommonStatus } from '@model/common/CommonResponse';
+import { LoginRequestParams, LogoutResponse, AuthoritiesResponse } from '@model/Auth';
+import { CommonResponse } from '@model/common/CommonResponse';
+
+import baseService from './baseService';
+
+const API_AUTH_URL = '/cca-be/v1/auth';
 
 const authService = {
-  login(): Promise<CommonResponse<User>> {
-    // return baseService.post<User, LoginRequestParams>('/api/v1/session', data);
-    const user: CommonResponse<User> = {
+  // TODO : 로그인 처리 후 토큰 발급 로직 샘플
+  login(data: LoginRequestParams) {
+    // return baseService.post<LoginResponse, LoginRequestParams>(`${API_AUTH_URL}/login`, data);
+    return Promise.resolve({
       successOrNot: 'Y',
+      statusCode: 'SUCCESS',
       data: {
-        emailAddress: 'admin@kt.com',
-        memberId: 1,
-        sessionId: '1234',
-        memberName: '이명진',
+        accessToken: 'mock-token',
+        memberInfo: {
+          memberId: data.loginId,
+          memberName: 'testuser',
+          classOfPosition: 'test-class',
+          memberGroup: 'test-group',
+          authorities: ['ROLE_SEARCH_TEL_NO'],
+        },
       },
-      status: CommonStatus.SUCCESS,
-    };
-    return Promise.resolve(user);
+    });
+  },
+
+  logout(): Promise<CommonResponse<LogoutResponse>> {
+    return baseService.post<LogoutResponse, undefined>(`${API_AUTH_URL}/logout`, undefined);
+  },
+
+  getAuthorities(memberId: string): Promise<CommonResponse<AuthoritiesResponse>> {
+    return baseService.get<AuthoritiesResponse>(`${API_AUTH_URL}/authorities/${memberId}`);
   },
 };
 

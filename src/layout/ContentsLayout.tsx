@@ -85,11 +85,16 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
               <StyledTab
                 key={tab.id}
                 value={tab.id}
+                data-testid={`tab-${tab.label}`}
                 label={
                   <TabLabel>
                     <Typography variant='body2'>{tab.label}</Typography>
                     {tab.closeable && (
-                      <TabCloseButton size='small' onClick={(e) => handleCloseTab(e, tab.id)}>
+                      <TabCloseButton
+                        size='small'
+                        data-testid={`close-tab-${tab.label}`}
+                        onClick={(e) => handleCloseTab(e, tab.id)}
+                      >
                         <CloseIcon />
                       </TabCloseButton>
                     )}
@@ -103,6 +108,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
               size='small'
               onClick={handleMoveLeft}
               disabled={customerTabs.activeTab === 0}
+              data-testid='tab-left-button'
             >
               <KeyboardArrowLeftIcon />
             </ActionButton>
@@ -110,10 +116,11 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
               size='small'
               onClick={handleMoveRight}
               disabled={customerTabs.activeTab === customerTabs.tabs.length - 1}
+              data-testid='tab-right-button'
             >
               <KeyboardArrowRightIcon />
             </ActionButton>
-            <CloseAllButton onClick={handleCloseAll}>
+            <CloseAllButton onClick={handleCloseAll} data-testid='close-all-tabs'>
               <CloseIcon />
               <Typography variant='body2'>전체닫기</Typography>
             </CloseAllButton>
@@ -125,6 +132,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
             {currentTab?.label !== '고객조회' && (
               <StarIconButton
                 variant='text'
+                data-testid={`bookmark-tab-${currentTab?.label}`}
                 onClick={(e) => {
                   if (!currentTab?.label || !currentTabId) return;
                   handleBookmarkClick(e, currentTabId);
