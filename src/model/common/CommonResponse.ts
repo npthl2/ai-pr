@@ -17,6 +17,6 @@ export enum CommonStatus {
 
 export interface CommonResponse<T> {
   successOrNot: string;
-  status: CommonStatus;
+  statusCode: CommonStatus;
   data: T | string | null;
 }

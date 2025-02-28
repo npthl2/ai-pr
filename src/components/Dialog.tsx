@@ -11,6 +11,7 @@ import {
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 type DialogSize = 'small' | 'medium' | 'large';
+
 interface DialogProps extends Omit<MuiDialogProps, 'content'> {
   size?: DialogSize;
   title: string;
@@ -41,6 +42,7 @@ const StyledButton = styled(Button)({
 });
 const StyledDialogContent = styled(DialogContent)({
   padding: '10px 24px',
+  whiteSpace: 'pre-line', // content 내에 줄바꿈 허용
 });
 const StyledDialogActions = styled(DialogActions)({
   padding: '18px 24px',

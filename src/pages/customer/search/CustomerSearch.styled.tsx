@@ -1,18 +1,19 @@
 import styled from '@emotion/styled';
 import Button from '@components/Button';
 import Box from '@mui/material/Box';
+import { Theme } from '@mui/material';
 
-export const CustomerSearchContainer = styled.div`
-  width: 474px;
-  min-height: 181px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  border-radius: 16px;
-  padding: 24px 32px;
-  background-color: #ffffff;
-  box-shadow: 0px 4px 15px 0px #00000033;
-`;
+export const CustomerSearchContainer = styled('div')(({ theme }: { theme: Theme }) => ({
+  width: '474px',
+  minHeight: '181px',
+  display: 'flex',
+  flexDirection: 'column' as const, // flexDirection 타입을 명시적으로 지정,
+  gap: '24px',
+  borderRadius: '16px',
+  padding: '24px 32px',
+  backgroundColor: theme.palette.primary.contrastText, // 테마의 primary 색상 사용
+  boxShadow: '0px 4px 15px 0px #00000033',
+}));
 
 // "고객조회" 제목의 스타일 (Figma 프로퍼티 적용)
 export const SearchTitle = styled.div`
@@ -31,25 +32,24 @@ export const RowWrapper = styled.div`
   gap: 16px;
 `;
 
-// Button의 스타일 오버라이드 - 인라인 스타일 대신 별도로 분리
-export const CustomerSearchButton = styled(Button)`
-  width: 410px;
-  height: 32px;
-  border-radius: 2px;
-  background: #05151f;
-  color: #ffffff;
+export const CustomerSearchButton = styled(Button)(({ theme }: { theme: Theme }) => ({
+  width: '410px',
+  height: '32px',
+  borderRadius: '2px',
+  background: theme.palette.primary.main, // 테마의 primary 색상 사용
+  color: theme.palette.primary.contrastText, // primary 대비 텍스트 색상 사용
 
-  font-family: 'Pretendard', sans-serif;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 21px;
-  letter-spacing: 0px;
+  fontFamily: 'Pretendard, sans-serif',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '21px',
+  letterSpacing: '0px',
 
   // hover 시에도 배경색 및 스타일 유지
-  &:hover {
-    background: #05151f;
-  }
-`;
+  '&:hover': {
+    background: theme.palette.primary.main, // hover 시 primary 색상 유지
+  },
+}));
 
 // 라디오 버튼 전체를 감싸는 컨테이너: 두 개의 라디오 버튼이 들어가며,
 // Figma에 따르면 전체 컨테이너는 width: 74px, height: 21px, gap: 8px

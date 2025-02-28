@@ -58,6 +58,36 @@ export default defineConfig({
         secure: false,
         rewrite: (path) => path.replace(/^\/cca-be/, ''),
       },
+      '/mpn-be': {
+        target: 'http://localhost:8082',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/mpn-be/, ''),
+      },
+      '/cbg-be': {
+        target: 'http://localhost:8083',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/cbg-be/, ''),
+      },
+      '/ctt-be': {
+        target: 'http://localhost:8084',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/ctt-be/, ''),
+      },
+      '/nwk-be': {
+        target: 'http://localhost:8085',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/nwk-be/, ''),
+      },
+      '/adm-be': {
+        target: 'http://localhost:8086',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/adm-be/, ''),
+      },
       '/stg-be': {
         target: 'http://localhost:8087',
         changeOrigin: true,
