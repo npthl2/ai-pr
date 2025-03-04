@@ -1,16 +1,16 @@
 import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
-import { MemberInfo } from '@model/Auth';
+import { Member } from '@model/Auth';
 
 interface MemberState {
-  memberInfo: MemberInfo | null;
-  setMemberInfo: (info: MemberInfo) => void;
+  memberInfo: Member | null;
+  setMemberInfo: (info: Member) => void;
   clearMemberInfo: () => void;
 }
 
 const useMemberStore = create<MemberState>((set) => ({
   memberInfo: null,
-  setMemberInfo: (info: MemberInfo) => set({ memberInfo: info }),
+  setMemberInfo: (info: Member) => set({ memberInfo: info }),
   clearMemberInfo: () => set({ memberInfo: null })
 }));
 

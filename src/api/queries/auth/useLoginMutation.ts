@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import authService from '@api/services/authService';
-import { LoginRequestParams, LoginResponse } from '@model/Auth';
+import { LoginRequestParams, LoginResponse, MemberInfo } from '@model/Auth';
 import { AxiosError } from 'axios';
 import useAuthStore from '@stores/AuthStore';
 import useMemberStore from '@stores/MemberStore';
@@ -28,9 +28,14 @@ export const useLoginMutation = () => {
     },
     onSuccess: (response: CommonResponse<LoginResponse>) => {
       if (response.data && typeof response.data !== 'string') {
-        const { accessToken, memberInfo } = response.data;
-        setAccessToken(accessToken, memberInfo);
-        setMemberInfo(memberInfo);
+
+        const rawData = response.data as unknown as { accessToken: string; member: MemberInfo };
+        const loginResponse: LoginResponse = {
+          accessToken: rawData.accessToken,
+          memberInfo: rawData.member,
+        };
+        setAccessToken(loginResponse.accessToken, loginResponse.memberInfo);
+        setMemberInfo(loginResponse.memberInfo);
         navigate('/', { replace: true });
       }
     },
