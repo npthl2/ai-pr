@@ -91,7 +91,7 @@ const MemoHistory: React.FC = () => {
         customerId: activeCustomerId,
         memoType: MemoType.MEMBER,
         content: memoContent,
-        authorName: memberInfo?.memberName || '',
+        author: `${memberInfo?.memberName || ''} ${memberInfo?.classOfPosition || ''}`,
       });
 
       // BusinessException시 실패 메세지 출력
@@ -130,7 +130,7 @@ const MemoHistory: React.FC = () => {
                 <TableCell sx={{ width: '18%' }}>
                   <Typography>작성일시</Typography>
                 </TableCell>
-                <TableCell sx={{ width: '13%' }}>
+                <TableCell sx={{ width: '18%' }}>
                   <Typography>작성자</Typography>
                 </TableCell>
                 <TableCell>
@@ -148,7 +148,7 @@ const MemoHistory: React.FC = () => {
                       <Typography>{memo.firstCreateDatetime}</Typography>
                     </TableCell>
                     <TableCell sx={{ minWidth: '100px' }}>
-                      <Typography>{memo.authorName}</Typography>
+                      <Typography>{memo.author}</Typography>
                     </TableCell>
                     <TableCell>
                       <Tooltip sx={{ zIndex: 10000 }} title={memo.content} placement='bottom' arrow>

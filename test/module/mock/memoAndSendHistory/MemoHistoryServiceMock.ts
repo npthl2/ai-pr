@@ -6,7 +6,7 @@ const memoList = [
     memoId: '1',
     memoType: 'MEMBER',
     content: '메모 내용',
-    authorName: 'member-id-01',
+    author: 'member-id-01 사원',
     firstCreateDatetime: '2025-02-01 12:00:00',
   },
 ];

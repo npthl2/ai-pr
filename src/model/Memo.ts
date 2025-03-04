@@ -9,14 +9,14 @@ export interface MemoRequestParams {
   customerId: string;
   memoType: MemoType;
   content: string;
-  authorName: string;
+  author: string;
 }
 
 export interface Memo {
   memoId: string;
   memoType: MemoType;
   content: string;
-  authorName: string;
+  author: string;
   firstCreateDatetime: string;
 }
 
@@ -31,9 +31,7 @@ export function isMemo(value: unknown): value is Memo {
   return (
     typeof value === 'object' &&
     value !== null &&
-    ['memoId', 'memoType', 'content', 'authorName', 'firstCreateDatetime'].every(
-      (key) => key in value,
-    )
+    ['memoId', 'memoType', 'content', 'author', 'firstCreateDatetime'].every((key) => key in value)
   );
 }
 
