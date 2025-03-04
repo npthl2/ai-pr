@@ -21,7 +21,7 @@ export const useLoginMutation = () => {
       const response = await authService.login(data);
       if (response.successOrNot !== 'Y') {
         const errorData = response.data as unknown as LoginErrorResponse;
-        const errorMessage = errorData?.errorMessage || '아이디 또는 비밀번호가 일치하지 않습니다.';
+        const errorMessage = errorData?.errorMessage || '로그인 계정 정보가 올바르지 않습니다.';
         throw new Error(errorMessage);
       }
       return response;
@@ -45,7 +45,7 @@ export const useLoginMutation = () => {
       }
     },
     onError: (_error: AxiosError) => {
-      throw new Error('아이디 또는 비밀번호가 일치하지 않습니다.');
+      throw new Error('로그인 계정 정보가 올바르지 않습니다.');
     },
   });
 };

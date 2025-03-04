@@ -28,7 +28,7 @@ export const failLoginResponse = {
     successOrNot: 'N',
     statusCode: 'FAIL',
     data: {
-        errorMessage: '아이디 또는 비밀번호가 일치하지 않습니다.'
+        errorMessage: '로그인 계정 정보가 올바르지 않습니다.'
     }
 };
 

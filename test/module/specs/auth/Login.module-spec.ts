@@ -50,7 +50,7 @@ describe('KAN-44 로그인 기능 테스트', () => {
         loginPage.inputPw('wrongPass');
         loginPage.clickLoginButton();
 
-        loginPage.assertLoginErrorMessage('아이디 또는 비밀번호가 일치하지 않습니다.');
+        loginPage.assertLoginErrorMessage('로그인 계정 정보가 올바르지 않습니다.');
     });
 
 
