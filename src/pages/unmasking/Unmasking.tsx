@@ -50,6 +50,7 @@ const Unmasking = <T,>({ onClose, onUnmask, requestData }: UnmaskingProps<T>) =>
     //   return;
     // }
     console.log(requestData);
+    console.log("requestData.itemTypeCode : "+requestData.itemTypeCode);
 
     const unmaskingRequestDto: UnmaskingRequestDto = {
       ...requestData,
@@ -57,7 +58,7 @@ const Unmasking = <T,>({ onClose, onUnmask, requestData }: UnmaskingProps<T>) =>
       requestUnmaskingDatetime : format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
       requestMemberId: memberId || 'S-0001', // MemberStore에서 memberId -> common 에서 X-Authorization-Id 사용하는 걸로 변경 예정.. 나중에.....
       requestMemberConnectedIp: '10.231.58.61',// common 에서 X-Authorization-Id 사용하는 걸로 변경 예정.. 나중에.....
-      customerId: selectedCustomerId || 'cust1234567890', // CustomerStore에서 selectedCustomerId
+      customerId: selectedCustomerId || 'cust12345', // CustomerStore에서 selectedCustomerId
     };
 
     try {
