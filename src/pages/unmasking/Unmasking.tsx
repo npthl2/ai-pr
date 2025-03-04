@@ -1,7 +1,7 @@
 // pages/unmasking/Unmasking.tsx
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Dialog from '@components/Dialog';
-import TextField from '@components/TextField';  // 커스텀 TextField 컴포넌트 임포트
+import TextField from '@components/TextField'; // 커스텀 TextField 컴포넌트 임포트
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { UnmaskingRequestDto, UnmaskingResponseDto, UnmaskingProps } from '@model/Unmasking';
@@ -33,7 +33,6 @@ const Unmasking = <T,>({ onClose, onUnmask, requestData }: UnmaskingProps<T>) =>
     return () => clearTimeout(timer);
   }, []); // Empty dependency array means this runs once on mount
 
-
   const handleReasonChange = (value: string) => {
     if (value.length <= 50) {
       setReason(value);
@@ -45,20 +44,19 @@ const Unmasking = <T,>({ onClose, onUnmask, requestData }: UnmaskingProps<T>) =>
     const selectedCustomerId = useCustomerStore.getState().selectedCustomerId;
     const memberId = useMemberStore.getState().memberInfo?.memberId;
 
-    // if (!selectedCustomerId || !memberId) {
-    //   console.error('고객 ID 또는 회원 ID가 없습니다.');
-    //   return;
-    // }
+    if (!selectedCustomerId || !memberId) {
+      console.error('고객 ID 또는 회원 ID가 없습니다.');
+      return;
+    }
     console.log(requestData);
-    console.log("requestData.itemTypeCode : "+requestData.itemTypeCode);
 
     const unmaskingRequestDto: UnmaskingRequestDto = {
       ...requestData,
       requestUnmaskingReason: reason, // key in 사유
       requestUnmaskingDatetime : format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
-      requestMemberId: memberId || 'S-0001', // MemberStore에서 memberId -> common 에서 X-Authorization-Id 사용하는 걸로 변경 예정.. 나중에.....
+      requestMemberId: memberId, // MemberStore에서 memberId -> common 에서 X-Authorization-Id 사용하는 걸로 변경 예정.. 나중에.....
       requestMemberConnectedIp: '10.231.58.61',// common 에서 X-Authorization-Id 사용하는 걸로 변경 예정.. 나중에.....
-      customerId: selectedCustomerId || 'cust12345', // CustomerStore에서 selectedCustomerId
+      customerId: selectedCustomerId, // CustomerStore에서 selectedCustomerId
     };
 
     try {
@@ -84,12 +82,12 @@ const Unmasking = <T,>({ onClose, onUnmask, requestData }: UnmaskingProps<T>) =>
         value={reason}
         onChange={handleReasonChange}
         state={reason.length > 50 ? 'error' : 'inactive'}
-        size="medium"
+        size='medium'
         multiline
         rows={2}
         autoFocus
         suffix={
-          <CharCount variant="caption" color="textSecondary">
+          <CharCount variant='caption' color='textSecondary'>
             {reason.length}/50
           </CharCount>
         }
@@ -101,11 +99,11 @@ const Unmasking = <T,>({ onClose, onUnmask, requestData }: UnmaskingProps<T>) =>
   return (
     <Dialog
       open={true}
-      size="small"
-      title="마스킹 해제"
+      size='small'
+      title='마스킹 해제'
       content={customContent}
-      closeLabel="취소"
-      confirmLabel="마스킹 해제"
+      closeLabel='취소'
+      confirmLabel='마스킹 해제'
       onClose={onClose}
       onConfirm={handleUnmask}
       isConfirmDisabled={!isButtonEnabled}

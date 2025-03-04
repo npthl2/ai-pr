@@ -3,7 +3,7 @@ import Tooltip from '@components/Tooltip';
 import {
   TooltipExampleContainer,
   TooltipWrapper,
-} from '@pages/tooltipExample/TooltipExample.styled';
+} from '@pages/examples/tooltip/TooltipExample.styled';
 
 const TooltipExample = () => {
   return (

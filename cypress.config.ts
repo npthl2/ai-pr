@@ -17,7 +17,7 @@ export default defineConfig({
       'test/module/specs/**/*.module-spec.ts',
       'test/smoke/specs/**/*.smoke-spec.ts',
     ],
-    baseUrl: 'http://localhost:5174',
-    supportFile: false
+    baseUrl: 'http://localhost:5173',
+    supportFile: false,
   },
 });
