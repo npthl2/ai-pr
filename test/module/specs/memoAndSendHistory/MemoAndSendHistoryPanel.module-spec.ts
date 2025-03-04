@@ -1,19 +1,34 @@
 import MemoHistoryPage from '../../../pages/memoAndSendHistory/MemoHistoryPage';
 import MemoHistoryServiceMock from '../../mock/memoAndSendHistory/MemoHistoryServiceMock';
 import { mockAuthStore } from '../../../support/helpers/mockAuthStore';
+import CustomerSearchTestPage from '../../../pages/customer/search/CustomerSearch';
+import { CustomerSearchServiceMock } from '../../mock/customer/search/CustomerSearchServiceMock';
 
 describe('KAN-201 메모 및 작성이력 화면 진입', () => {
   const page = new MemoHistoryPage();
   const service = new MemoHistoryServiceMock();
+  const customerSearch = new CustomerSearchTestPage();
+  const customerSearchServiceMock = new CustomerSearchServiceMock();
 
-  beforeEach(() => {
-    mockAuthStore();
-    // TO-DO : 고객 조회 기능 붙인후 추가 구현 필요
+  before(() => {
+    mockAuthStore({
+      memberInfo: {
+        memberId: 'user2',
+        memberName: 'user2',
+        authorities: [''],
+      },
+    });
     service.successWhenGetHomeBookmark();
+
+    customerSearch.visitCustomerSearch();
+    customerSearch.getOpenModalButton().click();
+    customerSearch.typeName('김철수');
+    customerSearch.typeBirthDate('781012');
+    customerSearchServiceMock.successFindCustomer01();
+    customerSearch.clickSearch();
   });
-  /*
+
   it('KAN-201-1 메모 및 작성이력 화면 진입', () => {
-    page.visitHome();
     page.clickMemoOpenButton();
     page.assertMemoPanelVisible();
     service.successWhenGetEmptyMemoList();
@@ -50,5 +65,5 @@ describe('KAN-201 메모 및 작성이력 화면 진입', () => {
     page.clickMemoOpenButton();
     page.clickMemoCloseButton();
     page.assertMemoPanelInvisible();
-  });*/
+  });
 });

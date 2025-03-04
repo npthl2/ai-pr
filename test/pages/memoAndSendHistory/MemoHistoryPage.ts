@@ -3,9 +3,8 @@
 class MemoHistoryPage {
   constructor() {}
 
-  visitHome() {
-    cy.visit('/');
-    cy.intercept('GET', '**/adm-be/v1/memos/module-customer-id?**', {
+  clickMemoOpenButton() {
+    cy.intercept('GET', '**/adm-be/v1/memos/100000000001?**', {
       statusCode: 200,
       body: {
         successOrNot: 'Y',
@@ -13,9 +12,6 @@ class MemoHistoryPage {
         data: { memos: [], isLast: true },
       },
     });
-  }
-
-  clickMemoOpenButton() {
     cy.get('[data-testid="memoOpenButton"]').click();
   }
 
