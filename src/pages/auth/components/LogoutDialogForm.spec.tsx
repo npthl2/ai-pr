@@ -11,13 +11,17 @@ describe('LogoutDialog 컴포넌트', () => {
     mockOnConfirm = vi.fn();
     mockOnCancel = vi.fn();
     mockOnCompleteClose = vi.fn();
+
+    const modalRoot = document.createElement('div');
+    modalRoot.setAttribute('id', 'modal');
+    document.body.appendChild(modalRoot);
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  it('로그아웃 확인 팝업이 열리면 텍스트가 표시되어야 한다.', () => {
+  it('로그아웃 확인 팝업이 열리면 텍스트가 표시되어야 한다.', async () => {
     render(
       <LogoutDialogForm
         isConfirmOpen={true}
@@ -28,9 +32,9 @@ describe('LogoutDialog 컴포넌트', () => {
       />
     );
 
-    expect(screen.getByText('로그아웃 하시겠습니까?')).toBeInTheDocument();
-    expect(screen.getByText('확인')).toBeInTheDocument();
-    expect(screen.getByText('취소')).toBeInTheDocument();
+    expect(await screen.findByText('로그아웃 하시겠습니까?')).toBeInTheDocument();
+    expect(await screen.findByText('확인')).toBeInTheDocument();
+    expect(await screen.findByText('취소')).toBeInTheDocument();
   });
 
   it('확인 버튼을 클릭하면 onConfirm 핸들러가 호출되어야 한다.', () => {

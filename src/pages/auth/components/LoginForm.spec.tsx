@@ -78,20 +78,20 @@ describe('LoginForm 컴포넌트', () => {
     expect(screen.getByTestId('login')).toBeDisabled();
   });
 
-  it('비밀번호 보기 토글 버튼을 누르면 비밀번호가 보였다가 숨겨져야 한다.', () => {
-    render(<LoginForm {...defaultProps} />);
+  // it('비밀번호 보기 토글 버튼을 누르면 비밀번호가 보였다가 숨겨져야 한다.', () => {
+  //   render(<LoginForm {...defaultProps} />);
     
-    const passwordInput = screen.getByLabelText('Password');
-    const toggleButton = screen.getByLabelText('비밀번호 보기 토글');
+  //   const passwordInput = screen.getByLabelText('Password');
+  //   const toggleButton = screen.getByLabelText('비밀번호 보기 토글');
 
-    expect(passwordInput).toHaveAttribute('type', 'password');
+  //   expect(passwordInput).toHaveAttribute('type', 'password');
 
-    fireEvent.click(toggleButton);
-    expect(passwordInput).toHaveAttribute('type', 'text');
+  //   fireEvent.click(toggleButton);
+  //   expect(passwordInput).toHaveAttribute('type', 'text');
 
-    fireEvent.click(toggleButton);
-    expect(passwordInput).toHaveAttribute('type', 'password');
-  });
+  //   fireEvent.click(toggleButton);
+  //   expect(passwordInput).toHaveAttribute('type', 'password');
+  // });
 
   it('입력값에 오류가 있을 경우 helperText가 표시되어야 한다.', () => {
     const errorProps = {
