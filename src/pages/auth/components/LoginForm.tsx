@@ -1,6 +1,6 @@
 // import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { ContainerTitle, FormFieldsContainer, LoginIdContainer, LoginPasswordContainer, LoginButton } from '../Login.styled';
-// import { useState } from 'react';
+import { useState } from 'react';
 import { LoginRequestParams } from '@model/Auth';
 import LoginAlert from './LoginAlert';
 import { LoginError } from '../Login.model';
@@ -18,7 +18,7 @@ interface LoginFormProps {
 const LoginForm = ({ formData, isLoading, errors, onSubmit, onChange, onBlur }: LoginFormProps) => {
     
     // 비밀번호 확인 토글 관련
-    // const [showPassword, setShowPassword] = useState(false);
+    const [showPassword] = useState(false);
 
     // const handleTogglePassword = () => {
     //     setShowPassword((prev) => !prev);
@@ -49,7 +49,7 @@ const LoginForm = ({ formData, isLoading, errors, onSubmit, onChange, onBlur }: 
                     label="Password"
                     name="password"
                     data-testid="pw"
-                    // type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? 'text' : 'password'}
                     value={formData.password}
                     onChange={(value) => onChange({ target: { name: 'password', value } } as React.ChangeEvent<HTMLInputElement>)}
                     onBlur={onBlur}
