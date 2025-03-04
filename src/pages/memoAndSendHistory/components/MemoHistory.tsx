@@ -189,7 +189,7 @@ const MemoHistory: React.FC = () => {
         <MemoEditorTextarea
           data-testid='memoTextarea'
           ref={memoEditorRef}
-          placeholder='표시할 데이터가 없습니다'
+          placeholder='메모내용을 입력해주세요.'
           minRows={4}
           maxRows={4}
           maxLength={500}
