@@ -21,7 +21,7 @@ describe('KAN-44 로그인 기능 테스트', () => {
         // cy.wait('@bookmarkRequest');
 
         loginPage.assertRedirectedToHome();
-        loginPage.assertUserInfoDisplayed('김콜센터', '대리');
+        loginPage.assertUserInfoDisplayed('김대리점', '대리');
     });
 
     it('KAN-44-2 항목이 누락된 상태로 로그인 버튼을 클릭할 때 에러 메시지가 표시되어야 한다', () => {
@@ -80,6 +80,7 @@ describe('KAN-44 로그인 기능 테스트', () => {
         cy.get('[data-testid="logout-confirm-button"]').click();
         cy.wait('@logoutRequest');
 
+        cy.wait(2000);
         cy.url().should('eq', `${Cypress.config().baseUrl}/login`);
     });
 

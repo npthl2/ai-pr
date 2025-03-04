@@ -65,6 +65,7 @@ const Layout = () => {
       await authService.logout();
       // logout();
       clearMemberInfo();
+      
       setIsLogoutCompleteDialogOpen(true);
     } catch (error) {
       console.error('Logout failed:', error);

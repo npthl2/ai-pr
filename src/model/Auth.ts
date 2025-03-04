@@ -13,10 +13,12 @@ export interface MemberInfo {
   authorities: string[];
 }
 
-// export interface RawLoginResponse {
-//   accessToken: string;
-//   member: MemberInfo; // 백엔드에서 보내는 키
-// }
+
+export interface RawLoginResponse {
+  accessToken: string;
+  member: Omit<MemberInfo, 'authorities'>; // authorities는 별도로 제공됨
+  authorities: string[];
+}
 
 export interface LoginResponse {
   accessToken: string;

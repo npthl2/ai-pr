@@ -5,13 +5,13 @@ export const successLoginResponse = {
     statusCode: 'SUCCESS',
     data: {
         accessToken: 'mocked-access-token',
-        memberInfo: {
+        member: {
             memberId: 'S-0001',
-            memberName: '김콜센터',  // UI에 표시될 이름
+            memberName: '김대리점',  // UI에 표시될 이름
             classOfPosition: '대리',  // UI에 표시될 직급
-            memberGroup: '콜센터',
-            authorities: [ "ROLE_SEARCH_TEL_NO", "ROLE_UNMASKING" ]
-        }
+            memberGroup: '대리점'
+        },
+        authorities: [ "ROLE_SEARCH_TEL_NO", "ROLE_UNMASKING" ]
     }
 };
 
