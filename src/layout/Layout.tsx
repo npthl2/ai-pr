@@ -23,7 +23,7 @@ const Layout = () => {
   const { setSelectedMainMenu } = useMenuStore();
   const { selectCustomer, reset } = useCustomerStore();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const memberInfo = useMemberStore((state) => state.memberInfo);
+  const memberInfo = useAuthStore((state) => state.memberInfo);
   const logout = useAuthStore((state) => state.logout);
   const clearMemberInfo = useMemberStore((state) => state.clearMemberInfo);
   const selectedCustomer = useCustomerStore((state) =>
