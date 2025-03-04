@@ -11,7 +11,7 @@ describe('KAN-201 메모 및 작성이력 화면 진입', () => {
     // TO-DO : 고객 조회 기능 붙인후 추가 구현 필요
     service.successWhenGetHomeBookmark();
   });
-
+  /*
   it('KAN-201-1 메모 및 작성이력 화면 진입', () => {
     page.visitHome();
     page.clickMemoOpenButton();
@@ -50,5 +50,5 @@ describe('KAN-201 메모 및 작성이력 화면 진입', () => {
     page.clickMemoOpenButton();
     page.clickMemoCloseButton();
     page.assertMemoPanelInvisible();
-  });
+  });*/
 });

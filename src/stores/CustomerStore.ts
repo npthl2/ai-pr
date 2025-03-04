@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
 import { DEFAULT_TABS, MAX_CUSTOMERS } from '@constants/CommonConstant';
-import { Customer, Gender } from '@model/Customer';
+import { Customer } from '@model/Customer';
 
 interface Tab {
   id: number;
@@ -30,33 +30,12 @@ interface CustomerState {
 }
 
 const useCustomerStore = create<CustomerState>((set, get) => ({
-  // TO-DO : 추후수정
-  // customers: [],
-  // selectedCustomerId: null,
-  customers: [
-    {
-      id: 'module-customer-id',
-      name: '케이티',
-      encryptedName: '케이티',
-      rrno: '123456-1234567',
-      encryptedRrno: '123456-1234567',
-      age: 30,
-      gender: Gender.MALE,
-      contractId: '1234567890',
-      unmaskingRrno: '',
-      unmaskingName: '',
-    },
-  ],
-  selectedCustomerId: 'module-customer-id',
+  customers: [],
+  selectedCustomerId: null,
   customerTabs: {},
 
   addCustomer: (customer: Customer) => {
     const { customers, selectedCustomerId } = get();
-
-    // 이미 10명의 고객이 존재하면 신규 추가하지 않고 false 반환
-    if (customers.length >= MAX_CUSTOMERS) {
-      return false;
-    }
 
     const updatedCustomers = selectedCustomerId
       ? customers.map((c) =>
@@ -74,6 +53,11 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
         customers: [...updatedCustomers],
       }));
       return true;
+    }
+
+    // 이미 10명의 고객이 존재하면 신규 추가하지 않고 false 반환
+    if (customers.length >= MAX_CUSTOMERS) {
+      return false;
     }
 
     set((state) => ({

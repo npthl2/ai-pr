@@ -1,12 +1,7 @@
 /// <reference types="cypress" />
 class CustomerSearchPage {
-  // CustomerSearch 컴포넌트를 모달 상태(open=true)로 마운트합니다.
-  visit() {
-    cy.visit('/login');
-  }
-
   visitCustomerSearch() {
-    cy.visit('/customer');
+    cy.visit('/');
   }
 
   getOpenModalButton() {
