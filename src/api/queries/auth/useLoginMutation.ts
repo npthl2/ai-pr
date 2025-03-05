@@ -29,7 +29,6 @@ export const useLoginMutation = () => {
     onSuccess: (response: CommonResponse<LoginResponse>) => {
       if (response.data && typeof response.data !== 'string') {
 
-
         const rawData = response.data as unknown as RawLoginResponse;
         
         const loginResponse: LoginResponse = {
@@ -42,7 +41,6 @@ export const useLoginMutation = () => {
         };
         setAccessToken(loginResponse.accessToken, loginResponse.memberInfo);
         setMemberInfo(loginResponse.memberInfo);
-
         navigate('/', { replace: true });
       }
     },
