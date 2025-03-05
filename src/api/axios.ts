@@ -15,17 +15,6 @@ export const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-axiosInstance.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    // TODO : 토큰 발급 후 헤더에 추가
-    config.headers['X-Authorization-Id'] = '0';
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
-);
-
 // 응답 인터셉터
 axiosInstance.interceptors.response.use(
   (response) => {
