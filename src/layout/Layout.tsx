@@ -63,7 +63,7 @@ const Layout = () => {
     try {
       setIsLogoutDialogOpen(false);
       await authService.logout();
-      // logout();
+      logout();
       clearMemberInfo();
       
       setIsLogoutCompleteDialogOpen(true);
