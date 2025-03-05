@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, TableHead, TableBody, Box, Grid, Typography } from '@mui/material';
+import { TableHead, TableBody, Box, Grid, Typography } from '@mui/material';
 import TableCell from '@components/Table/TableCell';
 import TableRow from '@components/Table/TableRow';
 import Button from '@components/Button';
@@ -16,6 +16,7 @@ import {
   MemoEditorBox,
   MemoEditorTextarea,
   MemoHistoryTableContainer,
+  MemoHistoryTable,
 } from './MemoHistory.styled';
 import useCustomerStore from '@stores/CustomerStore';
 import useAuthStore from '@stores/AuthStore';
@@ -124,7 +125,7 @@ const MemoHistory: React.FC = () => {
         </Typography>
 
         <MemoHistoryTableContainer>
-          <Table style={{ borderCollapse: 'separate', borderSpacing: 0 }}>
+          <MemoHistoryTable>
             <TableHead style={{ position: 'sticky', top: 0 }}>
               <TableRow variant='head'>
                 <TableCell sx={{ width: '18%' }}>
@@ -147,7 +148,7 @@ const MemoHistory: React.FC = () => {
                     <TableCell sx={{ minWidth: '180px' }}>
                       <Typography>{memo.firstCreateDatetime}</Typography>
                     </TableCell>
-                    <TableCell sx={{ minWidth: '100px' }}>
+                    <TableCell sx={{ minWidth: '150px' }}>
                       <Typography>{memo.author}</Typography>
                     </TableCell>
                     <TableCell>
@@ -167,7 +168,7 @@ const MemoHistory: React.FC = () => {
               {/* 스크롤 후 데이터 로드 시 데이터 로드 완료 확인을 위한 더미 div */}
               <div ref={loadMoreRef} style={{ height: '0px' }} />
             </TableBody>
-          </Table>
+          </MemoHistoryTable>
         </MemoHistoryTableContainer>
       </Box>
 
