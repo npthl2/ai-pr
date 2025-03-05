@@ -1,4 +1,4 @@
-// import { Visibility, VisibilityOff } from '@mui/icons-material';
+
 import { ContainerTitle, FormFieldsContainer, LoginIdContainer, LoginPasswordContainer, LoginButton } from '../Login.styled';
 import { useState } from 'react';
 import { LoginRequestParams } from '@model/Auth';
@@ -17,12 +17,7 @@ interface LoginFormProps {
 
 const LoginForm = ({ formData, isLoading, errors, onSubmit, onChange, onBlur }: LoginFormProps) => {
     
-    // 비밀번호 확인 토글 관련
     const [showPassword] = useState(false);
-
-    // const handleTogglePassword = () => {
-    //     setShowPassword((prev) => !prev);
-    // };
 
     return (
         <>
@@ -57,17 +52,6 @@ const LoginForm = ({ formData, isLoading, errors, onSubmit, onChange, onBlur }: 
                     fullWidth
                     state={errors.password ? 'error' : 'inactive'}
                     helperText={errors.password}
-                    // suffix={
-                    //     <IconButton
-                    //         aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
-                    //         onClick={handleTogglePassword}
-                    //         edge="end"
-                    //         disabled={isLoading}
-                    //         size="small"
-                    //     >
-                    //         {showPassword ? <VisibilityOff /> : <Visibility />}
-                    //     </IconButton>
-                    // }
                 />
                 </LoginPasswordContainer>
             </FormFieldsContainer>
