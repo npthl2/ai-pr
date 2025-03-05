@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Typography } from '@mui/material';
 import { Navigation, UserSection } from './GNBCustomer.styled';
 import Button from '@components/Button';
-import useMemberStore from '@stores/MemberStore';
+import useAuthStore from '@stores/AuthStore';
+import { useHistoryPanelStore } from '@stores/HistoryPanelStore';
 import useCustomerStore from '@stores/CustomerStore';
 import { ROLE_UNMASKING } from '@constants/CommonConstant';
 import Unmasking from '@pages/unmasking/Unmasking';
@@ -17,10 +18,11 @@ interface GNBCustomerProps {
 
 const GNBCustomer = ({ name, rrno, gender, age }: GNBCustomerProps) => {
   const [unmasking, setUnmasking] = useState<boolean>(false);
+  const toggleOpen = useHistoryPanelStore((state) => state.toggleOpen);
 
   const { updateCustomer } = useCustomerStore();
 
-  const memberInfo = useMemberStore((state) => state.memberInfo);
+  const memberInfo = useAuthStore((state) => state.memberInfo);
   const selectedCustomer = useCustomerStore((state) =>
     state.customers.find((c) => c.id === state.selectedCustomerId),
   );
@@ -71,11 +73,23 @@ const GNBCustomer = ({ name, rrno, gender, age }: GNBCustomerProps) => {
 
       <Navigation>
         {memberInfo?.authorities.includes(ROLE_UNMASKING) && (
-          <Button variant='outlined' size='small' color='grey' onClick={openUnmasking}>
+          <Button
+            variant='outlined'
+            size='small'
+            color='grey'
+            onClick={openUnmasking}
+            data-testid='gnb-unmasking-button'
+          >
             마스킹 해제
           </Button>
         )}
-        <Button variant='outlined' size='small' color='grey'>
+        <Button
+          data-testid='memoOpenButton'
+          variant='outlined'
+          size='small'
+          color='grey'
+          onClick={toggleOpen}
+        >
           메모 및 발송이력
         </Button>
       </Navigation>

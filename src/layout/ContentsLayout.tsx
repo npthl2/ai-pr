@@ -3,7 +3,7 @@ import { Typography, Box, useTheme } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { TabContext, TabPanel } from '@mui/lab';
+import { TabContext } from '@mui/lab';
 import {
   ContentsContainer,
   Header,
@@ -23,7 +23,7 @@ import Breadcrumb from '@components/Breadcrumb';
 import FavoriteIcon from '@components/FavoriteIcon';
 import { amber } from '@mui/material/colors';
 import useMenuStore from '@stores/MenuStore';
-import { DEFAULT_TABS, SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
+import { SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
 import { useBookmark } from '@hooks/useBookmark';
 import CustomerView from '@pages/customer/view/CustomerView';
 import NewSubscription from '@pages/customer/subscription/NewSubscription';
@@ -76,22 +76,6 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
   const isBookmarked = menuItems.bookmarks.some((item) => item.name === currentTab?.label);
   const currentTabId = SUBSCRIPTION_MENUS.find((menu) => menu.name === currentTab?.label)?.id;
 
-  const getTabContent = (id: number) => {
-    switch (id) {
-      // 고객조회
-      case DEFAULT_TABS[0].id:
-        return <CustomerView customerId={customerId} />;
-      // 신규가입
-      case DEFAULT_TABS[1].id:
-        return <NewSubscription />;
-      // 요금제/부가서비스 변경
-      case DEFAULT_TABS[2].id:
-        return <ServiceModification />;
-      default:
-        return null;
-    }
-  };
-
   return (
     <ContentsContainer>
       <TabContext value={customerTabs.activeTab.toString()}>
@@ -101,11 +85,16 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
               <StyledTab
                 key={tab.id}
                 value={tab.id}
+                data-testid={`tab-${tab.label}`}
                 label={
                   <TabLabel>
                     <Typography variant='body2'>{tab.label}</Typography>
                     {tab.closeable && (
-                      <TabCloseButton size='small' onClick={(e) => handleCloseTab(e, tab.id)}>
+                      <TabCloseButton
+                        size='small'
+                        data-testid={`close-tab-${tab.label}`}
+                        onClick={(e) => handleCloseTab(e, tab.id)}
+                      >
                         <CloseIcon />
                       </TabCloseButton>
                     )}
@@ -119,6 +108,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
               size='small'
               onClick={handleMoveLeft}
               disabled={customerTabs.activeTab === 0}
+              data-testid='tab-left-button'
             >
               <KeyboardArrowLeftIcon />
             </ActionButton>
@@ -126,10 +116,11 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
               size='small'
               onClick={handleMoveRight}
               disabled={customerTabs.activeTab === customerTabs.tabs.length - 1}
+              data-testid='tab-right-button'
             >
               <KeyboardArrowRightIcon />
             </ActionButton>
-            <CloseAllButton onClick={handleCloseAll}>
+            <CloseAllButton onClick={handleCloseAll} data-testid='close-all-tabs'>
               <CloseIcon />
               <Typography variant='body2'>전체닫기</Typography>
             </CloseAllButton>
@@ -141,6 +132,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
             {currentTab?.label !== '고객조회' && (
               <StarIconButton
                 variant='text'
+                data-testid={`bookmark-tab-${currentTab?.label}`}
                 onClick={(e) => {
                   if (!currentTab?.label || !currentTabId) return;
                   handleBookmarkClick(e, currentTabId);
@@ -157,16 +149,30 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
           <Breadcrumb activeTabLabel={['Home', currentTab?.label || '']} />
         </ContentHeader>
         <ContentsBG>
-          {customerTabs.tabs.map((tab) => (
-            <TabPanel
-              key={tab.id}
-              value={tab.id.toString()}
-              keepMounted
-              sx={{ height: '100%', padding: 0 }}
-            >
-              {getTabContent(tab.id)}
-            </TabPanel>
-          ))}
+          <Box
+            sx={{
+              display: currentTab?.id === 0 ? 'block' : 'none',
+              height: '100%',
+            }}
+          >
+            <CustomerView customerId={customerId} />
+          </Box>
+          <Box
+            sx={{
+              display: currentTab?.id === 1 ? 'block' : 'none',
+              height: '100%',
+            }}
+          >
+            <ServiceModification />
+          </Box>
+          <Box
+            sx={{
+              display: currentTab?.id === 2 ? 'block' : 'none',
+              height: '100%',
+            }}
+          >
+            <NewSubscription />
+          </Box>
         </ContentsBG>
       </TabContext>
     </ContentsContainer>

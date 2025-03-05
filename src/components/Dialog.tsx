@@ -11,6 +11,7 @@ import {
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 type DialogSize = 'small' | 'medium' | 'large';
+
 interface DialogProps extends Omit<MuiDialogProps, 'content'> {
   size?: DialogSize;
   title: string;
@@ -41,6 +42,7 @@ const StyledButton = styled(Button)({
 });
 const StyledDialogContent = styled(DialogContent)({
   padding: '10px 24px',
+  whiteSpace: 'pre-line', // content 내에 줄바꿈 허용
 });
 const StyledDialogActions = styled(DialogActions)({
   padding: '18px 24px',
@@ -69,14 +71,18 @@ const Dialog = ({
   return (
     <StyledDialog open={open} size={size} onClose={onClose}>
       <StyledDialogTitle>
-        <Typography variant='h6' sx={(theme) => ({ color: theme.palette.text.primary })}>
+        <Typography
+          variant='h6'
+          sx={(theme) => ({ color: theme.palette.text.primary })}
+          data-testid='component-dialog-title'
+        >
           {title}
         </Typography>
         <StyledIconButton onClick={onClose}>
           <CloseIcon />
         </StyledIconButton>
       </StyledDialogTitle>
-      <StyledDialogContent>{content}</StyledDialogContent>
+      <StyledDialogContent data-testid='component-dialog-content'>{content}</StyledDialogContent>
       <StyledDialogActions>
         {closeLabel && (
           <StyledButton

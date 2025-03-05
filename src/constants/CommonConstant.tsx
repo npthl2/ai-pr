@@ -15,6 +15,7 @@ export enum MainMenu {
   HOME = 'home',
   MENU = 'menu',
   BOOKMARKS = 'bookmarks',
+  CUSTOMERS = 'customers',
 }
 
 export const ROLE_SEARCH_TEL_NO = 'ROLE_SEARCH_TEL_NO';

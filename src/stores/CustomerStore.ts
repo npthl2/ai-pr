@@ -37,11 +37,6 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
   addCustomer: (customer: Customer) => {
     const { customers, selectedCustomerId } = get();
 
-    // 이미 10명의 고객이 존재하면 신규 추가하지 않고 false 반환
-    if (customers.length >= MAX_CUSTOMERS) {
-      return false;
-    }
-
     const updatedCustomers = selectedCustomerId
       ? customers.map((c) =>
           c.id === selectedCustomerId ? { ...c, unmaskingRrno: '', unmaskingName: '' } : c,
@@ -58,6 +53,11 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
         customers: [...updatedCustomers],
       }));
       return true;
+    }
+
+    // 이미 10명의 고객이 존재하면 신규 추가하지 않고 false 반환
+    if (customers.length >= MAX_CUSTOMERS) {
+      return false;
     }
 
     set((state) => ({
