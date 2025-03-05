@@ -1,5 +1,6 @@
+import useAuthStore from '@stores/AuthStore';
 import axios, { InternalAxiosRequestConfig } from 'axios';
-//import useAuthStore from '../stores/AuthStore';
+// import useAuthStore from '../stores/AuthStore';
 
 const baseURL = import.meta.env.VITE_API_URL;
 
@@ -31,14 +32,34 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   async (error) => {
-    // const { logout } = useAuthStore.getState();
+    const { logout } = useAuthStore.getState();
 
-    // if (error.response?.status === 401) {
-    //   logout();
-    //   window.location.href = '/login';
-    // }
+    if (error.response?.status === 401) {
+      logout();
+      window.location.href = '/login';
+    }
     return Promise.reject(error);
   },
+);
+
+axiosInstance.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    // TODO : 토큰 발급 후 헤더에 추가
+    const { accessToken } = useAuthStore.getState(); // ✅ Zustand에서 토큰 가져오기
+
+    // ✅ 토큰이 있으면 Authorization 헤더 추가
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+
+    // ✅ 추가적인 헤더 설정
+    config.headers['X-Authorization-Id'] = '0';
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 
 axiosInstance.interceptors.request.use((config) => {

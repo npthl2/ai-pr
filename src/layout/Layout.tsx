@@ -11,7 +11,7 @@ import useCustomerStore from '@stores/CustomerStore';
 import useAuthStore from '@stores/AuthStore';
 import useMemberStore from '@stores/MemberStore';
 import GNBCustomer from './component/GNBCustomer';
-import LogoutDialog from './component/LogoutDialog';
+import LogoutDialogForm from '../pages/auth/components/LogoutDialogForm';
 import { useHotkeys } from 'react-hotkeys-hook';
 import CustomerSearch from '@pages/customer/search/CustomerSearch';
 import { MainMenu } from '@constants/CommonConstant';
@@ -65,6 +65,7 @@ const Layout = () => {
       await authService.logout();
       logout();
       clearMemberInfo();
+      
       setIsLogoutCompleteDialogOpen(true);
     } catch (error) {
       console.error('Logout failed:', error);
@@ -76,9 +77,12 @@ const Layout = () => {
       reset();
     }
   };
-
-  // 로그아웃 완료 팝업 닫고 로그인 페이지로 이동
+  
+  // 로그아웃 완료 팝업 닫고 로그인 페이지로 이동 (부모 컴포넌트)
   const handleLogoutCompleteClose = () => {
+    // Snackbar의 autoHideDuration이 완료된 후에 호출되므로,
+    // 여기서 즉시 false로 변경해도 괜찮습니다.
+    console.log('부모: LogoutCompleteClose 호출됨');
     setIsLogoutCompleteDialogOpen(false);
     navigate('/login');
   };
@@ -126,6 +130,7 @@ const Layout = () => {
                   color='primary'
                   size='large'
                   iconComponent={<LogoutIcon />}
+                  data-testid="logout-button"
                   onClick={handleLogoutClick}
                 />
               </HeaderRight>
@@ -139,7 +144,7 @@ const Layout = () => {
           onCloseModal={() => setOpen(false)}
         />
 
-        <LogoutDialog
+        <LogoutDialogForm
           isConfirmOpen={isLogoutDialogOpen}
           isCompleteOpen={isLogoutCompleteDialogOpen}
           onConfirm={handleLogout}

@@ -11,6 +11,7 @@ import {
 } from './Login.styled';
 import LoginForm from './components/LoginForm';
 import { LoginError } from './Login.model';
+import { getTheme } from '@theme/theme';
 
 const Login = () => {
   // 로그인 폼 데이터 상태
@@ -71,25 +72,26 @@ const Login = () => {
     }
   };
 
-  return (
-    <LoginContainer>
-      <LogoText>R&R</LogoText>
-      <FormContainer>
-        <TitleContainer>
-          <Title>Welcome to R&R!</Title>
-          <Subtitle>Log in</Subtitle>
-        </TitleContainer>
-        <LoginForm
-          formData={formData}
-          isLoading={loginMutation.isPending}
-          errors={errors}
-          onSubmit={handleLogin}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
-      </FormContainer>
-    </LoginContainer>
-  );
+    return (
+        <LoginContainer>
+            <LogoText theme={getTheme('light')}>R&R</LogoText>
+            <FormContainer>
+                <TitleContainer>
+                    <Title theme={getTheme('light')}>Welcome to R&R!</Title>
+                    <Subtitle theme={getTheme('light')}>Log in</Subtitle>
+                </TitleContainer>
+                <LoginForm
+                    formData={formData}
+                    isLoading={loginMutation.isPending}
+                    errors={errors}
+                    onSubmit={handleLogin}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                />
+            </FormContainer>
+        </LoginContainer>
+    );
+
 };
 
 export default Login;
