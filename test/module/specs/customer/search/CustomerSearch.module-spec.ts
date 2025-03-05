@@ -1,7 +1,5 @@
 import CustomerSearchTestPage from '../../../../pages/customer/search/CustomerSearch';
-import {
-  CustomerSearchServiceMock
-} from '../../../mock/customer/search/CustomerSearchServiceMock';
+import { CustomerSearchServiceMock } from '../../../mock/customer/search/CustomerSearchServiceMock';
 import { mockAuthStore } from '../../../../support/helpers/mockAuthStore';
 
 describe('[KAN-18-1] 고객검색 Modal - 일반유저', () => {
@@ -189,5 +187,5 @@ describe('[KAN-18-2] 고객검색 Modal - 관리자', () => {
     customerSearch.getGNBUnmaskingButton().should('be.visible');
     customerSearch.getGNBUnmaskingButton().click();
     customerSearch.getAlertDialogTitle().should('be.visible');
-  }); */
+  });
 });

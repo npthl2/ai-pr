@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, TableHead, TableBody, Box, Grid, Typography } from '@mui/material';
+import { TableHead, TableBody, Box, Grid, Typography } from '@mui/material';
 import TableCell from '@components/Table/TableCell';
 import TableRow from '@components/Table/TableRow';
 import Button from '@components/Button';
@@ -16,6 +16,7 @@ import {
   MemoEditorBox,
   MemoEditorTextarea,
   MemoHistoryTableContainer,
+  MemoHistoryTable,
 } from './MemoHistory.styled';
 import useCustomerStore from '@stores/CustomerStore';
 import useAuthStore from '@stores/AuthStore';
@@ -91,7 +92,7 @@ const MemoHistory: React.FC = () => {
         customerId: activeCustomerId,
         memoType: MemoType.MEMBER,
         content: memoContent,
-        authorName: memberInfo?.memberName || '',
+        author: `${memberInfo?.memberName || ''} ${memberInfo?.classOfPosition || ''}`,
       });
 
       // BusinessException시 실패 메세지 출력
@@ -124,13 +125,13 @@ const MemoHistory: React.FC = () => {
         </Typography>
 
         <MemoHistoryTableContainer>
-          <Table style={{ borderCollapse: 'separate', borderSpacing: 0 }}>
+          <MemoHistoryTable>
             <TableHead style={{ position: 'sticky', top: 0 }}>
               <TableRow variant='head'>
                 <TableCell sx={{ width: '18%' }}>
                   <Typography>작성일시</Typography>
                 </TableCell>
-                <TableCell sx={{ width: '13%' }}>
+                <TableCell sx={{ width: '18%' }}>
                   <Typography>작성자</Typography>
                 </TableCell>
                 <TableCell>
@@ -147,8 +148,8 @@ const MemoHistory: React.FC = () => {
                     <TableCell sx={{ minWidth: '180px' }}>
                       <Typography>{memo.firstCreateDatetime}</Typography>
                     </TableCell>
-                    <TableCell sx={{ minWidth: '100px' }}>
-                      <Typography>{memo.authorName}</Typography>
+                    <TableCell sx={{ minWidth: '150px' }}>
+                      <Typography>{memo.author}</Typography>
                     </TableCell>
                     <TableCell>
                       <Tooltip sx={{ zIndex: 10000 }} title={memo.content} placement='bottom' arrow>
@@ -167,7 +168,7 @@ const MemoHistory: React.FC = () => {
               {/* 스크롤 후 데이터 로드 시 데이터 로드 완료 확인을 위한 더미 div */}
               <div ref={loadMoreRef} style={{ height: '0px' }} />
             </TableBody>
-          </Table>
+          </MemoHistoryTable>
         </MemoHistoryTableContainer>
       </Box>
 
@@ -189,7 +190,7 @@ const MemoHistory: React.FC = () => {
         <MemoEditorTextarea
           data-testid='memoTextarea'
           ref={memoEditorRef}
-          placeholder='표시할 데이터가 없습니다'
+          placeholder='메모내용을 입력해주세요.'
           minRows={4}
           maxRows={4}
           maxLength={500}

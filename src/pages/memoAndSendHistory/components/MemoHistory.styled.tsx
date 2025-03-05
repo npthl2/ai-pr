@@ -1,4 +1,4 @@
-import { Box, TextareaAutosize, Typography, TableContainer } from '@mui/material';
+import { Box, TextareaAutosize, Typography, TableContainer, Table } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const HighlightedTypography = styled(Typography)(({ theme }) => ({
@@ -31,6 +31,7 @@ export const MemoEditorTextarea = styled(TextareaAutosize)(({ theme }) => ({
   border: `1px solid ${theme.palette.primary.main}`,
   resize: 'none',
   borderRadius: '4px',
+  padding: '2px 12px',
 }));
 
 export const MemoHistoryTableContainer = styled(TableContainer)(({ theme }) => ({
@@ -39,4 +40,25 @@ export const MemoHistoryTableContainer = styled(TableContainer)(({ theme }) => (
   overflowY: 'auto',
   position: 'relative',
   borderBottom: `1px solid ${theme.palette.grey[200]}`,
+}));
+
+export const MemoHistoryTable = styled(Table)(({ theme }) => ({
+  borderCollapse: 'separate',
+  borderSpacing: 0,
+  '& .MuiTableCell-root': {
+    borderBottom: 'none',
+  },
+  '& .MuiTableHead-root': {
+    '& .MuiTableCell-root': {
+      borderBottom: `1px solid ${theme.palette.grey[200]}`,
+    },
+  },
+  '& .MuiTableBody-root': {
+    '& .MuiTableRow-root': {
+      borderBottom: `1px solid ${theme.palette.grey[200]}`,
+      '&:last-child': {
+        borderBottom: 'none',
+      },
+    },
+  },
 }));
