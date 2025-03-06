@@ -20,9 +20,10 @@ import LNBCustomerList from '@layout/component/LNBCustomerList';
 import { useBookmarksQuery } from '@api/queries/bookmark/useBookmarksQuery';
 import useMenuStore from '@stores/MenuStore';
 import { useBookmark } from '@hooks/useBookmark';
-import { DEFAULT_TABS, MainMenu, SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
+import { DEFAULT_TABS, MainMenu, SUBSCRIPTION_MENUS, TabInfo } from '@constants/CommonConstant';
 import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from '@mui/icons-material/Menu';
+import { Work } from '@model/Customer';
 
 interface LNBMenuProps {
   selectedMenu?: string | null;
@@ -43,19 +44,21 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
 
   const [openSubMenu, setOpenSubMenu] = useState<MenuType | null>(null);
   const [mountSubmenu, setMountSubmenu] = useState<MenuType | null>(null);
-  const [selectedSubItem, setSelectedSubItem] = useState<string | null>(null);
 
-  const { menuItems, displayMode, setMenuItems } = useMenuStore();
+  const { menuItems, displayMode, setMenuItems, setSelectedMainMenu } = useMenuStore();
+  const [newCustomerId, setNewCustomerId] = useState<number>(0);
 
   const {
     customers,
     selectedCustomerId,
+    addCustomer,
     selectCustomer,
     removeCustomer,
     customerTabs,
     setCustomerTabs,
     setActiveTab,
   } = useCustomerStore();
+
   const { handleBookmarkClick } = useBookmark();
   const { data: bookmarks } = useBookmarksQuery();
 
@@ -80,9 +83,15 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
   }, [bookmarks]);
 
   useEffect(() => {
-    if (selectedCustomerId && openSubMenu !== null && mountSubmenu === null) {
+    if (selectedMenu === MainMenu.HOME) {
+      const timer = setTimeout(() => {
+        setOpenSubMenu(null);
+        setMountSubmenu(null);
+      }, 300);
+
+      return () => clearTimeout(timer);
     }
-  }, [selectedCustomerId]);
+  }, [selectedMenu]);
 
   const handleMenuClick = (menuId: string) => {
     if (openSubMenu === menuId) {
@@ -106,30 +115,46 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
   };
 
   const handleSubMenuItemClick = (itemId: string) => {
-    setSelectedSubItem(itemId);
+    if (itemId === 'NEW_SUBSCRIPTION') {
+      const newCustomer: Work = {
+        id: 'NEW_SUBSCRIPTION' + newCustomerId,
+        name: TabInfo.NEW_SUBSCRIPTION.label,
+      };
+      addCustomer(newCustomer);
+      setNewCustomerId(newCustomerId + 1);
+      const newTab = {
+        id: 2,
+        label: newCustomer.name,
+        closeable: true,
+      };
 
-    if (!selectedCustomerId) return;
+      setCustomerTabs(newCustomer.id, [newTab]);
+      setActiveTab(newCustomer.id, newTab.id);
+      setSelectedMainMenu(MainMenu.CUSTOMERS);
+    } else {
+      if (!selectedCustomerId || selectedCustomerId.includes('NEW_SUBSCRIPTION')) return;
 
-    const targetMenu = SUBSCRIPTION_MENUS.find((menu) => menu.id === itemId);
-    if (!targetMenu) return;
+      const targetMenu = SUBSCRIPTION_MENUS.find((menu) => menu.id === itemId);
+      if (!targetMenu) return;
 
-    const currentTabs = customerTabs[selectedCustomerId]?.tabs;
-    if (!currentTabs) return;
+      const currentTabs = customerTabs[selectedCustomerId]?.tabs;
+      if (!currentTabs) return;
 
-    const existingTab = currentTabs.find((tab) => tab.label === targetMenu.name);
-    if (existingTab) {
-      setActiveTab(selectedCustomerId, existingTab.id);
-      return;
+      const existingTab = currentTabs.find((tab) => tab.label === targetMenu.name);
+      if (existingTab) {
+        setActiveTab(selectedCustomerId, existingTab.id);
+        return;
+      }
+
+      const newTab = {
+        id: DEFAULT_TABS.find((tab) => tab.label === targetMenu.name)?.id ?? currentTabs.length,
+        label: targetMenu.name,
+        closeable: true,
+      };
+
+      setCustomerTabs(selectedCustomerId, [...currentTabs, newTab]);
+      setActiveTab(selectedCustomerId, newTab.id);
     }
-
-    const newTab = {
-      id: DEFAULT_TABS.find((tab) => tab.label === targetMenu.name)?.id ?? currentTabs.length,
-      label: targetMenu.name,
-      closeable: true,
-    };
-
-    setCustomerTabs(selectedCustomerId, [...currentTabs, newTab]);
-    setActiveTab(selectedCustomerId, newTab.id);
   };
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: string) => {
@@ -152,7 +177,8 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
               iconComponent={menu.icon}
               className={
                 (menu.id === MainMenu.HOME && selectedMenu === MainMenu.HOME) ||
-                ((menu.id === MainMenu.MENU || menu.id === MainMenu.BOOKMARKS) &&
+                (selectedMenu !== MainMenu.HOME &&
+                  (menu.id === MainMenu.MENU || menu.id === MainMenu.BOOKMARKS) &&
                   openSubMenu === menu.id) ||
                 (menu.id === MainMenu.CUSTOMERS && selectedMenu === MainMenu.CUSTOMERS)
                   ? 'selected'
@@ -199,13 +225,15 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
                       data-testid={`menu-item-${item.name}`}
                       variant='text'
                       onClick={() => handleSubMenuItemClick(item.id)}
-                      className={selectedSubItem === item.id ? 'selected' : ''}
                     >
                       <Typography>{item.name}</Typography>
                       <StarIconButton
                         variant='text'
                         data-testid={`bookmark-button-${item.name}`}
-                        onClick={(e) => handleBookmarkClick(e, item.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleBookmarkClick(e, item.id);
+                        }}
                       >
                         {item.bookmark ? (
                           <FavoriteIcon fillColor={amber[600]} size='small' />

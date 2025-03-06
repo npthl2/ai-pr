@@ -33,3 +33,8 @@ export interface Customer {
   gender: Gender;
   contractId: string;
 }
+
+export interface Work {
+  id: string;
+  name: string;
+}

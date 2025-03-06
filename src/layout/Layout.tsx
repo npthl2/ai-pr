@@ -17,18 +17,19 @@ import CustomerSearch from '@pages/customer/search/CustomerSearch';
 import { MainMenu } from '@constants/CommonConstant';
 import useMenuStore from '@stores/MenuStore';
 import authService from '@api/services/authService';
+import { Customer } from '@model/Customer';
 
 const Layout = () => {
   const navigate = useNavigate();
   const { setSelectedMainMenu } = useMenuStore();
-  const { selectCustomer, reset } = useCustomerStore();
+  const { selectCustomer, reset, isCustomer } = useCustomerStore();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const memberInfo = useMemberStore((state) => state.memberInfo);
   const logout = useAuthStore((state) => state.logout);
   const clearMemberInfo = useMemberStore((state) => state.clearMemberInfo);
   const selectedCustomer = useCustomerStore((state) =>
     state.customers.find((c) => c.id === state.selectedCustomerId),
-  );
+  ) as Customer | undefined;
 
   // 로그아웃 관련 상태
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
@@ -82,7 +83,6 @@ const Layout = () => {
   const handleLogoutCompleteClose = () => {
     // Snackbar의 autoHideDuration이 완료된 후에 호출되므로,
     // 여기서 즉시 false로 변경해도 괜찮습니다.
-    console.log('부모: LogoutCompleteClose 호출됨');
     setIsLogoutCompleteDialogOpen(false);
     navigate('/login');
   };
@@ -98,7 +98,7 @@ const Layout = () => {
           {isAuthenticated && (
             <>
               {/* TODO : 고객 정보 추가 - 검색 정보가 있다면 */}
-              {selectedCustomer && (
+              {selectedCustomer && isCustomer(selectedCustomer) && (
                 <GNBCustomer
                   name={selectedCustomer.name}
                   rrno={selectedCustomer.rrno}

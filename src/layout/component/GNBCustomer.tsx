@@ -9,6 +9,7 @@ import { ROLE_UNMASKING } from '@constants/CommonConstant';
 import Unmasking from '@pages/unmasking/Unmasking';
 import unmaskingService from '@api/services/unmaskingService';
 import { format } from 'date-fns';
+import { Customer } from '@model/Customer';
 
 interface GNBCustomerProps {
   name: string; // 이름
@@ -26,7 +27,7 @@ const GNBCustomer = ({ name, rrno, gender, age }: GNBCustomerProps) => {
   const memberInfo = useAuthStore((state) => state.memberInfo);
   const selectedCustomer = useCustomerStore((state) =>
     state.customers.find((c) => c.id === state.selectedCustomerId),
-  );
+  ) as Customer;
 
   const openUnmasking = () => {
     setUnmasking(true);
