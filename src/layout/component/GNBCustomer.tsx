@@ -8,6 +8,7 @@ import useCustomerStore from '@stores/CustomerStore';
 import { ROLE_UNMASKING } from '@constants/CommonConstant';
 import Unmasking from '@pages/unmasking/Unmasking';
 import unmaskingService from '@api/services/unmaskingService';
+import { format } from 'date-fns';
 
 interface GNBCustomerProps {
   name: string; // 이름
@@ -40,18 +41,22 @@ const GNBCustomer = ({ name, rrno, gender, age }: GNBCustomerProps) => {
     // 추후 여러 건을 한번에 호출해서 마스킹해제하는 API 및 함수 필요
     const response = await unmaskingService.unmasking({
       encryptedItem: selectedCustomer?.encryptedRrno || '',
-      itemTypeCode: 'CUSTOMER_NAME',
-      requestUnmaskingDatetime: new Date().toISOString(),
+      itemTypeCode: 'CUSTOMER_RRNO',
+      requestUnmaskingDatetime: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
       requestMemberId: memberInfo?.memberId || '',
-      requestMemberConnectedIp: '127.0.0.1',
+      requestMemberConnectedIp: '10.231.58.61', // common 에서 X-Authorization-Id 사용하는 걸로 변경 예정.. 나중에.....
       customerId: selectedCustomer?.id || '',
       requestUnmaskingReason: '',
     });
 
-    updateCustomer(selectedCustomer?.id || '', {
-      unmaskingRrno: response.data.unmaskedItem,
-      unmaskingName: unmaskedItem,
-    });
+    if (response?.data && typeof response.data === 'object' && 'unmaskedItem' in response.data) {
+      updateCustomer(selectedCustomer?.id || '', {
+        unmaskingRrno: response.data.unmaskedItem,
+        unmaskingName: unmaskedItem,
+      });
+    } else {
+      //throw new Error('마스킹 해제 중 오류가 발생했습니다.');
+    }
   };
 
   return (
