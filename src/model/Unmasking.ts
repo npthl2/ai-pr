@@ -1,18 +1,17 @@
 // pages/unmasking/types.ts copy
 export interface UnmaskingRequestDto {
+  requestUnmaskingReason: string;
   requestUnmaskingDatetime: string;
   requestMemberId: string;
   requestMemberConnectedIp: string;
   customerId: string;
   itemTypeCode: string;
   encryptedItem: string;
-  requestUnmaskingReason: string;
 }
 
-export interface UnmaskingResponseDto<T> {
+export interface UnmaskingResponseDto {
   resultMessage: string;
   unmaskedItem: string;
-  param?: T;
 }
 
 export interface Unmasking<T> {

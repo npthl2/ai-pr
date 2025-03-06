@@ -4,7 +4,7 @@ import Dialog from '@components/Dialog';
 import TextField from '@components/TextField'; // 커스텀 TextField 컴포넌트 임포트
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { UnmaskingRequestDto, UnmaskingResponseDto, UnmaskingProps } from '@model/Unmasking';
+import { UnmaskingRequestDto, UnmaskingProps } from '@model/Unmasking';
 import unmaskingService from '@api/services/unmaskingService';
 import useCustomerStore from '@stores/CustomerStore';
 import useMemberStore from '@stores/MemberStore';
@@ -51,21 +51,26 @@ const Unmasking = <T,>({ onClose, onUnmask, requestData }: UnmaskingProps<T>) =>
     console.log(requestData);
 
     const unmaskingRequestDto: UnmaskingRequestDto = {
-      ...requestData,
       requestUnmaskingReason: reason, // key in 사유
-      requestUnmaskingDatetime : format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+      requestUnmaskingDatetime: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
       requestMemberId: memberId, // MemberStore에서 memberId -> common 에서 X-Authorization-Id 사용하는 걸로 변경 예정.. 나중에.....
-      requestMemberConnectedIp: '10.231.58.61',// common 에서 X-Authorization-Id 사용하는 걸로 변경 예정.. 나중에.....
+      requestMemberConnectedIp: '10.231.58.61', // common 에서 X-Authorization-Id 사용하는 걸로 변경 예정.. 나중에.....
       customerId: selectedCustomerId, // CustomerStore에서 selectedCustomerId
+      itemTypeCode: requestData.itemTypeCode,
+      encryptedItem: requestData.encryptedItem,
     };
 
     try {
-      const response: UnmaskingResponseDto<T> = await unmaskingService.unmasking(unmaskingRequestDto).then(response => response.data);
-      
-      // console.log("unmasking unmaskedItem : " + response.unmaskedItem);
-      // console.log("unmasking param : " + response.param);
-      onUnmask(response.unmaskedItem, requestData.param as T);
-      onClose();
+      const response = await unmaskingService
+        .unmasking(unmaskingRequestDto)
+        .then((response) => response.data);
+
+      if (response && typeof response === 'object' && 'unmaskedItem' in response) {
+        onUnmask(response.unmaskedItem, requestData.param as T);
+        onClose();
+      } else {
+        throw new Error('마스킹 해제 중 오류가 발생했습니다.');
+      }
     } catch (error: unknown) {
       console.error('마스킹 해제 중 오류가 발생했습니다.', error);
     }
@@ -74,7 +79,8 @@ const Unmasking = <T,>({ onClose, onUnmask, requestData }: UnmaskingProps<T>) =>
   const customContent = (
     <div style={{ position: 'relative' }}>
       <Typography variant='body1' sx={{ mb: 2, lineHeight: 1.2 }}>
-        마스킹을 해제하시겠습니까?<br/>
+        마스킹을 해제하시겠습니까?
+        <br />
         마스킹 해제 사유를 입력해주세요. (최대 50자 입력 가능)
       </Typography>
       <TextField
