@@ -1,0 +1,37 @@
+name: PR Quality Check
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ "develop" ]
+    types: [ "opened", "synchronize", "reopened" ]
+
+jobs:
+  lint-test-analysis:
+    name: Lint, Unit Test, Static Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Run Linter
+        run: |
+          npm run lint
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_GITHUB_TOKEN }}
+
+      - name: Run Unit Tests
+        run: |
+          npm run test:unit
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_GITHUB_TOKEN }}
+
+#      - name: Static Code Analysis (SonarQube)
+#        run: |
+#          ./gradlew sonarqube
+#        env:
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
