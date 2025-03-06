@@ -1,6 +1,6 @@
 export interface CustomerContract {
   customerId: string;
-  contracts:{
+  contracts: {
     customerId: string;
     contractId: string;
     orderId: string;
@@ -73,9 +73,5 @@ export interface CustomerContract {
 
 // Board 타입가드 함수 추가
 export function isCustomerContract(value: unknown): value is CustomerContract {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'customerId' in value 
-  );
+  return typeof value === 'object' && value !== null && 'customerId' in value;
 }

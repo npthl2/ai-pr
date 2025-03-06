@@ -12,7 +12,7 @@ const LoginAlert = ({ error }: LoginAlertProps) => {
 
   return (
     <AlertContainer>
-      <Alert severity="error" sx={{ width: '100%' }}>
+      <Alert severity='error' sx={{ width: '100%' }}>
         {error.general}
       </Alert>
     </AlertContainer>

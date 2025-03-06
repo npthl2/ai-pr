@@ -34,7 +34,7 @@ describe('LoginForm 컴포넌트', () => {
 
   it('초기 렌더링 시 입력 필드와 버튼이 존재해야 한다.', () => {
     render(<LoginForm {...defaultProps} />);
-    
+
     expect(screen.getByLabelText('ID')).toBeInTheDocument();
     expect(screen.getByLabelText('Password')).toBeInTheDocument();
     expect(screen.getByText('로그인')).toBeInTheDocument();

@@ -45,7 +45,6 @@ export const DialogContentWrapper = styled('div')({
   flexGrow: 1, // ✅ 부모 컨테이너가 남는 공간을 차지하도록 설정
 });
 
-
 export const CloseButton = styled(IconButton)({
   position: 'absolute',
   right: 8,

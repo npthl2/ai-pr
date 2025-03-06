@@ -65,7 +65,7 @@ const Layout = () => {
       await authService.logout();
       logout();
       clearMemberInfo();
-      
+
       setIsLogoutCompleteDialogOpen(true);
     } catch (error) {
       console.error('Logout failed:', error);
@@ -77,7 +77,7 @@ const Layout = () => {
       reset();
     }
   };
-  
+
   // 로그아웃 완료 팝업 닫고 로그인 페이지로 이동 (부모 컴포넌트)
   const handleLogoutCompleteClose = () => {
     // Snackbar의 autoHideDuration이 완료된 후에 호출되므로,
@@ -130,7 +130,7 @@ const Layout = () => {
                   color='primary'
                   size='large'
                   iconComponent={<LogoutIcon />}
-                  data-testid="logout-button"
+                  data-testid='logout-button'
                   onClick={handleLogoutClick}
                 />
               </HeaderRight>

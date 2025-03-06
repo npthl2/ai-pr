@@ -1,13 +1,12 @@
 import { Suspense } from 'react';
 import CustomerDetail from './CustomerDetail';
 
-const CustomerDetailContainer = () => { 
-
+const CustomerDetailContainer = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-        <CustomerDetail />
+      <CustomerDetail />
     </Suspense>
   );
 };
 
-export default CustomerDetailContainer; 
+export default CustomerDetailContainer;
