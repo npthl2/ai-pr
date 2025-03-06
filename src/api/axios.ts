@@ -41,14 +41,11 @@ axiosInstance.interceptors.request.use(
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
 
-    // ✅ 추가적인 헤더 설정
-    config.headers['X-Authorization-Id'] = '0';
-
     return config;
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 axiosInstance.interceptors.request.use((config) => {
