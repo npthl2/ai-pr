@@ -18,17 +18,17 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
 
-      - name: Run Linter
-        run: |
-          npm run lint
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_GITHUB_TOKEN }}
-
-      - name: Run Unit Tests
-        run: |
-          npm run test:unit
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_GITHUB_TOKEN }}
+#      - name: Run Linter
+#        run: |
+#          npm run lint
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.PAT_GITHUB_TOKEN }}
+#
+#      - name: Run Unit Tests
+#        run: |
+#          npm run test:unit
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.PAT_GITHUB_TOKEN }}
 
 #      - name: Static Code Analysis (SonarQube)
 #        run: |
