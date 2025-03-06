@@ -25,9 +25,9 @@ import { amber } from '@mui/material/colors';
 import useMenuStore from '@stores/MenuStore';
 import { SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
 import { useBookmark } from '@hooks/useBookmark';
-import CustomerView from '@pages/customer/view/CustomerView';
 import NewSubscription from '@pages/customer/subscription/NewSubscription';
 import ServiceModification from '@pages/customer/subscription/ServiceModification';
+import CustomerDetailContainer from '@pages/customerDetail/CustomerDetailContainer';
 
 interface ContentsLayoutProps {
   customerId: string;
@@ -155,7 +155,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
               height: '100%',
             }}
           >
-            <CustomerView customerId={customerId} />
+            <CustomerDetailContainer />
           </Box>
           <Box
             sx={{
