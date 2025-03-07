@@ -24,6 +24,9 @@ export const MemoContentTypography = styled(Typography)(({ theme }) => ({
   overflow: 'hidden',
   WebkitLineClamp: 2,
   textOverflow: 'ellipsis',
+  wordBreak: 'break-all',
+  width: '100%',
+  maxWidth: '100%',
 }));
 
 export const MemoEditorTextarea = styled(TextareaAutosize)(({ theme }) => ({
@@ -40,6 +43,7 @@ export const MemoHistoryTableContainer = styled(TableContainer)(({ theme }) => (
   overflowY: 'auto',
   position: 'relative',
   borderBottom: `1px solid ${theme.palette.grey[200]}`,
+  overflowX: 'hidden',
 }));
 
 export const MemoHistoryTable = styled(Table)(({ theme }) => ({

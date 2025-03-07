@@ -153,7 +153,9 @@ const MemoHistory: React.FC = () => {
                     </TableCell>
                     <TableCell>
                       <Tooltip sx={{ zIndex: 10000 }} title={memo.content} placement='bottom' arrow>
-                        <MemoContentTypography>{memo.content}</MemoContentTypography>
+                        <Box sx={{ maxWidth: '100%' }}>
+                          <MemoContentTypography>{memo.content}</MemoContentTypography>
+                        </Box>
                       </Tooltip>
                     </TableCell>
                   </TableRow>
