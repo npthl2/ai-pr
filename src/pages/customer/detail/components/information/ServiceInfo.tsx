@@ -10,7 +10,7 @@ import MaskingInfo from './MaskingInfo';
 import { DEFAULT_TABS } from '@constants/CommonConstant';
 import { SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
 import useCustomerStore from '@stores/CustomerStore';
-import { CONTRACT_SERVICE_TYPE_CODE } from '@pages/customerDetail/CustomerDetailConstant';
+import { CONTRACT_SERVICE_TYPE_CODE } from '@pages/customer/detail/CustomerDetailConstant';
 
 interface ServiceInfoProps {
   serviceInfoParam: ServiceItem | null;

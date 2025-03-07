@@ -1,7 +1,7 @@
 import { ServiceItem } from './types';
 import { StyledTreeItem } from './StyledTreeItem';
 import { Box, Typography } from '@mui/material';
-import { CONTRACT_SERVICE_TYPE_CODE } from '@pages/customerDetail/CustomerDetailConstant';
+import { CONTRACT_SERVICE_TYPE_CODE } from '@pages/customer/detail/CustomerDetailConstant';
 
 interface ServiceTreeItemProps {
   item: ServiceItem;

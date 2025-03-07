@@ -43,6 +43,7 @@ export default defineConfig({
       '@layout': path.resolve(__dirname, './src/layout'),
       '@constants': path.resolve(__dirname, './src/constants'),
       '@theme': path.resolve(__dirname, './src/theme'),
+      '@service': path.resolve(__dirname, './src/service'),
     },
   },
   server: {
