@@ -52,7 +52,7 @@ export const DialogLayout = ({
                 onCancel?.();
                 onClose();
               }}
-              data-testid="logout-cancel-button"
+              data-testid='logout-cancel-button'
             >
               {cancelText}
             </Button>
@@ -62,7 +62,7 @@ export const DialogLayout = ({
                 onConfirm?.();
                 onClose();
               }}
-              data-testid="logout-confirm-button"
+              data-testid='logout-confirm-button'
             >
               {confirmText}
             </Button>
@@ -91,10 +91,10 @@ export const DialogLayout = ({
           timeout: 0,
         },
       }}
-      data-testid="logout-dialog"
+      data-testid='logout-dialog'
     >
       <DialogTitleStyled>
-        <CloseButton aria-label='close' onClick={handleClose} data-testid="logout-close-button">
+        <CloseButton aria-label='close' onClick={handleClose} data-testid='logout-close-button'>
           <CloseIcon />
         </CloseButton>
       </DialogTitleStyled>

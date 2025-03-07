@@ -1,5 +1,10 @@
-
-import { ContainerTitle, FormFieldsContainer, LoginIdContainer, LoginPasswordContainer, LoginButton } from '../Login.styled';
+import {
+  ContainerTitle,
+  FormFieldsContainer,
+  LoginIdContainer,
+  LoginPasswordContainer,
+  LoginButton,
+} from '../Login.styled';
 import { useState } from 'react';
 import { LoginRequestParams } from '@model/Auth';
 import LoginAlert from './LoginAlert';
@@ -7,74 +12,81 @@ import { LoginError } from '../Login.model';
 import { getTheme } from '@theme/theme';
 import TextField from '@components/TextField';
 interface LoginFormProps {
-    formData: LoginRequestParams;
-    isLoading: boolean;
-    errors: LoginError;
-    onSubmit: () => void;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
+  formData: LoginRequestParams;
+  isLoading: boolean;
+  errors: LoginError;
+  onSubmit: () => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 const LoginForm = ({ formData, isLoading, errors, onSubmit, onChange, onBlur }: LoginFormProps) => {
-    
-    const [showPassword] = useState(false);
+  const [showPassword] = useState(false);
 
-    return (
-        <>
-            <FormFieldsContainer>
-                <LoginIdContainer>
-                    <ContainerTitle theme={getTheme('light')}>ID</ContainerTitle>
-                        <TextField
-                        label="ID"
-                        name="loginId"
-                        autoFocus
-                        value={formData.loginId}
-                        onChange={(value) => onChange({ target: { name: 'loginId', value } } as React.ChangeEvent<HTMLInputElement>)}
-                        onBlur={onBlur}
-                        disabled={isLoading}
-                        fullWidth
-                        state={errors.loginId ? 'error' : 'inactive'}
-                        helperText={errors.loginId}
-                        data-testid="id"
-                        />
-                </LoginIdContainer>
-                <LoginPasswordContainer>
-                    <ContainerTitle theme={getTheme('light')}>Password</ContainerTitle>
-                    <TextField
-                    label="Password"
-                    name="password"
-                    data-testid="pw"
-                    type={showPassword ? 'text' : 'password'}
-                    value={formData.password}
-                    onChange={(value) => onChange({ target: { name: 'password', value } } as React.ChangeEvent<HTMLInputElement>)}
-                    onBlur={onBlur}
-                    disabled={isLoading}
-                    fullWidth
-                    state={errors.password ? 'error' : 'inactive'}
-                    helperText={errors.password}
-                />
-                </LoginPasswordContainer>
-            </FormFieldsContainer>
-            <LoginAlert error={errors} />
-            <LoginButton
-                variant="contained"
-                onClick={onSubmit}
-                disabled={isLoading}
-                fullWidth
-                data-testid="login"
-                sx={{
-                    height: '36px',
-                    backgroundColor: '#050E1F',
-                    '&:hover': {
-                        backgroundColor: '#050E1F',
-                    },
-                    textTransform: 'none',
-                }}
-            >
-                {isLoading ? '로그인 중...' : '로그인'}
-            </LoginButton>
-        </>
-    );
+  return (
+    <>
+      <FormFieldsContainer>
+        <LoginIdContainer>
+          <ContainerTitle theme={getTheme('light')}>ID</ContainerTitle>
+          <TextField
+            label='ID'
+            name='loginId'
+            autoFocus
+            value={formData.loginId}
+            onChange={(value) =>
+              onChange({
+                target: { name: 'loginId', value },
+              } as React.ChangeEvent<HTMLInputElement>)
+            }
+            onBlur={onBlur}
+            disabled={isLoading}
+            fullWidth
+            state={errors.loginId ? 'error' : 'inactive'}
+            helperText={errors.loginId}
+            data-testid='id'
+          />
+        </LoginIdContainer>
+        <LoginPasswordContainer>
+          <ContainerTitle theme={getTheme('light')}>Password</ContainerTitle>
+          <TextField
+            label='Password'
+            name='password'
+            data-testid='pw'
+            type={showPassword ? 'text' : 'password'}
+            value={formData.password}
+            onChange={(value) =>
+              onChange({
+                target: { name: 'password', value },
+              } as React.ChangeEvent<HTMLInputElement>)
+            }
+            onBlur={onBlur}
+            disabled={isLoading}
+            fullWidth
+            state={errors.password ? 'error' : 'inactive'}
+            helperText={errors.password}
+          />
+        </LoginPasswordContainer>
+      </FormFieldsContainer>
+      <LoginAlert error={errors} />
+      <LoginButton
+        variant='contained'
+        onClick={onSubmit}
+        disabled={isLoading}
+        fullWidth
+        data-testid='login'
+        sx={{
+          height: '36px',
+          backgroundColor: '#050E1F',
+          '&:hover': {
+            backgroundColor: '#050E1F',
+          },
+          textTransform: 'none',
+        }}
+      >
+        {isLoading ? '로그인 중...' : '로그인'}
+      </LoginButton>
+    </>
+  );
 };
 
 export default LoginForm;

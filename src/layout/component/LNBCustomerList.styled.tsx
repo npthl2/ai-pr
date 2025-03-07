@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import { TabList } from '@mui/lab';
 import { styled } from '@mui/material/styles';
+import { Typography } from '@mui/material';
 
 export const LNBCustomerListContainer = styled(Box)({
   width: '100%',
@@ -10,12 +11,11 @@ export const LNBCustomerListContainer = styled(Box)({
 export const StyledTabList = styled(TabList)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  //   width: '76px',
   '& .MuiTabs-indicator': {
     display: 'none',
   },
   '& .MuiTabs-flexContainer': {
-    gap: '20px',
+    gap: '8px',
   },
 
   '& .MuiTab-root': {
@@ -33,5 +33,16 @@ export const StyledTabList = styled(TabList)(({ theme }) => ({
     '&.Mui-selected': {
       backgroundColor: theme.palette.action.selected,
     },
+  },
+}));
+
+export const CustomerName = styled(Typography)(({ theme }) => ({
+  textAlign: 'center',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shorter,
+    easing: theme.transitions.easing.easeInOut,
+  }),
+  '&.hovered': {
+    transform: 'translateX(-10px)',
   },
 }));

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
-import { DEFAULT_TABS, MAX_CUSTOMERS } from '@constants/CommonConstant';
-import { Customer } from '@model/Customer';
+import { DEFAULT_TABS, MAX_CUSTOMERS, TabInfo } from '@constants/CommonConstant';
+import { Customer, Work } from '@model/Customer';
 
 interface Tab {
   id: number;
@@ -10,7 +10,7 @@ interface Tab {
 }
 
 interface CustomerState {
-  customers: Customer[];
+  customers: Customer[] | Work[];
   selectedCustomerId: string | null;
   customerTabs: {
     [id: string]: {
@@ -18,7 +18,7 @@ interface CustomerState {
       activeTab: number;
     };
   };
-  addCustomer: (customer: Customer) => boolean;
+  addCustomer: (customer: Customer | Work) => boolean;
   removeCustomer: (id: string) => void;
   selectCustomer: (id: string) => void;
   getCustomerName: (id: string) => string;
@@ -27,6 +27,8 @@ interface CustomerState {
   closeCustomerTab: (id: string, tabId: number) => void;
   updateCustomer: (id: string, partialUpdate: Partial<Customer>) => void;
   reset: () => void;
+  isCustomer: (customer: Customer | Work) => customer is Customer;
+  isWork: (customer: Customer | Work) => customer is Work;
 }
 
 const useCustomerStore = create<CustomerState>((set, get) => ({
@@ -34,8 +36,9 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
   selectedCustomerId: null,
   customerTabs: {},
 
-  addCustomer: (customer: Customer) => {
-    const { customers, selectedCustomerId } = get();
+  addCustomer: (customer: Customer | Work) => {
+    const { customers, selectedCustomerId, isCustomer } = get();
+    const isCustomerType = isCustomer(customer);
 
     const updatedCustomers = selectedCustomerId
       ? customers.map((c) =>
@@ -67,8 +70,10 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
       customerTabs: {
         ...state.customerTabs,
         [customer.id]: {
-          tabs: [DEFAULT_TABS[0]],
-          activeTab: 0,
+          tabs: isCustomerType
+            ? [DEFAULT_TABS[TabInfo.CUSTOMER_SEARCH.id]]
+            : [DEFAULT_TABS[TabInfo.NEW_SUBSCRIPTION.id]],
+          activeTab: isCustomerType ? TabInfo.CUSTOMER_SEARCH.id : TabInfo.NEW_SUBSCRIPTION.id,
         },
       },
     }));
@@ -187,6 +192,14 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
       selectedCustomerId: null,
       customerTabs: {},
     }),
+
+  isCustomer: (customer: Customer | Work): customer is Customer => {
+    return 'contractId' in customer;
+  },
+
+  isWork: (customer: Customer | Work): customer is Work => {
+    return !('contractId' in customer);
+  },
 }));
 
 if (import.meta.env.DEV) {

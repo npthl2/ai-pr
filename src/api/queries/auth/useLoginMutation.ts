@@ -28,16 +28,14 @@ export const useLoginMutation = () => {
     },
     onSuccess: (response: CommonResponse<LoginResponse>) => {
       if (response.data && typeof response.data !== 'string') {
-
         const rawData = response.data as unknown as RawLoginResponse;
-        
+
         const loginResponse: LoginResponse = {
           accessToken: rawData.accessToken,
           memberInfo: {
             ...rawData.member,
             authorities: rawData.authorities,
           },
-    
         };
         setAccessToken(loginResponse.accessToken, loginResponse.memberInfo);
         setMemberInfo(loginResponse.memberInfo);

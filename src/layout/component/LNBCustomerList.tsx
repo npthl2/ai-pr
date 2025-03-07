@@ -1,16 +1,16 @@
-import { Tab, IconButton, Typography, Box } from '@mui/material';
+import { Tab, IconButton, Box } from '@mui/material';
 import { TabContext } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
-import { LNBCustomerListContainer, StyledTabList } from './LNBCustomerList.styled';
+import { LNBCustomerListContainer, StyledTabList, CustomerName } from './LNBCustomerList.styled';
 import { useState } from 'react';
-import { Customer } from '@model/Customer';
+import { Customer, Work } from '@model/Customer';
 import useMenuStore from '@stores/MenuStore';
 import { MainMenu } from '@constants/CommonConstant';
 
 interface LNBCustomerListProps {
   value: string;
   onChange: (event: React.SyntheticEvent, newValue: string) => void;
-  customers: Customer[];
+  customers: Customer[] | Work[];
   onRemove: (id: string) => void;
 }
 
@@ -40,9 +40,9 @@ const LNBCustomerList = ({ value, onChange, customers, onRemove }: LNBCustomerLi
                     position: 'relative',
                   }}
                 >
-                  <Typography noWrap sx={{ textAlign: 'center' }}>
+                  <CustomerName noWrap className={hoveredTab === customer.id ? 'hovered' : ''}>
                     {customer.name}
-                  </Typography>
+                  </CustomerName>
                   {hoveredTab === customer.id && (
                     <IconButton
                       size='small'

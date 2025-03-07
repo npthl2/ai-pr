@@ -29,7 +29,7 @@ describe('LogoutDialog 컴포넌트', () => {
         onConfirm={mockOnConfirm}
         onCancel={mockOnCancel}
         onCompleteClose={mockOnCompleteClose}
-      />
+      />,
     );
 
     expect(await screen.findByText('로그아웃 하시겠습니까?')).toBeInTheDocument();
@@ -45,7 +45,7 @@ describe('LogoutDialog 컴포넌트', () => {
         onConfirm={mockOnConfirm}
         onCancel={mockOnCancel}
         onCompleteClose={mockOnCompleteClose}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText('확인'));
@@ -60,7 +60,7 @@ describe('LogoutDialog 컴포넌트', () => {
         onConfirm={mockOnConfirm}
         onCancel={mockOnCancel}
         onCompleteClose={mockOnCompleteClose}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText('취소'));
@@ -75,7 +75,7 @@ describe('LogoutDialog 컴포넌트', () => {
         onConfirm={mockOnConfirm}
         onCancel={mockOnCancel}
         onCompleteClose={mockOnCompleteClose}
-      />
+      />,
     );
 
     expect(screen.getByText('로그아웃 되었습니다.')).toBeInTheDocument();
@@ -89,14 +89,17 @@ describe('LogoutDialog 컴포넌트', () => {
         onConfirm={mockOnConfirm}
         onCancel={mockOnCancel}
         onCompleteClose={mockOnCompleteClose}
-      />
+      />,
     );
 
     expect(screen.getByText('로그아웃 되었습니다.')).toBeInTheDocument();
 
     // 1000ms 후 onCompleteClose가 호출되었는지 확인
-    await waitFor(() => {
-      expect(mockOnCompleteClose).toHaveBeenCalled();
-    }, { timeout: 1500 });
+    await waitFor(
+      () => {
+        expect(mockOnCompleteClose).toHaveBeenCalled();
+      },
+      { timeout: 1500 },
+    );
   });
 });

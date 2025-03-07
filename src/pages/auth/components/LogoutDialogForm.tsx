@@ -33,11 +33,11 @@ const LogoutDialog = ({
       <DialogLayout
         open={isConfirmOpen}
         onClose={onCancel}
-        type="confirm"
+        type='confirm'
         onConfirm={onConfirm}
         onCancel={onCancel}
-        confirmText="확인"
-        cancelText="취소"
+        confirmText='확인'
+        cancelText='취소'
         isTopmost={false}
       >
         로그아웃 하시겠습니까?
@@ -50,12 +50,12 @@ const LogoutDialog = ({
         onClose={() => {
           setOpenSnackbar(false);
           onCompleteClose();
-        }} 
+        }}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        data-testid="logout-snackbar"
+        data-testid='logout-snackbar'
       >
-         <SnackbarContentBox>
-          <SnackbarText data-testid="logout-snackbar-message">로그아웃 되었습니다.</SnackbarText>
+        <SnackbarContentBox>
+          <SnackbarText data-testid='logout-snackbar-message'>로그아웃 되었습니다.</SnackbarText>
         </SnackbarContentBox>
       </StyledSnackbar>
     </>
