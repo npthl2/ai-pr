@@ -3,12 +3,14 @@ import MemoHistoryServiceMock from '../../mock/memoAndSendHistory/MemoHistorySer
 import { mockAuthStore } from '../../../support/helpers/mockAuthStore';
 import CustomerSearchTestPage from '../../../pages/customer/search/CustomerSearch';
 import { CustomerSearchServiceMock } from '../../mock/customer/search/CustomerSearchServiceMock';
+import CustomerDetailServiceMock from '../../mock/customer/detail/CustomerDetailServiceMock';
 
 describe('KAN-201 메모 및 작성이력 화면 진입', () => {
   const page = new MemoHistoryPage();
   const service = new MemoHistoryServiceMock();
   const customerSearch = new CustomerSearchTestPage();
   const customerSearchServiceMock = new CustomerSearchServiceMock();
+  const customerDetailServiceMock = new CustomerDetailServiceMock();
 
   before(() => {
     mockAuthStore({
@@ -25,6 +27,7 @@ describe('KAN-201 메모 및 작성이력 화면 진입', () => {
     customerSearch.typeName('김철수');
     customerSearch.typeBirthDate('781012');
     customerSearchServiceMock.successFindCustomer01();
+    customerDetailServiceMock.successWhenGetCustomerContracts();
     customerSearch.clickSearch();
   });
 
