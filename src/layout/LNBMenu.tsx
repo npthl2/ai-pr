@@ -24,6 +24,7 @@ import { DEFAULT_TABS, MainMenu, SUBSCRIPTION_MENUS, TabInfo } from '@constants/
 import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Work } from '@model/Customer';
+import { useRegistration } from '@hooks/useRegistration';
 
 interface LNBMenuProps {
   selectedMenu?: string | null;
@@ -60,6 +61,7 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
   } = useCustomerStore();
 
   const { handleBookmarkClick } = useBookmark();
+  const { handleRemoveAllRegistrationInfo } = useRegistration();
   const { data: bookmarks } = useBookmarksQuery();
 
   const menus = [
@@ -163,6 +165,7 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
 
   const handleRemoveCustomer = (id: string) => {
     removeCustomer(id);
+    handleRemoveAllRegistrationInfo(id);
   };
 
   return (

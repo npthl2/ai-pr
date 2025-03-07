@@ -4,7 +4,7 @@ import { Box, Typography } from '@mui/material';
 import { customerContractsTreeData } from '@api/queries/customerDetail/useCustomerDetail';
 import { useRef, useState } from 'react';
 import { useEffect } from 'react';
-import { CONTRACT_STATUS_CODE_CANCEL } from '@pages/customerDetail/CustomerDetailConstant';
+import { CONTRACT_STATUS_CODE_CANCEL } from '@pages/customer/detail/CustomerDetailConstant';
 
 interface TreeComponentProps {
   customerId: string;

@@ -2,8 +2,8 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import customerContractService from '@api/services/cusotmerDetailService'; // Ensure this import is correct
 import { CustomerContract } from '@model/CustomerContract'; // Ensure this module is correctly referenced
-import { Info } from '@pages/customerDetail/components/information/types';
-import { LobItem, PhoneItem } from '@pages/customerDetail/components/tree/types';
+import { Info } from '@pages/customer/detail/components/information/types';
+import { LobItem, PhoneItem } from '@pages/customer/detail/components/tree/types';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useCustomerContractsQuery = (customerId: string) => {

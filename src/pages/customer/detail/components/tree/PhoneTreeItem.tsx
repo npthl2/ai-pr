@@ -3,7 +3,7 @@ import { StyledTreeItem } from './StyledTreeItem';
 import { ServiceTreeItem } from './ServiceTreeItem';
 import { Box, Typography } from '@mui/material';
 import { Chip } from '@components/Chip';
-import { CONTRACT_STATUS_CODE_USE } from '@pages/customerDetail/CustomerDetailConstant';
+import { CONTRACT_STATUS_CODE_USE } from '@pages/customer/detail/CustomerDetailConstant';
 
 interface PhoneTreeItemProps {
   item: PhoneItem;
