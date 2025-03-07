@@ -42,11 +42,7 @@ interface Service {
   serviceValue: number;
 }
 
-interface AdditionalService {
-  serviceId: string;
-  serviceName: string;
-  serviceValueType: string;
-  serviceValue: number;
+interface AdditionalService extends Service {
   selectable: boolean;
 }
 
@@ -223,6 +219,8 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
   const validateRequiredFields = (): boolean => {
     const errors: Record<string, validationField> = {};
 
+    console.log('342242342342342');
+
     // Check sales type
     if (!salesType) {
       errors.salesType.state = 'error';
@@ -242,16 +240,18 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     }
 
     // Check SIM
-    if (!simNumber) {
+    if (!simNumber || simNumber === '') {
+      console.log('simNumber', simNumber);
       errors.simNumber.state = 'error';
       errors.simNumber.helperText = '필수';
     } else {
+      console.log('simNumber', simNumber);
       errors.simNumber.state = 'active';
       errors.simNumber.helperText = '';
     }
 
     // Check IMEI
-    if (!imeiNumber) {
+    if (!imeiNumber || imeiNumber === '') {
       errors.imeiNumber.state = 'error';
       errors.imeiNumber.helperText = '필수';
     } else {
@@ -260,7 +260,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     }
 
     // Check service plan
-    if (!selectedService?.serviceId) {
+    if (!selectedService?.serviceId || selectedService.serviceId === '') {
       errors.servicePlan.state = 'error';
       errors.servicePlan.helperText = '필수';
     } else {
@@ -295,100 +295,146 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
       <TwoColumnContainer>
         <Column>
           {/* 가입기본정보 섹션 */}
-          <SectionTitle>가입기본정보</SectionTitle>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <SectionTitle>
+              <Typography variant='h5'>가입기본정보</Typography>
+            </SectionTitle>
 
-          <FormRow>
-            <FormLabel>가입유형</FormLabel>
-            <Typography>{subscriptionType}</Typography>
-          </FormRow>
+            <FormRow>
+              <FormLabel>
+                <Typography variant='h5'>가입유형</Typography>
+              </FormLabel>
+              <Typography>{subscriptionType}</Typography>
+            </FormRow>
 
-          <FormRow>
-            <FormLabel>
-              판매유형<RequiredLabel>*</RequiredLabel>
-            </FormLabel>
-            <RadioGroup row value={salesType} onChange={(e) => setSalesType(e.target.value)}>
-              <FormControlLabel value='신규폰' control={<StyledRadio />} label='신규폰' />
-              <FormControlLabel value='중고폰' control={<StyledRadio />} label='중고폰' />
-            </RadioGroup>
-            {validationErrors.salesType.state === 'error' && (
-              <Typography color='error' variant='caption' sx={{ ml: 1 }}>
-                필수 항목입니다
-              </Typography>
-            )}
-          </FormRow>
+            <FormRow>
+              <FormLabel>
+                판매유형<RequiredLabel>*</RequiredLabel>
+              </FormLabel>
+              <RadioGroup row value={salesType} onChange={(e) => setSalesType(e.target.value)}>
+                <FormControlLabel value='신규폰' control={<StyledRadio />} label='신규폰' />
+                <FormControlLabel value='중고폰' control={<StyledRadio />} label='중고폰' />
+              </RadioGroup>
+              {validationErrors.salesType.state === 'error' && (
+                <Typography color='error' variant='caption' sx={{ ml: 1 }}>
+                  필수 항목입니다
+                </Typography>
+              )}
+            </FormRow>
 
-          <FormRow>
-            <FormLabel>
-              전화번호<RequiredLabel>*</RequiredLabel>
-            </FormLabel>
-            <StyledTextField
-              placeholder='뒤 4자리*'
-              size='small'
-              variant='outlined'
-              value={phoneNumberLastFour}
-              onChange={(value) => handlePhoneNumberLastFourChange(value)}
-              state={validationErrors.phoneNumber ? 'error' : 'active'}
-              helperText={validationErrors.phoneNumber ? '4자리를 입력해주세요' : ''}
-              inputRef={phoneNumberInputRef}
-              slotProps={{
-                htmlInput: {
-                  maxLength: 4,
-                  inputMode: 'numeric',
-                  pattern: '[0-9]*',
-                },
-              }}
-            />
-            <ActionButton variant='outlined' onClick={handlePhoneNumberModalOpen}>
-              번호채번
-            </ActionButton>
-            {selectedPhoneNumber && (
-              <Typography sx={{ ml: 2 }}>{selectedPhoneNumber.phoneNumber}</Typography>
-            )}
-          </FormRow>
+            <FormRow>
+              <FormLabel>
+                전화번호<RequiredLabel>*</RequiredLabel>
+              </FormLabel>
+              <StyledTextField
+                placeholder='뒤 4자리*'
+                size='small'
+                sx={{ width: '140px' }}
+                variant='outlined'
+                value={phoneNumberLastFour}
+                onChange={(value) => handlePhoneNumberLastFourChange(value)}
+                state={validationErrors.phoneNumber.state}
+                helperText={validationErrors.phoneNumber.helperText}
+                inputRef={phoneNumberInputRef}
+                slotProps={{
+                  htmlInput: {
+                    maxLength: 4,
+                    inputMode: 'numeric',
+                    pattern: '[0-9]*',
+                  },
+                }}
+              />
+              <ActionButton
+                variant='outlined'
+                size='small'
+                sx={{ width: '61px', height: '28px' }}
+                onClick={handlePhoneNumberModalOpen}
+              >
+                <Typography sx={{ fontSize: '13px' }}>번호채번</Typography>
+              </ActionButton>
+              {selectedPhoneNumber && (
+                <Typography sx={{ ml: 2 }}>{selectedPhoneNumber.phoneNumber}</Typography>
+              )}
+            </FormRow>
+          </div>
 
           {/* 기기정보 섹션 */}
-          <SectionTitle>기기정보</SectionTitle>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <SectionTitle>
+              <Typography variant='h5'>기기정보</Typography>
+            </SectionTitle>
 
-          <FormRow>
-            <FormLabel>
-              SIM<RequiredLabel>*</RequiredLabel>
-            </FormLabel>
-            <StyledTextField
-              fullWidth
-              size='small'
-              variant='outlined'
-              value={simNumber}
-              onChange={(value) => setSimNumber(value)}
-              state={validationErrors.simNumber ? 'error' : 'active'}
-              helperText={validationErrors.simNumber ? '필수' : ''}
-            />
-          </FormRow>
+            <FormRow>
+              <FormLabel>
+                SIM<RequiredLabel>*</RequiredLabel>
+              </FormLabel>
+              <StyledTextField
+                fullWidth
+                size='small'
+                variant='outlined'
+                value={simNumber}
+                onChange={(value) => {
+                  setSimNumber(value);
+                  setValidationErrors((prev) => ({
+                    ...prev,
+                    simNumber: {
+                      state: !value ? 'error' : 'active',
+                      helperText: !value ? '필수' : '',
+                    },
+                  }));
+                }}
+                state={validationErrors.simNumber.state}
+                helperText={validationErrors.simNumber.helperText}
+              />
+            </FormRow>
 
-          <FormRow>
-            <FormLabel>
-              IMEI<RequiredLabel>*</RequiredLabel>
-            </FormLabel>
-            <StyledTextField
-              fullWidth
-              size='small'
-              variant='outlined'
-              value={imeiNumber}
-              onChange={(value) => setImeiNumber(value)}
-              onBlur={() => {
-                if (imeiNumber) {
-                  handleDeviceModelName(imeiNumber);
-                }
-              }}
-              state={validationErrors.imeiNumber.state}
-              helperText={validationErrors.imeiNumber.helperText}
-            />
-            {deviceModelName && <Typography sx={{ ml: 2 }}>모델명: {deviceModelName}</Typography>}
-          </FormRow>
+            <FormRow>
+              <FormLabel>
+                IMEI<RequiredLabel>*</RequiredLabel>
+              </FormLabel>
+              <StyledTextField
+                fullWidth
+                size='small'
+                variant='outlined'
+                value={imeiNumber}
+                onChange={(value) => {
+                  setImeiNumber(value);
+                  setValidationErrors((prev) => ({
+                    ...prev,
+                    imeiNumber: {
+                      state: !value ? 'error' : 'active',
+                      helperText: !value ? '필수' : '',
+                    },
+                  }));
+                }}
+                onBlur={() => {
+                  if (imeiNumber) {
+                    handleDeviceModelName(imeiNumber);
+                  }
+                  // IMEI 입력 후 모델명이 없는 경우 에러 표시
+                  if (!deviceModelName) {
+                    setValidationErrors((prev) => ({
+                      ...prev,
+                      imeiNumber: {
+                        state: 'error',
+                        helperText: '모델명은 필수입니다',
+                      },
+                    }));
+                  }
+                }}
+                state={validationErrors.imeiNumber.state}
+                helperText={validationErrors.imeiNumber.helperText}
+              />
+              {deviceModelName && <Typography sx={{ ml: 2 }}>모델명: {deviceModelName}</Typography>}
+            </FormRow>
+          </div>
         </Column>
 
         <Column>
           {/* 상품정보 섹션 */}
-          <SectionTitle>상품정보</SectionTitle>
+          <SectionTitle>
+            <Typography variant='h5'>상품정보</Typography>
+          </SectionTitle>
 
           <FormRow>
             <FormLabel>
@@ -411,9 +457,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 readOnly: true,
               }}
               error={validationErrors.servicePlan.state === 'error'}
-              onChange={(e) => {
-                console.log('!!!!!!!!!!!onChange', e.target.value);
-              }}
+              helperText={validationErrors.servicePlan.helperText}
               sx={{
                 '& .MuiOutlinedInput-root': {
                   height: '32px',
@@ -423,11 +467,6 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
             <Typography sx={{ ml: 2 }}>
               {selectedService ? `${selectedService.serviceValue.toLocaleString()} 원` : '0 원'}
             </Typography>
-            {validationErrors.servicePlan && (
-              <Typography color='error' variant='caption' sx={{ ml: 1 }}>
-                필수 항목입니다
-              </Typography>
-            )}
           </FormRow>
 
           {selectedService && selectedService.serviceId && (

@@ -5,16 +5,15 @@ import TextField from '@components/TextField';
 export const SectionContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(2),
-  padding: theme.spacing(2),
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.background.paper,
+  gap: '24px',
+  borderRadius: '8px',
+  height: '227px',
 }));
 
 export const SectionTitle = styled('div')(({ theme }) => ({
   fontWeight: 'bold',
   fontSize: '1rem',
-  marginBottom: theme.spacing(2),
+  // marginBottom: theme.spacing(2),
   display: 'flex',
   alignItems: 'center',
   '&::before': {
@@ -27,7 +26,7 @@ export const SectionTitle = styled('div')(({ theme }) => ({
 export const FormRow = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  marginBottom: theme.spacing(2),
+  // marginBottom: theme.spacing(2),
 }));
 
 export const FormLabel = styled('div')(({ theme }) => ({
@@ -57,8 +56,8 @@ export const PhoneNumberField = styled(TextField)(({ theme }) => ({
 }));
 
 export const ActionButton = styled(Button)(({ theme }) => ({
-  marginLeft: theme.spacing(1),
-  height: '40px',
+  margin: 0,
+  padding: 0,
 }));
 
 export const TwoColumnContainer = styled(Box)({
