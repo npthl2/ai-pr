@@ -11,6 +11,9 @@ import {
 } from './ContractSummary.styled';
 import { SECTION_IDS, SECTION_TITLES } from '@constants/RegistrationConstants';
 import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
+import { useState } from 'react';
+import { useRegistrationInfo } from '@hooks/useRegistrationInfo';
+import useRegistrationStore from '@stores/registration/RegistrationStore';
 
 interface ContractSummaryProps {
   contractTabId: string;
@@ -20,6 +23,28 @@ interface ContractSummaryProps {
 const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryProps) => {
   const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
   const customerInfo = getRegistrationCustomerInfo(contractTabId);
+
+  // 모든 계약 관련 데이터 가져오기
+  const { setRegistrationInfo } = useRegistrationStore();
+  const [loading, setLoading] = useState(false);
+
+  const handleSave = () => {
+    setLoading(true);
+
+    //1. 모든 데이터 가져오기
+    const registrationInfo = useRegistrationInfo(contractTabId);
+    console.log('데이터 수집 확인:', registrationInfo);
+
+    //2. zustand에 저장
+    setRegistrationInfo(contractTabId, registrationInfo);
+
+    // 3. 저장 완료 화면으로 이동
+    setTimeout(() => {
+      setIsSaveRequested(true);
+      setLoading(false);
+    }, 500);
+  }
+
 
   return (
     <SummaryContainer>
@@ -142,9 +167,10 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
             variant='contained'
             color='primary'
             size='large'
-            onClick={() => setIsSaveRequested(true)}
+            onClick={handleSave}
+            disabled={loading}
           >
-            저장
+            {loading ? '저장 중...' : '저장'}
           </Button>
         </RightButtonGroup>
       </ButtonContainer>
