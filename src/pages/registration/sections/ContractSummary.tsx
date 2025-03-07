@@ -30,7 +30,7 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
 
         <SummaryContents>
           <Box>
-            <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.BILLING]}</Typography>
+            <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.INVOICE]}</Typography>
             <SummaryItem>
               <Typography variant='body2'>납부자명</Typography>
               <Typography variant='body2' color='text.secondary'>

@@ -2,13 +2,13 @@ import { Typography, Button } from '@mui/material';
 import { FormContainer, FormWrapper } from './common/SectionCommon.styled';
 import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
 
-interface BillingSectionProps {
+interface InvoiceSectionProps {
   contractTabId: string;
   onComplete: () => void;
   completed?: boolean;
 }
 
-const BillingSection = ({ contractTabId, onComplete, completed }: BillingSectionProps) => {
+const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSectionProps) => {
   const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
 
   const customerInfo = getRegistrationCustomerInfo(contractTabId);
@@ -30,4 +30,4 @@ const BillingSection = ({ contractTabId, onComplete, completed }: BillingSection
   );
 };
 
-export default BillingSection;
+export default InvoiceSection;

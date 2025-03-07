@@ -9,13 +9,14 @@ import {
   StyledAccordion,
 } from './NewContract.styled';
 import CustomerSection from './sections/CustomerSection';
-import BillingSection from './sections/BillingSection';
+
 import SalesSection from './sections/SalesSection';
 import ContractSection from './sections/ContractSection';
 import DeviceSection from './sections/DeviceSection';
 import { SectionId, SECTION_IDS, SECTION_TITLES } from '@constants/RegistrationConstants';
 import ContractRequest from './ContractRequest';
 import ContractSummary from './sections/ContractSummary';
+import InvoiceSection from './sections/InvoiceSection';
 
 interface NewContractProps {
   contractTabId: string;
@@ -42,14 +43,14 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
       canExpand: () => true,
     },
     {
-      id: SECTION_IDS.BILLING,
-      title: SECTION_TITLES[SECTION_IDS.BILLING],
+      id: SECTION_IDS.INVOICE,
+      title: SECTION_TITLES[SECTION_IDS.INVOICE],
       component: () => (
         // TODO : 자신의 부분만 수정하고 나머지 부분 수정 시 공유할 것. 예시 코드 참고
-        <BillingSection
+        <InvoiceSection
           contractTabId={contractTabId}
-          onComplete={() => handleSectionComplete(SECTION_IDS.BILLING)}
-          completed={completedSections.includes(SECTION_IDS.BILLING)}
+          onComplete={() => handleSectionComplete(SECTION_IDS.INVOICE)}
+          completed={completedSections.includes(SECTION_IDS.INVOICE)}
         />
       ),
       canExpand: (completedSections: SectionId[]) =>
@@ -68,7 +69,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
       ),
       canExpand: (completedSections: SectionId[]) =>
         completedSections.includes(SECTION_IDS.CUSTOMER) &&
-        completedSections.includes(SECTION_IDS.BILLING),
+        completedSections.includes(SECTION_IDS.INVOICE),
     },
     {
       id: SECTION_IDS.CONTRACT,
@@ -83,7 +84,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
       ),
       canExpand: (completedSections: SectionId[]) =>
         completedSections.includes(SECTION_IDS.CUSTOMER) &&
-        completedSections.includes(SECTION_IDS.BILLING) &&
+        completedSections.includes(SECTION_IDS.INVOICE) &&
         completedSections.includes(SECTION_IDS.SALES),
     },
     {
@@ -99,7 +100,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
       ),
       canExpand: (completedSections: SectionId[]) =>
         completedSections.includes(SECTION_IDS.CUSTOMER) &&
-        completedSections.includes(SECTION_IDS.BILLING) &&
+        completedSections.includes(SECTION_IDS.INVOICE) &&
         completedSections.includes(SECTION_IDS.SALES) &&
         completedSections.includes(SECTION_IDS.CONTRACT),
     },
