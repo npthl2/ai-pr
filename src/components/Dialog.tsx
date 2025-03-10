@@ -41,6 +41,7 @@ const StyledButton = styled(Button)({
   padding: '5px 8px',
 });
 const StyledDialogContent = styled(DialogContent)({
+  padding: 0,
   padding: '10px 24px',
   whiteSpace: 'pre-line', // content 내에 줄바꿈 허용
 });

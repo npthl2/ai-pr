@@ -22,8 +22,8 @@ const StyledSelect = styled(MuiSelect, {
   shouldForwardProp: (prop) => prop !== 'size' && prop !== 'state',
 })<{ size: SelectSize; state: SelectState }>(({ theme, size, state }) => ({
   height: {
-    small: 32,
-    medium: 42,
+    small: 28,
+    medium: 32,
   }[size],
   '& .MuiSelect-icon': {
     color: 'inherit',
