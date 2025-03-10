@@ -9,7 +9,7 @@ on:
 jobs:
   lint-test-analysis:
     name: Lint, Unit Test, Static Analysis
-    runs-on: ubuntu-latest
+    runs-on: arc-runner-rnr
     permissions:
       contents: write
       packages: write
