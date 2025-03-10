@@ -16,18 +16,284 @@ import useRegistrationCustomerStore from '@stores/registration/RegistrationCusto
 import SearchIcon from '@mui/icons-material/Search';
 import Select from '@components/Select';
 import Button from '@components/Button';
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import InvoiceListModal from './invoice/InvoiceListModal';
+import {
+  BillingType,
+  InvoiceType,
+  PaymentMethod,
+  PaymentDate,
+  BankCompanyCode,
+  CardCompanyCode,
+  invoiceTypeOptions,
+  paymentMethodOptions,
+  paymentDateOptions,
+  bankCompanyOptions,
+  cardCompanyOptions,
+  invoiceEmailDomainOptions,
+} from './invoiceSection.model';
+import { SelectChangeEvent } from '@mui/material';
 interface InvoiceSectionProps {
   contractTabId: string;
   onComplete: () => void;
   completed?: boolean;
 }
 
+// to-do : 연동시에는 emailType 없애기
+export interface InvoiceFormData {
+  billingType: BillingType;
+  recipient: string;
+  invoiceType: InvoiceType;
+  invoiceEmailId: string;
+  invoiceEmailDomainType: string;
+  invoiceEmailDomain: string;
+  invoicePostalCode: string;
+  invoiceAddress: string;
+  invoiceAddressDetail: string;
+  paymentMethod: PaymentMethod;
+  bankCompany: string;
+  bankAccount: string;
+  cardCompany: string;
+  cardNumber: string;
+  paymentDate: PaymentDate;
+  paymentName: string;
+  birthDate: string;
+}
+
+const initialInvoiceFormData: InvoiceFormData = {
+  billingType: BillingType.COMMON,
+  recipient: '',
+  invoiceType: InvoiceType.EMAIL,
+  invoiceEmailId: '',
+  invoiceEmailDomainType: '',
+  invoiceEmailDomain: '',
+  invoicePostalCode: '',
+  invoiceAddress: '',
+  invoiceAddressDetail: '',
+  paymentMethod: PaymentMethod.BANK,
+  bankCompany: '',
+  bankAccount: '',
+  cardCompany: '',
+  cardNumber: '',
+  paymentDate: PaymentDate.D26,
+  paymentName: '',
+  birthDate: '',
+};
+
+interface InvoiceError {
+  recipient: boolean;
+  invoiceEmailId: boolean;
+  invoiceEmailDomainType: boolean;
+  invoiceEmailDomain: boolean;
+  invoicePostalCode: boolean;
+  invoiceAddress: boolean;
+  invoiceAddressDetail: boolean;
+  bankCompany: boolean;
+  bankAccount: boolean;
+  cardCompany: boolean;
+  cardNumber: boolean;
+  paymentName: boolean;
+  birthDate: boolean;
+}
+const initialInvoiceError: InvoiceError = {
+  recipient: false,
+  invoiceEmailId: false,
+  invoiceEmailDomainType: false,
+  invoiceEmailDomain: false,
+  invoicePostalCode: false,
+  invoiceAddress: false,
+  invoiceAddressDetail: false,
+  bankCompany: false,
+  bankAccount: false,
+  cardCompany: false,
+  cardNumber: false,
+  paymentName: false,
+  birthDate: false,
+};
+
 const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSectionProps) => {
   const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
   const [modalOpen, setModalOpen] = useState(false);
   const customerInfo = getRegistrationCustomerInfo(contractTabId);
+  const [invoiceFormData, setInvoiceFormData] = useState<InvoiceFormData>(initialInvoiceFormData);
+  const [invoiceError, setInvoiceError] = useState<InvoiceError>(initialInvoiceError);
+  const handleInputChange = (name: string) => (value: string) => {
+    if (
+      name === 'invoicePostalCode' ||
+      name === 'cardNumber' ||
+      name === 'bankAccount' ||
+      name === 'birthDate'
+    ) {
+      // 숫자이거나 공백인지
+      if (!/^[0-9]+$/.test(value) && value !== '') {
+        return;
+      }
+    }
+
+    const newInvoiceFormData = { ...invoiceFormData, [name]: value };
+    setInvoiceFormData(newInvoiceFormData);
+    setInvoiceError({ ...invoiceError, [name]: false });
+  };
+
+  const handleRadioChange = (name: string) => (event: SelectChangeEvent<string>) => {
+    const newInvoiceFormData = { ...invoiceFormData, [name]: event.target.value };
+    const newInvoiceError = { ...invoiceError, [name]: false };
+    if (name === 'invoiceType') {
+      newInvoiceFormData['invoiceEmailId'] = '';
+      newInvoiceFormData['invoiceEmailDomain'] = '';
+      newInvoiceFormData['invoiceEmailDomainType'] = '';
+      newInvoiceError['invoiceEmailId'] = false;
+      newInvoiceError['invoiceEmailDomain'] = false;
+      newInvoiceError['invoiceEmailDomainType'] = false;
+    }
+    if (name === 'paymentMethod') {
+      newInvoiceFormData['bankCompany'] = '';
+      newInvoiceFormData['bankAccount'] = '';
+      newInvoiceFormData['cardCompany'] = '';
+      newInvoiceFormData['cardNumber'] = '';
+      newInvoiceError['bankCompany'] = false;
+      newInvoiceError['bankAccount'] = false;
+      newInvoiceError['cardCompany'] = false;
+      newInvoiceError['cardNumber'] = false;
+    }
+    setInvoiceFormData(newInvoiceFormData);
+    setInvoiceError(newInvoiceError);
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
+    const newInvoiceFormData = { ...invoiceFormData, [name]: value };
+    const newInvoiceError = { ...invoiceError, [name]: false };
+    if (name === 'invoiceEmailDomainType') {
+      newInvoiceFormData['invoiceEmailDomain'] = '';
+      newInvoiceError['invoiceEmailDomain'] = false;
+    }
+    setInvoiceFormData(newInvoiceFormData);
+    setInvoiceError(newInvoiceError);
+  };
+
+  // to-do : select onhandler 동작이 이상함
+  const handleFocusOut = (name: string) => () => {
+    console.log(invoiceFormData[name as keyof InvoiceFormData], name, 'focus out');
+    if (invoiceFormData[name as keyof InvoiceFormData] === '') {
+      setInvoiceError({ ...invoiceError, [name]: true });
+    }
+  };
+
+  const handleOnComplete = () => {
+    console.log(invoiceFormData);
+
+    // to-do : 제출시 이메일 도메인 타입이 직접입력이 아니면 처리
+
+    onComplete();
+  };
+
+  useEffect(() => {
+    invoiceTypeOptions.map((option) => {
+      console.log(invoiceFormData);
+    });
+  }, [invoiceFormData]);
+
+  const helperText = useMemo(() => {
+    const recipientHelperText = invoiceError.recipient ? '수령인을 입력해주세요.' : '';
+    const invoiceEmailIdHelperText = invoiceError.invoiceEmailId
+      ? '이메일주소를 입력해주세요.'
+      : invoiceFormData.invoiceEmailId !== '' &&
+          !/^[a-zA-Z0-9-_]+$/.test(invoiceFormData.invoiceEmailId)
+        ? '이메일주소가 올바르지 않습니다.'
+        : '';
+    const invoiceEmailDomainHelperText = invoiceError.invoiceEmailDomain
+      ? '이메일을 입력해주세요.'
+      : invoiceFormData.invoiceEmailDomain !== '' &&
+          !/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(invoiceFormData.invoiceEmailDomain)
+        ? '형식이 올바르지 않습니다.'
+        : '';
+    const invoiceEmailDomainTypeHelperText = invoiceError.invoiceEmailDomainType
+      ? '도메인을 선택해주세요.'
+      : '';
+    const invoicePostalCodeHelperText = invoiceError.invoicePostalCode
+      ? '우편번호를 입력해주세요.'
+      : '';
+    const invoiceAddressHelperText = invoiceError.invoiceAddress ? '주소를 입력해주세요.' : '';
+    const invoiceAddressDetailHelperText = invoiceError.invoiceAddressDetail
+      ? '상세주소를 입력해주세요.'
+      : '';
+    const bankCompanyHelperText = invoiceError.bankCompany ? '은행을 선택해주세요.' : '';
+    const bankAccountHelperText =
+      invoiceError.bankAccount ||
+      (invoiceFormData.bankAccount === '' && invoiceFormData.bankCompany !== '')
+        ? '계좌번호를 입력해주세요.'
+        : invoiceFormData.bankAccount !== '' && !/^[0-9]{10,20}$/.test(invoiceFormData.bankAccount)
+          ? '계좌번호는 10~20자리 사이 숫자로 입력해 주세요.'
+          : '';
+    const cardCompanyHelperText = invoiceError.cardCompany ? '카드를 선택해주세요.' : '';
+    const cardNumberHelperText =
+      invoiceError.cardNumber ||
+      (invoiceFormData.cardNumber === '' && invoiceFormData.cardCompany !== '')
+        ? '카드번호를 입력해주세요.'
+        : invoiceFormData.cardNumber !== '' && !/^[0-9]{16}$/.test(invoiceFormData.cardNumber)
+          ? '카드번호는 16자리 숫자만 입력해 주세요.'
+          : '';
+    const paymentNameHelperText = invoiceError.paymentName ? '납부고객명을 입력해주세요.' : '';
+    const birthDateHelperText = invoiceError.birthDate
+      ? '생년월일을 입력해주세요.'
+      : invoiceFormData.birthDate !== '' &&
+          !/^[0-9]{2}[0][0-9][0123][0-9]$/.test(invoiceFormData.birthDate) &&
+          !/^[0-9]{2}[1][0-2][0123][0-9]$/.test(invoiceFormData.birthDate)
+        ? '생년월일이 올바르지 않습니다.'
+        : '';
+
+    return {
+      recipient: recipientHelperText,
+      invoiceEmailId:
+        invoiceFormData.invoiceType === InvoiceType.EMAIL ? invoiceEmailIdHelperText : '',
+      invoiceEmailDomain:
+        invoiceFormData.invoiceType === InvoiceType.EMAIL ? invoiceEmailDomainHelperText : '',
+      invoiceEmailDomainType:
+        invoiceFormData.invoiceType === InvoiceType.EMAIL ? invoiceEmailDomainTypeHelperText : '',
+      invoicePostalCode: invoicePostalCodeHelperText,
+      invoiceAddress: invoiceAddressHelperText,
+      invoiceAddressDetail: invoiceAddressDetailHelperText,
+      bankCompany:
+        invoiceFormData.paymentMethod === PaymentMethod.BANK ? bankCompanyHelperText : '',
+      bankAccount:
+        invoiceFormData.paymentMethod === PaymentMethod.BANK ? bankAccountHelperText : '',
+      cardCompany:
+        invoiceFormData.paymentMethod === PaymentMethod.CARD ? cardCompanyHelperText : '',
+      cardNumber: invoiceFormData.paymentMethod === PaymentMethod.CARD ? cardNumberHelperText : '',
+      paymentName: paymentNameHelperText,
+      birthDate: birthDateHelperText,
+    };
+  }, [invoiceFormData, invoiceError]);
+
+  const isDisabled = useMemo(
+    () =>
+      Object.keys(helperText).some((key) => helperText[key as keyof InvoiceError] !== '') ||
+      Object.keys(invoiceFormData).some((key) => {
+        if (
+          invoiceFormData[key as keyof InvoiceFormData] !== '' &&
+          invoiceFormData[key as keyof InvoiceFormData] !== null
+        ) {
+          return false;
+        }
+        // to-do : validation 추가, helpertext 있는지로 하면 될듯???
+        if (key === 'invoiceEmailId' || key === 'invoiceEmailDomainType') {
+          return invoiceFormData['invoiceType'] === InvoiceType.EMAIL;
+        }
+        if (key === 'invoiceEmailDomain') {
+          return (
+            invoiceFormData['invoiceType'] === InvoiceType.EMAIL &&
+            invoiceFormData['invoiceEmailDomainType'] === '직접입력'
+          );
+        }
+        if (key === 'bankCompany' || key === 'bankAccount') {
+          return invoiceFormData['paymentMethod'] === PaymentMethod.BANK;
+        }
+        if (key === 'cardCompany' || key === 'cardNumber') {
+          return invoiceFormData['paymentMethod'] === PaymentMethod.CARD;
+        }
+      }),
+    [invoiceFormData, helperText],
+  );
 
   return (
     <FormContainer completed={completed} sx={{ position: 'relative' }}>
@@ -67,7 +333,19 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                 <MandatoryTypography>*</MandatoryTypography>
               </LabelWrapper>
               <Box>
-                <TextField size='small' label='수령인' required fullWidth />
+                <TextField
+                  size='small'
+                  label='수령인'
+                  required
+                  fullWidth
+                  value={invoiceFormData.recipient}
+                  onChange={handleInputChange('recipient')}
+                  maxLength={50}
+                  state={helperText.recipient ? 'error' : 'inactive'}
+                  helperText={helperText.recipient}
+                  absoluteHelperText
+                  onBlur={handleFocusOut('recipient')}
+                />
               </Box>
             </Box>
             <Box>
@@ -78,29 +356,71 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%' }}>
                 <Box>
                   <StyledRadioGroup row>
-                    <Radio value='모바일' checked={true} onChange={() => {}} label='모바일' />
-                    <Radio value='이메일' checked={false} onChange={() => {}} label='이메일' />
+                    {invoiceTypeOptions.map((option) => (
+                      <Radio
+                        key={option.value}
+                        value={option.value}
+                        checked={invoiceFormData.invoiceType === option.value}
+                        onChange={handleRadioChange('invoiceType')}
+                        label={option.label}
+                      />
+                    ))}
                   </StyledRadioGroup>
                 </Box>
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                  <TextField size='small' label='이메일주소' required fullWidth />
-                  <Box>
-                    <Select
-                      sx={{ width: '100px' }}
-                      value={''}
-                      // onChange={()=>{} }
+                {invoiceFormData.invoiceType === InvoiceType.EMAIL && (
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    <TextField
                       size='small'
-                      displayEmpty
-                      renderValue={() => '선택'}
-                      // label='은행'
-                      // helperText=''
-                    >
-                      <MenuItem value='직접입력'>직접입력</MenuItem>
-                      <MenuItem value='naver.com'>naver.com</MenuItem>
-                    </Select>
+                      label='이메일주소'
+                      required
+                      fullWidth
+                      value={invoiceFormData.invoiceEmailId}
+                      onChange={handleInputChange('invoiceEmailId')}
+                      maxLength={200}
+                      state={helperText.invoiceEmailId ? 'error' : 'inactive'}
+                      helperText={helperText.invoiceEmailId}
+                      absoluteHelperText
+                      onBlur={handleFocusOut('invoiceEmailId')}
+                    />
+                    <Box>
+                      <Select
+                        sx={{ width: '100px' }}
+                        value={invoiceFormData.invoiceEmailDomainType}
+                        size='small'
+                        displayEmpty
+                        renderValue={() => invoiceFormData.invoiceEmailDomainType || '선택'}
+                        state={helperText.invoiceEmailDomainType ? 'error' : 'inactive'}
+                        helperText={helperText.invoiceEmailDomainType}
+                        absoluteHelperText
+                        onBlur={handleFocusOut('invoiceEmailDomainType')}
+                      >
+                        {invoiceEmailDomainOptions.map((option) => (
+                          <MenuItem
+                            key={option.value}
+                            value={option.value}
+                            onClick={() =>
+                              handleSelectChange('invoiceEmailDomainType', option.value)
+                            }
+                          >
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </Box>
+                    <TextField
+                      size='small'
+                      disabled={invoiceFormData.invoiceEmailDomainType !== '직접입력'}
+                      fullWidth
+                      value={invoiceFormData.invoiceEmailDomain}
+                      onChange={handleInputChange('invoiceEmailDomain')}
+                      maxLength={53}
+                      state={helperText.invoiceEmailDomain ? 'error' : 'inactive'}
+                      helperText={helperText.invoiceEmailDomain}
+                      absoluteHelperText
+                      onBlur={handleFocusOut('invoiceEmailDomain')}
+                    />
                   </Box>
-                  <TextField size='small' disabled fullWidth />
-                </Box>
+                )}
               </Box>
             </Box>
 
@@ -109,12 +429,47 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                 <LabelTypography>청구주소</LabelTypography>
                 <MandatoryTypography>*</MandatoryTypography>
               </LabelWrapper>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.2 }}>
                 <Box sx={{ gap: 1 }}>
-                  <TextField size='small' label='우편번호' fullWidth suffix={<SearchIcon />} />
-                  <TextField size='small' label='주소' fullWidth />
+                  <TextField
+                    size='small'
+                    label='우편번호'
+                    fullWidth
+                    suffix={<SearchIcon />}
+                    value={invoiceFormData.invoicePostalCode}
+                    onChange={handleInputChange('invoicePostalCode')}
+                    // type='number'
+                    maxLength={10}
+                    state={helperText.invoicePostalCode ? 'error' : 'inactive'}
+                    helperText={helperText.invoicePostalCode}
+                    absoluteHelperText
+                    onBlur={handleFocusOut('invoicePostalCode')}
+                  />
+                  <TextField
+                    size='small'
+                    label='주소'
+                    fullWidth
+                    value={invoiceFormData.invoiceAddress}
+                    onChange={handleInputChange('invoiceAddress')}
+                    maxLength={40}
+                    state={helperText.invoiceAddress ? 'error' : 'inactive'}
+                    helperText={helperText.invoiceAddress}
+                    absoluteHelperText
+                    onBlur={handleFocusOut('invoiceAddress')}
+                  />
                 </Box>
-                <TextField size='small' label='상세주소' fullWidth />
+                <TextField
+                  size='small'
+                  label='상세주소'
+                  fullWidth
+                  value={invoiceFormData.invoiceAddressDetail}
+                  onChange={handleInputChange('invoiceAddressDetail')}
+                  maxLength={100}
+                  state={helperText.invoiceAddressDetail ? 'error' : 'inactive'}
+                  helperText={helperText.invoiceAddressDetail}
+                  absoluteHelperText
+                  onBlur={handleFocusOut('invoiceAddressDetail')}
+                />
               </Box>
             </Box>
           </InvoiceCard>
@@ -132,34 +487,112 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%' }}>
                 <Box>
                   <StyledRadioGroup row>
-                    <Radio
-                      value='은행계좌 자동이체'
-                      checked={true}
-                      onChange={() => {}}
-                      label='은행계좌 자동이체'
-                    />
-                    <Radio value='카드' checked={false} onChange={() => {}} label='카드' />
-                    <Radio value='지로' checked={false} onChange={() => {}} label='지로' />
+                    {paymentMethodOptions.map((option) => (
+                      <Radio
+                        key={option.value}
+                        value={option.value}
+                        checked={invoiceFormData.paymentMethod === option.value}
+                        onChange={handleRadioChange('paymentMethod')}
+                        label={option.label}
+                      />
+                    ))}
                   </StyledRadioGroup>
                 </Box>
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                  <Box>
-                    <Select
-                      sx={{ width: '100px' }}
-                      value={''}
-                      // onChange={()=>{}}
+
+                {invoiceFormData.paymentMethod === PaymentMethod.BANK && (
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Box>
+                      <Select
+                        sx={{ width: '100px' }}
+                        value={invoiceFormData.bankCompany}
+                        size='small'
+                        displayEmpty
+                        renderValue={() =>
+                          invoiceFormData.bankCompany
+                            ? bankCompanyOptions.find(
+                                (option) => option.value === invoiceFormData.bankCompany,
+                              )?.label
+                            : '은행'
+                        }
+                        state={helperText.bankCompany ? 'error' : 'inactive'}
+                        helperText={helperText.bankCompany}
+                        absoluteHelperText
+                        onBlur={handleFocusOut('bankCompany')}
+                      >
+                        {bankCompanyOptions.map((option) => (
+                          <MenuItem
+                            key={option.value}
+                            value={option.value}
+                            onClick={() => handleSelectChange('bankCompany', option.value)}
+                          >
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </Box>
+                    <TextField
                       size='small'
-                      displayEmpty
-                      renderValue={() => '은행'}
-                      // label='은행'
-                      // helperText=''
-                    >
-                      <MenuItem value='국민은행'>국민은행</MenuItem>
-                      <MenuItem value='신한은행'>신한은행</MenuItem>
-                    </Select>
+                      label='계좌번호'
+                      required
+                      fullWidth
+                      value={invoiceFormData.bankAccount}
+                      onChange={handleInputChange('bankAccount')}
+                      // type='number'
+                      maxLength={20}
+                      state={helperText.bankAccount ? 'error' : 'inactive'}
+                      helperText={helperText.bankAccount}
+                      absoluteHelperText
+                      onBlur={handleFocusOut('bankAccount')}
+                    />
                   </Box>
-                  <TextField size='small' label='계좌번호' required fullWidth />
-                </Box>
+                )}
+                {invoiceFormData.paymentMethod === PaymentMethod.CARD && (
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Box>
+                      <Select
+                        sx={{ width: '100px' }}
+                        value={invoiceFormData.cardCompany}
+                        size='small'
+                        displayEmpty
+                        renderValue={() =>
+                          invoiceFormData.cardCompany
+                            ? cardCompanyOptions.find(
+                                (option) => option.value === invoiceFormData.cardCompany,
+                              )?.label
+                            : '카드'
+                        }
+                        state={helperText.cardCompany ? 'error' : 'inactive'}
+                        helperText={helperText.cardCompany}
+                        absoluteHelperText
+                        onBlur={handleFocusOut('cardCompany')}
+                      >
+                        {cardCompanyOptions.map((option) => (
+                          <MenuItem
+                            key={option.value}
+                            value={option.value}
+                            onClick={() => handleSelectChange('cardCompany', option.value)}
+                          >
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </Box>
+                    <TextField
+                      size='small'
+                      label={!invoiceFormData.cardNumber ? '카드번호' : ''}
+                      required
+                      fullWidth
+                      value={invoiceFormData.cardNumber}
+                      onChange={handleInputChange('cardNumber')}
+                      // type='number'
+                      maxLength={16}
+                      state={helperText.cardNumber ? 'error' : 'inactive'}
+                      helperText={helperText.cardNumber}
+                      absoluteHelperText
+                      onBlur={handleFocusOut('cardNumber')}
+                    />
+                  </Box>
+                )}
               </Box>
             </Box>
 
@@ -170,8 +603,15 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
               </LabelWrapper>
               <Box>
                 <StyledRadioGroup row>
-                  <Radio value='매월26일' checked={true} onChange={() => {}} label='매월26일' />
-                  <Radio value='매월말일' checked={false} onChange={() => {}} label='매월말일' />
+                  {paymentDateOptions.map((option) => (
+                    <Radio
+                      key={option.value}
+                      value={option.value}
+                      checked={invoiceFormData.paymentDate === option.value}
+                      onChange={handleRadioChange('paymentDate')}
+                      label={option.label}
+                    />
+                  ))}
                 </StyledRadioGroup>
               </Box>
             </Box>
@@ -182,7 +622,19 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                 <MandatoryTypography>*</MandatoryTypography>
               </LabelWrapper>
               <Box>
-                <TextField size='small' label='납부고객명' required fullWidth />
+                <TextField
+                  size='small'
+                  label='납부고객명'
+                  required
+                  fullWidth
+                  value={invoiceFormData.paymentName}
+                  onChange={handleInputChange('paymentName')}
+                  maxLength={50}
+                  state={helperText.paymentName ? 'error' : 'inactive'}
+                  helperText={helperText.paymentName}
+                  absoluteHelperText
+                  onBlur={handleFocusOut('paymentName')}
+                />
               </Box>
             </Box>
             <Box>
@@ -191,7 +643,18 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                 <MandatoryTypography>*</MandatoryTypography>
               </LabelWrapper>
               <Box>
-                <TextField size='small' placeholder='YYMMDD' fullWidth />
+                <TextField
+                  size='small'
+                  label='YYMMDD'
+                  fullWidth
+                  value={invoiceFormData.birthDate}
+                  onChange={handleInputChange('birthDate')}
+                  maxLength={6}
+                  state={helperText.birthDate ? 'error' : 'inactive'}
+                  helperText={helperText.birthDate}
+                  absoluteHelperText
+                  onBlur={handleFocusOut('birthDate')}
+                />
               </Box>
             </Box>
           </InvoiceCard>
@@ -199,8 +662,9 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
             variant='contained'
             color='primary'
             size='small'
-            onClick={onComplete}
+            onClick={handleOnComplete}
             sx={{ position: 'absolute', bottom: 16, right: 16 }}
+            disabled={isDisabled}
           >
             청구정보 생성완료
           </Button>

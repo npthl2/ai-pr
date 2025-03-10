@@ -7,9 +7,9 @@ export const InvoiceCard = styled(Card)({
   backgroundColor: 'inherit',
   boxShadow: 'none',
   boxSizing: 'border-box',
-
+  marginTop: 20,
   '> .MuiBox-root': {
-    marginTop: 10,
+    marginBottom: 20,
   },
 
   '& .MuiBox-root': {
