@@ -14,5 +14,5 @@ export interface Service {
 }
 
 export interface AdditionalService extends Service {
-  selectable: boolean;
+  exclusiveServiceIds: string[];
 }

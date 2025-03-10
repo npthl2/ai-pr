@@ -1,26 +1,83 @@
 import { create } from 'zustand';
 
-export interface RegistrationSalesState {
-  displayMode: string;
-  setDisplayMode: (displayMode: string) => void;
-  removeRegistrationSalesInfo: (contractTapId: string) => void;
+export interface Sales {
+  // 가입대리점(판매부서)
+  salesDepartment: string;
+  // 접점
+  salesContractPoint: string;
+  // 판매자(최종판매자)
+  finalSeller: string;
+  // 서포터
+  supporter: string;
 }
 
-const useRegistrationSalesStore = create<RegistrationSalesState>((set) => ({
-  displayMode: 'home',
+export interface RegistrationSalesState {
+  sales: Record<string, Sales>;
+  getRegistrationSalesInfo: (tabId: string) => Sales | undefined;
+  addRegistrationSalesInfo: (
+    tabId: string,
+    sales: {
+      salesDepartment: string;
+      salesContractPoint: string;
+      finalSeller: string;
+      supporter: string;
+    },
+  ) => void;
+  updateRegistrationSalesInfo: (tabId: string, updates: Partial<Sales>) => void;
+  removeRegistrationSalesInfo: (tabId: string) => void;
+}
 
-  setDisplayMode: (displayMode: string) => {
-    set(() => ({
-      displayMode,
+const useRegistrationSalesStore = create<RegistrationSalesState>((set, get) => ({
+  sales: {},
+
+  getRegistrationSalesInfo: (tabId: string) => {
+    return get().sales[tabId];
+  },
+
+  addRegistrationSalesInfo: (tabId, sales) => {
+    const existingSales = get().sales[tabId];
+    if (existingSales) {
+      console.log(`Sales with tabId: ${tabId} already exists.`);
+      return;
+    }
+
+    set((state) => ({
+      sales: {
+        ...state.sales,
+        [tabId]: {
+          id: tabId,
+          salesDepartment: sales.salesDepartment,
+          salesContractPoint: sales.salesContractPoint,
+          finalSeller: sales.finalSeller,
+          supporter: sales.supporter,
+        },
+      },
     }));
   },
 
-  // remove 영역은 좌측 탭, 신규가입 탭 닫힐때 공통으로 처리 영역으로 아래 내용만 구현
-  removeRegistrationSalesInfo: (contractTapId: string) => {
+  updateRegistrationSalesInfo: (tabId, updates) => {
+    set((state) => ({
+      sales: {
+        ...state.sales,
+        [tabId]: {
+          ...state.sales[tabId],
+          ...updates,
+        },
+      },
+    }));
+  },
+
+  removeRegistrationSalesInfo: (tabId: string) => {
     set((state) => {
-      // TODO : 해당 내용 구현
-      console.log('contractTapId', contractTapId);
-      return state;
+      // 불변성을 유지하기 위해 새로운 객체 생성
+      console.log('removeRegistrationSalesInfo - tabId', tabId);
+      const updatedSales = { ...state.sales };
+      delete updatedSales[tabId];
+
+      return {
+        ...state,
+        sales: updatedSales,
+      };
     });
   },
 }));

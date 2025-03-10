@@ -24,7 +24,7 @@ interface AdditionalService {
   serviceName: string;
   serviceValue: number;
   serviceId: string;
-  selectable: boolean;
+  exclusiveServiceIds: string[];
 }
 
 const services: AdditionalService[] = [
@@ -33,70 +33,70 @@ const services: AdditionalService[] = [
     serviceName: '부가서비스 1',
     serviceValue: 5000,
     serviceId: 'ABC-123',
-    selectable: true,
+    exclusiveServiceIds: [],
   },
   {
     serviceValueType: '유료',
     serviceName: '부가서비스 2',
     serviceValue: 1000,
     serviceId: 'ABC-124',
-    selectable: true,
+    exclusiveServiceIds: [],
   },
   {
     serviceValueType: '유료',
     serviceName: '부가서비스 3',
     serviceValue: 10000,
     serviceId: 'ABC-125',
-    selectable: true,
+    exclusiveServiceIds: [],
   },
   {
     serviceValueType: '유료',
     serviceName: '부가서비스 4',
     serviceValue: 7000,
     serviceId: 'ABC-126',
-    selectable: true,
+    exclusiveServiceIds: [],
   },
   {
     serviceValueType: '무료',
     serviceName: '부가서비스 5',
     serviceValue: 0,
     serviceId: 'ABC-127',
-    selectable: true,
+    exclusiveServiceIds: [],
   },
   {
     serviceValueType: '무료',
     serviceName: '부가서비스 6',
     serviceValue: 0,
     serviceId: 'ABC-128',
-    selectable: true,
+    exclusiveServiceIds: [],
   },
   {
     serviceValueType: '무료',
     serviceName: '부가서비스 7',
     serviceValue: 0,
     serviceId: 'ABC-129',
-    selectable: false,
+    exclusiveServiceIds: ['serviceId-1', 'serviceId-2'],
   },
   {
     serviceValueType: '무료',
     serviceName: '부가서비스 8',
     serviceValue: 0,
     serviceId: 'ABC-130',
-    selectable: true,
+    exclusiveServiceIds: [],
   },
   {
     serviceValueType: '무료',
     serviceName: '부가서비스 9',
     serviceValue: 0,
     serviceId: 'ABC-131',
-    selectable: true,
+    exclusiveServiceIds: [],
   },
   {
     serviceValueType: '무료',
     serviceName: '부가서비스 10',
     serviceValue: 0,
     serviceId: 'ABC-132',
-    selectable: false,
+    exclusiveServiceIds: ['serviceId-1'],
   },
 ];
 
@@ -104,6 +104,7 @@ interface AdditionalServiceModalProps {
   open: boolean;
   onClose: () => void;
   onSelect: (selectedServices: AdditionalService[]) => void;
+  selectedServiceId: string;
   initialSelectedAdditionalServices?: AdditionalService[];
 }
 
@@ -111,6 +112,7 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
   open,
   onClose,
   onSelect: onComplete,
+  selectedServiceId: selectedServiceId,
   initialSelectedAdditionalServices: initialAdditionalSelectedServices = [],
 }) => {
   const [selectedAdditionalServices, setSelectedAdditionalServices] = useState<AdditionalService[]>(
@@ -133,8 +135,11 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
   }, [open]);
 
   const handleSelect = (service: AdditionalService) => {
-    console.log(service);
-    if (!service.selectable) {
+    console.log('selected additional service', service);
+    console.log('selectedServiceId from plans', selectedServiceId);
+    const hasConflict = service.exclusiveServiceIds.includes(selectedServiceId);
+
+    if (hasConflict) {
       setUnselectableAdditionalService(service);
       return;
     }

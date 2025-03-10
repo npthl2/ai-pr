@@ -7,7 +7,8 @@ export const SectionContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   gap: '24px',
   borderRadius: '8px',
-  height: '227px',
+  // height: '227px',
+  height: '100%',
 }));
 
 export const SectionTitle = styled('div')(({ theme }) => ({

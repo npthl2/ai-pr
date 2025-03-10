@@ -5,25 +5,33 @@ import baseService from './baseService';
 export interface PhoneNumberAvailabilityResponse {
   statusCode: string;
   phoneNumber: string;
+  claimedCustomerId: string;
   phoneNumberProvider: string;
   lastUpdateStatusDatetime: string;
+  lastUpdateStatueMemberId: string;
 }
 
 export interface DeviceModelResponse {
   deviceModelId: string;
   deviceModelName: string;
+  deviceType: string;
+  sellingPrice: number;
 }
 
 export interface ServiceResponse {
   serviceId: string;
   serviceName: string;
+  serviceType: string;
   serviceValueType: string;
   serviceValue: string;
+  exclusiveServiceIds: string[];
+  validStartDateTime: string;
+  validEndDateTime: string;
 }
 
-export interface AdditionalServiceResponse extends ServiceResponse {
-  excludeServiceIds: string[];
-}
+// export interface AdditionalServiceResponse extends ServiceResponse {
+//   excludeServiceIds: string[];
+// }
 
 // Request Types
 export interface ClaimPhoneNumberRequest {
@@ -35,16 +43,16 @@ const registrationContractService = {
   /**
    * 사용 가능한 전화번호 조회
    * @path GET /phone-numbers/availability
-   * @param endNumber - 끝자리 번호
+   * @param endPhoneNumber - 끝자리 번호
    * @param customerId - 고객 ID
    * @returns 전화번호 가용성 정보
    */
   async getAvailablePhoneNumber(
-    endNumber: string,
+    endPhoneNumber: string,
     customerId: string,
   ): Promise<PhoneNumberAvailabilityResponse> {
     const response = await baseService.get<PhoneNumberAvailabilityResponse>(
-      `/phone-numbers/availability?endNumber=${endNumber}&customerId=${customerId}`,
+      `/phone-numbers/availability?endPhoneNumber=${endPhoneNumber}&customerId=${customerId}`,
     );
     return response.data as PhoneNumberAvailabilityResponse;
   },
@@ -56,7 +64,10 @@ const registrationContractService = {
    * @returns void
    */
   claimAvailablePhoneNumber(data: ClaimPhoneNumberRequest): Promise<CommonResponse<void>> {
-    return baseService.post<void, ClaimPhoneNumberRequest>('/phone-numbers/availability', data);
+    return baseService.post<void, ClaimPhoneNumberRequest>(
+      `/phone-numbers/${data.phoneNumber}/claim`,
+      data,
+    );
   },
 
   /**
@@ -66,7 +77,9 @@ const registrationContractService = {
    * @returns 단말기 모델 정보
    */
   async getDeviceModelByIMEI(imei: string): Promise<DeviceModelResponse> {
-    const response = await baseService.get<DeviceModelResponse>(`/device-models?imei=${imei}`);
+    const response = await baseService.get<DeviceModelResponse>(
+      `/device-inventories/${imei}/device-model`,
+    );
     return response.data as DeviceModelResponse;
   },
 
@@ -84,8 +97,8 @@ const registrationContractService = {
    * @path GET /additional-services
    * @returns 부가 서비스 목록
    */
-  getAdditionalServices(): Promise<CommonResponse<AdditionalServiceResponse[]>> {
-    return baseService.get<AdditionalServiceResponse[]>('/additional-services');
+  getAdditionalServices(): Promise<CommonResponse<ServiceResponse[]>> {
+    return baseService.get<ServiceResponse[]>('/additional-services');
   },
 };
 

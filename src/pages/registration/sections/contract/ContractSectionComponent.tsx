@@ -43,7 +43,7 @@ interface Service {
 }
 
 interface AdditionalService extends Service {
-  selectable: boolean;
+  exclusiveServiceIds: string[];
 }
 
 interface ContractSectionComponentProps {
@@ -205,10 +205,11 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     );
   };
 
-  const handleDeviceModelName = (imeiNumber: string) => {
+  const handleDeviceModelName = (imeiNumber: string): string => {
     // TODO: 실제 API 호출 로직 추가
     setDeviceModelName('test');
     // setDeviceModelName('');
+    return 'test1';
   };
 
   interface validationField {
@@ -349,6 +350,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 size='small'
                 sx={{ width: '61px', height: '28px' }}
                 onClick={handlePhoneNumberModalOpen}
+                disabled={phoneNumberLastFour.length !== 4}
               >
                 <Typography sx={{ fontSize: '13px' }}>번호채번</Typography>
               </ActionButton>
@@ -408,10 +410,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                   }));
                 }}
                 onBlur={() => {
-                  if (imeiNumber) {
-                    handleDeviceModelName(imeiNumber);
-                  }
-                  // IMEI 입력 후 모델명이 없는 경우 에러 표시
+                  const deviceModelName = imeiNumber ? handleDeviceModelName(imeiNumber) : '';
                   if (!deviceModelName) {
                     setValidationErrors((prev) => ({
                       ...prev,
@@ -465,7 +464,10 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
               }}
             />
             <Typography sx={{ ml: 2 }}>
-              {selectedService ? `${selectedService.serviceValue.toLocaleString()} 원` : '0 원'}
+              {selectedService
+                ? `${selectedService.serviceValue.toLocaleString()} 
+              원`
+                : '0 원'}
             </Typography>
           </FormRow>
 
@@ -483,6 +485,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 variant='outlined'
                 size='small'
                 onClick={handleAdditionalServiceModalOpen}
+                disabled={!selectedService?.serviceId}
               >
                 부가서비스 선택
               </ActionButton>
@@ -544,19 +547,20 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
               serviceName: service.serviceName,
               serviceValueType: service.serviceValueType,
               serviceValue: service.serviceValue,
-              selectable: service.selectable,
+              exclusiveServiceIds: service.exclusiveServiceIds,
             }));
 
           if (newServices.length > 0) {
             setSelectedAdditionalServices((prev) => [...prev, ...newServices]);
           }
         }}
+        selectedServiceId={selectedService?.serviceId || ''}
         initialSelectedAdditionalServices={selectedAdditionalServices.map((service) => ({
           serviceId: service.serviceId,
           serviceName: service.serviceName,
           serviceValue: service.serviceValue,
           serviceValueType: service.serviceValueType,
-          selectable: service.selectable,
+          exclusiveServiceIds: service.exclusiveServiceIds,
         }))}
       />
 

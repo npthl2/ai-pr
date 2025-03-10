@@ -19,7 +19,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import { styles } from './ServiceSelectModal.styles';
 
-interface FeeItem {
+interface PlanItem {
   id: string;
   name: string;
   amount: number;
@@ -29,49 +29,49 @@ interface FeeItem {
 interface ServiceSelectModalProps {
   open: boolean;
   onClose: () => void;
-  onSelect: (selectedFee: FeeItem) => void;
+  onSelect: (selectedFee: PlanItem) => void;
 }
 
 const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, onSelect }) => {
   const [searchText, setSearchText] = useState<string>('');
-  const [selectedFee, setSelectedFee] = useState<FeeItem | null>(null);
-  const [feeList, setFeeList] = useState<FeeItem[]>([
+  const [selectedPlan, setSelectedPlan] = useState<PlanItem | null>(null);
+  const [planList, setPlanList] = useState<PlanItem[]>([
     {
-      id: '1',
+      id: 'serviceId-1',
       name: '넷플릭스 초이스 스페셜',
       amount: 100000,
     },
     {
-      id: '2',
+      id: 'serviceId-2',
       name: '넷플릭스 초이스 일반',
       amount: 50000,
     },
     // 필요시 더 많은 요금제 추가
   ]);
-  const [filteredFeeList, setFilteredFeeList] = useState<FeeItem[]>(feeList);
+  const [filteredPlanList, setFilteredPlanList] = useState<PlanItem[]>(planList);
 
   useEffect(() => {
-    setFilteredFeeList(feeList);
-  }, [feeList]);
+    setFilteredPlanList(planList);
+  }, [planList]);
 
   const handleSearch = () => {
     if (searchText) {
-      setFilteredFeeList(
-        feeList.filter((fee) => fee.name.toLowerCase().includes(searchText.toLowerCase())),
+      setFilteredPlanList(
+        planList.filter((plan) => plan.name.toLowerCase().includes(searchText.toLowerCase())),
       );
     } else {
-      setFilteredFeeList(feeList);
+      setFilteredPlanList(planList);
     }
   };
 
   const handleSelect = () => {
-    if (selectedFee) {
-      onSelect(selectedFee);
+    if (selectedPlan) {
+      onSelect(selectedPlan);
       onClose();
     }
   };
 
-  const handleServiceSelect = (service: FeeItem) => {
+  const handleServiceSelect = (service: PlanItem) => {
     onSelect(service);
     onClose();
   };
@@ -114,7 +114,7 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
         </Box>
 
         <Box sx={styles.tableContainer}>
-          <Typography sx={styles.tableTitle}>요금제 목록 {filteredFeeList.length}</Typography>
+          <Typography sx={styles.tableTitle}>요금제 목록 {filteredPlanList.length}</Typography>
           <TableContainer component={Paper} sx={styles.table}>
             <Table>
               <TableHead>
@@ -125,18 +125,18 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredFeeList.length > 0 ? (
-                  filteredFeeList.map((fee) => (
-                    <TableRow key={fee.id} sx={styles.tableRow}>
+                {filteredPlanList.length > 0 ? (
+                  filteredPlanList.map((plan) => (
+                    <TableRow key={plan.id} sx={styles.tableRow}>
                       <TableCell>
                         <Radio
-                          checked={selectedFee?.id === fee.id}
-                          onChange={() => setSelectedFee(fee)}
+                          checked={selectedPlan?.id === plan.id}
+                          onChange={() => setSelectedPlan(plan)}
                           size='small'
                         />
                       </TableCell>
-                      <TableCell>{fee.name}</TableCell>
-                      <TableCell>{fee.amount.toLocaleString()}</TableCell>
+                      <TableCell>{plan.name}</TableCell>
+                      <TableCell>{plan.amount.toLocaleString()}</TableCell>
                     </TableRow>
                   ))
                 ) : (
@@ -158,7 +158,7 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
           <Button
             variant='contained'
             onClick={handleSelect}
-            disabled={!selectedFee}
+            disabled={!selectedPlan}
             sx={styles.selectButton}
           >
             선택

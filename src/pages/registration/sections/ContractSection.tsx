@@ -1,4 +1,3 @@
-import { Typography, Button } from '@mui/material';
 import { FormContainer, FormWrapper } from './common/SectionCommon.styled';
 import ContractSectionComponent from './contract/ContractSectionComponent';
 import { useEffect } from 'react';

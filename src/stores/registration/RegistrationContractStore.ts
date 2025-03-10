@@ -1,3 +1,4 @@
+import { mountStoreDevtool } from 'simple-zustand-devtools';
 import { create } from 'zustand';
 
 export interface Contract {
@@ -99,5 +100,9 @@ const useRegistrationContractStore = create<RegistrationContractStoreState>((set
     });
   },
 }));
+
+if (import.meta.env.DEV) {
+  mountStoreDevtool('RegistrationContract Store', useRegistrationContractStore);
+}
 
 export default useRegistrationContractStore;
