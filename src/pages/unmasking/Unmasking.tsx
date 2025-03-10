@@ -48,7 +48,6 @@ const Unmasking = <T,>({ onClose, onUnmask, requestData }: UnmaskingProps<T>) =>
       console.error('고객 ID 또는 회원 ID가 없습니다.');
       return;
     }
-    // console.log(requestData);
 
     const unmaskingRequestDto: UnmaskingRequestDto = {
       requestUnmaskingReason: reason, // key in 사유
