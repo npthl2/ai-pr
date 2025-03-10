@@ -124,9 +124,9 @@ const EmailForm = ({ status, onSendEmail, isEnabled }: EmailFormProps) => {
         
         {/* 도메인 선택 드롭다운 컨테이너 */}
         <Box sx={{ 
-          width: '15%', // 컨테이너 너비를 비율로 설정
-          minWidth: '100px', // 최소 너비 설정
-          flexShrink: 1, // 공간이 부족할 때 축소 허용
+          width: '13%', // 컨테이너 너비를 비율로 설정
+          // minWidth: '150px', // 최소 너비 설정
+          flexShrink: 0, // 공간이 부족할 때 축소 허용
           height: '40px' // 높이 설정
         }}>
           <Select
@@ -134,13 +134,19 @@ const EmailForm = ({ status, onSendEmail, isEnabled }: EmailFormProps) => {
             onChange={(e) => handleDomainChange(e.target.value as string)} // 변경 이벤트 핸들러
             disabled={!isInputEnabled} // 비활성화 상태 설정
             size="small" // 작은 크기 설정
-            sx={{ 
+            sx={{
               width: '100%', // 부모 컨테이너의 전체 너비 사용
-              minWidth: '130px', // 최소 너비 설정
               height: '30px', // 높이 설정
               '& .MuiOutlinedInput-root': { // 입력 필드 루트 요소 스타일
                 border: '0',
                 height: '30px' // 높이 설정
+              }
+            }}
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  minWidth: '100%', // 부모 컨테이너 크기와 동일하게 설정
+                }
               }
             }}
           >
@@ -148,16 +154,15 @@ const EmailForm = ({ status, onSendEmail, isEnabled }: EmailFormProps) => {
             <MenuItem value="gmail.com">gmail.com</MenuItem> {/* Gmail 도메인 옵션 */}
             <MenuItem value="naver.com">naver.com</MenuItem> {/* 네이버 도메인 옵션 */}
             <MenuItem value="daum.net">daum.net</MenuItem> {/* 다음 도메인 옵션 */}
-            <MenuItem value="직접입력">직접입력</MenuItem> {/* 직접 입력 옵션 */}
+            <MenuItem value="직접입력"> 직접 입력 </MenuItem> {/* 직접 입력 옵션 */}
           </Select>
         </Box>
         
         {/* 직접입력 선택 시 나타나는 도메인 입력 필드 컨테이너 */}
         {isCustomDomain && ( // 직접 입력 모드일 때만 렌더링
           <Box sx={{ 
-            width: '15%', // 컨테이너 너비를 비율로 설정
-            minWidth: '130px', // 최소 너비 설정
-            flexShrink: 1, // 공간이 부족할 때 축소 허용
+            width: '13%', // 컨테이너 너비를 비율로 설정
+            flexShrink: 0, // 공간이 부족할 때 축소 허용
             height: '40px' // 높이 설정
           }}>
             <TextField
