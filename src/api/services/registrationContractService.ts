@@ -50,11 +50,11 @@ const registrationContractService = {
   async getAvailablePhoneNumber(
     endPhoneNumber: string,
     customerId: string,
-  ): Promise<PhoneNumberAvailabilityResponse> {
-    const response = await baseService.get<PhoneNumberAvailabilityResponse>(
-      `/phone-numbers/availability?endPhoneNumber=${endPhoneNumber}&customerId=${customerId}`,
+  ): Promise<PhoneNumberAvailabilityResponse[]> {
+    const response = await baseService.get<PhoneNumberAvailabilityResponse[]>(
+      `/ctt-be/v1/phone-numbers/availability?endPhoneNumber=${endPhoneNumber}&customerId=${customerId}`,
     );
-    return response.data as PhoneNumberAvailabilityResponse;
+    return response.data as PhoneNumberAvailabilityResponse[];
   },
 
   /**
@@ -65,7 +65,7 @@ const registrationContractService = {
    */
   claimAvailablePhoneNumber(data: ClaimPhoneNumberRequest): Promise<CommonResponse<void>> {
     return baseService.post<void, ClaimPhoneNumberRequest>(
-      `/phone-numbers/${data.phoneNumber}/claim`,
+      `/ctt-be/v1/phone-numbers/${data.phoneNumber}/claim`,
       data,
     );
   },
@@ -78,7 +78,7 @@ const registrationContractService = {
    */
   async getDeviceModelByIMEI(imei: string): Promise<DeviceModelResponse> {
     const response = await baseService.get<DeviceModelResponse>(
-      `/device-inventories/${imei}/device-model`,
+      `/ctt-be/v1/device-inventories/${imei}/device-model`,
     );
     return response.data as DeviceModelResponse;
   },
@@ -89,7 +89,7 @@ const registrationContractService = {
    * @returns 서비스 목록
    */
   getServices(): Promise<CommonResponse<ServiceResponse[]>> {
-    return baseService.get<ServiceResponse[]>('/services');
+    return baseService.get<ServiceResponse[]>('/ctt-be/v1/services');
   },
 
   /**
@@ -98,7 +98,7 @@ const registrationContractService = {
    * @returns 부가 서비스 목록
    */
   getAdditionalServices(): Promise<CommonResponse<ServiceResponse[]>> {
-    return baseService.get<ServiceResponse[]>('/additional-services');
+    return baseService.get<ServiceResponse[]>('/ctt-be/v1/additional-services');
   },
 };
 

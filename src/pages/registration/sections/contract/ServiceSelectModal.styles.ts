@@ -4,11 +4,12 @@ export const styles = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 800,
+    width: 600,
     bgcolor: 'background.paper',
     boxShadow: 24,
     p: 4,
     borderRadius: 1,
+    gap: '24px',
   },
   modalHeader: {
     display: 'flex',
@@ -22,21 +23,27 @@ export const styles = {
   searchContainer: {
     display: 'flex',
     alignItems: 'center',
-    mb: 3,
+    justifyContent: 'space-between',
+    width: '552px',
+    height: '64px',
+    paddingTop: '16px',
+    paddingRight: '24px',
+    paddingBottom: '16px',
+    paddingLeft: '24px',
+    backgroundColor: '#EDEFF1',
   },
-  searchLabel: {
-    mr: 2,
-    fontWeight: 500,
-  },
+
   searchInput: {
-    width: '70%',
-    mr: 2,
+    width: '362px',
   },
   searchButton: {
     minWidth: '80px',
   },
   tableContainer: {
-    mb: 3,
+    width: 552,
+    height: 249,
+    paddingTop: '16px',
+    paddingBottom: '16px',
   },
   tableTitle: {
     fontWeight: 'bold',
@@ -44,7 +51,6 @@ export const styles = {
   },
   table: {
     boxShadow: 'none',
-    border: '1px solid #e0e0e0',
   },
   tableHeaderCell: {
     backgroundColor: '#f5f5f5',
@@ -59,6 +65,7 @@ export const styles = {
   modalFooter: {
     display: 'flex',
     justifyContent: 'flex-end',
+    width: '100%',
     mt: 2,
   },
   cancelButton: {

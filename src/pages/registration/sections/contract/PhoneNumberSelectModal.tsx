@@ -1,25 +1,30 @@
 import React, { useState, useEffect } from 'react';
+
 import { DialogContent, Radio, IconButton, Typography, Box } from '@mui/material';
+import { Table, TableHead, TableBody } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
-import { Table, TableHead, TableBody } from '@mui/material';
+import { format } from 'date-fns';
+
+import registrationContractService from '@api/services/registrationContractService';
+
 import TableRow from '@components/Table/TableRow';
 import TableCell from '@components/Table/TableCell';
+import Button from '@components/Button';
+
 import {
   StyledDialog,
   StyledDialogTitle,
   StyledTableContainer,
   StyledDialogActions,
-  SelectButton,
-  CancelButton,
 } from './PhoneNumberSelectModal.style';
 
 interface PhoneNumber {
   id: number;
-  status: string;
+  statusCode: string;
   phoneNumber: string;
-  provider: string;
-  expirationDate: string;
+  phoneNumberProvider: string;
+  lastUpdateStatusDatetime: string;
 }
 
 interface PhoneNumberSelectModalProps {
@@ -27,52 +32,36 @@ interface PhoneNumberSelectModalProps {
   onClose: () => void;
   onSelect: (phoneNumber: PhoneNumber) => void;
   lastFourDigits?: string;
+  customerId: string;
 }
 
 const PhoneNumberSelectModal: React.FC<PhoneNumberSelectModalProps> = ({
   open,
   onClose,
   onSelect,
-  lastFourDigits = '',
+  lastFourDigits,
+  customerId,
 }) => {
-  // 샘플 데이터
-  const phoneNumbers: PhoneNumber[] = [
-    {
-      id: 1,
-      status: '선점',
-      phoneNumber: '010-6655-4567',
-      provider: 'KT',
-      expirationDate: '2025-02-20',
-    },
-    {
-      id: 3,
-      status: '사용가능',
-      phoneNumber: '010-2934-1234',
-      provider: 'KT',
-      expirationDate: '2025-02-20',
-    },
-    {
-      id: 4,
-      status: '사용가능',
-      phoneNumber: '010-8797-1234',
-      provider: 'KT',
-      expirationDate: '2025-02-20',
-    },
-    {
-      id: 5,
-      status: '사용가능',
-      phoneNumber: '010-0239-1234',
-      provider: 'KT',
-      expirationDate: '2025-02-20',
-    },
-  ];
-
+  // 상태관리
+  const [phoneNumbers, setPhoneNumbers] = useState<PhoneNumber[]>([]);
   const [selectedPhoneNumber, setSelectedPhoneNumber] = useState<PhoneNumber | null>(null);
+
+  useEffect(() => {
+    if (open) {
+      fetchPhoneNumbers(); // 창 열렸을 때 데이터 가져오기
+    }
+  }, [open]);
+
+  // 이벤트 핸들러
+  const handleClose = () => {
+    setSelectedPhoneNumber(null);
+    onClose();
+  };
 
   const handleSelect = () => {
     if (selectedPhoneNumber) {
       onSelect(selectedPhoneNumber);
-      onClose();
+      handleClose();
     }
   };
 
@@ -80,31 +69,44 @@ const PhoneNumberSelectModal: React.FC<PhoneNumberSelectModalProps> = ({
     setSelectedPhoneNumber(phoneNumber);
   };
 
+  // API 호출 함수
+  const fetchPhoneNumbers = async () => {
+    setPhoneNumbers([]);
+    if (lastFourDigits && lastFourDigits.length == 4 && customerId) {
+      const response = await registrationContractService.getAvailablePhoneNumber(
+        lastFourDigits,
+        customerId,
+      );
+      // UI에 맞는 인터페이스로 전환
+      const transformedPhoneNumbers: PhoneNumber[] = response.map((item, index) => ({
+        id: index + 1,
+        statusCode: item.statusCode,
+        phoneNumber: item.phoneNumber,
+        phoneNumberProvider: item.phoneNumberProvider,
+        lastUpdateStatusDatetime: item.lastUpdateStatusDatetime,
+      }));
+      setPhoneNumbers(transformedPhoneNumbers);
+    }
+  };
+
   // 테이블 헤더 정의
   const headers = [
-    { id: 'radio', label: '', width: '5%' },
-    { id: 'status', label: '상태', width: '15%' },
-    { id: 'phoneNumber', label: '전화번호', width: '30%' },
-    { id: 'provider', label: '번호부여회사', width: '25%' },
-    { id: 'expirationDate', label: '상태변경일', width: '25%' },
+    { id: 'radio', label: '', width: '48px' },
+    { id: 'statusCode', label: '상태', width: '100px' },
+    { id: 'phoneNumber', label: '전화번호', width: '134px' },
+    { id: 'phoneNumberProvider', label: '번호부여회사', width: '110px' },
+    { id: 'lastUpdateStatusDatetime', label: '상태변경일', width: '160px' },
   ];
 
-  // 예시: 컴포넌트가 마운트될 때 lastFourDigits가 있으면 해당 번호로 검색 초기화
-  useEffect(() => {
-    if (lastFourDigits && lastFourDigits.length > 0) {
-      // 검색 로직 구현 (예: setSearchTerm(lastFourDigits) 등)
-    }
-  }, [lastFourDigits, open]);
-
   return (
-    <StyledDialog open={open} onClose={onClose} maxWidth='md' fullWidth>
+    <StyledDialog open={open} onClose={handleClose} maxWidth='md' fullWidth>
       <StyledDialogTitle>
         <Typography variant='h6' component='div'>
           전화번호 선택
         </Typography>
         <IconButton
           aria-label='close'
-          onClick={onClose}
+          onClick={handleClose}
           sx={{
             position: 'absolute',
             right: 8,
@@ -118,36 +120,32 @@ const PhoneNumberSelectModal: React.FC<PhoneNumberSelectModalProps> = ({
 
       <DialogContent>
         <Box sx={{ mb: 2 }}>
-          <Typography variant='h6' component='div'>
-            전화번호 목록 {phoneNumbers.length}
+          <Typography variant='h3' component='div'>
+            전화번호 목록
+            <Typography variant='h4' component='span' sx={{ color: '#6E7782' }}>
+              {phoneNumbers.length}
+            </Typography>
           </Typography>
         </Box>
 
         <StyledTableContainer>
-          {phoneNumbers.length > 0 ? (
-            <Table>
-              <TableHead>
-                <TableRow>
-                  {headers.map((header) => (
-                    <TableCell key={header.id} width={header.width}>
-                      {header.label}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {phoneNumbers.map((phoneNumber) => (
+          <Table>
+            <TableHead>
+              <TableRow variant='head'>
+                {headers.map((header) => (
+                  <TableCell key={header.id} width={header.width}>
+                    <Typography>{header.label}</Typography>
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {phoneNumbers.length > 0 ? (
+                phoneNumbers.map((phoneNumber) => (
                   <TableRow
+                    disableEffect={true}
                     key={phoneNumber.id}
                     onClick={() => handleRadioChange(phoneNumber)}
-                    sx={{
-                      cursor: 'pointer',
-                      backgroundColor:
-                        selectedPhoneNumber?.id === phoneNumber.id
-                          ? 'rgba(0, 0, 0, 0.04)'
-                          : 'inherit',
-                      '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.08)' },
-                    }}
                   >
                     <TableCell>
                       <Radio
@@ -189,39 +187,46 @@ const PhoneNumberSelectModal: React.FC<PhoneNumberSelectModalProps> = ({
                         }
                       />
                     </TableCell>
-                    <TableCell>{phoneNumber.status}</TableCell>
-                    <TableCell>{phoneNumber.phoneNumber}</TableCell>
-                    <TableCell>{phoneNumber.provider}</TableCell>
-                    <TableCell>{phoneNumber.expirationDate}</TableCell>
+                    <TableCell>
+                      <Typography variant='body1'>{phoneNumber.statusCode}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant='body1'>{phoneNumber.phoneNumber}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant='body1'>{phoneNumber.phoneNumberProvider}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      {format(phoneNumber.lastUpdateStatusDatetime, 'yyyy-MM-dd')}
+                    </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '200px',
-                width: '100%',
-              }}
-            >
-              <Typography variant='body1'>사용가능한 전화번호가 없습니다.</Typography>
-            </Box>
-          )}
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} align='center' sx={{ py: 3 }}>
+                    <Typography variant='body1'>사용 가능한 전화번호가 없습니다</Typography>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         </StyledTableContainer>
       </DialogContent>
 
       <StyledDialogActions>
-        <CancelButton onClick={onClose}>취소</CancelButton>
-        <SelectButton
+        <Button onClick={handleClose} variant='outlined' color='grey' size='small'>
+          취소
+        </Button>
+        <Button
           onClick={handleSelect}
           disabled={!selectedPhoneNumber}
-          startIcon={<CheckIcon />}
+          variant='contained'
+          iconComponent={<CheckIcon />}
+          iconPosition='left'
+          size='small'
         >
           선택
-        </SelectButton>
+        </Button>
       </StyledDialogActions>
     </StyledDialog>
   );

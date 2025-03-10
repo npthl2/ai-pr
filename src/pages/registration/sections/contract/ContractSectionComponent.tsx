@@ -26,6 +26,7 @@ import {
   TwoColumnContainer,
   Column,
 } from './ContractSectionComponent.styles';
+import useCustomerStore from '@stores/CustomerStore';
 
 interface PhoneNumber {
   id: number;
@@ -60,6 +61,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
 
   // Add ref for phone number input field
   const phoneNumberInputRef = useRef<HTMLInputElement>(null);
+  const [customerId, setCustomerId] = useState<string>(null);
 
   const [subscriptionType, setSubscriptionType] = useState<string>('신규가입');
   const [salesType, setSalesType] = useState<string>('신규폰');
@@ -86,9 +88,12 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     servicePlan: { state: 'active', helperText: '' },
   });
 
+  const currentCustomerId = useCustomerStore((state) => state.selectedCustomerId);
   const currentContract = useRegistrationContractStore((state) => state.contracts[contractTabId]);
 
   useEffect(() => {
+    setCustomerId(currentCustomerId ?? '');
+
     const initialContract = {
       subscriptionType,
       salesType,
@@ -515,6 +520,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
         onClose={handlePhoneNumberModalClose}
         onSelect={handlePhoneNumberSelect}
         lastFourDigits={phoneNumberLastFour}
+        customerId={customerId}
       />
 
       <ServiceSelectModal

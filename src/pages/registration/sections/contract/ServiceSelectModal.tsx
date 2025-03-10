@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Modal,
-  Box,
-  Button,
-  TextField,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Radio,
-  Typography,
-  IconButton,
-} from '@mui/material';
+import { Modal, Box, TextField, Paper, Radio, Typography, IconButton } from '@mui/material';
+import { Table, TableBody, TableContainer, TableHead } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
+
+import registrationContractService from '@api/services/registrationContractService';
+
+import TableRow from '@components/Table/TableRow';
+import TableCell from '@components/Table/TableCell';
+import Button from '@components/Button';
+
 import { styles } from './ServiceSelectModal.styles';
 
 interface PlanItem {
@@ -77,10 +71,10 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
   };
 
   return (
-    <Modal open={open} onClose={onClose} aria-labelledby='fee-select-modal-title'>
+    <Modal open={open} onClose={onClose}>
       <Box sx={styles.modalContainer}>
         <Box sx={styles.modalHeader}>
-          <Typography id='fee-select-modal-title' variant='h6' component='h2'>
+          <Typography variant='h6' component='h2'>
             요금제 선택
           </Typography>
           <IconButton onClick={onClose} size='small' sx={styles.closeButton}>
@@ -89,39 +83,61 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
         </Box>
 
         <Box sx={styles.searchContainer}>
-          <Typography sx={styles.searchLabel}>요금제명</Typography>
-          <TextField
-            placeholder='넷플릭스'
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            size='small'
-            sx={styles.searchInput}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                handleSearch();
-                e.preventDefault();
-              }
+          <Box
+            sx={{
+              width: '419px',
+              height: '32px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
             }}
-          />
+          >
+            <Typography sx={{ minWidth: '60px' }}>요금제명</Typography>
+            <TextField
+              placeholder='넷플릭스'
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              size='small'
+              sx={styles.searchInput}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleSearch();
+                  e.preventDefault();
+                }
+              }}
+            />
+          </Box>
           <Button
-            variant='contained'
-            startIcon={<SearchIcon />}
             onClick={handleSearch}
-            sx={styles.searchButton}
+            variant='contained'
+            iconComponent={<SearchIcon />}
+            iconPosition='left'
+            size='small'
           >
             조회
           </Button>
         </Box>
 
         <Box sx={styles.tableContainer}>
-          <Typography sx={styles.tableTitle}>요금제 목록 {filteredPlanList.length}</Typography>
+          <Box sx={{ mb: 2 }}>
+            <Typography variant='h3' component='div'>
+              요금제 목록
+              <Typography variant='h4' component='span' sx={{ color: '#6E7782' }}>
+                {filteredPlanList.length}
+              </Typography>
+            </Typography>
+          </Box>
           <TableContainer component={Paper} sx={styles.table}>
             <Table>
               <TableHead>
-                <TableRow>
-                  <TableCell sx={styles.tableHeaderCell} width='50px'></TableCell>
-                  <TableCell sx={styles.tableHeaderCell}>요금제명</TableCell>
-                  <TableCell sx={styles.tableHeaderCell}>요금 (원)</TableCell>
+                <TableRow variant='head'>
+                  <TableCell sx={styles.tableHeaderCell} width='48px'></TableCell>
+                  <TableCell sx={styles.tableHeaderCell} width='250px'>
+                    <Typography>요금제명</Typography>
+                  </TableCell>
+                  <TableCell sx={styles.tableHeaderCell} width='254px'>
+                    <Typography>요금 (원)</Typography>
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -159,7 +175,9 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
             variant='contained'
             onClick={handleSelect}
             disabled={!selectedPlan}
-            sx={styles.selectButton}
+            iconComponent={<CheckIcon />}
+            iconPosition='left'
+            size='small'
           >
             선택
           </Button>
