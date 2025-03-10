@@ -8,7 +8,7 @@ import {
   ButtonContainer,
   LeftButtonGroup,
   RightButtonGroup,
-} from './ContractSummary.styled';
+} from './RegistrationSummary.styled';
 import { SECTION_IDS, SECTION_TITLES } from '@constants/RegistrationConstants';
 import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
 import { useState } from 'react';
@@ -61,7 +61,7 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
       registrationMutation.mutate(updatedInfo, {
         onSuccess: (response) => {
           console.log('저장 요청 성공:', response);
-          // 성공 응답 처리는 ContractRequest 컴포넌트에서 폴링으로 처리
+          // 성공 응답 처리는 RegistrationRequest 컴포넌트에서 폴링으로 처리
         },
         onError: (error) => {
           console.error('저장 요청 실패:', error);

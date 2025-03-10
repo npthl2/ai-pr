@@ -14,8 +14,8 @@ import SalesSection from './sections/SalesSection';
 import ContractSection from './sections/ContractSection';
 import DeviceSection from './sections/DeviceSection';
 import { SectionId, SECTION_IDS, SECTION_TITLES } from '@constants/RegistrationConstants';
-import ContractRequest from './ContractRequest';
-import ContractSummary from './sections/ContractSummary';
+import RegistrationRequest from './RegistrationRequest';
+import RegistrationSummary from './sections/RegistrationSummary';
 import InvoiceSection from './sections/InvoiceSection';
 
 interface NewContractProps {
@@ -150,7 +150,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
   };
 
   return isSaveRequested ? (
-    <ContractRequest contractTabId={contractTabId} />
+    <RegistrationRequest contractTabId={contractTabId} />
   ) : (
     <Container>
       <ContentWrapper>
@@ -195,7 +195,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
             })}
           </SectionsWrapper>
         </SectionsContainer>
-        <ContractSummary contractTabId={contractTabId} setIsSaveRequested={setIsSaveRequested} />
+        <RegistrationSummary contractTabId={contractTabId} setIsSaveRequested={setIsSaveRequested} />
       </ContentWrapper>
     </Container>
   );

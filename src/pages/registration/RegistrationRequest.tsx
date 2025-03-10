@@ -5,22 +5,22 @@ import { Box, Switch, FormControlLabel } from '@mui/material';
 import registrationService from '@api/services/registrationService';
 import useRegistrationStore from '@stores/registration/RegistrationStore';
 import {
-  ContractRequestContainer,
+  RegistrationRequestContainer,
   ContentContainer,
   PageTitle,
   SectionContainer
-} from './ContractRequest.styled';
-import StatusMessage from './components/StatusMessage';
-import SummaryInfo from './components/SummaryInfo';
-import EmailForm from './components/EmailForm';
-import ActionButtons from './components/ActionButtons';
+} from './RegistrationRequest.styled';
+import StatusMessage from './registration/StatusMessage';
+import SummaryInfo from './registration/SummaryInfo';
+import EmailForm from './registration/EmailForm';
+import ActionButtons from './registration/ActionButtons';
 import { RegistrationStatusType } from '@model/RegistrationInfo';
 
-interface ContractRequestProps {
+interface RegistrationRequestProps {
   contractTabId?: string;
 }
 
-const ContractRequest = ({ contractTabId }: ContractRequestProps) => {
+const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
   const navigate = useNavigate();
   const [status, setStatus] = useState<RegistrationStatusType>('PENDING');
   const [failReason, setFailReason] = useState<string>('');
@@ -149,7 +149,7 @@ const ContractRequest = ({ contractTabId }: ContractRequestProps) => {
   };
 
   return (
-    <ContractRequestContainer>
+    <RegistrationRequestContainer>
       <ContentContainer>
         <StatusMessage 
           status={status} 
@@ -238,8 +238,8 @@ const ContractRequest = ({ contractTabId }: ContractRequestProps) => {
           />
         </SectionContainer>
       </ContentContainer>
-    </ContractRequestContainer>
+    </RegistrationRequestContainer>
   );
 };
 
-export default ContractRequest;
+export default RegistrationRequest;

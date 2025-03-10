@@ -1,6 +1,6 @@
 import { Box, styled, Typography as MuiTypography, Theme } from '@mui/material';
 
-export const ContractRequestContainer = styled(Box)(({ theme }) => ({
+export const RegistrationRequestContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '100%',
   backgroundColor: theme.palette.background.default,

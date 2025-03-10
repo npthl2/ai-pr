@@ -3,7 +3,7 @@ import {
   GifContainer,
   StatusMessage as StyledStatusMessage,
   ErrorMessage
-} from '../ContractRequest.styled';
+} from '../RegistrationRequest.styled';
 import { RegistrationStatusType } from '@model/RegistrationInfo';
 
 interface StatusMessageProps {

@@ -2,7 +2,7 @@ import { MenuItem, Box } from '@mui/material'; // Material UI 컴포넌트 임�
 import Button from '@components/Button'; // 커스텀 버튼 컴포넌트 임포트
 import TextField from '@components/TextField'; // 커스텀 텍스트필드 컴포넌트 임포트
 import Select from '@components/Select'; // 커스텀 셀렉트 컴포넌트 임포트
-import { EmailSeparator } from '../ContractRequest.styled'; // 이메일 구분자 스타일 임포트
+import { EmailSeparator } from '../RegistrationRequest.styled'; // 이메일 구분자 스타일 임포트
 import { useState, useEffect } from 'react'; // React 훅 임포트
 import { RegistrationStatusType } from '@model/RegistrationInfo'; // 등록 상태 타입 임포트
 

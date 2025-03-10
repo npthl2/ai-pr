@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import ContractRequest from './ContractRequest';
+import ContractRequest from './RegistrationRequest';
 
 interface ContractRequestContainerProps {
   contractTabId?: string;
