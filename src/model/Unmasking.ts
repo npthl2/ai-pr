@@ -22,6 +22,6 @@ export interface Unmasking<T> {
 
 export interface UnmaskingProps<T> {
   onClose: () => void;
-  onUnmask: (unmaskedItem: string, param: T) => void;
+  onUnmask: (unmaskedItem: string, param: T, reason: string ) => void;
   requestData: Unmasking<T>;
 }
