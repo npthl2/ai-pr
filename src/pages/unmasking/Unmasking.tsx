@@ -66,7 +66,7 @@ const Unmasking = <T,>({ onClose, onUnmask, requestData }: UnmaskingProps<T>) =>
         .then((response) => response.data);
 
       if (response && typeof response === 'object' && 'unmaskedItem' in response) {
-        onUnmask(response.unmaskedItem, requestData.param as T, reason );
+        onUnmask(response.unmaskedItem, reason);
         onClose();
       } else {
         throw new Error('마스킹 해제 중 오류가 발생했습니다.');
