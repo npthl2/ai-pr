@@ -52,7 +52,7 @@ const MaskingInfo: React.FC<MaskingInfoProps> = ({ originalInfo, encryptedInfo, 
 
   // 마스킹 해제 된 데이터 업데이트
 
-  const updateMaskingValue = (unmaskedItem: string, param: MaskedTarget) => {
+  const updateMaskingValue = (unmaskedItem: string, param: MaskedTarget, reason: string) => {
     queryClient.setQueryData<CustomerContract>(
       ['customerContracts', param.customerId],
       (oldData) => {
