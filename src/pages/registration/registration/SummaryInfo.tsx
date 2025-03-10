@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { InvoiceInfo as BaseInvoiceInfo, DeviceInfo as BaseDeviceInfo, SalesInfo as BaseSalesInfo } from '@model/RegistrationInfo';
+import { InvoiceInfo as BaseInvoiceInfo, DeviceInfo as BaseDeviceInfo, ContractInfo as BaseContractInfo } from '@model/RegistrationInfo';
 import { StyledDivider, VerticalDivider } from './SummaryInfo.styled';
 import BillingInfo from './summary/BillingInfo';
 import SalesInfo from './summary/SalesInfo';
@@ -15,17 +15,17 @@ interface DeviceInfo extends Partial<BaseDeviceInfo> {
   [key: string]: any;
 }
 
-interface SalesInfoType extends Partial<BaseSalesInfo> {
+interface ContractInfo extends Partial<BaseContractInfo> {
   [key: string]: any;
 }
 
 interface SummaryInfoProps {
   invoiceInfo: InvoiceInfo;
   deviceInfo: DeviceInfo;
-  salesInfo: SalesInfoType;
+  contractInfo: ContractInfo;
 }
 
-const SummaryInfo = ({ invoiceInfo, deviceInfo, salesInfo }: SummaryInfoProps) => {
+const SummaryInfo = ({ invoiceInfo, deviceInfo, contractInfo }: SummaryInfoProps) => {
   return (
     <Box sx={{ display: 'flex', flexWrap: 'nowrap', width: '100%', gap: 3 }}>
       {/* 왼쪽 컬럼 */}
@@ -38,7 +38,7 @@ const SummaryInfo = ({ invoiceInfo, deviceInfo, salesInfo }: SummaryInfoProps) =
         
         <StyledDivider />
         
-        <SubscriptionInfo salesInfo={salesInfo} />
+        <SubscriptionInfo contractInfo={contractInfo} />
       </Box>
       
       {/* 세로 구분선 - 모바일에서는 숨김 */}

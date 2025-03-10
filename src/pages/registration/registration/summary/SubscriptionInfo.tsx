@@ -1,4 +1,4 @@
-import { SalesInfo as BaseSalesInfo } from '@model/RegistrationInfo';
+import { ContractInfo as BaseContractInfo } from '@model/RegistrationInfo';
 import { 
   InfoSection, 
   InfoRow, 
@@ -7,26 +7,26 @@ import {
   SubSectionTitle 
 } from '../SummaryInfo.styled';
 
-interface SalesInfo extends Partial<BaseSalesInfo> {
+interface ContractInfo extends Partial<BaseContractInfo> {
   [key: string]: any;
 }
 
 interface SubscriptionInfoProps {
-  salesInfo: SalesInfo;
+  contractInfo: ContractInfo;
 }
 
-const SubscriptionInfo = ({ salesInfo }: SubscriptionInfoProps) => {
+const SubscriptionInfo = ({ contractInfo }: SubscriptionInfoProps) => {
   return (
     <>
       <SubSectionTitle>가입정보</SubSectionTitle>
       <InfoSection>
         <InfoRow>
           <InfoLabel>전화번호</InfoLabel>
-          <InfoValue>{salesInfo.phoneNumber || '-'}</InfoValue>
+          <InfoValue>{contractInfo.phoneNumber || '-'}</InfoValue>
         </InfoRow>
         <InfoRow>
           <InfoLabel>개통요금제</InfoLabel>
-          <InfoValue>{salesInfo.planName || '-'}</InfoValue>
+          <InfoValue>{contractInfo.service?.serviceName || '-'}</InfoValue>
         </InfoRow>
       </InfoSection>
     </>

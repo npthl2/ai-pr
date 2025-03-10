@@ -14,7 +14,7 @@ import StatusMessage from './registration/StatusMessage';
 import SummaryInfo from './registration/SummaryInfo';
 import EmailForm from './registration/EmailForm';
 import ActionButtons from './registration/ActionButtons';
-import { RegistrationStatusType } from '@model/RegistrationInfo';
+import { RegistrationStatusType, InvoiceInfo, DeviceInfo, ContractInfo } from '@model/RegistrationInfo';
 
 interface RegistrationRequestProps {
   contractTabId?: string;
@@ -33,40 +33,11 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
   // RegistrationStore에서 데이터 가져오기
   const registrationData = contractTabId ? getRegistrationInfo(contractTabId) : undefined;
   
-  // 고객 정보
-  const customerInfo = registrationData?.customer || {
-    name: '',
-    rrno: '',
-    isConsent: false,
-    customerId: ''
-  };
-  
-  // 청구 정보
-  const invoiceInfo = registrationData?.invoice || {
-    payerName: '홍길동', // 납부자명
-    paymentMethod: '은행계좌 자동이체', // 납부방법
-    paymentDay: '매월말일' // 납부일
-  };
-  
-  // 기기 정보
-  const deviceInfo = registrationData?.device || {
-    sponsorName: '통합스폰서', // 스폰서명
-    sponsorOption: '공시지원금(24개월)', // 스폰서 옵션
-    totalPrice: 1155000, // 총고가
-    subsidy: 0, // 공시지원금
-    prepayment: 0, // 선납금
-    installmentPrincipal: 1155000, // 할부원금
-    installmentFee: 72312, // 총 할부수수료
-    totalAmount: 1227312, // 총 금액
-    monthlyInstallment: 51138, // 월 할부금
-    installmentPeriod: 24 // 할부기간(개월)
-  };
-  
-  // 판매 정보
-  const salesInfo = registrationData?.sales || {
-    phoneNumber: '010-1234-5678', // 전화번호
-    planName: '네플릭스 초이스 스페셜' // 개통요금제
-  };
+  // 각 정보 추출
+  const customerInfo = registrationData?.customer;
+  const invoiceInfo = registrationData?.invoice as InvoiceInfo;
+  const deviceInfo = registrationData?.device as DeviceInfo;
+  const contractInfo = registrationData?.contract as ContractInfo;
   
   // 컴포넌트 마운트 시 RegistrationStore 상태 확인
   useEffect(() => {
@@ -153,7 +124,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
       <ContentContainer>
         <StatusMessage 
           status={status} 
-          customerName={customerInfo.name} 
+          customerName={customerInfo?.name || ''} 
           failReason={failReason} 
         />
 
@@ -176,11 +147,13 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
               p: 3,
               backgroundColor: (theme) => theme.palette.grey[50]
             }}>
-              <SummaryInfo 
-                invoiceInfo={invoiceInfo} 
-                deviceInfo={deviceInfo} 
-                salesInfo={salesInfo} 
-              />
+              {invoiceInfo && deviceInfo && contractInfo && (
+                <SummaryInfo 
+                  invoiceInfo={invoiceInfo} 
+                  deviceInfo={deviceInfo} 
+                  contractInfo={contractInfo} 
+                />
+              )}
             </Box>
           </Box>
           

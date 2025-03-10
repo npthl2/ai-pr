@@ -1,18 +1,20 @@
 import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
-import { RegistrationCustomerInfo } from './RegistrationCustomerStore';
+import { RegistrationInfo } from '@model/RegistrationInfo';
 
-// 계약 정보 저장을 위한 데이터 타입 정의
-export interface RegistrationInfo {
-  customer: RegistrationCustomerInfo; // 고객 정보
-  contract: Record<string, any>; // 계약 정보
-  invoice: Record<string, any>; // 청구서 정보
-  device: Record<string, any>; // 기기 정보
-  sales: Record<string, any>; // 판매 정보
-  status?: 'PENDING' | 'COMPLETED' | 'FAILED'; // 저장 상태 추가
-}
+// import { RegistrationCustomerInfo } from './RegistrationCustomerStore';
 
-// Zustand 상태 관리 인터페이스 정의
+// // 계약 정보 저장을 위한 데이터 타입 정의
+// export interface RegistrationInfo {
+//   customer: RegistrationCustomerInfo; // 고객 정보
+//   contract: Record<string, any>; // 계약 정보
+//   invoice: Record<string, any>; // 청구서 정보
+//   device: Record<string, any>; // 기기 정보
+//   sales: Record<string, any>; // 판매 정보
+//   status?: 'PENDING' | 'COMPLETED' | 'FAILED'; // 저장 상태 추가
+// }
+
+// 스토어 상태 인터페이스 정의
 export interface RegistrationStoreState {
   registrationInfo: Record<string, RegistrationInfo>; // 계약 ID를 키로 갖는 저장된 계약 데이터 객체
   
@@ -69,9 +71,8 @@ const useRegistrationStore = create<RegistrationStoreState>((set, get) => ({
     updateRegistrationStatus: (contractTapId, status) => {
         set((state) => {
             const currentInfo = state.registrationInfo[contractTapId];
-            if (!currentInfo) return state;
+            if (!currentInfo) return state; // 해당 ID의 데이터가 없으면 상태 변경 없음
             
-            console.log('RegistrationInfo 상태 업데이트:', contractTapId, status); // 디버깅용 로그 추가
             return {
                 registrationInfo: {
                     ...state.registrationInfo,
