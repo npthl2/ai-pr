@@ -150,7 +150,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
   };
 
   return isSaveRequested ? (
-    <ContractRequest />
+    <ContractRequest contractTabId={contractTabId} />
   ) : (
     <Container>
       <ContentWrapper>

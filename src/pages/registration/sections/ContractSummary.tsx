@@ -14,6 +14,7 @@ import useRegistrationCustomerStore from '@stores/registration/RegistrationCusto
 import { useState } from 'react';
 import { useRegistrationInfo } from '@hooks/useRegistrationInfo';
 import useRegistrationStore from '@stores/registration/RegistrationStore';
+import { useRegistrationMutation } from '@api/queries/registration/useRegistrationMutation';
 
 interface ContractSummaryProps {
   contractTabId: string;
@@ -25,26 +26,58 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
   const customerInfo = getRegistrationCustomerInfo(contractTabId);
 
   // 모든 계약 관련 데이터 가져오기
-  const { setRegistrationInfo } = useRegistrationStore();
+  const { setRegistrationInfo, updateRegistrationStatus } = useRegistrationStore();
   const [loading, setLoading] = useState(false);
+  const registrationMutation = useRegistrationMutation();
 
-  const handleSave = () => {
-    setLoading(true);
+  const handleSave = async () => {
+    try {
+      setLoading(true);
 
-    //1. 모든 데이터 가져오기
-    const registrationInfo = useRegistrationInfo(contractTabId);
-    console.log('데이터 수집 확인:', registrationInfo);
+      // 1. 모든 데이터 가져오기 (현재는 customerStore만 구현됨)
+      const registrationInfo = useRegistrationInfo(contractTabId);
+      console.log('데이터 수집 확인:', registrationInfo);
 
-    //2. zustand에 저장
-    setRegistrationInfo(contractTabId, registrationInfo);
+      // 2. zustand에 저장하고 상태를 PENDING으로 설정
+      const updatedInfo = {
+        ...registrationInfo,
+        status: 'PENDING' as const
+      };
+      
+      // 저장 전 RegistrationStore 상태 확인
+      console.log('저장 전 RegistrationStore:', useRegistrationStore.getState());
+      
+      setRegistrationInfo(contractTabId, updatedInfo);
+      updateRegistrationStatus(contractTabId, 'PENDING');
+      
+      // 저장 후 RegistrationStore 상태 확인
+      console.log('저장 후 RegistrationStore:', useRegistrationStore.getState());
+      
+      // 저장된 데이터 확인
+      const savedInfo = useRegistrationStore.getState().getRegistrationInfo(contractTabId);
+      console.log('저장된 RegistrationInfo:', savedInfo);
 
-    // 3. 저장 완료 화면으로 이동
-    setTimeout(() => {
+      // 3. 백엔드 API 호출 (개발 단계에서는 임시 응답 사용)
+      registrationMutation.mutate(updatedInfo, {
+        onSuccess: (response) => {
+          console.log('저장 요청 성공:', response);
+          // 성공 응답 처리는 ContractRequest 컴포넌트에서 폴링으로 처리
+        },
+        onError: (error) => {
+          console.error('저장 요청 실패:', error);
+          updateRegistrationStatus(contractTabId, 'FAILED');
+        },
+      });
+
+      // 4. 저장 완료 화면으로 이동 (결과와 상관없이)
       setIsSaveRequested(true);
+    } catch (error) {
+      console.error('저장 처리 중 오류 발생:', error);
+      updateRegistrationStatus(contractTabId, 'FAILED');
+    } finally {
       setLoading(false);
-    }, 500);
-  }
-
+    }
+  };
 
   return (
     <SummaryContainer>

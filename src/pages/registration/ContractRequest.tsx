@@ -1,18 +1,244 @@
-import { Box, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { Box, Switch, FormControlLabel } from '@mui/material';
+import registrationService from '@api/services/registrationService';
+import useRegistrationStore from '@stores/registration/RegistrationStore';
+import {
+  ContractRequestContainer,
+  ContentContainer,
+  PageTitle,
+  SectionContainer
+} from './ContractRequest.styled';
+import StatusMessage from './components/StatusMessage';
+import SummaryInfo from './components/SummaryInfo';
+import EmailForm from './components/EmailForm';
+import ActionButtons from './components/ActionButtons';
+import { RegistrationStatusType } from '@model/RegistrationInfo';
 
-const ContractRequest = () => {
+interface ContractRequestProps {
+  contractTabId?: string;
+}
+
+const ContractRequest = ({ contractTabId }: ContractRequestProps) => {
+  const navigate = useNavigate();
+  const [status, setStatus] = useState<RegistrationStatusType>('PENDING');
+  const [failReason, setFailReason] = useState<string>('');
+  const [isEmailEnabled, setIsEmailEnabled] = useState<boolean>(false);
+  
+  // 스토어 접근
+  const updateRegistrationStatus = useRegistrationStore((state) => state.updateRegistrationStatus);
+  const getRegistrationInfo = useRegistrationStore((state) => state.getRegistrationInfo);
+  
+  // RegistrationStore에서 데이터 가져오기
+  const registrationData = contractTabId ? getRegistrationInfo(contractTabId) : undefined;
+  
+  // 고객 정보
+  const customerInfo = registrationData?.customer || {
+    name: '',
+    rrno: '',
+    isConsent: false,
+    customerId: ''
+  };
+  
+  // 청구 정보
+  const invoiceInfo = registrationData?.invoice || {
+    payerName: '홍길동', // 납부자명
+    paymentMethod: '은행계좌 자동이체', // 납부방법
+    paymentDay: '매월말일' // 납부일
+  };
+  
+  // 기기 정보
+  const deviceInfo = registrationData?.device || {
+    sponsorName: '통합스폰서', // 스폰서명
+    sponsorOption: '공시지원금(24개월)', // 스폰서 옵션
+    totalPrice: 1155000, // 총고가
+    subsidy: 0, // 공시지원금
+    prepayment: 0, // 선납금
+    installmentPrincipal: 1155000, // 할부원금
+    installmentFee: 72312, // 총 할부수수료
+    totalAmount: 1227312, // 총 금액
+    monthlyInstallment: 51138, // 월 할부금
+    installmentPeriod: 24 // 할부기간(개월)
+  };
+  
+  // 판매 정보
+  const salesInfo = registrationData?.sales || {
+    phoneNumber: '010-1234-5678', // 전화번호
+    planName: '네플릭스 초이스 스페셜' // 개통요금제
+  };
+  
+  // 컴포넌트 마운트 시 RegistrationStore 상태 확인
+  useEffect(() => {
+    if (contractTabId) {
+      const savedInfo = useRegistrationStore.getState().getRegistrationInfo(contractTabId);
+      console.log('저장된 RegistrationInfo:', savedInfo);
+    }
+  }, [contractTabId]);
+  
+  // 저장 상태를 폴링하는 쿼리
+  const { data, isError } = useQuery({
+    queryKey: ['registrationStatus', contractTabId],
+    queryFn: () => {
+      if (!contractTabId) return Promise.resolve({ status: 'PENDING' as const });
+      return registrationService.getRegistrationStatus(contractTabId);
+    },
+    refetchInterval: 3000, // 3초마다 폴링
+    enabled: !!contractTabId && status === 'PENDING',
+  });
+
+  useEffect(() => {
+    if (data?.status) {
+      // 타입 안전성을 위해 status 값을 검증
+      const newStatus = data.status === 'COMPLETED' ? 'COMPLETED' : 
+                        data.status === 'FAILED' ? 'FAILED' : 'PENDING';
+      
+      setStatus(newStatus);
+      if (contractTabId) {
+        updateRegistrationStatus(contractTabId, newStatus);
+      }
+      
+      // 실패 시 사유 설정
+      if (data.status === 'FAILED' && 'reason' in data) {
+        setFailReason(data.reason as string || '');
+      }
+    }
+    
+    if (isError) {
+      setStatus('FAILED');
+      setFailReason('서버 연결 오류가 발생했습니다.');
+      if (contractTabId) {
+        updateRegistrationStatus(contractTabId, 'FAILED');
+      }
+    }
+  }, [data, isError, contractTabId, updateRegistrationStatus]);
+
+  // 개발 단계에서는 실제 백엔드 연동 전까지 5초 후 완료 상태로 변경하는 임시 로직 추가
+  useEffect(() => {
+    if (status === 'PENDING') {
+      const timer = setTimeout(() => {
+        setStatus('COMPLETED');
+        if (contractTabId) {
+          updateRegistrationStatus(contractTabId, 'COMPLETED');
+        }
+      }, 5000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [status, contractTabId, updateRegistrationStatus]);
+
+  // 이메일 발송 처리
+  const handleSendEmail = (email: string) => {
+    console.log('이메일 발송:', email);
+    // 여기에 이메일 발송 API 호출 로직 추가
+  };
+
+  // 홈으로 이동
+  const handleGoHome = () => {
+    navigate('/');
+  };
+
+  // 고객조회로 이동
+  const handleGoCustomerSearch = () => {
+    // 고객조회 페이지로 이동하는 로직 추가
+  };
+
+  // 이메일 토글 변경 처리
+  const handleEmailToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsEmailEnabled(event.target.checked);
+  };
+
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100%',
-      }}
-    >
-      <Typography variant='h3'>가입정보 저장 완료</Typography>
-    </Box>
+    <ContractRequestContainer>
+      <ContentContainer>
+        <StatusMessage 
+          status={status} 
+          customerName={customerInfo.name} 
+          failReason={failReason} 
+        />
+
+        <SectionContainer>
+          <Box sx={{ 
+            width: '100%', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            mb: 4,
+            backgroundColor: (theme) => theme.palette.common.white,
+            overflow: 'hidden'
+          }}>
+            <Box sx={{ 
+              backgroundColor: (theme) => theme.palette.common.white
+            }}>
+              <PageTitle>가입정보 요약</PageTitle>
+            </Box>
+            
+            <Box sx={{ 
+              p: 3,
+              backgroundColor: (theme) => theme.palette.grey[50]
+            }}>
+              <SummaryInfo 
+                invoiceInfo={invoiceInfo} 
+                deviceInfo={deviceInfo} 
+                salesInfo={salesInfo} 
+              />
+            </Box>
+          </Box>
+          
+          <Box sx={{ 
+            width: '100%', 
+            display: 'flex', 
+            flexDirection: 'column',
+            backgroundColor: (theme) => theme.palette.background.paper,
+            overflow: 'hidden'
+          }}>
+            <Box sx={{ 
+              backgroundColor: (theme) => theme.palette.common.white,
+              display: 'flex',
+              alignItems: 'center', // 세로 중앙 정렬
+              gap: 2, // 요소 간 간격 추가
+            }}>
+              <PageTitle>가입내역서</PageTitle>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={isEmailEnabled}
+                    onChange={handleEmailToggleChange}
+                    disabled={status !== 'COMPLETED'}
+                    size="small"
+                  />
+                }
+                label="이메일 발송"
+                sx={{ 
+                  '& .MuiFormControlLabel-label': { 
+                    color: status === 'COMPLETED' ? 'text.primary' : 'text.disabled',
+                    fontSize: '0.875rem'
+                  } 
+                }}
+              />
+            </Box>
+
+            {/* 하단: 이메일 입력 폼 */}
+            <Box sx={{ 
+              display: 'flex', 
+              justifyContent: 'flex-start', // 왼쪽 정렬
+              width: '100%',
+            }}>
+              <EmailForm 
+                status={status} 
+                onSendEmail={handleSendEmail}
+                isEnabled={isEmailEnabled}
+              />
+            </Box>
+          </Box>
+          
+          <ActionButtons 
+            status={status} 
+            onGoHome={handleGoHome} 
+            onGoCustomerSearch={handleGoCustomerSearch} 
+          />
+        </SectionContainer>
+      </ContentContainer>
+    </ContractRequestContainer>
   );
 };
 
