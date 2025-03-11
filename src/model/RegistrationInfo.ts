@@ -37,6 +37,25 @@ export interface RegistrationRequest {
     last_update_member_id?: string; // 최종 수정자 ID
 }
 
+// 백엔드 API 응답 데이터 형식
+export interface RegistrationResponseData {
+    businessProcessId: string; // 백엔드에서 생성된 업무 프로세스 ID
+}
+
+// 백엔드 상태 조회 API 응답 데이터 형식
+export interface RegistrationStatusResponseData {
+    status: string; // 백엔드에서 반환하는 상태 값
+    contractId?: string; // 계약 ID (있는 경우)
+    reason?: string; // 실패 사유 (있는 경우)
+}
+
+// 프론트엔드에서 사용할 변환된 상태 응답 형식
+export interface RegistrationStatusResponse {
+    status: RegistrationStatusType;
+    contract_id?: string;
+    reason?: string;
+}
+
 // 백엔드 응답 모델
 export interface RegistrationResponse {
     business_process_id: string; // 업무 프로세스 ID (백엔드에서 생성)

@@ -58,9 +58,9 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
   // 저장 상태를 폴링하는 쿼리
   const { data, isError, refetch } = useQuery({
     queryKey: ['registrationStatus', contractTabId, registrationData?.business_process_id],
-    queryFn: () => {
+    queryFn: async () => {
       console.log('폴링 쿼리 실행:', contractTabId);
-      if (!contractTabId) return Promise.resolve({ status: REGISTRATION_STATUS.PENDING } as RegistrationStatus);
+      if (!contractTabId) return { status: REGISTRATION_STATUS.PENDING } as RegistrationStatus;
       
       // business_process_id가 있는 경우에만 폴링 실행
       // business_process_id가 없으면 아직 저장되지 않은 상태이므로 PENDING 반환
@@ -68,11 +68,25 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
       
       if (!business_process_id) {
         console.log('business_process_id 없음, 저장 전 상태로 간주');
-        return Promise.resolve({ status: REGISTRATION_STATUS.PENDING } as RegistrationStatus);
+        return { status: REGISTRATION_STATUS.PENDING } as RegistrationStatus;
       }
       
       console.log('상태 조회 ID:', business_process_id);
-      return registrationService.getRegistrationStatus(business_process_id);
+      const response = await registrationService.getRegistrationStatus(business_process_id);
+      
+      // 응답 데이터 변환
+      if (response.data && typeof response.data === 'object') {
+        const statusData = response.data;
+        return {
+          status: statusData.status === 'COMPLETED' ? REGISTRATION_STATUS.COMPLETED :
+                 statusData.status === 'FAILED' ? REGISTRATION_STATUS.FAILED :
+                 REGISTRATION_STATUS.PENDING,
+          ...(statusData.contractId ? { contract_id: statusData.contractId } : {}),
+          ...(statusData.reason ? { reason: statusData.reason } : {})
+        } as RegistrationStatus;
+      }
+      
+      return { status: REGISTRATION_STATUS.PENDING } as RegistrationStatus;
     },
     refetchInterval: status === REGISTRATION_STATUS.PENDING ? 2000 : false, // PENDING 상태일 때만 2초마다 폴링
     enabled: !!contractTabId && status === REGISTRATION_STATUS.PENDING && !!registrationData?.business_process_id,
@@ -103,47 +117,47 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
       }
     }
   }, [contractTabId, refetch, status]);
-
-  // 개발 환경에서만 동작하는 테스트용 business_process_id 생성 로직
-  useEffect(() => {
-    // 개발 환경에서만 동작
-    if (process.env.NODE_ENV !== 'development') return;
+// 개발 환경에서만 동작하는 테스트용 business_process_id 생성 로직
+  // useEffect(() => {
+  //   // 개발 환경에서만 동작
+  //   if (process.env.NODE_ENV !== 'development') return;
     
-    // contractTabId가 있고, 저장된 정보가 있지만 business_process_id가 없는 경우에만 실행
-    if (contractTabId && registrationData && !registrationData.business_process_id) {
-      console.log('개발 환경 테스트: business_process_id 자동 생성 준비');
+  //   // contractTabId가 있고, 저장된 정보가 있지만 business_process_id가 없는 경우에만 실행
+  //   if (contractTabId && registrationData && !registrationData.business_process_id) {
+  //     console.log('개발 환경 테스트: business_process_id 자동 생성 준비');
       
-      const timer = setTimeout(() => {
-        console.log('개발 환경 테스트: business_process_id 자동 생성 시작');
+  //     const timer = setTimeout(() => {
+  //       console.log('개발 환경 테스트: business_process_id 자동 생성 시작');
         
-        // 현재 저장된 정보 다시 확인 (타이머 실행 시점에 변경되었을 수 있음)
-        const currentInfo = useRegistrationStore.getState().getRegistrationInfo(contractTabId);
+  //       // 현재 저장된 정보 다시 확인 (타이머 실행 시점에 변경되었을 수 있음)
+  //       const currentInfo = useRegistrationStore.getState().getRegistrationInfo(contractTabId);
         
-        // 여전히 business_process_id가 없는 경우에만 생성
-        if (currentInfo && !currentInfo.business_process_id) {
-          // 임의의 business_process_id 생성
-          const business_process_id = `BP_${new Date().getTime()}_${Math.floor(Math.random() * 1000)}`;
-          console.log('개발 환경 테스트: 생성된 business_process_id:', business_process_id);
+  //       // 여전히 business_process_id가 없는 경우에만 생성
+  //       if (currentInfo && !currentInfo.business_process_id) {
+  //         // 임의의 business_process_id 생성
+  //         const business_process_id = `BP_${new Date().getTime()}_${Math.floor(Math.random() * 1000)}`;
+  //         console.log('개발 환경 테스트: 생성된 business_process_id:', business_process_id);
           
-          // business_process_id 추가하여 저장
-          const updatedInfo = {
-            ...currentInfo,
-            business_process_id,
-            status: REGISTRATION_STATUS.PENDING
-          };
+  //         // business_process_id 추가하여 저장
+  //         const updatedInfo = {
+  //           ...currentInfo,
+  //           business_process_id,
+  //           status: REGISTRATION_STATUS.PENDING
+  //         };
           
-          // 저장소에 업데이트
-          useRegistrationStore.getState().setRegistrationInfo(contractTabId, updatedInfo);
-          console.log('개발 환경 테스트: business_process_id 저장됨');
+  //         // 저장소에 업데이트
+  //         useRegistrationStore.getState().setRegistrationInfo(contractTabId, updatedInfo);
+  //         console.log('개발 환경 테스트: business_process_id 저장됨');
           
-          // 폴링 시작을 위해 refetch 호출
-          refetch();
-        }
-      }, 3000); // 3초 후 실행
+  //         // 폴링 시작을 위해 refetch 호출
+  //         refetch();
+  //       }
+  //     }, 3000); // 3초 후 실행
       
-      return () => clearTimeout(timer);
-    }
-  }, [contractTabId, registrationData, refetch]);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [contractTabId, registrationData, refetch]);
+  // 
 
   useEffect(() => {
     console.log('폴링 결과:', data);

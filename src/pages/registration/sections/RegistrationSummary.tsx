@@ -63,19 +63,20 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
           console.log('저장 요청 성공:', response);
           
           // business_process_id 저장 (폴링에 사용)
-          if (response.data) {
-            console.log('백엔드에서 반환된 business_process_id:', response.data);
+          if (response.data && typeof response.data === 'object' && 'businessProcessId' in response.data) {
+            const businessProcessId = response.data.businessProcessId;
+            console.log('백엔드에서 반환된 businessProcessId:', businessProcessId);
             
             // business_process_id를 저장소에 업데이트
             const updatedInfoWithId = {
               ...updatedInfo,
-              business_process_id: response.data,
+              business_process_id: businessProcessId,
               status: REGISTRATION_STATUS.PENDING // 상태 명시적으로 설정
             };
             
             // 저장소에 업데이트
             setRegistrationInfo(contractTabId, updatedInfoWithId);
-            console.log('business_process_id 저장됨:', response.data);
+            console.log('business_process_id 저장됨:', businessProcessId);
             
             // 저장 후 RegistrationStore 상태 확인
             const updatedSavedInfo = useRegistrationStore.getState().getRegistrationInfo(contractTabId);

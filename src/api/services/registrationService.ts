@@ -1,4 +1,4 @@
-import { RegistrationRequest, RegistrationStatus } from '@model/RegistrationInfo';
+import { RegistrationRequest, RegistrationResponseData, RegistrationStatusResponseData } from '@model/RegistrationInfo';
 import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants';
 import baseService from './baseService';
 import { CommonResponse, CommonStatus } from '@model/common/CommonResponse';
@@ -8,31 +8,32 @@ const devStatusMap: Record<string, { status: RegistrationStatusType, createdAt: 
 
 const registrationService = {
   // 계약 정보를 registrationInfo 및 outbox 테이블에 저장
-  saveRegistration(data: RegistrationRequest): Promise<CommonResponse<string>> {
-    // 개발 단계에서는 실제 API 호출 대신 임시 응답 반환
-    if (process.env.NODE_ENV === 'development') {
-      // 백엔드에서 생성될 business_process_id를 시뮬레이션
-      const business_process_id = `BP_${new Date().getTime()}_${Math.floor(Math.random() * 1000)}`;
+  saveRegistration(data: RegistrationRequest): Promise<CommonResponse<RegistrationResponseData>> {
+    // // 개발 단계에서는 실제 API 호출 대신 임시 응답 반환
+    // if (process.env.NODE_ENV === 'development') {
+    //   // 백엔드에서 생성될 business_process_id를 시뮬레이션
+    //   const business_process_id = `BP_${new Date().getTime()}_${Math.floor(Math.random() * 1000)}`;
       
-      // 개발 환경에서 상태 추적을 위해 상태 저장
-      devStatusMap[business_process_id] = {
-        status: REGISTRATION_STATUS.PENDING,
-        createdAt: Date.now()
-      };
+    //   // 개발 환경에서 상태 추적을 위해 상태 저장
+    //   devStatusMap[business_process_id] = {
+    //     status: REGISTRATION_STATUS.PENDING,
+    //     createdAt: Date.now()
+    //   };
       
-      const mockResponse: CommonResponse<string> = {
-        successOrNot: 'Y',
-        statusCode: CommonStatus.SUCCESS,
-        data: business_process_id
-      };
-      return Promise.resolve(mockResponse);
-    }
+    //   const mockResponse: CommonResponse<string> = {
+    //     successOrNot: 'Y',
+    //     statusCode: CommonStatus.SUCCESS,
+    //     data: business_process_id
+    //   };
+    //   return Promise.resolve(mockResponse);
+    // }
     
-    return baseService.post<string, RegistrationRequest>('/v1/registration-common', data);
+    console.log('실제 백엔드 API 호출 시도:', '/cca-be/v1/registration-common');
+    return baseService.post<RegistrationResponseData, RegistrationRequest>('/cca-be/v1/registration-common', data);
   },
   
   // 저장 상태 조회
-  getRegistrationStatus(business_process_id: string): Promise<RegistrationStatus> {
+  getRegistrationStatus(business_process_id: string): Promise<CommonResponse<RegistrationStatusResponseData>> {
     // 개발 단계에서는 실제 API 호출 대신 임시 응답 반환
     if (process.env.NODE_ENV === 'development') {
       console.log('개발 환경 상태 조회:', business_process_id);
@@ -46,7 +47,11 @@ const registrationService = {
           createdAt: Date.now()
         };
         console.log('devStatusMap 업데이트:', devStatusMap);
-        return Promise.resolve({ status: REGISTRATION_STATUS.PENDING });
+        return Promise.resolve({
+          successOrNot: 'Y',
+          statusCode: CommonStatus.SUCCESS,
+          data: { status: 'PENDING' }
+        });
       }
       
       // 시간에 따라 상태 변경 시뮬레이션
@@ -61,50 +66,37 @@ const registrationService = {
         console.log('devStatusMap 업데이트:', devStatusMap);
         
         // 개발 환경에서 임의의 계약 ID 생성
-        const response = { 
-          status: statusInfo.status,
-          contract_id: `CT_${business_process_id.substring(15)}`
+        const mockResponse: CommonResponse<RegistrationStatusResponseData> = {
+          successOrNot: 'Y',
+          statusCode: CommonStatus.SUCCESS,
+          data: { 
+            status: 'COMPLETED',
+            contractId: `CT_${business_process_id.substring(15)}`
+          }
         };
-        console.log('응답 반환:', response);
-        return Promise.resolve(response);
+        console.log('응답 반환:', mockResponse);
+        return Promise.resolve(mockResponse);
       }
       
       // 상태에 따른 응답 생성
-      const response = { 
-        status: statusInfo.status,
-        // COMPLETED 상태일 때만 계약 ID 포함
-        ...(statusInfo.status === REGISTRATION_STATUS.COMPLETED ? {
-          contract_id: `CT_${business_process_id.substring(15)}`
-        } : {})
+      const mockResponse: CommonResponse<RegistrationStatusResponseData> = {
+        successOrNot: 'Y',
+        statusCode: CommonStatus.SUCCESS,
+        data: { 
+          status: statusInfo.status === REGISTRATION_STATUS.COMPLETED ? 'COMPLETED' : 
+                 statusInfo.status === REGISTRATION_STATUS.FAILED ? 'FAILED' : 'PENDING',
+          // COMPLETED 상태일 때만 계약 ID 포함
+          ...(statusInfo.status === REGISTRATION_STATUS.COMPLETED ? {
+            contractId: `CT_${business_process_id.substring(15)}`
+          } : {})
+        }
       };
-      console.log('응답 반환:', response);
-      return Promise.resolve(response);
+      console.log('응답 반환:', mockResponse);
+      return Promise.resolve(mockResponse);
     }
     
-    return baseService.get<RegistrationStatus>(`/v1/registration-common/${business_process_id}`)
-      .then((response: CommonResponse<RegistrationStatus>) => {
-        if (!response.data) {
-          return { status: REGISTRATION_STATUS.PENDING };
-        }
-        
-        // response.data가 문자열인 경우 처리
-        if (typeof response.data === 'string') {
-          return { status: REGISTRATION_STATUS.PENDING };
-        }
-        
-        // 타입 안전성을 위해 status 값을 검증
-        const status = response.data.status;
-        if (status === REGISTRATION_STATUS.COMPLETED || status === REGISTRATION_STATUS.FAILED || status === REGISTRATION_STATUS.PENDING) {
-          // contract_id가 있으면 함께 반환
-          return { 
-            status,
-            ...(response.data.contract_id ? { contract_id: response.data.contract_id } : {}),
-            ...(response.data.reason ? { reason: response.data.reason } : {})
-          };
-        }
-        
-        return { status: REGISTRATION_STATUS.PENDING };
-      });
+    console.log('실제 백엔드 API 호출 시도:', `/cca-be/v1/registration-common/${business_process_id}`);
+    return baseService.get<RegistrationStatusResponseData>(`/cca-be/v1/registration-common/${business_process_id}`);
   },
 };
 
