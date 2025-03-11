@@ -351,12 +351,12 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
               >
                 <Typography sx={{ fontSize: '13px' }}>번호채번</Typography>
               </ActionButton>
-              <Typography sx={{ ml: 2 }}>{selectedPhoneNumber?.phoneNumber ?? ''}</Typography>
+              <Typography sx={{ ml: 1 }}>{selectedPhoneNumber?.phoneNumber ?? ''}</Typography>
             </FormRow>
           </div>
 
           {/* 기기정보 섹션 */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
             <SectionTitle>
               <Typography variant='h5'>기기정보</Typography>
             </SectionTitle>

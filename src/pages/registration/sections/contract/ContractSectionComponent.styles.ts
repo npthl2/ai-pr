@@ -50,6 +50,7 @@ export const RequiredLabel = styled('span')(({ theme }) => ({
 export const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     borderRadius: theme.shape.borderRadius,
+    borderColor: '#ffffff',
   },
 }));
 
