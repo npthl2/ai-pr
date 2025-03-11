@@ -16,6 +16,7 @@ interface CustomSelectProps extends Omit<MuiSelectProps, 'size' | 'prefix'> {
   state?: SelectState;
   prefix?: React.ReactNode;
   helperText?: string;
+  absoluteHelperText?: boolean;
 }
 
 const StyledSelect = styled(MuiSelect, {
@@ -54,6 +55,7 @@ const Select = ({
   prefix,
   disabled,
   helperText,
+  absoluteHelperText,
   ...props
 }: CustomSelectProps) => {
   const currentState = disabled ? 'disabled' : state;
@@ -73,7 +75,23 @@ const Select = ({
       >
         {children}
       </StyledSelect>
-      {helperText && <StyledFormHelperText state={currentState}>{helperText}</StyledFormHelperText>}
+      {helperText &&
+        (absoluteHelperText ? (
+          <StyledFormHelperText
+            state={currentState}
+            sx={{
+              position: 'absolute',
+              bottom: -20,
+              left: 0,
+              width: '100%',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {helperText}
+          </StyledFormHelperText>
+        ) : (
+          <StyledFormHelperText state={currentState}>{helperText || ' '}</StyledFormHelperText>
+        ))}
     </FormControl>
   );
 };

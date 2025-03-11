@@ -21,6 +21,7 @@ interface CustomTextFieldProps
   helperText?: string;
   onChange: (value: string) => void;
   absoluteHelperText?: boolean;
+  maxLength?: number;
 }
 
 const getBorderColor = (theme: any, state: TextFieldState) =>
@@ -100,10 +101,14 @@ const TextField = ({
   InputProps,
   InputLabelProps,
   absoluteHelperText = false,
+  maxLength,
   ...props
 }: CustomTextFieldProps) => {
   const currentState: TextFieldState = disabled ? 'disabled' : state;
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (maxLength && e.target.value.length > maxLength) {
+      return;
+    }
     onChange(e.target.value);
   };
 
@@ -145,6 +150,8 @@ const TextField = ({
               position: 'absolute',
               bottom: -20,
               left: 0,
+              width: '100%',
+              whiteSpace: 'nowrap',
             }}
           >
             {helperText}

@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
-type DialogSize = 'small' | 'medium' | 'large';
+type DialogSize = 'small' | 'medium' | 'medium-large' | 'large';
 
 interface DialogProps extends Omit<MuiDialogProps, 'content'> {
   size?: DialogSize;
@@ -27,9 +27,10 @@ const StyledDialog = styled(MuiDialog, { shouldForwardProp: (prop) => prop !== '
 }>(({ theme, size }) => ({
   '& .MuiDialog-paper': {
     backgroundColor: theme.palette.background.paper,
-    width: {
+    minWidth: {
       small: 400,
       medium: 600,
+      'medium-large': 800,
       large: 1000,
     }[size],
   },
@@ -41,7 +42,6 @@ const StyledButton = styled(Button)({
   padding: '5px 8px',
 });
 const StyledDialogContent = styled(DialogContent)({
-  padding: 0,
   padding: '10px 24px',
   whiteSpace: 'pre-line', // content 내에 줄바꿈 허용
 });
