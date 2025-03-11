@@ -4,9 +4,9 @@ import { RegistrationStatusType } from '@constants/RegistrationConstants';
 export interface RegistrationInfo {
     customer: CustomerInfo;
     contract: ContractInfo;
-    invoice: any;
+    invoice: InvoiceInfo;
     device: DeviceInfo;
-    sales: any;
+    sales: SalesInfo;
     business_process_id?: string; // 업무 프로세스 ID (백엔드에서 생성)
     status?: RegistrationStatusType; // 저장 상태
     contract_id?: string; // 계약 ID
@@ -150,11 +150,20 @@ export interface DeviceInfo {
     monthlyInstallmentPrice: number;  // 월/최종분납금
 }
 
+// 판매 정보 인터페이스
+export interface SalesInfo {
+  salesDepartment?: string; // 가입대리점=판매부서:stg
+  salesContactPoint?: string; // 접점
+  finalSeller?: string; // 판매자=최종판매자:stg
+  supporter?: string; // 서포터
+}
+
 // UI용 등록 정보 인터페이스
 export interface RegistrationUIInfo {
     customer: CustomerInfo;
     contract: ContractInfo;
     invoice: InvoiceInfo;
     device: DeviceInfo;
+    sales: SalesInfo;
 }
   

@@ -1,5 +1,10 @@
 import { Box } from '@mui/material';
-import { InvoiceInfo as BaseInvoiceInfo, DeviceInfo as BaseDeviceInfo, ContractInfo as BaseContractInfo } from '@model/RegistrationInfo';
+import { 
+  InvoiceInfo as BaseInvoiceInfo, 
+  DeviceInfo as BaseDeviceInfo, 
+  ContractInfo as BaseContractInfo,
+  SalesInfo as BaseSalesInfo
+} from '@model/RegistrationInfo';
 import { StyledDivider, VerticalDivider } from './SummaryInfo.styled';
 import BillingInfo from './summary/BillingInfo';
 import SalesInfo from './summary/SalesInfo';
@@ -19,13 +24,7 @@ interface ContractInfo extends Partial<BaseContractInfo> {
   [key: string]: any;
 }
 
-interface SalesInfoType {
-  salesChannel?: string;
-  salesPerson?: string;
-  salesCode?: string;
-  salesDate?: string;
-  promotionCode?: string;
-  referralCode?: string;
+interface SalesInfoType extends Partial<BaseSalesInfo> {
   [key: string]: any;
 }
 

@@ -5,14 +5,9 @@ import {
   InfoValue, 
   SubSectionTitle 
 } from '../SummaryInfo.styled';
+import { SalesInfo as BaseSalesInfo } from '@model/RegistrationInfo';
 
-interface SalesInfo {
-  salesChannel?: string;
-  salesPerson?: string;
-  salesCode?: string;
-  salesDate?: string;
-  promotionCode?: string;
-  referralCode?: string;
+interface SalesInfo extends Partial<BaseSalesInfo> {
   [key: string]: any;
 }
 
@@ -27,15 +22,7 @@ const SalesInfo = ({ salesInfo = {} }: SalesInfoProps) => {
       <InfoSection>
         <InfoRow>
           <InfoLabel>판매채널정보</InfoLabel>
-          <InfoValue>{salesInfo.salesChannel || 'IT전략2담당(일반)'}</InfoValue>
-        </InfoRow>
-        <InfoRow>
-          <InfoLabel>판매자</InfoLabel>
-          <InfoValue>{salesInfo.salesPerson || '-'}</InfoValue>
-        </InfoRow>
-        <InfoRow>
-          <InfoLabel>판매코드</InfoLabel>
-          <InfoValue>{salesInfo.salesCode || '-'}</InfoValue>
+          <InfoValue>{salesInfo.salesDepartment}</InfoValue>
         </InfoRow>
       </InfoSection>
     </>

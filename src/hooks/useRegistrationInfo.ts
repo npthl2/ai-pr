@@ -1,4 +1,4 @@
-import { RegistrationInfo, CustomerInfo, InvoiceInfo } from '@model/RegistrationInfo';
+import { RegistrationInfo, CustomerInfo, InvoiceInfo, SalesInfo, ContractInfo } from '@model/RegistrationInfo';
 import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
 // import { useRegistrationContractStore } from '@stores/registration/RegistrationContractStore';
 // import { useRegistrationInvoiceStore } from '@stores/registration/RegistrationInvoiceStore';
@@ -43,7 +43,7 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
   
   // 아직 구현되지 않은 스토어들은 임시 데이터로 대체
   // 테스트를 위한 Contract 인터페이스 예시 데이터
-  const contractInfo = {
+  const contractInfo : ContractInfo = {
     contractType: '신규가입', // 가입유형 예시
     sellType: '일반판매', // 판매유형 예시
     phoneNumber: '010-1234-5678', // 전화번호 예시
@@ -117,13 +117,11 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
   };
   
   // 테스트를 위한 Sales 인터페이스 예시 데이터
-  const salesInfo = {
-    salesChannel: '온라인',
-    salesPerson: '홍길동',
-    salesCode: 'S12345',
-    salesDate: new Date().toISOString().split('T')[0],
-    promotionCode: 'PROMO2023',
-    referralCode: 'REF12345'
+  const salesInfo: SalesInfo = {
+    salesDepartment: '온라인지점',
+    salesContactPoint: '온라인',
+    finalSeller: '홍길동',
+    supporter: '김지원'
   };
 
   const result: RegistrationInfo = { 
