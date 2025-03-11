@@ -1,22 +1,30 @@
 import Dialog from '@components/Dialog';
-import { Container, Box, Typography, Table, TableBody, TableHead } from '@mui/material';
+import { Box, Typography, Table, TableBody, TableHead } from '@mui/material';
 import TableCell from '@components/Table/TableCell';
 import TableRow from '@components/Table/TableRow';
 import Radio from '@components/Radio';
+import { Invoice } from '@model/registration/Invoice';
+import { paymentMethodOptions } from '.././invoiceSection.model';
+import { useState } from 'react';
 
 const InvoiceListModal = ({
   open,
   onClose,
   onConfirm,
+  data,
 }: {
   open: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (invoice: Invoice) => void;
+  data: Invoice[];
 }) => {
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+
   return (
     <Dialog
       title='청구정보조회'
-      size='large'
+      size='medium-large'
+      sx={{ width: '3000px' }}
       content={
         <Box>
           <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
@@ -43,26 +51,52 @@ const InvoiceListModal = ({
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                <TableCell sx={{ width: '5%' }}>
-                  <Radio size='small' />
-                </TableCell>
-                <TableCell>
-                  <Typography>청구번호</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography>수령인</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography>납부방법</Typography>
-                </TableCell>
-              </TableRow>
+              {data.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} sx={{ textAlign: 'center' }}>
+                    <Typography>청구정보가 없습니다.</Typography>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                data.map((invoice) => (
+                  <TableRow key={invoice.invoiceId}>
+                    <TableCell sx={{ width: '5%' }}>
+                      <Radio
+                        size='small'
+                        checked={selectedInvoice?.invoiceId === invoice.invoiceId}
+                        onChange={() => setSelectedInvoice(invoice)}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Typography>{invoice.invoiceId}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography>{invoice.recipient}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      {invoice.paymentMethod === paymentMethodOptions[0].label && (
+                        <Typography>{`${invoice.paymentMethod} / ${invoice.bankCompany} / ${invoice.bankAccount}`}</Typography>
+                      )}
+                      {invoice.paymentMethod === paymentMethodOptions[1].label && (
+                        <Typography>{`${invoice.paymentMethod} / ${invoice.cardCompany} / ${invoice.cardNumber}`}</Typography>
+                      )}
+                      {invoice.paymentMethod === paymentMethodOptions[2].label && (
+                        <Typography>{invoice.paymentMethod}</Typography>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </Box>
       }
       onClose={onClose}
-      onConfirm={onConfirm}
+      onConfirm={() => {
+        if (selectedInvoice) {
+          onConfirm(selectedInvoice);
+        }
+      }}
       open={open}
     />
   );

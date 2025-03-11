@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid2';
 import TextField from '@components/TextField';
 import Radio from '@components/Radio';
 import { FormContainer } from './common/SectionCommon.styled';
+import { InvoiceCreateRequestParams } from '@model/registration/Invoice';
 import {
   MandatoryTypography,
   LabelTypography,
@@ -11,35 +12,39 @@ import {
   InvoiceCard,
   InformationIcon,
   LabelWrapper,
+  AddressSearchIcon,
 } from './InvoiceSection.styled';
 import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
-import SearchIcon from '@mui/icons-material/Search';
 import Select from '@components/Select';
 import Button from '@components/Button';
 import { useState, useEffect, useMemo } from 'react';
+import useToastStore from '@stores/ToastStore';
+import { useInvoiceQuery } from '@api/queries/registration/useInvoiceQuery';
+import { useInvoiceMutation } from '@api/queries/registration/useInvoiceMutation';
 import InvoiceListModal from './invoice/InvoiceListModal';
 import {
   BillingType,
   InvoiceType,
   PaymentMethod,
   PaymentDate,
-  BankCompanyCode,
-  CardCompanyCode,
   invoiceTypeOptions,
   paymentMethodOptions,
   paymentDateOptions,
   bankCompanyOptions,
   cardCompanyOptions,
   invoiceEmailDomainOptions,
+  BankCompanyCode,
+  CardCompanyCode,
 } from './invoiceSection.model';
+import { Invoice } from '@model/registration/Invoice';
 import { SelectChangeEvent } from '@mui/material';
+import useRegistrationInvoiceStore from '@stores/registration/RegistrationInvoiceStore';
 interface InvoiceSectionProps {
   contractTabId: string;
   onComplete: () => void;
   completed?: boolean;
 }
 
-// to-do : 연동시에는 emailType 없애기
 export interface InvoiceFormData {
   billingType: BillingType;
   recipient: string;
@@ -114,9 +119,18 @@ const initialInvoiceError: InvoiceError = {
 const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSectionProps) => {
   const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
   const [modalOpen, setModalOpen] = useState(false);
+  const openToast = useToastStore((state) => state.openToast);
   const customerInfo = getRegistrationCustomerInfo(contractTabId);
   const [invoiceFormData, setInvoiceFormData] = useState<InvoiceFormData>(initialInvoiceFormData);
   const [invoiceError, setInvoiceError] = useState<InvoiceError>(initialInvoiceError);
+  const { registrationInvoices, getRegistrationInvoiceInfo, setRegistrationInvoiceInfo } =
+    useRegistrationInvoiceStore();
+  const registrationInvoiceInfo = getRegistrationInvoiceInfo(contractTabId);
+  // to-do : 수정
+  const activeCustomerId = 'CUST12345678';
+  const { data } = useInvoiceQuery(activeCustomerId);
+  const saveInvoiceMutation = useInvoiceMutation();
+
   const handleInputChange = (name: string) => (value: string) => {
     if (
       name === 'invoicePostalCode' ||
@@ -125,7 +139,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
       name === 'birthDate'
     ) {
       // 숫자이거나 공백인지
-      if (!/^[0-9]+$/.test(value) && value !== '') {
+      if (value !== '' && !/^[0-9]+$/.test(value)) {
         return;
       }
     }
@@ -171,27 +185,68 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
     setInvoiceError(newInvoiceError);
   };
 
-  // to-do : select onhandler 동작이 이상함
   const handleFocusOut = (name: string) => () => {
-    console.log(invoiceFormData[name as keyof InvoiceFormData], name, 'focus out');
     if (invoiceFormData[name as keyof InvoiceFormData] === '') {
       setInvoiceError({ ...invoiceError, [name]: true });
     }
   };
 
-  const handleOnComplete = () => {
-    console.log(invoiceFormData);
+  const handleOnComplete = async () => {
+    const invoiceCreateRequestParams: InvoiceCreateRequestParams = {
+      customerId: activeCustomerId,
+      billingType: invoiceFormData.billingType,
+      recipient: invoiceFormData.recipient,
+      invoiceType: invoiceFormData.invoiceType,
+      invoiceEmail: `${invoiceFormData.invoiceEmailId}@${invoiceFormData.invoiceEmailDomainType === '직접입력' ? invoiceFormData.invoiceEmailDomain : invoiceFormData.invoiceEmailDomainType}`,
+      invoicePostalCode: invoiceFormData.invoicePostalCode,
+      invoiceAddress: invoiceFormData.invoiceAddress,
+      invoiceAddressDetail: invoiceFormData.invoiceAddressDetail,
+      paymentMethod: invoiceFormData.paymentMethod,
+      bankCompany: invoiceFormData.bankCompany as BankCompanyCode,
+      bankAccount: invoiceFormData.bankAccount,
+      cardCompany: invoiceFormData.cardCompany as CardCompanyCode,
+      cardNumber: invoiceFormData.cardNumber,
+      paymentDate: invoiceFormData.paymentDate,
+      paymentName: invoiceFormData.paymentName,
+      birthDate: invoiceFormData.birthDate,
+    };
 
-    // to-do : 제출시 이메일 도메인 타입이 직접입력이 아니면 처리
+    const result = await saveInvoiceMutation.mutateAsync(invoiceCreateRequestParams);
 
+    console.log('save', result);
+    if (typeof result.data === 'string') {
+      openToast('저장에 실패했습니다. 다시 시도해 주세요.');
+      return;
+    }
+
+    if (result.data) {
+      setRegistrationInvoiceInfo(contractTabId, result.data);
+    }
     onComplete();
   };
 
+  const handleSelectInvoice = (invoice: Invoice) => {
+    setRegistrationInvoiceInfo(contractTabId, invoice);
+    setModalOpen(false);
+  };
+
   useEffect(() => {
-    invoiceTypeOptions.map((option) => {
-      console.log(invoiceFormData);
+    // select box에 선택된 값이 있으면 에러 제거
+    ['invoiceEmailDomainType', 'bankCompany', 'cardCompany'].forEach((name) => {
+      if (invoiceFormData[name as keyof InvoiceFormData] !== '') {
+        setInvoiceError({ ...invoiceError, [name]: false });
+      }
     });
   }, [invoiceFormData]);
+
+  // to-do : 삭제
+  // useEffect(() => {
+  //   console.log('savedInvoiceFormData', savedInvoiceFormData);
+  // }, [savedInvoiceFormData]);
+
+  useEffect(() => {
+    console.log('registrationInvoices', registrationInvoices);
+  }, [registrationInvoices]);
 
   const helperText = useMemo(() => {
     const recipientHelperText = invoiceError.recipient ? '수령인을 입력해주세요.' : '';
@@ -275,7 +330,6 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
         ) {
           return false;
         }
-        // to-do : validation 추가, helpertext 있는지로 하면 될듯???
         if (key === 'invoiceEmailId' || key === 'invoiceEmailDomainType') {
           return invoiceFormData['invoiceType'] === InvoiceType.EMAIL;
         }
@@ -304,7 +358,15 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
             청구정보를 입력해 생성하거나, 기존 청구정보를 선택하세요.
           </CaptionTypography>
         </Box>
-        <Button variant='outlined' size='small' color='primary' onClick={() => setModalOpen(true)}>
+        <Button
+          variant='outlined'
+          size='small'
+          color='primary'
+          onClick={() => {
+            setModalOpen(true);
+          }}
+          disabled={data?.length === 0 || !!registrationInvoiceInfo}
+        >
           청구정보조회
         </Button>
       </Box>
@@ -392,7 +454,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                         state={helperText.invoiceEmailDomainType ? 'error' : 'inactive'}
                         helperText={helperText.invoiceEmailDomainType}
                         absoluteHelperText
-                        onBlur={handleFocusOut('invoiceEmailDomainType')}
+                        onClose={handleFocusOut('invoiceEmailDomainType')}
                       >
                         {invoiceEmailDomainOptions.map((option) => (
                           <MenuItem
@@ -435,10 +497,15 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                     size='small'
                     label='우편번호'
                     fullWidth
-                    suffix={<SearchIcon />}
+                    suffix={
+                      <AddressSearchIcon
+                        onClick={() => {
+                          console.log('search');
+                        }}
+                      />
+                    }
                     value={invoiceFormData.invoicePostalCode}
                     onChange={handleInputChange('invoicePostalCode')}
-                    // type='number'
                     maxLength={10}
                     state={helperText.invoicePostalCode ? 'error' : 'inactive'}
                     helperText={helperText.invoicePostalCode}
@@ -517,7 +584,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                         state={helperText.bankCompany ? 'error' : 'inactive'}
                         helperText={helperText.bankCompany}
                         absoluteHelperText
-                        onBlur={handleFocusOut('bankCompany')}
+                        onClose={handleFocusOut('bankCompany')}
                       >
                         {bankCompanyOptions.map((option) => (
                           <MenuItem
@@ -537,7 +604,6 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                       fullWidth
                       value={invoiceFormData.bankAccount}
                       onChange={handleInputChange('bankAccount')}
-                      // type='number'
                       maxLength={20}
                       state={helperText.bankAccount ? 'error' : 'inactive'}
                       helperText={helperText.bankAccount}
@@ -564,7 +630,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                         state={helperText.cardCompany ? 'error' : 'inactive'}
                         helperText={helperText.cardCompany}
                         absoluteHelperText
-                        onBlur={handleFocusOut('cardCompany')}
+                        onClose={handleFocusOut('cardCompany')}
                       >
                         {cardCompanyOptions.map((option) => (
                           <MenuItem
@@ -584,7 +650,6 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                       fullWidth
                       value={invoiceFormData.cardNumber}
                       onChange={handleInputChange('cardNumber')}
-                      // type='number'
                       maxLength={16}
                       state={helperText.cardNumber ? 'error' : 'inactive'}
                       helperText={helperText.cardNumber}
@@ -664,13 +729,18 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
             size='small'
             onClick={handleOnComplete}
             sx={{ position: 'absolute', bottom: 16, right: 16 }}
-            disabled={isDisabled}
+            disabled={isDisabled || !!registrationInvoiceInfo}
           >
             청구정보 생성완료
           </Button>
         </Grid>
       </Grid>
-      <InvoiceListModal open={modalOpen} onClose={() => setModalOpen(false)} onConfirm={() => {}} />
+      <InvoiceListModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onConfirm={handleSelectInvoice}
+        data={data ?? []}
+      />
     </FormContainer>
   );
 };
