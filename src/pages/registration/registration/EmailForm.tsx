@@ -11,9 +11,10 @@ interface EmailFormProps {
   status: RegistrationStatusType; // 현재 등록 상태
   onSendEmail: (email: string) => void; // 이메일 발송 콜백 함수
   isEnabled: boolean; // 이메일 발송 기능 활성화 여부
+  isLoading?: boolean; // 이메일 발송 로딩 상태
 }
 
-const EmailForm = ({ status, onSendEmail, isEnabled }: EmailFormProps) => {
+const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailFormProps) => {
   // 상태 관리
   const [emailAddress, setEmailAddress] = useState<string>(''); // 이메일 주소 상태
   const [emailDomain, setEmailDomain] = useState<string>(''); // 직접 입력 도메인 상태
@@ -71,6 +72,7 @@ const EmailForm = ({ status, onSendEmail, isEnabled }: EmailFormProps) => {
   
   // 이메일 발송 버튼 활성화 여부 계산
   const isEmailSendEnabled = isInputEnabled && // 입력 필드가 활성화되어 있고
+                            !isLoading && // 로딩 중이 아니며
                             emailAddress.trim() !== '' && // 이메일 주소가 비어있지 않으며
                             ((isCustomDomain && emailDomain.trim() !== '') || // 직접 입력 모드에서 도메인이 비어있지 않거나
                              (!isCustomDomain && emailDomainType !== '선택' && emailDomainType !== '직접입력')); // 선택 모드에서 유효한 도메인이 선택된 경우
@@ -199,7 +201,7 @@ const EmailForm = ({ status, onSendEmail, isEnabled }: EmailFormProps) => {
               whiteSpace: 'nowrap', // 텍스트 줄바꿈 방지
             }}
           >
-            발송하기
+            {isLoading ? '발송중...' : '발송하기'}
           </Button>
         </Box>
       </Box>

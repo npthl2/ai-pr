@@ -15,6 +15,10 @@ import SummaryInfo from './registration/SummaryInfo';
 import EmailForm from './registration/EmailForm';
 import ActionButtons from './registration/ActionButtons';
 import { RegistrationStatusType, InvoiceInfo, DeviceInfo, ContractInfo } from '@model/RegistrationInfo';
+import { useEmailSendMutation } from '@api/queries/email/useEmailSendMutation';
+import { EmailSendRequest } from '@model/Email';
+import useToastStore from '@stores/ToastStore';
+import { Toast } from '@components/Toast';
 
 interface RegistrationRequestProps {
   contractTabId?: string;
@@ -25,6 +29,12 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
   const [status, setStatus] = useState<RegistrationStatusType>('PENDING');
   const [failReason, setFailReason] = useState<string>('');
   const [isEmailEnabled, setIsEmailEnabled] = useState<boolean>(false);
+  
+  // Toast 스토어 접근
+  const openToast = useToastStore((state) => state.openToast);
+  
+  // 이메일 발송 mutation 훅 사용
+  const { mutate: sendEmail, isPending: isEmailSending } = useEmailSendMutation();
   
   // 스토어 접근
   const updateRegistrationStatus = useRegistrationStore((state) => state.updateRegistrationStatus);
@@ -100,10 +110,32 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
 
   // 이메일 발송 처리
   const handleSendEmail = (email: string) => {
-    console.log('이메일 발송:', email);
-    // 여기에 이메일 발송 API 호출 로직 추가
-  };
+    if (!contractTabId || !customerInfo?.customerId) {
+      console.log('customerInfo', customerInfo);
+      openToast('계약 정보 또는 고객 정보가 없습니다.');
+      return;
+    }
 
+    const emailRequest: EmailSendRequest = {
+      customerId: customerInfo.customerId,
+      // contractId: contractTabId,
+      emailAddress: email
+    };
+
+    sendEmail(emailRequest, {
+      onSuccess: (response) => {
+        if (response.successOrNot === 'Y') {
+          openToast('이메일이 성공적으로 발송되었습니다.');
+        } else {
+          openToast('이메일 발송에 실패했습니다. 다시 시도해 주세요.');
+        }
+      },
+      onError: () => {
+        openToast('이메일 발송 중 오류가 발생했습니다. 다시 시도해 주세요.');
+      }
+    });
+  };
+  
   // 홈으로 이동
   const handleGoHome = () => {
     navigate('/');
@@ -200,6 +232,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
                 status={status} 
                 onSendEmail={handleSendEmail}
                 isEnabled={isEmailEnabled}
+                isLoading={isEmailSending}
               />
             </Box>
           </Box>
@@ -211,6 +244,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
           />
         </SectionContainer>
       </ContentContainer>
+      <Toast />
     </RegistrationRequestContainer>
   );
 };
