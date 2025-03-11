@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Modal, Box, TextField, Paper, Radio, Typography, IconButton } from '@mui/material';
 import { Table, TableBody, TableContainer, TableHead } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -12,6 +12,7 @@ import TableCell from '@components/Table/TableCell';
 import Button from '@components/Button';
 
 import { styles } from './ServiceSelectModal.styles';
+import { useServicesQuery } from '@api/queries/registration/useRegistrationContractQuery';
 
 interface PlanItem {
   id: string;
@@ -27,27 +28,26 @@ interface ServiceSelectModalProps {
 }
 
 const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, onSelect }) => {
+  // 상태관리
   const [searchText, setSearchText] = useState<string>('');
   const [selectedPlan, setSelectedPlan] = useState<PlanItem | null>(null);
-  const [planList, setPlanList] = useState<PlanItem[]>([
-    {
-      id: 'serviceId-1',
-      name: '넷플릭스 초이스 스페셜',
-      amount: 100000,
-    },
-    {
-      id: 'serviceId-2',
-      name: '넷플릭스 초이스 일반',
-      amount: 50000,
-    },
-    // 필요시 더 많은 요금제 추가
-  ]);
+  const { data } = useServicesQuery();
+  const planList = useMemo(() => {
+    return (
+      data?.map((plan) => ({
+        id: plan.serviceId,
+        name: plan.serviceName,
+        amount: plan.serviceValue,
+      })) ?? []
+    );
+  }, [data]);
   const [filteredPlanList, setFilteredPlanList] = useState<PlanItem[]>(planList);
 
   useEffect(() => {
     setFilteredPlanList(planList);
   }, [planList]);
 
+  // 이벤트 핸들러
   const handleSearch = () => {
     if (searchText) {
       setFilteredPlanList(
