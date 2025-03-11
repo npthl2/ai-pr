@@ -104,7 +104,7 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
     if (emailAddress.trim() === '' && isInputEnabled) {
       setErrors((prev) => ({
         ...prev,
-        emailAddress: '이메일 주소를 입력해주세요.'
+        emailAddress: '이메일을 입력해주세요.'
       }));
     }
   };
@@ -115,6 +115,16 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
       setErrors((prev) => ({
         ...prev,
         emailDomain: '도메인을 입력해주세요.'
+      }));
+    }
+  };
+
+  // 포커스 아웃 핸들러 - 도메인 선택
+  const handleDomainSelectBlur = () => {
+    if (!isCustomDomain && (emailDomainType === '선택' || emailDomainType === '직접입력') && isInputEnabled) {
+      setErrors((prev) => ({
+        ...prev,
+        emailDomain: '도메인을 선택해주세요.'
       }));
     }
   };
@@ -161,7 +171,7 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
                 height: '30px', // 높이 설정
                 '& fieldset': { // 테두리 스타일
                   borderColor: errors.emailAddress ? 'error.main' : 'inherit', // 오류 상태에 따른 테두리 색상
-                  borderWidth: errors.emailAddress ? 2 : 1 // 오류 상태에 따른 테두리 두께
+                  borderWidth: errors.emailAddress ?  1 : 1 // 오류 상태에 따른 테두리 두께
                 },
                 '&:hover fieldset': { // 호버 상태 테두리 스타일
                   borderColor: errors.emailAddress ? 'error.main' : 'inherit' // 오류 상태에 따른 호버 테두리 색상
@@ -182,8 +192,7 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
           alignItems: 'center'
         }}>
           <EmailSeparator sx={{ 
-            padding: '0 8px', // 좌우 패딩 추가
-            backgroundColor: (theme) => theme.palette.common.white,
+            padding: '0px', // 좌우 패딩 추가
             height: '30px', // 높이 설정
             display: 'flex', // 내부 콘텐츠 가로 배치
             alignItems: 'center', // 내부 콘텐츠 수직 중앙 정렬
@@ -193,8 +202,8 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
         
         {/* 도메인 선택 드롭다운 컨테이너 */}
         <Box sx={{ 
-          width: '13%', // 컨테이너 너비를 비율로 설정
-          minWidth: '120px', // 최소 너비 설정
+          width: '14%', // 컨테이너 너비를 비율로 설정
+          minWidth: '140px', // 최소 너비 설정
           flexShrink: 0, // 공간이 부족할 때 축소 허용
           minHeight: '40px', // 최소 높이 설정 (오류 메시지 공간 확보)
           display: 'flex',
@@ -203,6 +212,7 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
           <Select
             value={emailDomainType} // 선택된 도메인 타입 바인딩
             onChange={(e) => handleDomainChange(e.target.value as string)} // 변경 이벤트 핸들러
+            onBlur={handleDomainSelectBlur} // 포커스 아웃 이벤트 핸들러 추가
             disabled={!isInputEnabled} // 비활성화 상태 설정
             size="small" // 작은 크기 설정
             error={!isCustomDomain && !!errors.emailDomain} // 오류 상태 설정
@@ -226,7 +236,7 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
             MenuProps={{
               PaperProps: {
                 sx: {
-                  minWidth: '120px', // 최소 너비 설정
+                  minWidth: '140px', // 최소 너비 설정
                 }
               }
             }}
@@ -247,8 +257,8 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
         {/* 직접입력 선택 시 나타나는 도메인 입력 필드 컨테이너 */}
         {isCustomDomain && ( // 직접 입력 모드일 때만 렌더링
           <Box sx={{ 
-            width: '13%', // 컨테이너 너비를 비율로 설정
-            minWidth: '120px', // 최소 너비 설정
+            width: '14%', // 컨테이너 너비를 비율로 설정
+            minWidth: '140px', // 최소 너비 설정
             flexShrink: 0, // 공간이 부족할 때 축소 허용
             minHeight: '40px', // 최소 높이 설정 (오류 메시지 공간 확보)
             display: 'flex',
