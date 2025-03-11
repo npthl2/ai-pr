@@ -15,7 +15,7 @@ import { ZoneContextManager } from '@opentelemetry/context-zone';
 const setupOTelSDK = () => {
   const resource = Resource.default().merge(
     new Resource({
-      [ATTR_SERVICE_NAME]: 'koko-fe',
+      [ATTR_SERVICE_NAME]: 'rnr-fe',
     }),
   );
 
