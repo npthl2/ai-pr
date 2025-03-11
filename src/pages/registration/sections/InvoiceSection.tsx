@@ -39,6 +39,8 @@ import {
 import { Invoice } from '@model/registration/Invoice';
 import { SelectChangeEvent } from '@mui/material';
 import useRegistrationInvoiceStore from '@stores/registration/RegistrationInvoiceStore';
+import InvoicePostCodeModal from './invoice/InvoicePostCodeModal';
+import { useQueryClient } from '@tanstack/react-query';
 interface InvoiceSectionProps {
   contractTabId: string;
   onComplete: () => void;
@@ -117,6 +119,7 @@ const initialInvoiceError: InvoiceError = {
 };
 
 const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSectionProps) => {
+  const queryClient = useQueryClient();
   const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
   const [modalOpen, setModalOpen] = useState(false);
   const openToast = useToastStore((state) => state.openToast);
@@ -126,9 +129,10 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
   const { registrationInvoices, getRegistrationInvoiceInfo, setRegistrationInvoiceInfo } =
     useRegistrationInvoiceStore();
   const registrationInvoiceInfo = getRegistrationInvoiceInfo(contractTabId);
+  const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
   // to-do : 수정
   const activeCustomerId = 'CUST12345678';
-  const { data } = useInvoiceQuery(activeCustomerId);
+  const { data: invoiceList } = useInvoiceQuery(activeCustomerId);
   const saveInvoiceMutation = useInvoiceMutation();
 
   const handleInputChange = (name: string) => (value: string) => {
@@ -213,11 +217,11 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
 
     const result = await saveInvoiceMutation.mutateAsync(invoiceCreateRequestParams);
 
-    console.log('save', result);
     if (typeof result.data === 'string') {
       openToast('저장에 실패했습니다. 다시 시도해 주세요.');
       return;
     }
+    queryClient.invalidateQueries({ queryKey: ['invoice'] });
 
     if (result.data) {
       setRegistrationInvoiceInfo(contractTabId, result.data);
@@ -230,6 +234,29 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
     setModalOpen(false);
   };
 
+  const handleAddressSelectComplete = (data: { zonecode: string; address: string }) => {
+    setInvoiceFormData({
+      ...invoiceFormData,
+      invoicePostalCode: data.zonecode,
+      invoiceAddress: data.address,
+    });
+    setInvoiceError({
+      ...invoiceError,
+      invoicePostalCode: false,
+      invoiceAddress: false,
+    });
+    setIsPostcodeOpen(false);
+  };
+
+  const handlePostcodeClose = () => {
+    setIsPostcodeOpen(false);
+    setInvoiceError({
+      ...invoiceError,
+      invoicePostalCode: true,
+      invoiceAddress: true,
+    });
+  };
+
   useEffect(() => {
     // select box에 선택된 값이 있으면 에러 제거
     ['invoiceEmailDomainType', 'bankCompany', 'cardCompany'].forEach((name) => {
@@ -238,11 +265,6 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
       }
     });
   }, [invoiceFormData]);
-
-  // to-do : 삭제
-  // useEffect(() => {
-  //   console.log('savedInvoiceFormData', savedInvoiceFormData);
-  // }, [savedInvoiceFormData]);
 
   useEffect(() => {
     console.log('registrationInvoices', registrationInvoices);
@@ -365,7 +387,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
           onClick={() => {
             setModalOpen(true);
           }}
-          disabled={data?.length === 0 || !!registrationInvoiceInfo}
+          disabled={invoiceList?.length === 0 || !!registrationInvoiceInfo}
         >
           청구정보조회
         </Button>
@@ -491,7 +513,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                 <LabelTypography>청구주소</LabelTypography>
                 <MandatoryTypography>*</MandatoryTypography>
               </LabelWrapper>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.2 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <Box sx={{ gap: 1 }}>
                   <TextField
                     size='small'
@@ -500,16 +522,20 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                     suffix={
                       <AddressSearchIcon
                         onClick={() => {
-                          console.log('search');
+                          setIsPostcodeOpen(true);
                         }}
                       />
                     }
                     value={invoiceFormData.invoicePostalCode}
                     onChange={handleInputChange('invoicePostalCode')}
-                    maxLength={10}
-                    state={helperText.invoicePostalCode ? 'error' : 'inactive'}
-                    helperText={helperText.invoicePostalCode}
-                    absoluteHelperText
+                    maxLength={5}
+                    state={
+                      helperText.invoicePostalCode ||
+                      helperText.invoiceAddress ||
+                      helperText.invoiceAddressDetail
+                        ? 'error'
+                        : 'inactive'
+                    }
                     onBlur={handleFocusOut('invoicePostalCode')}
                   />
                   <TextField
@@ -519,9 +545,13 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                     value={invoiceFormData.invoiceAddress}
                     onChange={handleInputChange('invoiceAddress')}
                     maxLength={40}
-                    state={helperText.invoiceAddress ? 'error' : 'inactive'}
-                    helperText={helperText.invoiceAddress}
-                    absoluteHelperText
+                    state={
+                      helperText.invoicePostalCode ||
+                      helperText.invoiceAddress ||
+                      helperText.invoiceAddressDetail
+                        ? 'error'
+                        : 'inactive'
+                    }
                     onBlur={handleFocusOut('invoiceAddress')}
                   />
                 </Box>
@@ -532,8 +562,18 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                   value={invoiceFormData.invoiceAddressDetail}
                   onChange={handleInputChange('invoiceAddressDetail')}
                   maxLength={100}
-                  state={helperText.invoiceAddressDetail ? 'error' : 'inactive'}
-                  helperText={helperText.invoiceAddressDetail}
+                  state={
+                    helperText.invoicePostalCode ||
+                    helperText.invoiceAddress ||
+                    helperText.invoiceAddressDetail
+                      ? 'error'
+                      : 'inactive'
+                  }
+                  helperText={
+                    helperText.invoicePostalCode ||
+                    helperText.invoiceAddress ||
+                    helperText.invoiceAddressDetail
+                  }
                   absoluteHelperText
                   onBlur={handleFocusOut('invoiceAddressDetail')}
                 />
@@ -739,7 +779,13 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onConfirm={handleSelectInvoice}
-        data={data ?? []}
+        invoiceList={invoiceList ?? []}
+      />
+      <InvoicePostCodeModal
+        open={isPostcodeOpen}
+        onClose={handlePostcodeClose}
+        onComplete={handleAddressSelectComplete}
+        postcode={invoiceFormData.invoicePostalCode}
       />
     </FormContainer>
   );

@@ -7,24 +7,20 @@ import { Invoice } from '@model/registration/Invoice';
 import { paymentMethodOptions } from '.././invoiceSection.model';
 import { useState } from 'react';
 
-const InvoiceListModal = ({
-  open,
-  onClose,
-  onConfirm,
-  data,
-}: {
+interface InvoiceListModalProps {
   open: boolean;
+  invoiceList: Invoice[];
   onClose: () => void;
   onConfirm: (invoice: Invoice) => void;
-  data: Invoice[];
-}) => {
+}
+
+const InvoiceListModal = ({ open, onClose, onConfirm, invoiceList }: InvoiceListModalProps) => {
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
 
   return (
     <Dialog
       title='청구정보조회'
       size='medium-large'
-      sx={{ width: '3000px' }}
       content={
         <Box>
           <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
@@ -51,14 +47,14 @@ const InvoiceListModal = ({
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.length === 0 ? (
+              {invoiceList.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} sx={{ textAlign: 'center' }}>
                     <Typography>청구정보가 없습니다.</Typography>
                   </TableCell>
                 </TableRow>
               ) : (
-                data.map((invoice) => (
+                invoiceList.map((invoice) => (
                   <TableRow key={invoice.invoiceId}>
                     <TableCell sx={{ width: '5%' }}>
                       <Radio
