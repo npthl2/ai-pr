@@ -9,17 +9,24 @@ import {
   LeftButtonGroup,
   RightButtonGroup,
 } from './ContractSummary.styled';
-import { SECTION_IDS, SECTION_TITLES } from '@constants/RegistrationConstants';
+import { SECTION_IDS, SECTION_TITLES, SectionId } from '@constants/RegistrationConstants';
 import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
-
+import useRegistrationContractStore from '@stores/registration/RegistrationContractStore';
 interface ContractSummaryProps {
   contractTabId: string;
   setIsSaveRequested: (isSaveRequested: boolean) => void;
+  isExpanded: (sectionId: SectionId, canExpand: boolean) => boolean;
 }
 
-const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryProps) => {
+const ContractSummary = ({
+  contractTabId,
+  setIsSaveRequested,
+  isExpanded,
+}: ContractSummaryProps) => {
   const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
+  const { getRegistrationContractInfo } = useRegistrationContractStore();
   const customerInfo = getRegistrationCustomerInfo(contractTabId);
+  const contractInfo = getRegistrationContractInfo(contractTabId);
 
   return (
     <SummaryContainer>
@@ -62,7 +69,7 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
             <SummaryItem>
               <Typography variant='body2'>개통요금제</Typography>
               <Typography variant='body2' color='text.secondary'>
-                -
+                {isExpanded(SECTION_IDS.DEVICE, true) ? contractInfo?.service?.serviceName : '-'}
               </Typography>
             </SummaryItem>
           </Box>

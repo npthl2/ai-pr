@@ -39,6 +39,11 @@ export interface ClaimPhoneNumberRequest {
   customerId: string;
 }
 
+export interface ExclusiveServiceRequest {
+  serviceId: string;
+  additionalServiceId: string;
+}
+
 const registrationContractService = {
   /**
    * 사용 가능한 전화번호 조회
@@ -99,6 +104,16 @@ const registrationContractService = {
    */
   getAdditionalServices(): Promise<CommonResponse<ServiceResponse[]>> {
     return baseService.get<ServiceResponse[]>('/ctt-be/v1/additional-services');
+  },
+
+  /**
+   * 부가서비스 배타여부 확인
+   * @path GET /additional-services
+   * @returns 부가서비스 배타여부 확인
+   */
+  checkExclusiveService(data: ExclusiveServiceRequest): Promise<CommonResponse<boolean>> {
+    const queryString = new URLSearchParams(Object.entries(data)).toString();
+    return baseService.get<boolean>(`/ctt-be/v1/additional-services/exclusive?${queryString}`);
   },
 };
 

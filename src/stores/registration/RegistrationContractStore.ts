@@ -12,10 +12,15 @@ export interface Contract {
   sim: string;
   // IMEI 정보
   imei: string;
+  // 단말기 모델명
+  deviceModelName: string;
   // 요금제 정보
   service: Service;
   // 부가서비스 리스트
   additionalServices: Service[];
+
+  // 필요한 필드가 다 채워졌는지 확인
+  validationFlag: boolean;
 }
 
 export interface Service {
@@ -30,10 +35,12 @@ export interface RegistrationContractStoreState {
   getRegistrationContractInfo: (tabId: string) => Contract | undefined;
   addRegistrationContractInfo: (
     tabId: string,
-    contract: { subscriptionType: string; salesType: string },
+    contract: { subscriptionType: string; sellType: string },
   ) => void;
   updateRegistrationContractInfo: (tabId: string, updates: Partial<Contract>) => void;
   removeRegistrationContractInfo: (tabId: string) => void;
+  updateRegistarationContractValidationFlag: (tabId: string) => void;
+  getRegistarationContractValidationFlag: (tabId: string) => boolean;
 }
 
 const useRegistrationContractStore = create<RegistrationContractStoreState>((set, get) => ({
@@ -57,11 +64,12 @@ const useRegistrationContractStore = create<RegistrationContractStoreState>((set
           id: tabId,
           // 필드 매핑
           contractType: contract.subscriptionType,
-          sellType: contract.salesType,
+          sellType: contract.sellType,
           // 기본값 설정
           phoneNumber: '',
           sim: '',
           imei: '',
+          deviceModelName: '',
           service: {
             serviceId: '',
             serviceName: '',
@@ -69,6 +77,7 @@ const useRegistrationContractStore = create<RegistrationContractStoreState>((set
             serviceValue: 0,
           },
           additionalServices: [],
+          validationFlag: false,
         },
       },
     }));
@@ -98,6 +107,34 @@ const useRegistrationContractStore = create<RegistrationContractStoreState>((set
         contracts: updatedContracts,
       };
     });
+  },
+
+  updateRegistarationContractValidationFlag: (tabId: string) => {
+    set((state) => {
+      const existingContract = state.contracts[tabId];
+      // 필요한 필드 다 값이 있는지 확인 후 validationFlag 업데이트
+      const validationFlag =
+        existingContract.contractType !== '' &&
+        existingContract.sellType !== '' &&
+        existingContract.phoneNumber !== '' &&
+        existingContract.sim !== '' &&
+        existingContract.imei !== '' &&
+        existingContract.deviceModelName !== '' &&
+        existingContract.service.serviceId !== ''
+          ? true
+          : false;
+
+      return {
+        contracts: {
+          ...state.contracts,
+          [tabId]: { ...existingContract, validationFlag: validationFlag },
+        },
+      };
+    });
+  },
+
+  getRegistarationContractValidationFlag: (tabId: string) => {
+    return get().contracts[tabId]?.validationFlag ?? false;
   },
 }));
 

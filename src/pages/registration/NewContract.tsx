@@ -91,9 +91,9 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
         />
       ),
       canExpand: (completedSections: SectionId[]) =>
-        completedSections.includes(SECTION_IDS.CUSTOMER) &&
-        completedSections.includes(SECTION_IDS.INVOICE) &&
-        completedSections.includes(SECTION_IDS.SALES) &&
+        // completedSections.includes(SECTION_IDS.CUSTOMER) &&
+        // completedSections.includes(SECTION_IDS.INVOICE) &&
+        // completedSections.includes(SECTION_IDS.SALES) &&
         completedSections.includes(SECTION_IDS.CONTRACT),
     },
   ];
@@ -182,7 +182,11 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
             })}
           </SectionsWrapper>
         </SectionsContainer>
-        <ContractSummary contractTabId={contractTabId} setIsSaveRequested={setIsSaveRequested} />
+        <ContractSummary
+          contractTabId={contractTabId}
+          setIsSaveRequested={setIsSaveRequested}
+          isExpanded={isExpanded}
+        />
       </ContentWrapper>
     </Container>
   );

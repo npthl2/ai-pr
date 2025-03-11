@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Modal,
   Box,
@@ -18,6 +18,8 @@ import {
   IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import registrationContractService from '@api/services/registrationContractService';
+import { useAdditionalServicesQuery } from '@api/queries/registration/useRegistrationContractQuery';
 
 interface AdditionalService {
   serviceValueType: string;
@@ -26,79 +28,6 @@ interface AdditionalService {
   serviceId: string;
   exclusiveServiceIds: string[];
 }
-
-const services: AdditionalService[] = [
-  {
-    serviceValueType: '유료',
-    serviceName: '부가서비스 1',
-    serviceValue: 5000,
-    serviceId: 'ABC-123',
-    exclusiveServiceIds: [],
-  },
-  {
-    serviceValueType: '유료',
-    serviceName: '부가서비스 2',
-    serviceValue: 1000,
-    serviceId: 'ABC-124',
-    exclusiveServiceIds: [],
-  },
-  {
-    serviceValueType: '유료',
-    serviceName: '부가서비스 3',
-    serviceValue: 10000,
-    serviceId: 'ABC-125',
-    exclusiveServiceIds: [],
-  },
-  {
-    serviceValueType: '유료',
-    serviceName: '부가서비스 4',
-    serviceValue: 7000,
-    serviceId: 'ABC-126',
-    exclusiveServiceIds: [],
-  },
-  {
-    serviceValueType: '무료',
-    serviceName: '부가서비스 5',
-    serviceValue: 0,
-    serviceId: 'ABC-127',
-    exclusiveServiceIds: [],
-  },
-  {
-    serviceValueType: '무료',
-    serviceName: '부가서비스 6',
-    serviceValue: 0,
-    serviceId: 'ABC-128',
-    exclusiveServiceIds: [],
-  },
-  {
-    serviceValueType: '무료',
-    serviceName: '부가서비스 7',
-    serviceValue: 0,
-    serviceId: 'ABC-129',
-    exclusiveServiceIds: ['serviceId-1', 'serviceId-2'],
-  },
-  {
-    serviceValueType: '무료',
-    serviceName: '부가서비스 8',
-    serviceValue: 0,
-    serviceId: 'ABC-130',
-    exclusiveServiceIds: [],
-  },
-  {
-    serviceValueType: '무료',
-    serviceName: '부가서비스 9',
-    serviceValue: 0,
-    serviceId: 'ABC-131',
-    exclusiveServiceIds: [],
-  },
-  {
-    serviceValueType: '무료',
-    serviceName: '부가서비스 10',
-    serviceValue: 0,
-    serviceId: 'ABC-132',
-    exclusiveServiceIds: ['serviceId-1'],
-  },
-];
 
 interface AdditionalServiceModalProps {
   open: boolean;
@@ -119,9 +48,23 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
     initialAdditionalSelectedServices,
   );
   const [filterText, setFilterText] = useState<string>('');
-  const [filteredServices, setFilteredServices] = useState<AdditionalService[]>(services);
   const [unselectableAdditionalService, setUnselectableAdditionalService] =
     useState<AdditionalService | null>(null);
+
+  const { data } = useAdditionalServicesQuery();
+  const services = useMemo(() => {
+    return (
+      data?.map((additionalService) => ({
+        serviceId: additionalService.serviceId,
+        serviceName: additionalService.serviceName,
+        serviceValue: additionalService.serviceValue,
+        serviceValueType: additionalService.serviceValueType,
+        exclusiveServiceIds: additionalService.exclusiveServiceIds,
+      })) ?? []
+    );
+  }, [data]);
+
+  const [filteredServices, setFilteredServices] = useState<AdditionalService[]>(services);
 
   useEffect(() => {
     setSelectedAdditionalServices([...initialAdditionalSelectedServices]);
@@ -134,10 +77,20 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
     }
   }, [open]);
 
-  const handleSelect = (service: AdditionalService) => {
+  // API 호출 함수
+  const checkExclusiveService = async (serviceId: string, additionalServiceId: string) => {
+    const response = await registrationContractService.checkExclusiveService({
+      serviceId: serviceId,
+      additionalServiceId: additionalServiceId,
+    });
+
+    return response.data;
+  };
+
+  const handleSelect = async (service: AdditionalService) => {
     console.log('selected additional service', service);
     console.log('selectedServiceId from plans', selectedServiceId);
-    const hasConflict = service.exclusiveServiceIds.includes(selectedServiceId);
+    const hasConflict = await checkExclusiveService(selectedServiceId, service.serviceId);
 
     if (hasConflict) {
       setUnselectableAdditionalService(service);

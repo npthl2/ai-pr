@@ -27,6 +27,7 @@ import {
   Column,
 } from './ContractSectionComponent.styles';
 import useCustomerStore from '@stores/CustomerStore';
+import registrationContractService from '@api/services/registrationContractService';
 
 interface PhoneNumber {
   id: number;
@@ -56,15 +57,17 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
   contractTabId,
   onComplete,
 }) => {
-  const { addRegistrationContractInfo, updateRegistrationContractInfo } =
-    useRegistrationContractStore();
+  const {
+    addRegistrationContractInfo,
+    updateRegistrationContractInfo,
+    updateRegistarationContractValidationFlag,
+    getRegistarationContractValidationFlag,
+  } = useRegistrationContractStore();
 
-  // Add ref for phone number input field
-  const phoneNumberInputRef = useRef<HTMLInputElement>(null);
   const [customerId, setCustomerId] = useState<string>(null);
 
   const [subscriptionType, setSubscriptionType] = useState<string>('신규가입');
-  const [salesType, setSalesType] = useState<string>('신규폰');
+  const [sellType, setSellType] = useState<string>('신규폰');
   const [selectedPhoneNumber, setSelectedPhoneNumber] = useState<PhoneNumber | null>(null);
   const [phoneNumberLastFour, setPhoneNumberLastFour] = useState<string>('');
   const [simNumber, setSimNumber] = useState<string>('');
@@ -90,75 +93,54 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
 
   const currentCustomerId = useCustomerStore((state) => state.selectedCustomerId);
   const currentContract = useRegistrationContractStore((state) => state.contracts[contractTabId]);
+  const validationFlag = getRegistarationContractValidationFlag(contractTabId);
+
+  const phoneNumberInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    // store 정보 생성
     setCustomerId(currentCustomerId ?? '');
-
-    const initialContract = {
+    addRegistrationContractInfo(contractTabId, {
       subscriptionType,
-      salesType,
-    };
-
-    addRegistrationContractInfo(contractTabId, initialContract);
-
+      sellType,
+    });
     // 전화번호 입력 필드에 포커스 설정
     if (phoneNumberInputRef.current) {
       phoneNumberInputRef.current.focus();
     }
   }, []);
 
+  // 모든 필드가 채워졌는지 확인하여 완료 되었을 때만 아코디언 활성화 함수 호출(한번 활성화 되면 비활성화 X)
   useEffect(() => {
-    console.log('Required fields check:', {
-      salesType: !!salesType && salesType !== '',
-      phoneNumber: !!selectedPhoneNumber?.phoneNumber && selectedPhoneNumber.phoneNumber !== '',
-      simNumber: !!simNumber && simNumber !== '',
-      imeiNumber: !!imeiNumber && imeiNumber !== '',
-      service: !!selectedService?.serviceId && selectedService.serviceId !== '',
-      allFieldsFilled: areAllRequiredFieldsFilled(),
-    });
-
-    // 모든 필수 필드가 채워져 있는지 확인
-    if (areAllRequiredFieldsFilled()) {
-      // 모든 필드가 채워져 있으면 계약 정보 업데이트
-      updateRegistrationContractInfo(contractTabId, {
-        sellType: salesType,
-        phoneNumber: selectedPhoneNumber?.phoneNumber || '',
-        sim: simNumber,
-        imei: imeiNumber,
-        service: selectedService ? selectedService : undefined,
-        additionalServices:
-          selectedAdditionalServices.map((service) => ({
-            serviceId: service.serviceId,
-            serviceName: service.serviceName,
-            serviceValueType: service.serviceValueType,
-            serviceValue: service.serviceValue,
-          })) || [],
-      });
-      // onComplete(); // 완료 시 다음 섹션으로 넘어가는 함수 호출 -- 별도 페이지 테스트 시는 막아놓기
+    if (validationFlag) {
+      onComplete();
     }
-  }, [
-    salesType,
-    selectedPhoneNumber,
-    simNumber,
-    deviceModelName,
-    selectedService,
-    selectedAdditionalServices,
-    contractTabId,
-  ]);
+  }, [validationFlag]);
 
-  const handlePhoneNumberModalOpen = () => {
-    setIsPhoneNumberModalOpen(true);
-  };
-  const handlePhoneNumberModalClose = () => {
-    setIsPhoneNumberModalOpen(false);
-  };
+  // 버튼, 모달 등에서 데이터 확정되어 들어오는 경우 useEffect로 관리하여 업데이트
+  useEffect(() => {
+    handleUpdateStoreAndValidationCompleteFields(contractTabId, {
+      sellType: sellType,
+      phoneNumber: selectedPhoneNumber?.phoneNumber ?? '',
+      service: selectedService,
+      additionalServices: selectedAdditionalServices,
+      deviceModelName: deviceModelName,
+    });
+  }, [sellType, selectedPhoneNumber, selectedService, selectedAdditionalServices, deviceModelName]);
+
+  // 전화번호 - 번호 채번 핸들러
+  const handlePhoneNumberModalOpen = () => setIsPhoneNumberModalOpen(true);
+  const handlePhoneNumberModalClose = () => setIsPhoneNumberModalOpen(false);
   const handlePhoneNumberSelect = (phoneNumber: PhoneNumber) => {
     setSelectedPhoneNumber(phoneNumber);
   };
-
   const handlePhoneNumberLastFourChange = (value: string) => {
     if (value.length <= 4) {
       setPhoneNumberLastFour(value);
+      setSelectedPhoneNumber(null);
+      handleUpdateStoreAndValidationCompleteFields(contractTabId, {
+        phoneNumber: '',
+      });
       // 4자리 미만일 때 에러 상태 설정
       setValidationErrors((prev) => ({
         ...prev,
@@ -171,9 +153,9 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
   };
 
   // 요금제 모달 핸들러
+  const handleServiceModalOpen = () => setIsServiceModalOpen(true);
+  const handleServiceModalClose = () => setIsServiceModalOpen(false);
   const handleServiceSelect = (selectedServiceFromModal: Service) => {
-    console.log('!!!!!!!!!!!handleServiceSelect', selectedServiceFromModal);
-    setSelectedService(selectedServiceFromModal);
     // 기존 요금제와 새로 선택한 요금제가 다른 경우에만 부가서비스 초기화
     if (!selectedService || selectedService.serviceId !== selectedServiceFromModal.serviceId) {
       // 요금제가 변경되면 선택된 부가서비스를 모두 제거
@@ -182,39 +164,28 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     setSelectedService(selectedServiceFromModal);
   };
 
-  const handleRemoveService = (serviceId: string) => {
-    const updatedServices = selectedAdditionalServices.filter(
-      (service) => service.serviceId !== serviceId,
-    );
-    setSelectedAdditionalServices(updatedServices);
-  };
-
   // 부가서비스 모달 핸들러
   const handleAdditionalServiceModalOpen = () => setIsAdditionalServiceModalOpen(true);
   const handleAdditionalServiceModalClose = () => setIsAdditionalServiceModalOpen(false);
-  const handleAdditionalServiceSelect = (selectedService: AdditionalService) => {
-    // 이미 선택된 서비스인지 확인
-    const isAlreadySelected = selectedAdditionalServices.some(
-      (s) => s.serviceId === selectedService.serviceId,
-    );
-
-    if (!isAlreadySelected) {
-      // 중복되지 않은 경우에만 추가
-      setSelectedAdditionalServices((prev) => [...prev, selectedService]);
-    }
-  };
-
   const handleRemoveAdditionalService = (serviceId: string) => {
     setSelectedAdditionalServices((prev) =>
       prev.filter((service) => service.serviceId !== serviceId),
     );
   };
 
-  const handleDeviceModelName = (imeiNumber: string): string => {
-    // TODO: 실제 API 호출 로직 추가
-    setDeviceModelName('test');
-    // setDeviceModelName('');
-    return 'test1';
+  const handleDeviceModelName = async (imeiNumber: string): Promise<string> => {
+    const response = await registrationContractService.getDeviceModelByIMEI(imeiNumber);
+    setDeviceModelName(response.deviceModelName);
+    return response.deviceModelName;
+  };
+
+  const handleUpdateStoreAndValidationCompleteFields = (
+    contractTabId: string,
+    partialContract: any,
+  ) => {
+    // 스토어에 변경사항 업데이트 하고 모든 필드가 채워졌는지 validation field도 업데이트
+    updateRegistrationContractInfo(contractTabId, partialContract);
+    updateRegistarationContractValidationFlag(contractTabId);
   };
 
   interface validationField {
@@ -228,7 +199,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     console.log('342242342342342');
 
     // Check sales type
-    if (!salesType) {
+    if (!sellType) {
       errors.salesType.state = 'error';
       errors.salesType.helperText = '선택필수수';
     } else {
@@ -276,24 +247,8 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
 
     setValidationErrors(errors);
 
-    // Return true if all fields are valid (no errors)
+    // 전 필드 정상 상태
     return Object.keys(errors).length === 0;
-  };
-
-  // Add a function to check if all required fields are filled
-  const areAllRequiredFieldsFilled = (): boolean => {
-    return (
-      !!salesType &&
-      salesType !== '' &&
-      !!selectedPhoneNumber?.phoneNumber &&
-      selectedPhoneNumber.phoneNumber !== '' &&
-      !!simNumber &&
-      simNumber !== '' &&
-      !!deviceModelName &&
-      deviceModelName !== '' &&
-      !!selectedService?.serviceId &&
-      selectedService.serviceId !== ''
-    );
   };
 
   return (
@@ -317,7 +272,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
               <FormLabel>
                 판매유형<RequiredLabel>*</RequiredLabel>
               </FormLabel>
-              <RadioGroup row value={salesType} onChange={(e) => setSalesType(e.target.value)}>
+              <RadioGroup row value={sellType} onChange={(e) => setSellType(e.target.value)}>
                 <FormControlLabel value='신규폰' control={<StyledRadio />} label='신규폰' />
                 <FormControlLabel value='중고폰' control={<StyledRadio />} label='중고폰' />
               </RadioGroup>
@@ -359,9 +314,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
               >
                 <Typography sx={{ fontSize: '13px' }}>번호채번</Typography>
               </ActionButton>
-              {selectedPhoneNumber && (
-                <Typography sx={{ ml: 2 }}>{selectedPhoneNumber.phoneNumber}</Typography>
-              )}
+              <Typography sx={{ ml: 2 }}>{selectedPhoneNumber?.phoneNumber ?? ''}</Typography>
             </FormRow>
           </div>
 
@@ -382,6 +335,9 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 value={simNumber}
                 onChange={(value) => {
                   setSimNumber(value);
+                  handleUpdateStoreAndValidationCompleteFields(contractTabId, {
+                    sim: '',
+                  });
                   setValidationErrors((prev) => ({
                     ...prev,
                     simNumber: {
@@ -389,6 +345,11 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                       helperText: !value ? '필수' : '',
                     },
                   }));
+                }}
+                onBlur={() => {
+                  handleUpdateStoreAndValidationCompleteFields(contractTabId, {
+                    sim: simNumber,
+                  });
                 }}
                 state={validationErrors.simNumber.state}
                 helperText={validationErrors.simNumber.helperText}
@@ -406,6 +367,9 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 value={imeiNumber}
                 onChange={(value) => {
                   setImeiNumber(value);
+                  handleUpdateStoreAndValidationCompleteFields(contractTabId, {
+                    imei: '',
+                  });
                   setValidationErrors((prev) => ({
                     ...prev,
                     imeiNumber: {
@@ -424,6 +388,10 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                         helperText: '모델명은 필수입니다',
                       },
                     }));
+                  } else {
+                    handleUpdateStoreAndValidationCompleteFields(contractTabId, {
+                      imei: imeiNumber,
+                    });
                   }
                 }}
                 state={validationErrors.imeiNumber.state}
@@ -452,10 +420,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
               InputProps={{
                 endAdornment: (
                   <InputAdornment position='end'>
-                    <SearchIcon
-                      onClick={() => setIsServiceModalOpen(true)}
-                      sx={{ cursor: 'pointer' }}
-                    />
+                    <SearchIcon onClick={handleServiceModalOpen} sx={{ cursor: 'pointer' }} />
                   </InputAdornment>
                 ),
                 readOnly: true,
@@ -525,13 +490,13 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
 
       <ServiceSelectModal
         open={isServiceModalOpen}
-        onClose={() => setIsServiceModalOpen(false)}
-        onSelect={(selectedFee) => {
+        onClose={handleServiceModalClose}
+        onSelect={(selectedPlan) => {
           const serviceData: Service = {
-            serviceId: selectedFee.id.toString(),
-            serviceName: selectedFee.name,
+            serviceId: selectedPlan.id.toString(),
+            serviceName: selectedPlan.name,
             serviceValueType: 'amount',
-            serviceValue: selectedFee.amount,
+            serviceValue: selectedPlan.amount,
           };
           handleServiceSelect(serviceData);
         }}
@@ -541,24 +506,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
         open={isAdditionalServiceModalOpen}
         onClose={handleAdditionalServiceModalClose}
         onSelect={(selectedServices) => {
-          const newServices = selectedServices
-            .filter(
-              (service) =>
-                !selectedAdditionalServices.some(
-                  (existing) => existing.serviceId === service.serviceId,
-                ),
-            )
-            .map((service) => ({
-              serviceId: service.serviceId,
-              serviceName: service.serviceName,
-              serviceValueType: service.serviceValueType,
-              serviceValue: service.serviceValue,
-              exclusiveServiceIds: service.exclusiveServiceIds,
-            }));
-
-          if (newServices.length > 0) {
-            setSelectedAdditionalServices((prev) => [...prev, ...newServices]);
-          }
+          setSelectedAdditionalServices(selectedServices);
         }}
         selectedServiceId={selectedService?.serviceId || ''}
         initialSelectedAdditionalServices={selectedAdditionalServices.map((service) => ({

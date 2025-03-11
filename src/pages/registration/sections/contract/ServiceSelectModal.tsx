@@ -4,13 +4,9 @@ import { Table, TableBody, TableContainer, TableHead } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
-
-import registrationContractService from '@api/services/registrationContractService';
-
 import TableRow from '@components/Table/TableRow';
 import TableCell from '@components/Table/TableCell';
 import Button from '@components/Button';
-
 import { styles } from './ServiceSelectModal.styles';
 import { useServicesQuery } from '@api/queries/registration/useRegistrationContractQuery';
 
