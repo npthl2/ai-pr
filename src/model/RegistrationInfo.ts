@@ -5,7 +5,7 @@ export interface RegistrationInfo {
     customer: CustomerInfo;
     contract: ContractInfo;
     invoice: any;
-    device: any;
+    device: DeviceInfo;
     sales: any;
     business_process_id?: string; // 업무 프로세스 ID (백엔드에서 생성)
     status?: RegistrationStatusType; // 저장 상태
@@ -134,16 +134,20 @@ export interface InvoiceInfo {
 
 // 기기 정보 인터페이스
 export interface DeviceInfo {
-    sponsorName: string;
-    sponsorOption: string;
-    totalPrice: number;
-    subsidy: number;
-    prepayment: number;
-    installmentPrincipal: number;
-    installmentFee: number;
-    totalAmount: number;
-    monthlyInstallment: number;
-    installmentPeriod: number;
+    deviceId?: string;
+    deviceName: string;
+    deviceEngagementType: 'installment' | 'immediate';  // 할부/즉납
+    deviceSponsorName: string | '통합스폰서'; 
+    deviceEngagementPeriod: number;  // 약정기간 12 || 24
+    deviceEngagementName: '공시지원금' | '선택약정';  // 공시지원금/선택약정  
+    deviceSalesPrice: number;  // 단말출고가
+    deviceDiscountPrice: number;  // 공시지원금
+    devicePrepaidPrice: number;  // 선납금
+    deviceInstallmentAmount: number;  // 할부원금
+    deviceInstallmentFee: number;  // 총 할부수수료
+    deviceTotalPrice: number;  // 총 금액
+    deviceInstallmentPeriod: number;  // 분납개월수
+    monthlyInstallmentPrice: number;  // 월/최종분납금
 }
 
 // UI용 등록 정보 인터페이스

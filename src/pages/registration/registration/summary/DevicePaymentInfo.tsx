@@ -23,47 +23,46 @@ const DevicePaymentInfo = ({ deviceInfo }: DevicePaymentInfoProps) => {
       <InfoSection>
         <InfoRow>
           <InfoLabel>스폰서정책</InfoLabel>
-          <InfoValue>{deviceInfo.sponsorName || '-'}</InfoValue>
+          <InfoValue>{deviceInfo.deviceSponsorName || '-'}</InfoValue>
         </InfoRow>
         <InfoRow>
-          <InfoLabel>스폰서 옵션</InfoLabel>
-          <InfoValue>{deviceInfo.sponsorOption || '-'}</InfoValue>
-        </InfoRow>
-        
+          <InfoLabel>스폰서옵션</InfoLabel>
+          <InfoValue>{deviceInfo.deviceEngagementName || '-'}({deviceInfo.deviceEngagementPeriod ? `${deviceInfo.deviceEngagementPeriod}개월` : '-'})</InfoValue>
+        </InfoRow>        
         <StyledDivider />
         
         <InfoRow>
-          <InfoLabel>총고가</InfoLabel>
-          <InfoValue>{deviceInfo.totalPrice ? `${deviceInfo.totalPrice.toLocaleString()} 원` : '-'}</InfoValue>
+          <InfoLabel>출고가</InfoLabel>
+          <InfoValue sx={{ fontWeight: 'bold' }}>{deviceInfo.deviceSalesPrice ? `${deviceInfo.deviceSalesPrice.toLocaleString()} 원` : '-'}</InfoValue>
         </InfoRow>
         <InfoRow>
           <InfoLabel>공시지원금</InfoLabel>
-          <InfoValue>{deviceInfo.subsidy && deviceInfo.subsidy > 0 ? `${deviceInfo.subsidy.toLocaleString()} 원` : '-'}</InfoValue>
+          <InfoValue>{deviceInfo.deviceDiscountPrice && deviceInfo.deviceDiscountPrice > 0 ? `${deviceInfo.deviceDiscountPrice.toLocaleString()} 원` : '-'}</InfoValue>
         </InfoRow>
         <InfoRow>
           <InfoLabel>선납금</InfoLabel>
-          <InfoValue>{deviceInfo.prepayment && deviceInfo.prepayment > 0 ? `${deviceInfo.prepayment.toLocaleString()} 원` : '-'}</InfoValue>
+          <InfoValue>{deviceInfo.devicePrepaidPrice && deviceInfo.devicePrepaidPrice > 0 ? `${deviceInfo.devicePrepaidPrice.toLocaleString()} 원` : '-'}</InfoValue>
         </InfoRow>
         
         <StyledDivider />
         
         <InfoRow>
           <InfoLabel>할부원금</InfoLabel>
-          <InfoValue>{deviceInfo.installmentPrincipal ? `${deviceInfo.installmentPrincipal.toLocaleString()} 원` : '-'}</InfoValue>
+          <InfoValue>{deviceInfo.deviceInstallmentAmount ? `${deviceInfo.deviceInstallmentAmount.toLocaleString()} 원` : '-'}</InfoValue>
         </InfoRow>
         <InfoRow>
           <InfoLabel>총 할부수수료</InfoLabel>
-          <InfoValue>{deviceInfo.installmentFee ? `${deviceInfo.installmentFee.toLocaleString()} 원` : '-'}</InfoValue>
+          <InfoValue>{deviceInfo.deviceInstallmentFee ? `${deviceInfo.deviceInstallmentFee.toLocaleString()} 원` : '-'}</InfoValue>
         </InfoRow>
         <InfoRow>
           <InfoLabel>총 금액</InfoLabel>
-          <InfoValue>{deviceInfo.totalAmount ? `${deviceInfo.totalAmount.toLocaleString()} 원` : '-'}</InfoValue>
+          <InfoValue sx={{ fontWeight: 'bold' }}>{deviceInfo.deviceTotalPrice ? `${deviceInfo.deviceTotalPrice.toLocaleString()} 원` : '-'}</InfoValue>
         </InfoRow>
         <InfoRow>
-          <InfoLabel>월 할부금</InfoLabel>
-          <InfoValue>
-            {deviceInfo.monthlyInstallment && deviceInfo.installmentPeriod 
-              ? `${deviceInfo.monthlyInstallment.toLocaleString()} 원 / ${deviceInfo.installmentPeriod}개월` 
+          <InfoLabel sx={{ fontSize: '18px', fontWeight: 'bold' }}>월 할부금</InfoLabel>
+          <InfoValue sx={{ fontSize: '18px', fontWeight: 'bold' }}>
+            {deviceInfo.monthlyInstallmentPrice && deviceInfo.deviceInstallmentPeriod 
+              ? `${deviceInfo.monthlyInstallmentPrice.toLocaleString()} 원 / ${deviceInfo.deviceInstallmentPeriod}개월` 
               : '-'}
           </InfoValue>
         </InfoRow>

@@ -88,7 +88,7 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     invoicePostalCode: '06164',
     invoiceAddress: '서울특별시 강남구 테헤란로 123',
     invoiceAddressDetail: '5층 501호',
-    paymentMethod: '자동이체',
+    paymentMethod: 'BANK',
     bankCompany: '국민은행',
     bankAccount: '123-456-789012',
     cardCompany: '신한카드',
@@ -100,16 +100,20 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
   
   // 테스트를 위한 Device 인터페이스 예시 데이터
   const deviceInfo = {
-    sponsorName: '단말기 지원금',
-    sponsorOption: '24개월 약정',
-    totalPrice: 1200000,
-    subsidy: 300000,
-    prepayment: 100000,
-    installmentPrincipal: 800000,
-    installmentFee: 24000,
-    totalAmount: 824000,
-    monthlyInstallment: 34333,
-    installmentPeriod: 24
+    deviceId: 'DEV12345',
+    deviceName: '갤럭시 S23 Ultra',
+    deviceEngagementType: 'installment' as const,
+    deviceSponsorName: '통합스폰서',
+    deviceEngagementPeriod: 24,
+    deviceEngagementName: '공시지원금' as const,
+    deviceSalesPrice: 1200000,
+    deviceDiscountPrice: 300000,
+    devicePrepaidPrice: 100000,
+    deviceInstallmentAmount: 800000,
+    deviceInstallmentFee: 24000,
+    deviceTotalPrice: 824000,
+    deviceInstallmentPeriod: 24,
+    monthlyInstallmentPrice: 34333
   };
   
   // 테스트를 위한 Sales 인터페이스 예시 데이터
