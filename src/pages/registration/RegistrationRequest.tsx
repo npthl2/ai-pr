@@ -252,7 +252,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
             width: '100%', 
             display: 'flex', 
             flexDirection: 'column', 
-            mb: 4,
+            mb: 2,
             backgroundColor: (theme) => theme.palette.common.white,
             overflow: 'hidden'
           }}>
@@ -315,6 +315,9 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
               display: 'flex', 
               justifyContent: 'flex-start', // 왼쪽 정렬
               width: '100%',
+              minHeight: '80px', // 최소 높이 설정 (오류 메시지 공간 확보)
+              backgroundColor: (theme) => theme.palette.common.white,
+              borderRadius: '0 0 4px 4px' // 하단 모서리 둥글게
             }}>
               <EmailForm 
                 status={status} 
