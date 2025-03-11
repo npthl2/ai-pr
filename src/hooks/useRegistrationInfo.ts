@@ -1,4 +1,4 @@
-import { RegistrationInfo } from '@model/RegistrationInfo';
+import { RegistrationInfo, CustomerInfo, InvoiceInfo } from '@model/RegistrationInfo';
 import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
 // import { useRegistrationContractStore } from '@stores/registration/RegistrationContractStore';
 // import { useRegistrationInvoiceStore } from '@stores/registration/RegistrationInvoiceStore';
@@ -24,17 +24,24 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
   // const salesStore = useRegistrationSalesStore.getState();
   
   // 각 스토어에서 데이터를 가져옵니다
-  // customerId가 항상 문자열 값을 가지도록 보장
   const storeCustomerInfo = customerStore.getRegistrationCustomerInfo(contractTapId);
-  const customerInfo = {
+  
+  // 새로운 CustomerInfo 형태로 변환
+  const customerInfo: CustomerInfo = {
     customerId: storeCustomerInfo?.customerId || '',
     name: storeCustomerInfo?.name || '',
     rrno: storeCustomerInfo?.rrno || '',
-    isConsent: storeCustomerInfo?.isConsent || false
+    rrnoIssueDate: storeCustomerInfo?.rrnoIssueDate || '20230101',
+    authHistoryId: storeCustomerInfo?.authHistoryId || 0,
+    isConsentPersonalInfo: storeCustomerInfo?.isConsentPersonalInfo || false,
+    isConsentIdentityVerification: storeCustomerInfo?.isConsentIdentityVerification || false,
+    verificationResult: storeCustomerInfo?.verificationResult || false,
+    organization: storeCustomerInfo?.organization || '통신사',
+    availableContractCount: storeCustomerInfo?.availableContractCount || 1
   };
   console.log('수집된 customerInfo:', customerInfo);
   
-  // 아직 구현되지 않은 스토어들은 빈 객체로 대체
+  // 아직 구현되지 않은 스토어들은 임시 데이터로 대체
   // 테스트를 위한 Contract 인터페이스 예시 데이터
   const contractInfo = {
     contractType: '신규가입', // 가입유형 예시
@@ -70,9 +77,50 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     ]
   };
   
-  const invoiceInfo = {}; // 나중에 구현 예정
-  const deviceInfo = {}; // 나중에 구현 예정
-  const salesInfo = {}; // 나중에 구현 예정
+  // 테스트를 위한 Invoice 인터페이스 예시 데이터
+  const invoiceInfo: InvoiceInfo = {
+    invoiceId: 'INV' + new Date().getTime(),
+    customerId: customerInfo.customerId || '',
+    billingType: '휴대폰',
+    recipient: customerInfo.name,
+    invoiceType: '이메일',
+    invoiceEmail: 'user@example.com',
+    invoicePostalCode: '06164',
+    invoiceAddress: '서울특별시 강남구 테헤란로 123',
+    invoiceAddressDetail: '5층 501호',
+    paymentMethod: '자동이체',
+    bankCompany: '국민은행',
+    bankAccount: '123-456-789012',
+    cardCompany: '신한카드',
+    cardNumber: '1234-5678-9012-3456',
+    paymentDate: '25',
+    paymentName: customerInfo.name,
+    birthDate: '19900101'
+  };
+  
+  // 테스트를 위한 Device 인터페이스 예시 데이터
+  const deviceInfo = {
+    sponsorName: '단말기 지원금',
+    sponsorOption: '24개월 약정',
+    totalPrice: 1200000,
+    subsidy: 300000,
+    prepayment: 100000,
+    installmentPrincipal: 800000,
+    installmentFee: 24000,
+    totalAmount: 824000,
+    monthlyInstallment: 34333,
+    installmentPeriod: 24
+  };
+  
+  // 테스트를 위한 Sales 인터페이스 예시 데이터
+  const salesInfo = {
+    salesChannel: '온라인',
+    salesPerson: '홍길동',
+    salesCode: 'S12345',
+    salesDate: new Date().toISOString().split('T')[0],
+    promotionCode: 'PROMO2023',
+    referralCode: 'REF12345'
+  };
 
   const result: RegistrationInfo = { 
     customer: customerInfo,

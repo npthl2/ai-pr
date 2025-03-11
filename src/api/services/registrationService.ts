@@ -1,10 +1,6 @@
-import { RegistrationRequest } from '@model/RegistrationInfo';
+import { RegistrationRequest, RegistrationStatus } from '@model/RegistrationInfo';
 import baseService from './baseService';
 import { CommonResponse, CommonStatus } from '@model/common/CommonResponse';
-
-interface RegistrationStatus {
-  status: 'PENDING' | 'COMPLETED' | 'FAILED';
-}
 
 const registrationService = {
   // 계약 정보를 registrationinfo 및 outbox 테이블에 저장

@@ -19,13 +19,24 @@ interface ContractInfo extends Partial<BaseContractInfo> {
   [key: string]: any;
 }
 
+interface SalesInfoType {
+  salesChannel?: string;
+  salesPerson?: string;
+  salesCode?: string;
+  salesDate?: string;
+  promotionCode?: string;
+  referralCode?: string;
+  [key: string]: any;
+}
+
 interface SummaryInfoProps {
   invoiceInfo: InvoiceInfo;
   deviceInfo: DeviceInfo;
   contractInfo: ContractInfo;
+  salesInfo?: SalesInfoType;
 }
 
-const SummaryInfo = ({ invoiceInfo, deviceInfo, contractInfo }: SummaryInfoProps) => {
+const SummaryInfo = ({ invoiceInfo, deviceInfo, contractInfo, salesInfo = {} }: SummaryInfoProps) => {
   return (
     <Box sx={{ display: 'flex', flexWrap: 'nowrap', width: '100%', gap: 3 }}>
       {/* 왼쪽 컬럼 */}
@@ -34,7 +45,7 @@ const SummaryInfo = ({ invoiceInfo, deviceInfo, contractInfo }: SummaryInfoProps
         
         <StyledDivider />
         
-        <SalesInfo />
+        <SalesInfo salesInfo={salesInfo} />
         
         <StyledDivider />
         

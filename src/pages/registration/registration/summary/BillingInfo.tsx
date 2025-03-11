@@ -22,7 +22,7 @@ const BillingInfo = ({ invoiceInfo }: BillingInfoProps) => {
       <InfoSection>
         <InfoRow>
           <InfoLabel>납부자명</InfoLabel>
-          <InfoValue>{invoiceInfo.payerName || '-'}</InfoValue>
+          <InfoValue>{invoiceInfo.paymentName || '-'}</InfoValue>
         </InfoRow>
         <InfoRow>
           <InfoLabel>납부방법</InfoLabel>
@@ -30,7 +30,7 @@ const BillingInfo = ({ invoiceInfo }: BillingInfoProps) => {
         </InfoRow>
         <InfoRow>
           <InfoLabel>납부일</InfoLabel>
-          <InfoValue>{invoiceInfo.paymentDay || '-'}</InfoValue>
+          <InfoValue>{invoiceInfo.paymentDate || '-'}</InfoValue>
         </InfoRow>
       </InfoSection>
     </>

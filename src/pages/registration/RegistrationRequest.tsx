@@ -48,6 +48,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
   const invoiceInfo = registrationData?.invoice as InvoiceInfo;
   const deviceInfo = registrationData?.device as DeviceInfo;
   const contractInfo = registrationData?.contract as ContractInfo;
+  const salesInfo = registrationData?.sales;
   
   // 컴포넌트 마운트 시 RegistrationStore 상태 확인
   useEffect(() => {
@@ -184,6 +185,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
                   invoiceInfo={invoiceInfo} 
                   deviceInfo={deviceInfo} 
                   contractInfo={contractInfo} 
+                  salesInfo={salesInfo}
                 />
               )}
             </Box>

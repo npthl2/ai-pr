@@ -31,10 +31,16 @@ export interface RegistrationStatus {
 
 // 고객 정보 인터페이스
 export interface CustomerInfo {
+    customerId?: string;
     name: string;
     rrno: string;
-    isConsent: boolean;
-    customerId: string;
+    authHistoryId?: number;
+    isConsentPersonalInfo?: boolean;
+    rrnoIssueDate: string;
+    isConsentIdentityVerification?: boolean;
+    verificationResult?: boolean;
+    organization?: string;
+    availableContractCount?: number;
 }
 
 // 계약 정보 인터페이스
@@ -65,9 +71,40 @@ export interface Service {
 
 // 청구 정보 인터페이스
 export interface InvoiceInfo {
-    payerName: string;
+    // 청구ID
+    invoiceId: string;
+    // 고객ID
+    customerId: string;
+    // 청구서번호 구분
+    billingType: string;
+    // 수령인
+    recipient: string;
+    // 발송형태
+    invoiceType: string;
+    // 청구서 이메일
+    invoiceEmail: string;
+    // 청구서 우편번호
+    invoicePostalCode: string;
+    // 청구서 주소
+    invoiceAddress: string;
+    // 청구서 상세주소
+    invoiceAddressDetail: string;
+    // 납부방법
     paymentMethod: string;
-    paymentDay: string;
+    // 은행명
+    bankCompany: string;
+    // 계좌번호
+    bankAccount: string;
+    // 카드사명
+    cardCompany: string;
+    // 카드번호
+    cardNumber: string;
+    // 결제일
+    paymentDate: string;
+    // 납부고객명
+    paymentName: string;
+    // 생년월일
+    birthDate: string;
 }
 
 // 기기 정보 인터페이스
