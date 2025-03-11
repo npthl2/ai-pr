@@ -8,10 +8,8 @@ export const useInvoiceQuery = (customerId: string) => {
     queryFn: () => registrationService.getMemos(customerId),
     select: (response) => {
       if (isInvoiceResponse(response.data)) {
-        console.log('response.data o : ', response.data);
         return response.data;
       }
-      console.log('response.data x : ', response.data);
       return [];
     },
   });

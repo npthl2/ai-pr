@@ -13,11 +13,12 @@ import {
   InformationIcon,
   LabelWrapper,
   AddressSearchIcon,
+  InvoiceCheckIcon,
 } from './InvoiceSection.styled';
 import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
 import Select from '@components/Select';
 import Button from '@components/Button';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import useToastStore from '@stores/ToastStore';
 import { useInvoiceQuery } from '@api/queries/registration/useInvoiceQuery';
 import { useInvoiceMutation } from '@api/queries/registration/useInvoiceMutation';
@@ -39,8 +40,9 @@ import {
 import { Invoice } from '@model/registration/Invoice';
 import { SelectChangeEvent } from '@mui/material';
 import useRegistrationInvoiceStore from '@stores/registration/RegistrationInvoiceStore';
-import InvoicePostCodeModal from './invoice/InvoicePostCodeModal';
+import InvoiceAddressSearchModal from './invoice/InvoiceAddressSearchModal';
 import { useQueryClient } from '@tanstack/react-query';
+
 interface InvoiceSectionProps {
   contractTabId: string;
   onComplete: () => void;
@@ -70,7 +72,7 @@ export interface InvoiceFormData {
 const initialInvoiceFormData: InvoiceFormData = {
   billingType: BillingType.COMMON,
   recipient: '',
-  invoiceType: InvoiceType.EMAIL,
+  invoiceType: InvoiceType.MOBILE,
   invoiceEmailId: '',
   invoiceEmailDomainType: '',
   invoiceEmailDomain: '',
@@ -123,8 +125,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
   const customerInfo = getRegistrationCustomerInfo(contractTabId);
   // to-do : 수정
   const activeCustomerId = customerInfo?.customerId || 'CUST12345678';
-  const { registrationInvoices, getRegistrationInvoiceInfo, setRegistrationInvoiceInfo } =
-    useRegistrationInvoiceStore();
+  const { getRegistrationInvoiceInfo, setRegistrationInvoiceInfo } = useRegistrationInvoiceStore();
   const registrationInvoiceInfo = getRegistrationInvoiceInfo(contractTabId);
   const openToast = useToastStore((state) => state.openToast);
 
@@ -136,25 +137,33 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
   const [invoiceError, setInvoiceError] = useState<InvoiceError>(initialInvoiceError);
   const [modalOpen, setModalOpen] = useState(false);
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
+  const recipientRef = useRef<HTMLInputElement>(null);
 
+  const isSaved = !!registrationInvoiceInfo;
+
+  // 유효성 검사
+  const validators = {
+    isNumeric: (value: string) => value === '' || /^[0-9]+$/.test(value),
+    isEmailId: (value: string) => value === '' || /^[a-zA-Z0-9-_]+$/.test(value),
+    isEmailDomain: (value: string) => value === '' || /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value),
+    isBankAccount: (value: string) => value === '' || /^[0-9]{10,20}$/.test(value),
+    isCardNumber: (value: string) => value === '' || /^[0-9]{16}$/.test(value),
+    isBirthDate: (value: string) =>
+      value === '' ||
+      /^[0-9]{2}[0][0-9][0123][0-9]$/.test(value) ||
+      /^[0-9]{2}[1][0-2][0123][0-9]$/.test(value),
+  };
+
+  // 입력 필드 변경 핸들러
   const handleInputChange = (name: string) => (value: string) => {
-    if (
-      name === 'invoicePostalCode' ||
-      name === 'cardNumber' ||
-      name === 'bankAccount' ||
-      name === 'birthDate'
-    ) {
-      // 숫자이거나 공백인지
-      if (value !== '' && !/^[0-9]+$/.test(value)) {
-        return;
-      }
+    if (['invoicePostalCode', 'cardNumber', 'bankAccount', 'birthDate'].includes(name)) {
+      if (!validators.isNumeric(value)) return;
     }
-
-    const newInvoiceFormData = { ...invoiceFormData, [name]: value };
-    setInvoiceFormData(newInvoiceFormData);
+    setInvoiceFormData({ ...invoiceFormData, [name]: value });
     setInvoiceError({ ...invoiceError, [name]: false });
   };
 
+  // 라디오 변경 핸들러
   const handleRadioChange = (name: string) => (event: SelectChangeEvent<string>) => {
     const newInvoiceFormData = { ...invoiceFormData, [name]: event.target.value };
     const newInvoiceError = { ...invoiceError, [name]: false };
@@ -180,6 +189,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
     setInvoiceError(newInvoiceError);
   };
 
+  // Select 변경 핸들러
   const handleSelectChange = (name: string, value: string) => {
     const newInvoiceFormData = { ...invoiceFormData, [name]: value };
     const newInvoiceError = { ...invoiceError, [name]: false };
@@ -191,12 +201,14 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
     setInvoiceError(newInvoiceError);
   };
 
+  // 포커스 아웃 핸들러
   const handleFocusOut = (name: string) => () => {
     if (invoiceFormData[name as keyof InvoiceFormData] === '') {
       setInvoiceError({ ...invoiceError, [name]: true });
     }
   };
 
+  // 청구정보 생성완료 핸들러
   const handleOnComplete = async () => {
     const invoiceCreateRequestParams: InvoiceCreateRequestParams = {
       customerId: activeCustomerId,
@@ -220,22 +232,30 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
     const result = await saveInvoiceMutation.mutateAsync(invoiceCreateRequestParams);
 
     if (typeof result.data === 'string') {
-      openToast('저장에 실패했습니다. 다시 시도해 주세요.');
+      openToast('청구정보 생성에 실패했습니다. 다시 시도해 주세요.');
       return;
     }
+
+    // 청구정보 목록 캐시 무효화
     queryClient.invalidateQueries({ queryKey: ['invoice'] });
 
+    // 청구정보 스토어에 저장
     if (result.data) {
       setRegistrationInvoiceInfo(contractTabId, result.data);
     }
+    // 다음 섹션으로 이동
     onComplete();
   };
 
+  // 청구정보 리스트 다이얼로그 - 선택 핸들러
   const handleSelectInvoice = (invoice: Invoice) => {
     setRegistrationInvoiceInfo(contractTabId, invoice);
     setModalOpen(false);
+    // 다음 섹션으로 이동
+    onComplete();
   };
 
+  // 다음 주소 검색 다이얼로그 - 완료 핸들러
   const handleAddressSelectComplete = (data: { zonecode: string; address: string }) => {
     setInvoiceFormData({
       ...invoiceFormData,
@@ -250,6 +270,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
     setIsPostcodeOpen(false);
   };
 
+  // 다음 주소 검색 다이얼로그 - 닫기 핸들러
   const handlePostcodeClose = () => {
     setIsPostcodeOpen(false);
     setInvoiceError({
@@ -260,7 +281,15 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
   };
 
   useEffect(() => {
-    // select box에 선택된 값이 있으면 에러 제거
+    // 진입시 수령인 포커스
+    if (recipientRef.current) {
+      recipientRef.current.focus();
+    }
+  }, []);
+
+  useEffect(() => {
+    // select box에 선택된 값이 있으면 에러 제거.
+    // select onClose시 값을 선택했는지 확인이 불가하여 추가 보완로직 수현
     ['invoiceEmailDomainType', 'bankCompany', 'cardCompany'].forEach((name) => {
       if (invoiceFormData[name as keyof InvoiceFormData] !== '') {
         setInvoiceError({ ...invoiceError, [name]: false });
@@ -268,84 +297,84 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
     });
   }, [invoiceFormData]);
 
-  useEffect(() => {
-    console.log('registrationInvoices', registrationInvoices);
-  }, [registrationInvoices]);
-
+  // 유효성 검사 헬퍼 텍스트
+  // 포커스 아웃(invoiceError)과 validation에 따라 헬퍼 텍스트 세팅
   const helperText = useMemo(() => {
-    const recipientHelperText = invoiceError.recipient ? '수령인을 입력해 주세요.' : '';
-    const invoiceEmailIdHelperText = invoiceError.invoiceEmailId
-      ? '이메일주소를 입력해 주세요.'
-      : invoiceFormData.invoiceEmailId !== '' &&
-          !/^[a-zA-Z0-9-_]+$/.test(invoiceFormData.invoiceEmailId)
-        ? '이메일주소가 올바르지 않습니다.'
-        : '';
-    const invoiceEmailDomainHelperText = invoiceError.invoiceEmailDomain
-      ? '이메일을 입력해 주세요.'
-      : invoiceFormData.invoiceEmailDomain !== '' &&
-          !/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(invoiceFormData.invoiceEmailDomain)
-        ? '형식이 올바르지 않습니다.'
-        : '';
-    const invoiceEmailDomainTypeHelperText = invoiceError.invoiceEmailDomainType
-      ? '도메인을 선택해 주세요.'
-      : '';
-    const invoicePostalCodeHelperText = invoiceError.invoicePostalCode
-      ? '우편번호를 입력해 주세요.'
-      : '';
-    const invoiceAddressHelperText = invoiceError.invoiceAddress ? '주소를 입력해 주세요.' : '';
-    const invoiceAddressDetailHelperText = invoiceError.invoiceAddressDetail
-      ? '상세주소를 입력해 주세요.'
-      : '';
-    const bankCompanyHelperText = invoiceError.bankCompany ? '은행을 선택해 주세요.' : '';
-    const bankAccountHelperText =
-      invoiceError.bankAccount ||
-      (invoiceFormData.bankAccount === '' && invoiceFormData.bankCompany !== '')
-        ? '계좌번호를 입력해 주세요.'
-        : invoiceFormData.bankAccount !== '' && !/^[0-9]{10,20}$/.test(invoiceFormData.bankAccount)
-          ? '계좌번호는 10~20자리 사이 숫자로 입력해 주세요.'
-          : '';
-    const cardCompanyHelperText = invoiceError.cardCompany ? '카드를 선택해 주세요.' : '';
-    const cardNumberHelperText =
-      invoiceError.cardNumber ||
-      (invoiceFormData.cardNumber === '' && invoiceFormData.cardCompany !== '')
-        ? '카드번호를 입력해 주세요.'
-        : invoiceFormData.cardNumber !== '' && !/^[0-9]{16}$/.test(invoiceFormData.cardNumber)
-          ? '카드번호는 16자리 숫자만 입력해 주세요.'
-          : '';
-    const paymentNameHelperText = invoiceError.paymentName ? '납부고객명을 입력해 주세요.' : '';
-    const birthDateHelperText = invoiceError.birthDate
-      ? '생년월일을 입력해 주세요.'
-      : invoiceFormData.birthDate !== '' &&
-          !/^[0-9]{2}[0][0-9][0123][0-9]$/.test(invoiceFormData.birthDate) &&
-          !/^[0-9]{2}[1][0-2][0123][0-9]$/.test(invoiceFormData.birthDate)
-        ? '생년월일이 올바르지 않습니다.'
-        : '';
+    const getFieldError = {
+      recipient: () => (invoiceError.recipient ? '수령인을 입력해 주세요.' : ''),
+
+      emailId: () =>
+        invoiceError.invoiceEmailId
+          ? '이메일주소를 입력해 주세요.'
+          : !validators.isEmailId(invoiceFormData.invoiceEmailId)
+            ? '이메일주소가 올바르지 않습니다.'
+            : '',
+
+      emailDomain: () =>
+        invoiceError.invoiceEmailDomain
+          ? '이메일을 입력해 주세요.'
+          : !validators.isEmailDomain(invoiceFormData.invoiceEmailDomain)
+            ? '형식이 올바르지 않습니다.'
+            : '',
+
+      bankAccount: () =>
+        invoiceError.bankAccount ||
+        (invoiceFormData.bankAccount === '' && invoiceFormData.bankCompany !== '')
+          ? '계좌번호를 입력해 주세요.'
+          : !validators.isBankAccount(invoiceFormData.bankAccount)
+            ? '계좌번호는 10~20자리 사이 숫자로 입력해 주세요.'
+            : '',
+
+      cardNumber: () =>
+        invoiceError.cardNumber ||
+        (invoiceFormData.cardNumber === '' && invoiceFormData.cardCompany !== '')
+          ? '카드번호를 입력해 주세요.'
+          : !validators.isCardNumber(invoiceFormData.cardNumber)
+            ? '카드번호는 16자리 숫자만 입력해 주세요.'
+            : '',
+
+      birthDate: () =>
+        invoiceError.birthDate
+          ? '생년월일을 입력해 주세요.'
+          : !validators.isBirthDate(invoiceFormData.birthDate)
+            ? '생년월일이 올바르지 않습니다.'
+            : '',
+    };
 
     return {
-      recipient: recipientHelperText,
+      recipient: getFieldError.recipient(),
       invoiceEmailId:
-        invoiceFormData.invoiceType === InvoiceType.EMAIL ? invoiceEmailIdHelperText : '',
+        invoiceFormData.invoiceType === InvoiceType.EMAIL ? getFieldError.emailId() : '',
       invoiceEmailDomain:
-        invoiceFormData.invoiceType === InvoiceType.EMAIL ? invoiceEmailDomainHelperText : '',
+        invoiceFormData.invoiceType === InvoiceType.EMAIL ? getFieldError.emailDomain() : '',
       invoiceEmailDomainType:
-        invoiceFormData.invoiceType === InvoiceType.EMAIL ? invoiceEmailDomainTypeHelperText : '',
-      invoicePostalCode: invoicePostalCodeHelperText,
-      invoiceAddress: invoiceAddressHelperText,
-      invoiceAddressDetail: invoiceAddressDetailHelperText,
+        invoiceFormData.invoiceType === InvoiceType.EMAIL && invoiceError.invoiceEmailDomainType
+          ? '도메인을 선택해 주세요.'
+          : '',
+      invoicePostalCode: invoiceError.invoicePostalCode ? '우편번호를 입력해 주세요.' : '',
+      invoiceAddress: invoiceError.invoiceAddress ? '주소를 입력해 주세요.' : '',
+      invoiceAddressDetail: invoiceError.invoiceAddressDetail ? '상세주소를 입력해 주세요.' : '',
       bankCompany:
-        invoiceFormData.paymentMethod === PaymentMethod.BANK ? bankCompanyHelperText : '',
+        invoiceFormData.paymentMethod === PaymentMethod.BANK && invoiceError.bankCompany
+          ? '은행을 선택해 주세요.'
+          : '',
       bankAccount:
-        invoiceFormData.paymentMethod === PaymentMethod.BANK ? bankAccountHelperText : '',
+        invoiceFormData.paymentMethod === PaymentMethod.BANK ? getFieldError.bankAccount() : '',
       cardCompany:
-        invoiceFormData.paymentMethod === PaymentMethod.CARD ? cardCompanyHelperText : '',
-      cardNumber: invoiceFormData.paymentMethod === PaymentMethod.CARD ? cardNumberHelperText : '',
-      paymentName: paymentNameHelperText,
-      birthDate: birthDateHelperText,
+        invoiceFormData.paymentMethod === PaymentMethod.CARD && invoiceError.cardCompany
+          ? '카드를 선택해 주세요.'
+          : '',
+      cardNumber:
+        invoiceFormData.paymentMethod === PaymentMethod.CARD ? getFieldError.cardNumber() : '',
+      paymentName: invoiceError.paymentName ? '납부고객명을 입력해 주세요.' : '',
+      birthDate: getFieldError.birthDate(),
     };
   }, [invoiceFormData, invoiceError]);
 
+  // 버튼 비활성화 여부 결정
   const isDisabled = useMemo(
     () =>
+      // validation을 모두 충족했으며 입력 필드에 값이 있는 경우 버튼 활성화
       Object.keys(helperText).some((key) => helperText[key as keyof InvoiceError] !== '') ||
       Object.keys(invoiceFormData).some((key) => {
         if (
@@ -373,10 +402,9 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
     [invoiceFormData, helperText],
   );
 
-  const isSaved = !!registrationInvoiceInfo;
-
   return (
     <FormContainer completed={completed} sx={{ position: 'relative' }}>
+      {/* 상단 영역 */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <InformationIcon />
@@ -396,11 +424,16 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
           청구정보조회
         </Button>
       </Box>
+
+      {/* 구분선 */}
       <Divider orientation='horizontal' flexItem sx={{ mx: 1, margin: '5px 0 20px' }} />
 
+      {/* 하단 영역 */}
       <Grid container spacing={2} sx={{ marginRight: '-16px' }}>
+        {/* 왼쪽 영역 */}
         <Grid size={5.8}>
           <InvoiceCard isSaved={isSaved}>
+            {/* 청구번호 구분 */}
             <Box>
               <LabelWrapper>
                 <LabelTypography>청구번호 구분</LabelTypography>
@@ -410,6 +443,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
               </Box>
             </Box>
 
+            {/* 청구번호 */}
             <Box>
               <LabelWrapper>
                 <LabelTypography>청구번호</LabelTypography>
@@ -419,6 +453,8 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                 <Typography variant='body2'>{registrationInvoiceInfo?.invoiceId}</Typography>
               </Box>
             </Box>
+
+            {/* 수령인 */}
             <Box>
               <LabelWrapper>
                 <LabelTypography>수령인</LabelTypography>
@@ -440,10 +476,13 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                     helperText={helperText.recipient}
                     absoluteHelperText
                     onBlur={handleFocusOut('recipient')}
+                    inputRef={recipientRef}
                   />
                 )}
               </Box>
             </Box>
+
+            {/* 발송형태 */}
             <Box>
               <LabelWrapper>
                 <LabelTypography>발송형태</LabelTypography>
@@ -526,6 +565,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
               )}
             </Box>
 
+            {/* 청구주소 */}
             <Box>
               <LabelWrapper>
                 <LabelTypography>청구주소</LabelTypography>
@@ -609,10 +649,13 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
           </InvoiceCard>
         </Grid>
 
+        {/* 구분선 */}
         <Divider orientation='vertical' flexItem />
 
+        {/* 오른쪽 영역 */}
         <Grid size={5.8}>
           <InvoiceCard isSaved={isSaved}>
+            {/* 납부방법 */}
             <Box>
               <LabelWrapper>
                 <LabelTypography>납부방법</LabelTypography>
@@ -748,6 +791,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
               )}
             </Box>
 
+            {/* 납부일 */}
             <Box>
               <LabelWrapper>
                 <LabelTypography>납부일</LabelTypography>
@@ -772,6 +816,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
               </Box>
             </Box>
 
+            {/* 납부고객명 */}
             <Box>
               <LabelWrapper>
                 <LabelTypography>납부고객명</LabelTypography>
@@ -797,6 +842,8 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                 )}
               </Box>
             </Box>
+
+            {/* 생년월일 */}
             <Box>
               <LabelWrapper>
                 <LabelTypography>생년월일</LabelTypography>
@@ -822,6 +869,8 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
               </Box>
             </Box>
           </InvoiceCard>
+
+          {/* 청구정보 생성완료 버튼 */}
           {!isSaved && (
             <Button
               variant='contained'
@@ -836,13 +885,23 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
           )}
         </Grid>
       </Grid>
+
+      {/* 청구정보 목록 다이얼로그 */}
       <InvoiceListModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onConfirm={handleSelectInvoice}
         invoiceList={invoiceList ?? []}
+        onConfirmLabel={
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.3 }}>
+            <InvoiceCheckIcon />
+            선택
+          </Box>
+        }
       />
-      <InvoicePostCodeModal
+
+      {/* 주소 검색 다이얼로그 */}
+      <InvoiceAddressSearchModal
         open={isPostcodeOpen}
         onClose={handlePostcodeClose}
         onComplete={handleAddressSelectComplete}

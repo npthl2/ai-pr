@@ -14,13 +14,20 @@ interface InvoiceListModalProps {
   onConfirm: (invoice: Invoice) => void;
 }
 
-const InvoiceListModal = ({ open, onClose, onConfirm, invoiceList }: InvoiceListModalProps) => {
+const InvoiceListModal = ({
+  open,
+  onClose,
+  onConfirm,
+  invoiceList,
+  onConfirmLabel,
+}: InvoiceListModalProps) => {
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
 
   return (
     <Dialog
       title='청구정보조회'
       size='medium-large'
+      confirmLabel={onConfirmLabel}
       content={
         <Box>
           <Box sx={{ display: 'flex', gap: '10px' }}>

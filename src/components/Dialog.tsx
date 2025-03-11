@@ -17,7 +17,7 @@ interface DialogProps extends Omit<MuiDialogProps, 'content'> {
   title: string;
   content: string | React.ReactNode;
   closeLabel?: string;
-  confirmLabel?: string;
+  confirmLabel?: string | React.ReactNode;
   isConfirmDisabled?: boolean;
   onClose: () => void;
   onConfirm?: () => void;

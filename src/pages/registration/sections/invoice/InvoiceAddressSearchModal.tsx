@@ -1,19 +1,19 @@
 import Dialog from '@components/Dialog';
 import DaumPostcode from 'react-daum-postcode';
 
-interface InvoicePostCodeModalProps {
+interface InvoiceAddressSearchModalProps {
   open: boolean;
   postcode: string;
   onClose: () => void;
   onComplete: (data: { address: string; zonecode: string }) => void;
 }
 
-const InvoicePostCodeModal = ({
+const InvoiceAddressSearchModal = ({
   open,
   onClose,
   onComplete,
   postcode,
-}: InvoicePostCodeModalProps) => {
+}: InvoiceAddressSearchModalProps) => {
   return (
     <Dialog
       title='주소 검색'
@@ -25,4 +25,4 @@ const InvoicePostCodeModal = ({
   );
 };
 
-export default InvoicePostCodeModal;
+export default InvoiceAddressSearchModal;
