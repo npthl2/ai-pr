@@ -1,12 +1,12 @@
 import Dialog from '@components/Dialog';
-import { Box, Typography, Table, TableBody, TableHead } from '@mui/material';
+import { Box, Typography, TableBody, TableHead } from '@mui/material';
 import TableCell from '@components/Table/TableCell';
 import TableRow from '@components/Table/TableRow';
 import Radio from '@components/Radio';
 import { Invoice } from '@model/registration/Invoice';
 import { paymentMethodOptions } from '.././invoiceSection.model';
 import { useState } from 'react';
-
+import { InvoiceListTableContainer, InvoiceListTable } from './invoiceListModal.styled';
 interface InvoiceListModalProps {
   open: boolean;
   invoiceList: Invoice[];
@@ -23,68 +23,63 @@ const InvoiceListModal = ({ open, onClose, onConfirm, invoiceList }: InvoiceList
       size='medium-large'
       content={
         <Box>
-          <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', gap: '10px' }}>
             <Typography variant='h3'>청구정보 목록</Typography>
             <Typography variant='h4' color='text.secondary'>
-              2
+              {invoiceList.length}
             </Typography>
           </Box>
-          <Table>
-            <TableHead>
-              <TableRow variant='head'>
-                <TableCell sx={{ width: '5%' }}>
-                  <Radio disabled size='small' />
-                </TableCell>
-                <TableCell>
-                  <Typography>청구번호</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography>수령인</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography>납부방법</Typography>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {invoiceList.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={5} sx={{ textAlign: 'center' }}>
-                    <Typography>청구정보가 없습니다.</Typography>
+          <InvoiceListTableContainer>
+            <InvoiceListTable stickyHeader>
+              <TableHead>
+                <TableRow variant='head'>
+                  <TableCell sx={{ width: '5%', paddingLeft: '20px' }}>
+                    <Radio disabled size='small' />
+                  </TableCell>
+                  <TableCell>
+                    <Typography>청구번호</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography>수령인</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography>납부방법</Typography>
                   </TableCell>
                 </TableRow>
-              ) : (
-                invoiceList.map((invoice) => (
-                  <TableRow key={invoice.invoiceId}>
-                    <TableCell sx={{ width: '5%' }}>
-                      <Radio
-                        size='small'
-                        checked={selectedInvoice?.invoiceId === invoice.invoiceId}
-                        onChange={() => setSelectedInvoice(invoice)}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Typography>{invoice.invoiceId}</Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography>{invoice.recipient}</Typography>
-                    </TableCell>
-                    <TableCell>
-                      {invoice.paymentMethod === paymentMethodOptions[0].label && (
-                        <Typography>{`${invoice.paymentMethod} / ${invoice.bankCompany} / ${invoice.bankAccount}`}</Typography>
-                      )}
-                      {invoice.paymentMethod === paymentMethodOptions[1].label && (
-                        <Typography>{`${invoice.paymentMethod} / ${invoice.cardCompany} / ${invoice.cardNumber}`}</Typography>
-                      )}
-                      {invoice.paymentMethod === paymentMethodOptions[2].label && (
-                        <Typography>{invoice.paymentMethod}</Typography>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {invoiceList.length > 0 &&
+                  invoiceList.map((invoice) => (
+                    <TableRow key={invoice.invoiceId}>
+                      <TableCell sx={{ width: '5%', paddingLeft: '20px' }}>
+                        <Radio
+                          size='small'
+                          checked={selectedInvoice?.invoiceId === invoice.invoiceId}
+                          onChange={() => setSelectedInvoice(invoice)}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Typography>{invoice.invoiceId}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography>{invoice.recipient}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        {invoice.paymentMethod === paymentMethodOptions[0].label && (
+                          <Typography>{`${invoice.paymentMethod} / ${invoice.bankCompany} / ${invoice.bankAccount}`}</Typography>
+                        )}
+                        {invoice.paymentMethod === paymentMethodOptions[1].label && (
+                          <Typography>{`${invoice.paymentMethod} / ${invoice.cardCompany} / ${invoice.cardNumber}`}</Typography>
+                        )}
+                        {invoice.paymentMethod === paymentMethodOptions[2].label && (
+                          <Typography>{invoice.paymentMethod}</Typography>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </InvoiceListTable>
+          </InvoiceListTableContainer>
         </Box>
       }
       onClose={onClose}

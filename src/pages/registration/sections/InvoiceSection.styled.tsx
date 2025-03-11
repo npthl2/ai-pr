@@ -4,21 +4,21 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 import SearchIcon from '@mui/icons-material/Search';
 
-export const InvoiceCard = styled(Card)({
+export const InvoiceCard = styled(Card)(({ isSaved }: { isSaved: boolean }) => ({
   height: '100%',
   backgroundColor: 'inherit',
   boxShadow: 'none',
   boxSizing: 'border-box',
-  marginTop: 20,
+  marginTop: 10,
   '> .MuiBox-root': {
-    marginBottom: 20,
+    marginBottom: isSaved ? 10 : 20,
   },
 
   '& .MuiBox-root': {
     display: 'flex',
     alignItems: 'top',
   },
-});
+}));
 
 export const LabelWrapper = styled(Box)({
   display: 'flex',
@@ -54,6 +54,6 @@ export const InformationIcon = styled(ErrorOutlineIcon)(({ theme }) => ({
   color: theme.palette.action.active,
 }));
 
-export const AddressSearchIcon = styled(SearchIcon)(({ theme }) => ({
+export const AddressSearchIcon = styled(SearchIcon)({
   cursor: 'pointer',
-}));
+});

@@ -5,7 +5,7 @@ interface InvoicePostCodeModalProps {
   open: boolean;
   postcode: string;
   onClose: () => void;
-  onComplete: (data: unknown) => void;
+  onComplete: (data: { address: string; zonecode: string }) => void;
 }
 
 const InvoicePostCodeModal = ({
