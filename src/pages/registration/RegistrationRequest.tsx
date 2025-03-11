@@ -21,7 +21,10 @@ import useToastStore from '@stores/ToastStore';
 import { Toast } from '@components/Toast';
 import useMenuStore from '@stores/MenuStore';
 import useCustomerStore from '@stores/CustomerStore';
-import { MainMenu } from '@constants/CommonConstant';
+import { MainMenu, TabInfo } from '@constants/CommonConstant';
+import customerService from '@api/services/customerService';
+import { Gender } from '@model/Customer';
+import { useRegistration } from '@hooks/useRegistration';
 
 interface RegistrationRequestProps {
   contractTabId?: string;
@@ -227,6 +230,8 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
   // 필요한 스토어 접근
   const setSelectedMainMenu = useMenuStore((state) => state.setSelectedMainMenu);
   const selectCustomer = useCustomerStore((state) => state.selectCustomer);
+  const { handleRemoveAllRegistrationInfo } = useRegistration();
+  const { customerTabs, setCustomerTabs, addCustomer, setActiveTab } = useCustomerStore();
 
   // 홈으로 이동
   const handleGoHome = () => {
@@ -241,8 +246,68 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
   };
 
   // 고객조회로 이동
-  const handleGoCustomerSearch = () => {
-    // 고객조회 페이지로 이동하는 로직 추가
+  const handleGoCustomerSearch = async () => {
+    // 1. 필요한 정보 확인
+    if (!contractInfo?.phoneNumber || !customerInfo?.customerId) {
+      openToast('고객 정보 또는 전화번호가 없습니다.');
+      return;
+    }
+
+    try {
+      // 전화번호에서 대시 제거
+      const formattedPhoneNumber = contractInfo.phoneNumber.replace(/-/g, '');
+      
+      // 2. 전화번호로 고객 정보 조회
+      const response = await customerService.fetchCustomer({
+        phoneNumber: formattedPhoneNumber, // 대시가 제거된 전화번호 사용
+      });
+
+      // 3. 응답 처리
+      if (response.successOrNot === 'Y' && response.data && typeof response.data !== 'string') {
+        const data = response.data;
+        
+        // 4. 신규가입 탭 닫기 (contractTabId가 있는 경우)
+        if (contractTabId) {
+          // 등록 정보 정리
+          handleRemoveAllRegistrationInfo(contractTabId);
+          
+          // 탭 닫기 로직 (탭 배열에서 제거)
+          const currentTabs = customerTabs[customerInfo.customerId]?.tabs || [];
+          const newTabs = currentTabs.filter(tab => tab.id !== TabInfo.NEW_SUBSCRIPTION.id);
+          
+          // 수정된 부분: 두 함수를 순차적으로 호출
+          setCustomerTabs(customerInfo.customerId, newTabs);
+          setActiveTab(customerInfo.customerId, TabInfo.CUSTOMER_SEARCH.id);
+        }
+        
+        // 5. 고객 추가 또는 선택
+        const result = addCustomer({
+          id: data.customerId,
+          name: data.customerName,
+          encryptedName: data.encryptedCustomerName,
+          unmaskingName: '',
+          rrno: data.rrno,
+          encryptedRrno: data.encryptedRrno,
+          unmaskingRrno: '',
+          age: data.age,
+          gender: data.gender === 'M' ? Gender.MALE : Gender.FEMALE,
+          contractId: data.contractId,
+        });
+        
+        // 6. 메뉴 상태 변경 및 탭 활성화
+        if (result) {
+          setSelectedMainMenu(MainMenu.CUSTOMERS);
+          setActiveTab(data.customerId, TabInfo.CUSTOMER_SEARCH.id);
+        } else {
+          openToast('고객은 최대 10명까지 조회할 수 있습니다.');
+        }
+      } else {
+        openToast('고객 정보 조회에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('고객 조회 중 오류 발생:', error);
+      openToast('고객 조회 중 오류가 발생했습니다.');
+    }
   };
 
   // 이메일 토글 변경 처리
