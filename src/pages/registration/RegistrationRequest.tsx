@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 import { Box, Switch, FormControlLabel } from '@mui/material';
 import registrationService from '@api/services/registrationService';
 import useRegistrationStore from '@stores/registration/RegistrationStore';
@@ -20,13 +19,15 @@ import { useEmailSendMutation } from '@api/queries/email/useEmailSendMutation';
 import { EmailSendRequest } from '@model/Email';
 import useToastStore from '@stores/ToastStore';
 import { Toast } from '@components/Toast';
+import useMenuStore from '@stores/MenuStore';
+import useCustomerStore from '@stores/CustomerStore';
+import { MainMenu } from '@constants/CommonConstant';
 
 interface RegistrationRequestProps {
   contractTabId?: string;
 }
 
 const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
-  const navigate = useNavigate();
   const [status, setStatus] = useState<RegistrationStatusType>('PENDING');
   const [failReason, setFailReason] = useState<string>('');
   const [isEmailEnabled, setIsEmailEnabled] = useState<boolean>(false);
@@ -223,9 +224,20 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
     });
   };
   
+  // 필요한 스토어 접근
+  const setSelectedMainMenu = useMenuStore((state) => state.setSelectedMainMenu);
+  const selectCustomer = useCustomerStore((state) => state.selectCustomer);
+
   // 홈으로 이동
   const handleGoHome = () => {
-    navigate('/');
+    // 현재 선택된 고객 해제
+    selectCustomer('');
+    
+    // 메인 메뉴를 홈으로 설정
+    setSelectedMainMenu(MainMenu.HOME);
+    
+    // 필요한 경우 추가 정리 작업 수행
+    // 예: 등록 정보 초기화, 탭 닫기 등
   };
 
   // 고객조회로 이동
