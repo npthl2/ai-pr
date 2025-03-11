@@ -4,7 +4,7 @@ import TextField from '@components/TextField'; // 커스텀 텍스트필드 컴�
 import Select from '@components/Select'; // 커스텀 셀렉트 컴포넌트 임포트
 import { EmailSeparator } from '../RegistrationRequest.styled'; // 이메일 구분자 스타일 임포트
 import { useState, useEffect } from 'react'; // React 훅 임포트
-import { RegistrationStatusType } from '@model/RegistrationInfo'; // 등록 상태 타입 임포트
+import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants'; // 등록 상태 타입 임포트
 
 // 이메일 폼 컴포넌트 props 인터페이스 정의
 interface EmailFormProps {
@@ -68,7 +68,7 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
   };
 
   // 입력 필드 활성화 여부 계산
-  const isInputEnabled = status === 'COMPLETED' && isEnabled; // 상태가 완료되고 이메일 발송이 활성화된 경우
+  const isInputEnabled = status === REGISTRATION_STATUS.COMPLETED && isEnabled; // 상태가 완료되고 이메일 발송이 활성화된 경우
   
   // 이메일 발송 버튼 활성화 여부 계산
   const isEmailSendEnabled = isInputEnabled && // 입력 필드가 활성화되어 있고

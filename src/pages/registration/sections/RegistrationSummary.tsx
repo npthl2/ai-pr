@@ -61,6 +61,18 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
       registrationMutation.mutate(updatedInfo, {
         onSuccess: (response) => {
           console.log('저장 요청 성공:', response);
+          
+          // business_process_id 저장 (폴링에 사용)
+          if (response.data) {
+            // business_process_id를 저장소에 업데이트
+            const updatedInfoWithId = {
+              ...updatedInfo,
+              business_process_id: response.data
+            };
+            setRegistrationInfo(contractTabId, updatedInfoWithId);
+            console.log('business_process_id 저장됨:', response.data);
+          }
+          
           // 성공 응답 처리는 RegistrationRequest 컴포넌트에서 폴링으로 처리
         },
         onError: (error) => {

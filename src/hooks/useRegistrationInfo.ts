@@ -28,7 +28,7 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
   
   // 새로운 CustomerInfo 형태로 변환
   const customerInfo: CustomerInfo = {
-    customerId: storeCustomerInfo?.customerId || '',
+    customerId: storeCustomerInfo?.customerId || '1234',
     name: storeCustomerInfo?.name || '',
     rrno: storeCustomerInfo?.rrno || '',
     rrnoIssueDate: storeCustomerInfo?.rrnoIssueDate || '20230101',

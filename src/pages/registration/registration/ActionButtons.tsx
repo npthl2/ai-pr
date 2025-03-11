@@ -1,6 +1,6 @@
 import Button from '@components/Button';
 import { Box } from '@mui/material';
-import { RegistrationStatusType } from '@model/RegistrationInfo';
+import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants';
 
 interface ActionButtonsProps {
   status: RegistrationStatusType;
@@ -24,7 +24,7 @@ const ActionButtons = ({ status, onGoHome, onGoCustomerSearch }: ActionButtonsPr
       >
         홈으로 이동
       </Button>
-      {status === 'COMPLETED' && (
+      {status === REGISTRATION_STATUS.COMPLETED && (
         <Button 
           variant="outlined" 
           onClick={onGoCustomerSearch}

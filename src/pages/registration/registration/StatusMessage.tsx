@@ -4,7 +4,7 @@ import {
   StatusMessage as StyledStatusMessage,
   ErrorMessage
 } from '../RegistrationRequest.styled';
-import { RegistrationStatusType } from '@model/RegistrationInfo';
+import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants';
 
 interface StatusMessageProps {
   status: RegistrationStatusType;
@@ -19,21 +19,21 @@ const StatusMessage = ({ status, customerName, failReason }: StatusMessageProps)
 
   return (
     <>
-      {status === 'PENDING' && (
+      {status === REGISTRATION_STATUS.PENDING && (
         <StatusMessageContainer>
           <StyledStatusMessage>{customerName} 고객님의 가입이 처리중입니다.</StyledStatusMessage>
           <GifContainer src={pendingGifPath} alt="처리중" />
         </StatusMessageContainer>
       )}
       
-      {status === 'COMPLETED' && (
+      {status === REGISTRATION_STATUS.COMPLETED && (
         <StatusMessageContainer>
           <StyledStatusMessage>{customerName} 고객님의 가입이 처리 완료되었습니다.</StyledStatusMessage>
           <GifContainer src={completedGifPath} alt="완료" />
         </StatusMessageContainer>
       )}
       
-      {status === 'FAILED' && (
+      {status === REGISTRATION_STATUS.FAILED && (
         <StatusMessageContainer>
           <StyledStatusMessage>{customerName} 고객님의 가입을 실패하였습니다.</StyledStatusMessage>
           <ErrorMessage>

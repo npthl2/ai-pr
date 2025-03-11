@@ -1,32 +1,57 @@
 // API 관련 타입 정의
+import { RegistrationStatusType } from '@constants/RegistrationConstants';
+
 export interface RegistrationInfo {
     customer: CustomerInfo;
     contract: ContractInfo;
     invoice: any;
     device: any;
     sales: any;
+    business_process_id?: string; // 업무 프로세스 ID (백엔드에서 생성)
+    status?: RegistrationStatusType; // 저장 상태
+    contract_id?: string; // 계약 ID
 }
 
+// Outbox 테이블 구조에 맞는 이벤트 모델
 export interface Outbox {
-    eventId: string;
-    eventType: string;
-    payload: RegistrationInfo;
-    createdAt: string;
+    eventId?: string; // 백엔드에서 생성되는 ID (DB 시퀀스 채번)
+    eventType: string; // 이벤트 타입
+    eventHubName: string; // 이벤트허브명
+    payload: any; // 요청 데이터
+    status: string; // 상태
+    g_tr_id: string; // 글로벌 트랜잭션 ID
+    tr_ps_seq?: number; // 트랜잭션 처리 순서
+    business_process_id?: string; // 비즈니스 처리 아이디 (백엔드에서 생성)
+    requestTime?: string; // 요청 발생 일시
+    publishedTime?: string; // 발행 일시
+    first_create_member_id?: string; // 최초 생성자 ID
+    last_update_member_id?: string; // 최종 수정자 ID
 }
 
+// DB 테이블 구조에 맞는 요청 모델
 export interface RegistrationRequest {
-    registrationInfo: RegistrationInfo;
-    outbox: Outbox;
+    g_tr_id: string; // 글로벌 트랜잭션 ID (프론트엔드에서 생성)
+    registrationInfo: RegistrationInfo; // 가입 정보 (JSON으로 저장됨)
+    outbox: Outbox; // 이벤트 소싱용 Outbox
+    first_create_member_id?: string; // 최초 생성자 ID
+    last_update_member_id?: string; // 최종 수정자 ID
+}
+
+// 백엔드 응답 모델
+export interface RegistrationResponse {
+    business_process_id: string; // 업무 프로세스 ID (백엔드에서 생성)
+    status: RegistrationStatusType; // 처리 상태
+    contract_id?: string; // 계약 ID (있는 경우)
+    created_at: string; // 생성 시간
+    updated_at: string; // 수정 시간
 }
 
 // UI 관련 타입 정의
-// 등록 상태 타입
-export type RegistrationStatusType = 'PENDING' | 'COMPLETED' | 'FAILED';
-
 // 등록 상태 인터페이스
 export interface RegistrationStatus {
     status: RegistrationStatusType;
     reason?: string; // 실패 사유
+    contract_id?: string; // 계약 ID
 }
 
 // 고객 정보 인터페이스

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
 import { RegistrationInfo } from '@model/RegistrationInfo';
+import { RegistrationStatusType } from '@constants/RegistrationConstants';
 
 // import { RegistrationCustomerInfo } from './RegistrationCustomerStore';
 
@@ -31,7 +32,7 @@ export interface RegistrationStoreState {
   clearAllRegistrationInfo: () => void;
   
   // 저장 상태를 업데이트하는 함수 추가
-  updateRegistrationStatus: (contractTapId: string, status: 'PENDING' | 'COMPLETED' | 'FAILED') => void;
+  updateRegistrationStatus: (contractTapId: string, status: RegistrationStatusType) => void;
 }
 
 // Zustand 상태 생성 및 정의
@@ -69,10 +70,15 @@ const useRegistrationStore = create<RegistrationStoreState>((set, get) => ({
     
     // 저장 상태를 업데이트하는 함수 구현
     updateRegistrationStatus: (contractTapId, status) => {
+        console.log('상태 업데이트 요청:', contractTapId, status);
         set((state) => {
             const currentInfo = state.registrationInfo[contractTapId];
-            if (!currentInfo) return state; // 해당 ID의 데이터가 없으면 상태 변경 없음
+            if (!currentInfo) {
+                console.log('해당 ID의 데이터가 없음:', contractTapId);
+                return state; // 해당 ID의 데이터가 없으면 상태 변경 없음
+            }
             
+            console.log('상태 업데이트 전:', currentInfo.status, '후:', status);
             return {
                 registrationInfo: {
                     ...state.registrationInfo,

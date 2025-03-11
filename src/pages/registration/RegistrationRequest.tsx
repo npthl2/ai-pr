@@ -14,7 +14,8 @@ import StatusMessage from './registration/StatusMessage';
 import SummaryInfo from './registration/SummaryInfo';
 import EmailForm from './registration/EmailForm';
 import ActionButtons from './registration/ActionButtons';
-import { RegistrationStatusType, InvoiceInfo, DeviceInfo, ContractInfo } from '@model/RegistrationInfo';
+import { InvoiceInfo, DeviceInfo, ContractInfo, RegistrationStatus, RegistrationInfo } from '@model/RegistrationInfo';
+import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants';
 import { useEmailSendMutation } from '@api/queries/email/useEmailSendMutation';
 import { EmailSendRequest } from '@model/Email';
 import useToastStore from '@stores/ToastStore';
@@ -50,64 +51,89 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
   const contractInfo = registrationData?.contract as ContractInfo;
   const salesInfo = registrationData?.sales;
   
-  // 컴포넌트 마운트 시 RegistrationStore 상태 확인
-  useEffect(() => {
-    if (contractTabId) {
-      const savedInfo = useRegistrationStore.getState().getRegistrationInfo(contractTabId);
-      console.log('저장된 RegistrationInfo:', savedInfo);
-    }
-  }, [contractTabId]);
-  
   // 저장 상태를 폴링하는 쿼리
-  const { data, isError } = useQuery({
+  const { data, isError, refetch } = useQuery({
     queryKey: ['registrationStatus', contractTabId],
     queryFn: () => {
-      if (!contractTabId) return Promise.resolve({ status: 'PENDING' as const });
-      return registrationService.getRegistrationStatus(contractTabId);
+      console.log('폴링 쿼리 실행:', contractTabId);
+      if (!contractTabId) return Promise.resolve({ status: REGISTRATION_STATUS.PENDING } as RegistrationStatus);
+      
+      // business_process_id가 있으면 사용, 없으면 contractTabId 사용
+      const business_process_id = registrationData?.business_process_id || contractTabId;
+      console.log('상태 조회 ID:', business_process_id);
+      return registrationService.getRegistrationStatus(business_process_id);
     },
-    refetchInterval: 3000, // 3초마다 폴링
-    enabled: !!contractTabId && status === 'PENDING',
+    refetchInterval: status === REGISTRATION_STATUS.PENDING ? 2000 : false, // PENDING 상태일 때만 2초마다 폴링
+    enabled: !!contractTabId && status === REGISTRATION_STATUS.PENDING,
+    staleTime: 0, // 항상 최신 데이터 사용
+    gcTime: 0, // 캐시 사용하지 않음
+    retry: 3, // 실패 시 3번까지 재시도
+    refetchOnWindowFocus: false, // 창 포커스 시 다시 가져오지 않음
   });
 
+  // 컴포넌트 마운트 시 초기 상태 설정
   useEffect(() => {
+    if (contractTabId && status === REGISTRATION_STATUS.PENDING) {
+      console.log('초기 상태 설정 및 폴링 시작');
+      // 현재 저장된 정보 확인
+      const savedInfo = useRegistrationStore.getState().getRegistrationInfo(contractTabId);
+      console.log('저장된 RegistrationInfo:', savedInfo);
+      
+      // 즉시 첫 번째 폴링 실행
+      refetch();
+    }
+  }, [contractTabId, refetch, status]);
+
+  useEffect(() => {
+    console.log('폴링 결과:', data);
     if (data?.status) {
       // 타입 안전성을 위해 status 값을 검증
-      const newStatus = data.status === 'COMPLETED' ? 'COMPLETED' : 
-                        data.status === 'FAILED' ? 'FAILED' : 'PENDING';
+      const newStatus = data.status === REGISTRATION_STATUS.COMPLETED ? REGISTRATION_STATUS.COMPLETED : 
+                        data.status === REGISTRATION_STATUS.FAILED ? REGISTRATION_STATUS.FAILED : REGISTRATION_STATUS.PENDING;
       
-      setStatus(newStatus);
-      if (contractTabId) {
-        updateRegistrationStatus(contractTabId, newStatus);
+      console.log('상태 업데이트:', status, '->', newStatus);
+      
+      // 상태가 변경된 경우에만 업데이트
+      if (status !== newStatus) {
+        console.log('상태 변경 감지, 업데이트 실행');
+        setStatus(newStatus);
+        if (contractTabId) {
+          // 상태 업데이트 및 contract_id가 있으면 함께 저장
+          updateRegistrationStatus(contractTabId, newStatus);
+          
+          // contract_id가 있고 상태가 COMPLETED인 경우 RegistrationStore에 저장
+          if (data.contract_id && newStatus === REGISTRATION_STATUS.COMPLETED && registrationData) {
+            console.log('계약 ID 발견, 저장 실행:', data.contract_id);
+            // 기존 정보 복사 후 contract_id 추가
+            const updatedInfo: RegistrationInfo = {
+              ...registrationData,
+              contract_id: data.contract_id,
+              status: newStatus // 상태도 함께 업데이트
+            };
+            useRegistrationStore.getState().setRegistrationInfo(contractTabId, updatedInfo);
+            console.log('계약 ID 저장 완료:', data.contract_id);
+            console.log('업데이트된 정보:', updatedInfo);
+          }
+        }
+      } else {
+        console.log('상태 변경 없음, 업데이트 생략');
       }
       
       // 실패 시 사유 설정
-      if (data.status === 'FAILED' && 'reason' in data) {
+      if (data.status === REGISTRATION_STATUS.FAILED && 'reason' in data) {
         setFailReason(data.reason as string || '');
       }
     }
     
     if (isError) {
-      setStatus('FAILED');
+      console.log('폴링 오류 발생');
+      setStatus(REGISTRATION_STATUS.FAILED);
       setFailReason('서버 연결 오류가 발생했습니다.');
       if (contractTabId) {
-        updateRegistrationStatus(contractTabId, 'FAILED');
+        updateRegistrationStatus(contractTabId, REGISTRATION_STATUS.FAILED);
       }
     }
-  }, [data, isError, contractTabId, updateRegistrationStatus]);
-
-  // 개발 단계에서는 실제 백엔드 연동 전까지 5초 후 완료 상태로 변경하는 임시 로직 추가
-  useEffect(() => {
-    if (status === 'PENDING') {
-      const timer = setTimeout(() => {
-        setStatus('COMPLETED');
-        if (contractTabId) {
-          updateRegistrationStatus(contractTabId, 'COMPLETED');
-        }
-      }, 5000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [status, contractTabId, updateRegistrationStatus]);
+  }, [data, isError, contractTabId, updateRegistrationStatus, registrationData, status]);
 
   // 이메일 발송 처리
   const handleSendEmail = (email: string) => {
@@ -117,9 +143,12 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
       return;
     }
 
+    // 저장된 계약 ID 사용
+    const contractId = registrationData?.contract_id;
+    
     const emailRequest: EmailSendRequest = {
       customerId: customerInfo.customerId,
-      // contractId: contractTabId,
+      ...(contractId && { contractId }), // contractId가 있을 때만 포함
       emailAddress: email
     };
 

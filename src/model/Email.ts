@@ -3,7 +3,7 @@ import { CommonResponse } from './common/CommonResponse';
 // 이메일 발송 요청 인터페이스
 export interface EmailSendRequest {
   customerId: string;      // 고객 ID
-  // contractId: string;      // 계약 ID
+  contractId?: string;     // 계약 ID (옵셔널)
   emailAddress: string;    // 이메일 주소
 }
 
