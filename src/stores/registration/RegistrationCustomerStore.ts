@@ -4,7 +4,13 @@ export interface RegistrationCustomerInfo {
   customerId?: string;
   name: string;
   rrno: string;
-  isConsent: boolean;
+  customerNameVerificationHistoryId?: number;
+  isConsentPersonalInfo?: boolean;
+  rrnoIssueDate: string;
+  isConsentIdentityVerification?: boolean;
+  verificationResult?: boolean;
+  organization?: string;
+  availableContractCount?: number;
 }
 
 export interface RegistrationCustomers {

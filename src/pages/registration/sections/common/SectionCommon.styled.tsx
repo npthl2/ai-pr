@@ -14,6 +14,8 @@ export const FormContainer = styled(Box, {
   backgroundColor: theme.palette.grey[50],
   padding: 16,
   gap: 16,
+  display: 'flex',
+  flexDirection: 'column',
 }));
 
 export const FormWrapper = styled(Box)({
