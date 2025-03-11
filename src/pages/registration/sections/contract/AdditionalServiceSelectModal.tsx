@@ -1,25 +1,18 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import {
-  Modal,
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Checkbox,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Chip,
-  Alert,
-  IconButton,
-} from '@mui/material';
+
+import { Modal, Box, TextField, Paper, Checkbox, Typography, IconButton } from '@mui/material';
+import { Table, TableBody, TableContainer, TableHead } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
+import TableRow from '@components/Table/TableRow';
+import TableCell from '@components/Table/TableCell';
+import Button from '@components/Button';
+import { Chip } from '@components/Chip';
+import Alert from '@components/Alert';
 import registrationContractService from '@api/services/registrationContractService';
 import { useAdditionalServicesQuery } from '@api/queries/registration/useRegistrationContractQuery';
+import { styles } from './ServiceSelectModal.styles';
 
 interface AdditionalService {
   serviceValueType: string;
@@ -115,129 +108,143 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
   };
 
   const handleComplete = () => {
-    console.log('모달안쪽', selectedAdditionalServices);
     onComplete(selectedAdditionalServices);
     onClose();
   };
 
-  const isServiceSelected = (serviceId: string) => {
-    return selectedAdditionalServices.some((s) => s.serviceId === serviceId);
-  };
+  // const isServiceSelected = (serviceId: string) => {
+  //   return selectedAdditionalServices.some((s) => s.serviceId === serviceId);
+  // };
 
   return (
     <Modal open={open} onClose={onClose}>
-      <Box
-        sx={{
-          width: 600,
-          bgcolor: 'background.paper',
-          p: 4,
-          mx: 'auto',
-          mt: 5,
-          position: 'relative',
-        }}
-      >
-        <IconButton
-          aria-label='close'
-          onClick={onClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-        <Typography variant='h6' gutterBottom>
-          부가서비스 선택
-        </Typography>
-        <Box sx={{ display: 'flex', mb: 2 }}>
-          <TextField
-            fullWidth
-            label='부가서비스명'
-            variant='outlined'
-            value={filterText}
-            onChange={(e) => setFilterText(e.target.value)}
-            sx={{ mr: 1 }}
-          />
-          <Button
-            variant='contained'
-            onClick={handleFilter}
+      <Box sx={{ ...styles.modalContainer, width: '800px', minHeight: '800px' }}>
+        <Box sx={styles.modalHeader}>
+          <Typography variant='h6' component='h2'>
+            부가서비스 선택
+          </Typography>
+          <IconButton onClick={onClose} size='small' sx={styles.closeButton}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+
+        <Box sx={{ ...styles.searchContainer, width: '100%' }}>
+          <Box
             sx={{
-              minWidth: '80px',
-              bgcolor: '#0f1a2c',
-              '&:hover': {
-                bgcolor: '#1a2a3c',
-              },
+              height: '32px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
             }}
+          >
+            <Typography sx={{ minWidth: '73px' }}>부가서비스명</Typography>
+            <TextField
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+              size='small'
+              sx={{ width: '100%' }}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleFilter();
+                  e.preventDefault();
+                }
+              }}
+            />
+          </Box>
+          <Button
+            onClick={handleFilter}
+            variant='contained'
+            iconComponent={<SearchIcon />}
+            iconPosition='left'
+            size='small'
           >
             조회
           </Button>
         </Box>
-        <TableContainer component={Paper} sx={{ maxHeight: 363, overflow: 'auto' }}>
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                <TableCell>선택</TableCell>
-                <TableCell>부가서비스명</TableCell>
-                <TableCell>요금 (원)</TableCell>
-                <TableCell>코드</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredServices.length > 0 ? (
-                filteredServices.map((service) => (
-                  <TableRow key={service.serviceId}>
-                    <TableCell>
-                      <Checkbox
-                        checked={selectedAdditionalServices.some(
-                          (s) => s.serviceId === service.serviceId,
-                        )}
-                        onChange={() => handleSelect(service)}
-                      />
-                    </TableCell>
-                    <TableCell>{service.serviceName}</TableCell>
-                    <TableCell>{service.serviceValue.toLocaleString()}</TableCell>
-                    <TableCell>{service.serviceId}</TableCell>
+
+        <Box>
+          <Box sx={{ mb: 2 }}>
+            <Typography variant='h3' component='div'>
+              부가서비스 목록
+              <Typography variant='h4' component='span' sx={{ color: '#6E7782' }}>
+                {filteredServices.length}
+              </Typography>
+            </Typography>
+          </Box>
+          <Box sx={{ ...styles.tableContainer, width: '100%', height: '363px' }}>
+            <TableContainer component={Paper} sx={styles.table}>
+              <Table stickyHeader>
+                <TableHead>
+                  <TableRow variant='head'>
+                    <TableCell width='48px'></TableCell>
+                    <TableCell width='100px'>구분</TableCell>
+                    <TableCell width='300px'>부가서비스명</TableCell>
+                    <TableCell width='304px'>요금 (원)</TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={4} align='center' sx={{ py: 5 }}>
-                    <Typography variant='body1' color='text.secondary'>
-                      표시할 데이터가 없습니다
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-
-        {unselectableAdditionalService && (
-          <Alert severity='error' sx={{ mt: 2 }}>
-            *
-            {`${unselectableAdditionalService.serviceName}은(는) 선택이 불가능한 부가서비스 입니다.`}
-          </Alert>
-        )}
-
-        <Typography variant='h6' sx={{ mt: 2 }}>
-          선택된 부가서비스 {selectedAdditionalServices.length}
-        </Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
-          {selectedAdditionalServices.map((service) => (
-            <Chip
-              key={service.serviceId}
-              label={`${service.serviceName} - ${service.serviceValue.toLocaleString()}원`}
-              onDelete={() => handleSelect(service)}
-            />
-          ))}
+                </TableHead>
+                <TableBody>
+                  {filteredServices.length > 0 ? (
+                    filteredServices.map((service) => (
+                      <TableRow key={service.serviceId}>
+                        <TableCell>
+                          <Checkbox
+                            checked={selectedAdditionalServices.some(
+                              (s) => s.serviceId === service.serviceId,
+                            )}
+                            onChange={() => handleSelect(service)}
+                          />
+                        </TableCell>
+                        <TableCell>{service.serviceValueType}</TableCell>
+                        <TableCell>{service.serviceName}</TableCell>
+                        <TableCell>{service.serviceValue.toLocaleString()}</TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={4} align='center' sx={{ py: 5 }} hideborder={true}>
+                        <Typography variant='body1' color='text.secondary'>
+                          표시할 데이터가 없습니다
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
         </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-          <Button onClick={onClose} sx={{ mr: 1 }}>
+        <Box sx={{ minHeight: '131px' }}>
+          {unselectableAdditionalService && (
+            <Alert severity='error' sx={{ mt: 2 }}>
+              *
+              {`${unselectableAdditionalService.serviceName}은(는) 선택이 불가능한 부가서비스 입니다.`}
+            </Alert>
+          )}
+
+          <Typography variant='h6' sx={{ mt: 2 }}>
+            선택된 부가서비스 {selectedAdditionalServices.length}
+          </Typography>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
+            {selectedAdditionalServices.map((service) => (
+              <Chip
+                key={service.serviceId}
+                label={`${service.serviceName} - ${service.serviceValue.toLocaleString()}원`}
+                onDelete={() => handleSelect(service)}
+              />
+            ))}
+          </Box>
+        </Box>
+        <Box sx={styles.modalFooter}>
+          <Button onClick={onClose} sx={styles.cancelButton}>
             취소
           </Button>
-          <Button variant='contained' onClick={handleComplete}>
+          <Button
+            variant='contained'
+            onClick={handleComplete}
+            iconComponent={<CheckIcon />}
+            iconPosition='left'
+            size='small'
+          >
             완료
           </Button>
         </Box>

@@ -152,6 +152,36 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     }
   };
 
+  // SIM 핸들러
+  const handleSimNumberChange = (value: string) => {
+    setSimNumber(value);
+    handleUpdateStoreAndValidationCompleteFields(contractTabId, {
+      sim: '',
+    });
+    setValidationErrors((prev) => ({
+      ...prev,
+      simNumber: {
+        state: !value ? 'error' : 'active',
+        helperText: !value ? '필수' : '',
+      },
+    }));
+  };
+
+  const handleImeiNumberChange = (value: string) => {
+    setImeiNumber(value);
+    setDeviceModelName('');
+    handleUpdateStoreAndValidationCompleteFields(contractTabId, {
+      imei: '',
+    });
+    setValidationErrors((prev) => ({
+      ...prev,
+      imeiNumber: {
+        state: !value ? 'error' : 'active',
+        helperText: !value ? '필수' : '',
+      },
+    }));
+  };
+
   // 요금제 모달 핸들러
   const handleServiceModalOpen = () => setIsServiceModalOpen(true);
   const handleServiceModalClose = () => setIsServiceModalOpen(false);
@@ -173,10 +203,17 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     );
   };
 
-  const handleDeviceModelName = async (imeiNumber: string): Promise<string> => {
+  const handleDeviceModelName = async (imeiNumber: string): Promise<void> => {
     const response = await registrationContractService.getDeviceModelByIMEI(imeiNumber);
-    setDeviceModelName(response.deviceModelName);
-    return response.deviceModelName;
+    const deviceModelName = response.deviceModelName ?? '';
+    setDeviceModelName(deviceModelName);
+    setValidationErrors((prev) => ({
+      ...prev,
+      imeiNumber: {
+        state: deviceModelName === '' ? 'error' : 'active',
+        helperText: deviceModelName === '' ? '모델명은 필수입니다' : '',
+      },
+    }));
   };
 
   const handleUpdateStoreAndValidationCompleteFields = (
@@ -256,7 +293,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
       <TwoColumnContainer>
         <Column>
           {/* 가입기본정보 섹션 */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '227px' }}>
             <SectionTitle>
               <Typography variant='h5'>가입기본정보</Typography>
             </SectionTitle>
@@ -329,23 +366,11 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 SIM<RequiredLabel>*</RequiredLabel>
               </FormLabel>
               <StyledTextField
-                fullWidth
+                sx={{ width: '160px' }}
                 size='small'
                 variant='outlined'
                 value={simNumber}
-                onChange={(value) => {
-                  setSimNumber(value);
-                  handleUpdateStoreAndValidationCompleteFields(contractTabId, {
-                    sim: '',
-                  });
-                  setValidationErrors((prev) => ({
-                    ...prev,
-                    simNumber: {
-                      state: !value ? 'error' : 'active',
-                      helperText: !value ? '필수' : '',
-                    },
-                  }));
-                }}
+                onChange={handleSimNumberChange}
                 onBlur={() => {
                   handleUpdateStoreAndValidationCompleteFields(contractTabId, {
                     sim: simNumber,
@@ -361,121 +386,124 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 IMEI<RequiredLabel>*</RequiredLabel>
               </FormLabel>
               <StyledTextField
-                fullWidth
+                sx={{ width: '160px' }}
                 size='small'
                 variant='outlined'
                 value={imeiNumber}
-                onChange={(value) => {
-                  setImeiNumber(value);
-                  handleUpdateStoreAndValidationCompleteFields(contractTabId, {
-                    imei: '',
-                  });
-                  setValidationErrors((prev) => ({
-                    ...prev,
-                    imeiNumber: {
-                      state: !value ? 'error' : 'active',
-                      helperText: !value ? '필수' : '',
-                    },
-                  }));
-                }}
+                onChange={handleImeiNumberChange}
                 onBlur={() => {
-                  const deviceModelName = imeiNumber ? handleDeviceModelName(imeiNumber) : '';
-                  if (!deviceModelName) {
-                    setValidationErrors((prev) => ({
-                      ...prev,
-                      imeiNumber: {
-                        state: 'error',
-                        helperText: '모델명은 필수입니다',
-                      },
-                    }));
-                  } else {
-                    handleUpdateStoreAndValidationCompleteFields(contractTabId, {
-                      imei: imeiNumber,
-                    });
-                  }
+                  handleUpdateStoreAndValidationCompleteFields(contractTabId, {
+                    imei: imeiNumber,
+                  });
+                  handleDeviceModelName(imeiNumber);
                 }}
                 state={validationErrors.imeiNumber.state}
                 helperText={validationErrors.imeiNumber.helperText}
               />
-              {deviceModelName && <Typography sx={{ ml: 2 }}>모델명: {deviceModelName}</Typography>}
+
+              <Typography
+                variant='body1'
+                sx={{
+                  flex: '0 0 auto',
+                  whiteSpace: 'nowrap',
+                  minWidth: '200px',
+                  display: 'inline-block',
+                }}
+              >
+                모델명: {deviceModelName}
+              </Typography>
             </FormRow>
           </div>
         </Column>
 
         <Column>
           {/* 상품정보 섹션 */}
-          <SectionTitle>
-            <Typography variant='h5'>상품정보</Typography>
-          </SectionTitle>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '227px' }}>
+            <SectionTitle>
+              <Typography variant='h5'>상품정보</Typography>
+            </SectionTitle>
 
-          <FormRow>
-            <FormLabel>
-              요금제<RequiredLabel>*</RequiredLabel>
-            </FormLabel>
-            <TextField
-              fullWidth
-              size='small'
-              variant='outlined'
-              value={selectedService ? selectedService.serviceName : ''}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <SearchIcon onClick={handleServiceModalOpen} sx={{ cursor: 'pointer' }} />
-                  </InputAdornment>
-                ),
-                readOnly: true,
-              }}
-              error={validationErrors.servicePlan.state === 'error'}
-              helperText={validationErrors.servicePlan.helperText}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  height: '32px',
-                },
-              }}
-            />
-            <Typography sx={{ ml: 2 }}>
-              {selectedService
-                ? `${selectedService.serviceValue.toLocaleString()} 
-              원`
-                : '0 원'}
-            </Typography>
-          </FormRow>
-
-          {selectedService && selectedService.serviceId && (
-            <div>
-              <h3>선택된 서비스</h3>
-              <p>{selectedService.serviceName}</p>
-            </div>
-          )}
-
-          <FormRow>
-            <FormLabel>부가서비스</FormLabel>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <ActionButton
-                variant='outlined'
+            <FormRow>
+              <FormLabel>
+                요금제<RequiredLabel>*</RequiredLabel>
+              </FormLabel>
+              <TextField
                 size='small'
-                onClick={handleAdditionalServiceModalOpen}
-                disabled={!selectedService?.serviceId}
+                variant='outlined'
+                value={selectedService ? selectedService.serviceName : ''}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <SearchIcon onClick={handleServiceModalOpen} sx={{ cursor: 'pointer' }} />
+                    </InputAdornment>
+                  ),
+                  readOnly: true,
+                }}
+                error={validationErrors.servicePlan.state === 'error'}
+                helperText={validationErrors.servicePlan.helperText}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    height: '32px',
+                  },
+                  width: '200px',
+                }}
+              />
+              <Typography
+                sx={{
+                  flex: '0 0 auto',
+                  whiteSpace: 'nowrap',
+                  minWidth: '200px',
+                  display: 'inline-block',
+                  ml: 2,
+                }}
               >
-                부가서비스 선택
-              </ActionButton>
-            </Box>
-          </FormRow>
+                {selectedService
+                  ? `${selectedService.serviceValue.toLocaleString()} 
+              원`
+                  : '0 원'}
+              </Typography>
+            </FormRow>
 
-          {selectedAdditionalServices.length > 0 && (
-            <div>
-              <h3>선택된 추가 서비스</h3>
-              {selectedAdditionalServices.map((service) => (
-                <Box key={service.serviceId} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <Chip
-                    label={service.serviceName}
-                    onDelete={() => handleRemoveAdditionalService(service.serviceId)}
-                    sx={{ mr: 1 }}
-                  />
-                </Box>
-              ))}
-            </div>
-          )}
+            {/* {selectedService && selectedService.serviceId && (
+              <div>
+                <h3>선택된 서비스</h3>
+                <p>{selectedService.serviceName}</p>
+              </div>
+            )} */}
+
+            <FormRow>
+              <FormLabel>부가서비스</FormLabel>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <ActionButton
+                  variant='outlined'
+                  size='small'
+                  sx={{ width: '100px', height: '28px' }}
+                  onClick={handleAdditionalServiceModalOpen}
+                  disabled={!selectedService?.serviceId}
+                >
+                  부가서비스 선택
+                </ActionButton>
+              </Box>
+            </FormRow>
+
+            {selectedAdditionalServices.length > 0 && (
+              <div>
+                <h3>선택된 추가 서비스</h3>
+                {selectedAdditionalServices.map((service) => (
+                  <Box
+                    key={service.serviceId}
+                    sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
+                  >
+                    <Chip
+                      label={service.serviceName}
+                      onDelete={() => handleRemoveAdditionalService(service.serviceId)}
+                      sx={{ mr: 1 }}
+                    />
+                  </Box>
+                ))}
+              </div>
+            )}
+          </div>
         </Column>
       </TwoColumnContainer>
 
@@ -519,7 +547,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
       />
 
       {/* Contract Store Debug Display */}
-      <Box sx={{ mt: 4, borderTop: '1px dashed #ccc', pt: 2 }}>
+      {/* <Box sx={{ mt: 4, borderTop: '1px dashed #ccc', pt: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
           <Typography variant='h6'>Contract Store Data</Typography>
           <ActionButton
@@ -546,7 +574,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
             </Typography>
           </Box>
         )}
-      </Box>
+      </Box> */}
     </SectionContainer>
   );
 };

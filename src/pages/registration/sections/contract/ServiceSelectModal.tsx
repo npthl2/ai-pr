@@ -90,7 +90,6 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
           >
             <Typography sx={{ minWidth: '60px' }}>요금제명</Typography>
             <TextField
-              placeholder='넷플릭스'
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               size='small'
@@ -114,7 +113,7 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
           </Button>
         </Box>
 
-        <Box sx={styles.tableContainer}>
+        <Box>
           <Box sx={{ mb: 2 }}>
             <Typography variant='h3' component='div'>
               요금제 목록
@@ -123,44 +122,46 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
               </Typography>
             </Typography>
           </Box>
-          <TableContainer component={Paper} sx={styles.table}>
-            <Table>
-              <TableHead>
-                <TableRow variant='head'>
-                  <TableCell sx={styles.tableHeaderCell} width='48px'></TableCell>
-                  <TableCell sx={styles.tableHeaderCell} width='250px'>
-                    <Typography>요금제명</Typography>
-                  </TableCell>
-                  <TableCell sx={styles.tableHeaderCell} width='254px'>
-                    <Typography>요금 (원)</Typography>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredPlanList.length > 0 ? (
-                  filteredPlanList.map((plan) => (
-                    <TableRow key={plan.id} sx={styles.tableRow}>
-                      <TableCell>
-                        <Radio
-                          checked={selectedPlan?.id === plan.id}
-                          onChange={() => setSelectedPlan(plan)}
-                          size='small'
-                        />
-                      </TableCell>
-                      <TableCell>{plan.name}</TableCell>
-                      <TableCell>{plan.amount.toLocaleString()}</TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={4} align='center' sx={{ py: 3 }}>
-                      <Typography variant='body1'>표시할 데이터가 없습니다</Typography>
+          <Box sx={styles.tableContainer}>
+            <TableContainer component={Paper} sx={styles.table}>
+              <Table>
+                <TableHead>
+                  <TableRow variant='head'>
+                    <TableCell sx={styles.tableHeaderCell} width='48px'></TableCell>
+                    <TableCell sx={styles.tableHeaderCell} width='250px'>
+                      <Typography>요금제명</Typography>
+                    </TableCell>
+                    <TableCell sx={styles.tableHeaderCell} width='254px'>
+                      <Typography>요금 (원)</Typography>
                     </TableCell>
                   </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {filteredPlanList.length > 0 ? (
+                    filteredPlanList.map((plan) => (
+                      <TableRow key={plan.id} sx={styles.tableRow}>
+                        <TableCell>
+                          <Radio
+                            checked={selectedPlan?.id === plan.id}
+                            onChange={() => setSelectedPlan(plan)}
+                            size='small'
+                          />
+                        </TableCell>
+                        <TableCell>{plan.name}</TableCell>
+                        <TableCell>{plan.amount.toLocaleString()}</TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={4} align='center' sx={{ py: 3 }} hideborder={true}>
+                        <Typography variant='body1'>표시할 데이터가 없습니다</Typography>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
         </Box>
 
         <Box sx={styles.modalFooter}>

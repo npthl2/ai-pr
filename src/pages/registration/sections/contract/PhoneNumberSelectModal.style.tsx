@@ -28,6 +28,7 @@ export const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
 export const StyledTableContainer = styled(Box)(({ theme }) => ({
   width: 552,
   height: 249,
+  overflow: 'auto',
   '& .MuiTableCell-root': {
     padding: 0,
   },

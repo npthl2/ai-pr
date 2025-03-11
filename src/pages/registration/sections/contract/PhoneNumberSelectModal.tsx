@@ -89,15 +89,6 @@ const PhoneNumberSelectModal: React.FC<PhoneNumberSelectModalProps> = ({
     }
   };
 
-  // 테이블 헤더 정의
-  const headers = [
-    { id: 'radio', label: '', width: '48px' },
-    { id: 'statusCode', label: '상태', width: '100px' },
-    { id: 'phoneNumber', label: '전화번호', width: '134px' },
-    { id: 'phoneNumberProvider', label: '번호부여회사', width: '110px' },
-    { id: 'lastUpdateStatusDatetime', label: '상태변경일', width: '160px' },
-  ];
-
   return (
     <StyledDialog open={open} onClose={handleClose} maxWidth='md' fullWidth>
       <StyledDialogTitle>
@@ -132,11 +123,11 @@ const PhoneNumberSelectModal: React.FC<PhoneNumberSelectModalProps> = ({
           <Table>
             <TableHead>
               <TableRow variant='head'>
-                {headers.map((header) => (
-                  <TableCell key={header.id} width={header.width}>
-                    <Typography>{header.label}</Typography>
-                  </TableCell>
-                ))}
+                <TableCell width='48px'></TableCell>
+                <TableCell width='100px'>상태</TableCell>
+                <TableCell width='134px'>전화번호</TableCell>
+                <TableCell width='110px'>번호부여회사</TableCell>
+                <TableCell width='160px'>상태변경일</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

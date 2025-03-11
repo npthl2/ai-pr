@@ -27,13 +27,19 @@ export const SectionTitle = styled('div')(({ theme }) => ({
 export const FormRow = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  // marginBottom: theme.spacing(2),
+  gap: theme.spacing(2),
+  '& > *:first-of-type': {
+    flex: '0 0 auto',
+  },
+  '& > *:not(:first-of-type)': {
+    flex: '1 1 auto',
+  },
 }));
 
 export const FormLabel = styled('div')(({ theme }) => ({
   minWidth: '100px',
   fontWeight: 'bold',
-  color: theme.palette.text.primary,
+  color: theme.palette.text.secondary,
 }));
 
 export const RequiredLabel = styled('span')(({ theme }) => ({

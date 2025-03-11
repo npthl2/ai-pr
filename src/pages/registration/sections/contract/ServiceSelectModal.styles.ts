@@ -42,8 +42,7 @@ export const styles = {
   tableContainer: {
     width: 552,
     height: 249,
-    paddingTop: '16px',
-    paddingBottom: '16px',
+    overflow: 'auto',
   },
   tableTitle: {
     fontWeight: 'bold',
@@ -72,6 +71,6 @@ export const styles = {
     mr: 1,
   },
   selectButton: {
-    minWidth: '80px',
+    mr: 1,
   },
 };
