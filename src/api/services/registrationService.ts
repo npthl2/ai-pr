@@ -7,7 +7,7 @@ import { CommonResponse, CommonStatus } from '@model/common/CommonResponse';
 const devStatusMap: Record<string, { status: RegistrationStatusType, createdAt: number }> = {};
 
 const registrationService = {
-  // 계약 정보를 registrationinfo 및 outbox 테이블에 저장
+  // 계약 정보를 registrationInfo 및 outbox 테이블에 저장
   saveRegistration(data: RegistrationRequest): Promise<CommonResponse<string>> {
     // 개발 단계에서는 실제 API 호출 대신 임시 응답 반환
     if (process.env.NODE_ENV === 'development') {
@@ -63,7 +63,7 @@ const registrationService = {
         // 개발 환경에서 임의의 계약 ID 생성
         const response = { 
           status: statusInfo.status,
-          contract_id: `CONTRACT_${business_process_id.substring(3)}`
+          contract_id: `CT_${business_process_id.substring(15)}`
         };
         console.log('응답 반환:', response);
         return Promise.resolve(response);
@@ -74,7 +74,7 @@ const registrationService = {
         status: statusInfo.status,
         // COMPLETED 상태일 때만 계약 ID 포함
         ...(statusInfo.status === REGISTRATION_STATUS.COMPLETED ? {
-          contract_id: `CONTRACT_${business_process_id.substring(3)}`
+          contract_id: `CT_${business_process_id.substring(15)}`
         } : {})
       };
       console.log('응답 반환:', response);

@@ -28,7 +28,6 @@ export const useRegistrationMutation = () => {
       };
 
       // RegistrationRequest 생성
-      // business_process_id는 백엔드에서 생성하므로 여기서는 포함하지 않음
       const request: RegistrationRequest = {
         g_tr_id,
         registrationInfo,

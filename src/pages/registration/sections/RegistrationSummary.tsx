@@ -9,7 +9,7 @@ import {
   LeftButtonGroup,
   RightButtonGroup,
 } from './RegistrationSummary.styled';
-import { SECTION_IDS, SECTION_TITLES } from '@constants/RegistrationConstants';
+import { SECTION_IDS, SECTION_TITLES, REGISTRATION_STATUS } from '@constants/RegistrationConstants';
 import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
 import { useState } from 'react';
 import { useRegistrationInfo } from '@hooks/useRegistrationInfo';
@@ -41,14 +41,14 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
       // 2. zustand에 저장하고 상태를 PENDING으로 설정
       const updatedInfo = {
         ...registrationInfo,
-        status: 'PENDING' as const
+        status: REGISTRATION_STATUS.PENDING
       };
       
       // 저장 전 RegistrationStore 상태 확인
       console.log('저장 전 RegistrationStore:', useRegistrationStore.getState());
       
       setRegistrationInfo(contractTabId, updatedInfo);
-      updateRegistrationStatus(contractTabId, 'PENDING');
+      updateRegistrationStatus(contractTabId, REGISTRATION_STATUS.PENDING);
       
       // 저장 후 RegistrationStore 상태 확인
       console.log('저장 후 RegistrationStore:', useRegistrationStore.getState());
@@ -64,20 +64,35 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
           
           // business_process_id 저장 (폴링에 사용)
           if (response.data) {
+            console.log('백엔드에서 반환된 business_process_id:', response.data);
+            
             // business_process_id를 저장소에 업데이트
             const updatedInfoWithId = {
               ...updatedInfo,
-              business_process_id: response.data
+              business_process_id: response.data,
+              status: REGISTRATION_STATUS.PENDING // 상태 명시적으로 설정
             };
+            
+            // 저장소에 업데이트
             setRegistrationInfo(contractTabId, updatedInfoWithId);
             console.log('business_process_id 저장됨:', response.data);
+            
+            // 저장 후 RegistrationStore 상태 확인
+            const updatedSavedInfo = useRegistrationStore.getState().getRegistrationInfo(contractTabId);
+            console.log('business_process_id 저장 후 RegistrationInfo:', updatedSavedInfo);
+            
+            // 이 시점에서 RegistrationRequest 컴포넌트의 폴링이 시작됨
+          } else {
+            console.warn('백엔드에서 business_process_id가 반환되지 않음');
+            // 오류 처리
+            updateRegistrationStatus(contractTabId, REGISTRATION_STATUS.FAILED);
           }
           
           // 성공 응답 처리는 RegistrationRequest 컴포넌트에서 폴링으로 처리
         },
         onError: (error) => {
           console.error('저장 요청 실패:', error);
-          updateRegistrationStatus(contractTabId, 'FAILED');
+          updateRegistrationStatus(contractTabId, REGISTRATION_STATUS.FAILED);
         },
       });
 
@@ -85,7 +100,7 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
       setIsSaveRequested(true);
     } catch (error) {
       console.error('저장 처리 중 오류 발생:', error);
-      updateRegistrationStatus(contractTabId, 'FAILED');
+      updateRegistrationStatus(contractTabId, REGISTRATION_STATUS.FAILED);
     } finally {
       setLoading(false);
     }
