@@ -235,6 +235,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
       openToast('청구정보 생성에 실패했습니다. 다시 시도해 주세요.');
       return;
     }
+    openToast('청구정보가 생성되었습니다.');
 
     // 청구정보 목록 캐시 무효화
     queryClient.invalidateQueries({ queryKey: ['invoice'] });

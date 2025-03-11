@@ -130,7 +130,7 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
 
       <ButtonContainer>
         <LeftButtonGroup>
-          <Button variant='outlined' color='grey' size='large'>
+          <Button variant='outlined' color='grey' size='large' disabled={!registrationInvoiceInfo}>
             임시저장
           </Button>
           <Button variant='outlined' color='grey' size='large'>
