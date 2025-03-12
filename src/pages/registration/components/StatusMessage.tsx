@@ -11,7 +11,7 @@ interface StatusMessageProps {
   failReason?: string;
 }
 
-const StatusMessage = ({ status, customerName, failReason }: StatusMessageProps) => {
+const StatusMessage = ({ status, customerName }: StatusMessageProps) => {
   // 이미지 경로 정의
   const pendingGifPath = '/images/Registration-Progressing.gif';
   const completedGifPath = '/images/Registration-Completed.gif';
@@ -36,14 +36,14 @@ const StatusMessage = ({ status, customerName, failReason }: StatusMessageProps)
         <StatusMessageContainer>
           <StyledStatusMessage>{customerName} 고객님의 가입을 실패하였습니다.</StyledStatusMessage>
           <StyledStatusMessage>
-            실패사유: {failReason || (
+            실패사유: {
               <>
                 <span style={{ color: 'red' }}>가입한도</span>
                 를 
                 <span style={{ color: 'red' }}> 초과</span>
                 했습니다.
               </>
-            )}
+            }
           </StyledStatusMessage>
         </StatusMessageContainer>
       )}

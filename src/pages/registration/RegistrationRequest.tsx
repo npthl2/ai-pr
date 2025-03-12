@@ -9,10 +9,10 @@ import {
   PageTitle,
   SectionContainer
 } from './RegistrationRequest.styled';
-import StatusMessage from './registration/StatusMessage';
-import SummaryInfo from './registration/SummaryInfo';
-import EmailForm from './registration/EmailForm';
-import ActionButtons from './registration/ActionButtons';
+import StatusMessage from './component/StatusMessage';
+import SummaryInfo from './component/SummaryInfo';
+import EmailForm from './component/EmailForm';
+import ActionButtons from './component/ActionButtons';
 import { InvoiceInfo, DeviceInfo, ContractInfo, RegistrationStatus, RegistrationInfo } from '@model/RegistrationInfo';
 import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants';
 import { useEmailSendMutation } from '@api/queries/email/useEmailSendMutation';
@@ -31,8 +31,7 @@ interface RegistrationRequestProps {
 }
 
 const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
-  const [status, setStatus] = useState<RegistrationStatusType>('PENDING');
-  const [failReason, setFailReason] = useState<string>('');
+  const [status, setStatus] = useState<RegistrationStatusType>(REGISTRATION_STATUS.PENDING);
   const [isEmailEnabled, setIsEmailEnabled] = useState<boolean>(false);
   
   // Toast 스토어 접근
@@ -77,7 +76,6 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
         // 응답 데이터 변환
         if (response.data && typeof response.data === 'object') {
           const statusData = response.data;
-          console.log('상태 데이터:', statusData);
           
           return {
             status: statusData.status === 'COMPLETED' ? REGISTRATION_STATUS.COMPLETED :
@@ -170,7 +168,6 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
       
       // 상태가 변경된 경우에만 업데이트
       if (status !== newStatus) {
-        console.log('상태 변경 감지, 업데이트 실행');
         setStatus(newStatus);
         if (contractTabId) {
           // 상태 업데이트 및 contract_id가 있으면 함께 저장
@@ -178,7 +175,6 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
           
           // contract_id가 있고 상태가 COMPLETED인 경우 RegistrationStore에 저장
           if (data.contract_id && newStatus === REGISTRATION_STATUS.COMPLETED && registrationData) {
-            console.log('계약 ID 발견, 저장 실행:', data.contract_id);
             // 기존 정보 복사 후 contract_id 추가
             const updatedInfo: RegistrationInfo = {
               ...registrationData,
@@ -193,15 +189,12 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
       
       // 실패 시 사유 설정
       if (data.status === REGISTRATION_STATUS.FAILED && 'reason' in data) {
-        setFailReason(data.reason as string || '');
       }
     } else {
     }
     
     if (isError) {
-      console.log('폴링 오류 발생');
       setStatus(REGISTRATION_STATUS.FAILED);
-      setFailReason('서버 연결 오류가 발생했습니다.');
       if (contractTabId) {
         updateRegistrationStatus(contractTabId, REGISTRATION_STATUS.FAILED);
       }
@@ -332,7 +325,6 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
         <StatusMessage 
           status={status} 
           customerName={customerInfo?.name || ''} 
-          failReason={failReason} 
         />
 
         <SectionContainer>

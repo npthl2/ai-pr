@@ -18,9 +18,9 @@ export type SectionId = (typeof SECTION_IDS)[keyof typeof SECTION_IDS];
 
 // 등록 상태 상수
 export const REGISTRATION_STATUS = {
-  PENDING: 'PENDING',
-  COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED'
+  PENDING: '진행중',
+  COMPLETED: '완료',
+  FAILED: '실패'
 } as const;
 
 // 등록 상태 타입
