@@ -11,11 +11,9 @@ import useRegistrationCustomerStore from '@stores/registration/RegistrationCusto
  * @returns 등록 정보
  */
 export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => {
-  console.log('useRegistrationInfo 호출됨:', contractTapId);
   
   // 각 스토어의 상태를 가져옵니다
   const customerStore = useRegistrationCustomerStore.getState();
-  console.log('customerStore 상태:', customerStore);
   
   // 아직 구현되지 않은 스토어들은 주석 처리
   // const contractStore = useRegistrationContractStore.getState();
@@ -39,7 +37,6 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     organization: storeCustomerInfo?.organization || '통신사',
     availableContractCount: storeCustomerInfo?.availableContractCount || 1
   };
-  console.log('수집된 customerInfo:', customerInfo);
   
   // 아직 구현되지 않은 스토어들은 임시 데이터로 대체
   // 테스트를 위한 Contract 인터페이스 예시 데이터
@@ -132,6 +129,5 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     sales: salesInfo,
   };
   
-  console.log('useRegistrationInfo 결과:', result);
   return result;
 };

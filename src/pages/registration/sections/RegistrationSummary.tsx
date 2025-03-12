@@ -36,7 +36,6 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
 
       // 1. 모든 데이터 가져오기 (현재는 customerStore만 구현됨)
       const registrationInfo = useRegistrationInfo(contractTabId);
-      console.log('데이터 수집 확인:', registrationInfo);
 
       // 2. zustand에 저장하고 상태를 PENDING으로 설정
       const updatedInfo = {
@@ -45,34 +44,23 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
       };
       
       // 저장 전 RegistrationStore 상태 확인
-      console.log('저장 전 RegistrationStore:', useRegistrationStore.getState());
-      
       setRegistrationInfo(contractTabId, updatedInfo);
       updateRegistrationStatus(contractTabId, REGISTRATION_STATUS.PENDING);
-      
-      // 저장 후 RegistrationStore 상태 확인
-      console.log('저장 후 RegistrationStore:', useRegistrationStore.getState());
       
       // 저장된 데이터 확인
       const savedInfo = useRegistrationStore.getState().getRegistrationInfo(contractTabId);
       console.log('저장된 RegistrationInfo:', savedInfo);
 
-      // 3. 백엔드 API 호출 (개발 단계에서는 임시 응답 사용)
-      console.log('백엔드 API 호출 시작 시간:', new Date().toISOString());
-      
+      // 3. 백엔드 API 호출 (개발 단계에서는 임시 응답 사용)   
       // Promise를 반환하도록 수정하여 API 응답을 기다림
       await new Promise((resolve, reject) => {
         registrationMutation.mutate(updatedInfo, {
           onSuccess: (response) => {
-            console.log('저장 요청 성공 시간:', new Date().toISOString());
-            console.log('저장 요청 성공:', response);
             
             // business_process_id 저장 (폴링에 사용)
             if (response.data && typeof response.data === 'object' && 'businessProcessId' in response.data) {
               const businessProcessId = response.data.businessProcessId;
-              console.log('백엔드에서 반환된 businessProcessId:', businessProcessId);
-              console.log('백엔드 응답 전체:', response);
-              
+
               // business_process_id를 저장소에 업데이트
               const updatedInfoWithId = {
                 ...updatedInfo,
@@ -82,19 +70,10 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
               
               // 저장소에 업데이트
               setRegistrationInfo(contractTabId, updatedInfoWithId);
-              console.log('business_process_id 저장됨:', businessProcessId);
-              
-              // 저장 후 RegistrationStore 상태 확인
-              const updatedSavedInfo = useRegistrationStore.getState().getRegistrationInfo(contractTabId);
-              console.log('business_process_id 저장 후 RegistrationInfo:', updatedSavedInfo);
-              
-              // 이 시점에서 RegistrationRequest 컴포넌트의 폴링이 시작됨
-              console.log('폴링 시작 예상 시간:', new Date().toISOString());
-              
+
               // Promise 해결
               resolve(businessProcessId);
             } else {
-              console.warn('백엔드에서 business_process_id가 반환되지 않음');
               // 오류 처리
               updateRegistrationStatus(contractTabId, REGISTRATION_STATUS.FAILED);
               reject(new Error('백엔드에서 business_process_id가 반환되지 않음'));
@@ -103,8 +82,6 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
             // 성공 응답 처리는 RegistrationRequest 컴포넌트에서 폴링으로 처리
           },
           onError: (error) => {
-            console.error('저장 요청 실패 시간:', new Date().toISOString());
-            console.error('저장 요청 실패:', error);
             updateRegistrationStatus(contractTabId, REGISTRATION_STATUS.FAILED);
             reject(error);
           },

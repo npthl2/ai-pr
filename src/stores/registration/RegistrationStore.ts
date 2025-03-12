@@ -70,15 +70,12 @@ const useRegistrationStore = create<RegistrationStoreState>((set, get) => ({
     
     // 저장 상태를 업데이트하는 함수 구현
     updateRegistrationStatus: (contractTapId, status) => {
-        console.log('상태 업데이트 요청:', contractTapId, status);
         set((state) => {
             const currentInfo = state.registrationInfo[contractTapId];
             if (!currentInfo) {
-                console.log('해당 ID의 데이터가 없음:', contractTapId);
                 return state; // 해당 ID의 데이터가 없으면 상태 변경 없음
             }
             
-            console.log('상태 업데이트 전:', currentInfo.status, '후:', status);
             return {
                 registrationInfo: {
                     ...state.registrationInfo,
