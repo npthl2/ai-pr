@@ -69,7 +69,7 @@ const registrationContractService = {
    * @returns void
    */
   claimAvailablePhoneNumber(data: ClaimPhoneNumberRequest): Promise<CommonResponse<void>> {
-    return baseService.post<void, ClaimPhoneNumberRequest>(
+    return baseService.put<void, ClaimPhoneNumberRequest>(
       `/ctt-be/v1/phone-numbers/${data.phoneNumber}/claim`,
       data,
     );

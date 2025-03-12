@@ -16,13 +16,13 @@ import useRegistrationSalesStore from '@stores/registration/RegistrationSalesSto
 interface ContractSummaryProps {
   contractTabId: string;
   setIsSaveRequested: (isSaveRequested: boolean) => void;
-  isExpanded: (sectionId: SectionId, canExpand: boolean) => boolean;
+  completedSections: SectionId[];
 }
 
 const ContractSummary = ({
   contractTabId,
   setIsSaveRequested,
-  isExpanded,
+  completedSections,
 }: ContractSummaryProps) => {
   const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
   const { getRegistrationSalesInfo } = useRegistrationSalesStore();
@@ -61,7 +61,7 @@ const ContractSummary = ({
             <SummaryItem>
               <Typography variant='body2'>판매채널정보</Typography>
               <Typography variant='body2' color='text.secondary'>
-                {isExpanded(SECTION_IDS.CONTRACT, true) ? salesInfo?.salesDepartment : '-'}
+                {completedSections.includes(SECTION_IDS.SALES) ? salesInfo?.salesDepartment : '-'}
               </Typography>
             </SummaryItem>
           </Box>
@@ -72,7 +72,9 @@ const ContractSummary = ({
             <SummaryItem>
               <Typography variant='body2'>개통요금제</Typography>
               <Typography variant='body2' color='text.secondary'>
-                {isExpanded(SECTION_IDS.DEVICE, true) ? contractInfo?.service?.serviceName : '-'}
+                {completedSections.includes(SECTION_IDS.CONTRACT)
+                  ? contractInfo?.service?.serviceName
+                  : '-'}
               </Typography>
             </SummaryItem>
           </Box>

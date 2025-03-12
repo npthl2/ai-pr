@@ -188,7 +188,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
         <ContractSummary
           contractTabId={contractTabId}
           setIsSaveRequested={setIsSaveRequested}
-          isExpanded={isExpanded}
+          completedSections={completedSections}
         />
       </ContentWrapper>
     </Container>

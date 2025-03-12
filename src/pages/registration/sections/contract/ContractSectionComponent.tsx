@@ -335,6 +335,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                   onChange={(value) => handlePhoneNumberLastFourChange(value)}
                   state={validationErrors.phoneNumber.state}
                   helperText={validationErrors.phoneNumber.helperText}
+                  absoluteHelperText={true}
                   inputRef={phoneNumberInputRef}
                   slotProps={{
                     htmlInput: {
@@ -379,7 +380,8 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                     });
                   }}
                   state={validationErrors.simNumber.state}
-                  helperText={validationErrors.simNumber.helperText}
+                  // absoluteHelperText={true}
+                  // helperText={validationErrors.simNumber.helperText}
                 />
               </FormRow>
 
@@ -400,6 +402,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                     handleDeviceModelName(imeiNumber);
                   }}
                   state={validationErrors.imeiNumber.state}
+                  absoluteHelperText={true}
                   helperText={validationErrors.imeiNumber.helperText}
                 />
 
@@ -448,8 +451,9 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       height: '32px',
+                      backgroundColor: '#ffffff',
+                      width: '200px',
                     },
-                    width: '200px',
                   }}
                 />
                 <Typography

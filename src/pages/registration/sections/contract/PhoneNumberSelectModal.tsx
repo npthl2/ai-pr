@@ -58,9 +58,10 @@ const PhoneNumberSelectModal: React.FC<PhoneNumberSelectModalProps> = ({
     onClose();
   };
 
-  const handleSelect = () => {
+  const handleSelect = async () => {
     if (selectedPhoneNumber) {
       onSelect(selectedPhoneNumber);
+      await claimPhoneNumber(selectedPhoneNumber.phoneNumber);
       handleClose();
     }
   };
@@ -87,6 +88,13 @@ const PhoneNumberSelectModal: React.FC<PhoneNumberSelectModalProps> = ({
       }));
       setPhoneNumbers(transformedPhoneNumbers);
     }
+  };
+
+  const claimPhoneNumber = async (phoneNumber: string) => {
+    await registrationContractService.claimAvailablePhoneNumber({
+      phoneNumber: phoneNumber.replace(/-/g, ''),
+      customerId: customerId,
+    });
   };
 
   return (
