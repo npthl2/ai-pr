@@ -1,12 +1,12 @@
 import {
   Dialog as MuiDialog,
   DialogProps as MuiDialogProps,
-  DialogTitle,
+  Button,
   DialogContent,
   DialogActions,
-  Button,
   Typography,
   IconButton,
+  Box,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
@@ -34,8 +34,9 @@ const StyledDialog = styled(MuiDialog, { shouldForwardProp: (prop) => prop !== '
     }[size],
   },
 }));
-const StyledDialogTitle = styled(DialogTitle)({
+const StyledDialogTitle = styled(Box)({
   padding: '16px 24px',
+  position: 'relative',
 });
 const StyledButton = styled(Button)({
   padding: '5px 8px',
