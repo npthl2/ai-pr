@@ -27,6 +27,7 @@ import {
   CreateCustomerRequestParams,
   CreateCustomerResponse,
 } from '@model/Customer';
+import { isValid, parse } from 'date-fns';
 
 interface CustomerDialogProps {
   isOpen: boolean;
@@ -79,15 +80,21 @@ const CustomerDialog = ({
   };
 
   const validateRrnoIssueDate = (rrnoIssueDate: string) => {
-    if (!customer.rrnoIssueDate || customer.rrnoIssueDate.length < 8) {
+    if (!rrnoIssueDate || rrnoIssueDate.length < 8) {
       return '주민등록증 발급일자를 입력해주세요.';
     }
 
     if (rrnoIssueDate.length === 8) {
+      const year = parseInt(rrnoIssueDate.substring(0, 4));
       const month = parseInt(rrnoIssueDate.substring(4, 6));
       const day = parseInt(rrnoIssueDate.substring(6, 8));
 
-      if (month < 1 || month > 12 || day < 1 || day > 31) {
+      const issueDate = parse(`${year}-${month}-${day}`, 'yyyy-MM-dd', new Date());
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (!isValid(issueDate) || issueDate > today) {
         return '주민등록증 발급일자를 확인해주세요.';
       }
     }

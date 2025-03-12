@@ -13,7 +13,8 @@ import {
   RightSection,
   VerificationButton,
 } from '../CustomerSection.styled';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
+import { isValid, parse } from 'date-fns';
 
 interface CustomerInfoProps {
   customer: RegistrationCustomerInfo;
@@ -33,6 +34,7 @@ const CustomerInfo = ({
 }: CustomerInfoProps) => {
   const [nameError, setNameError] = useState<string>('');
   const [rrnoError, setRrnoError] = useState<string>('');
+  const rrnoInputRef = useRef<HTMLInputElement>(null);
 
   const isVerificationEnabled = useMemo(() => {
     return (
@@ -50,15 +52,29 @@ const CustomerInfo = ({
     }
 
     if (name === 'rrno') {
-      const numericValue = value.replace(/-/g, '');
-      if (!/^\d*$/.test(numericValue)) {
+      const cursorPosition = rrnoInputRef.current?.selectionStart || 0;
+      const cleanValue = value.replace(/[^0-9]/g, '');
+
+      if (cleanValue.length > 13) {
         return;
       }
-      if (numericValue.length > 13) {
-        return;
-      }
+
       setRrnoError('');
-      value = numericValue;
+      setCustomer({
+        ...customer,
+        [name]: cleanValue,
+      });
+
+      requestAnimationFrame(() => {
+        if (rrnoInputRef.current) {
+          let newPosition = cursorPosition;
+          if (cursorPosition > 6) {
+            newPosition = cursorPosition;
+          }
+          rrnoInputRef.current.setSelectionRange(newPosition, newPosition);
+        }
+      });
+      return;
     }
 
     setCustomer({
@@ -99,17 +115,16 @@ const CustomerInfo = ({
       const genderDigit = parseInt(rrno.charAt(6));
       const fullYear = genderDigit <= 2 ? 1900 + year : 2000 + year;
 
-      const birthDate = new Date(fullYear, month - 1, day);
-      birthDate.setHours(0, 0, 0, 0);
+      const birthDate = parse(`${fullYear}-${month}-${day}`, 'yyyy-MM-dd', new Date());
 
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      if (birthDate > today || month < 1 || month > 12 || day < 1 || day > 31) {
+      if (!isValid(birthDate) || birthDate > today) {
         return '생년월일을 확인해 주세요.';
       }
 
-      if (rrno.length > 6 && ![1, 2, 3, 4].includes(genderDigit)) {
+      if (![1, 2, 3, 4].includes(genderDigit)) {
         return '성별을 확인해주세요.';
       }
     }
@@ -169,6 +184,7 @@ const CustomerInfo = ({
               state={rrnoError ? 'error' : 'inactive'}
               helperText={rrnoError}
               data-testid='rrno-field'
+              inputRef={rrnoInputRef}
             />
           ) : (
             <Typography>{formatRrno(customer.rrno || '')}</Typography>
