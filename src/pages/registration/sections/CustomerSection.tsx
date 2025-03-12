@@ -116,16 +116,12 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      if (birthDate > today) {
+      if (birthDate > today || month < 1 || month > 12 || day < 1 || day > 31) {
         return '생년월일을 확인해 주세요.';
       }
 
       if (rrno.length > 6 && ![1, 2, 3, 4].includes(genderDigit)) {
         return '성별을 확인해주세요.';
-      }
-
-      if (month < 1 || month > 12 || day < 1 || day > 31) {
-        return '주민등록증 발급일자를 확인해주세요.';
       }
     }
 
