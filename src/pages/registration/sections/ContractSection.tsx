@@ -11,9 +11,7 @@ const ContractSection = ({ contractTabId, onComplete, completed }: ContractSecti
   return (
     // completed 가 true 이면 outline 활성화, fales 일 경우 비활성화
     <FormContainer completed={completed}>
-      <FormWrapper>
-        <ContractSectionComponent contractTabId={contractTabId} onComplete={onComplete} />
-      </FormWrapper>
+      <ContractSectionComponent contractTabId={contractTabId} onComplete={onComplete} />
     </FormContainer>
   );
 };

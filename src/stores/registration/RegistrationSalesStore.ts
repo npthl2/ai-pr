@@ -1,3 +1,4 @@
+import { mountStoreDevtool } from 'simple-zustand-devtools';
 import { create } from 'zustand';
 
 export interface Sales {
@@ -9,22 +10,19 @@ export interface Sales {
   finalSeller: string;
   // 서포터
   supporter: string;
+
+  // 필요한 필드가 다 채워졌는지 확인
+  isValidated: boolean;
 }
 
 export interface RegistrationSalesState {
   sales: Record<string, Sales>;
   getRegistrationSalesInfo: (tabId: string) => Sales | undefined;
-  addRegistrationSalesInfo: (
-    tabId: string,
-    sales: {
-      salesDepartment: string;
-      salesContractPoint: string;
-      finalSeller: string;
-      supporter: string;
-    },
-  ) => void;
+  addRegistrationSalesInfo: (tabId: string) => void;
   updateRegistrationSalesInfo: (tabId: string, updates: Partial<Sales>) => void;
   removeRegistrationSalesInfo: (tabId: string) => void;
+  updateRegistrationSalesValidationFlag: (tabId: string) => void;
+  getRegistrationSalesValidationFlag: (tabId: string) => boolean;
 }
 
 const useRegistrationSalesStore = create<RegistrationSalesState>((set, get) => ({
@@ -34,7 +32,7 @@ const useRegistrationSalesStore = create<RegistrationSalesState>((set, get) => (
     return get().sales[tabId];
   },
 
-  addRegistrationSalesInfo: (tabId, sales) => {
+  addRegistrationSalesInfo: (tabId) => {
     const existingSales = get().sales[tabId];
     if (existingSales) {
       console.log(`Sales with tabId: ${tabId} already exists.`);
@@ -46,10 +44,11 @@ const useRegistrationSalesStore = create<RegistrationSalesState>((set, get) => (
         ...state.sales,
         [tabId]: {
           id: tabId,
-          salesDepartment: sales.salesDepartment,
-          salesContractPoint: sales.salesContractPoint,
-          finalSeller: sales.finalSeller,
-          supporter: sales.supporter,
+          salesDepartment: '',
+          salesContractPoint: '',
+          finalSeller: '',
+          supporter: '',
+          isValidated: false,
         },
       },
     }));
@@ -80,5 +79,29 @@ const useRegistrationSalesStore = create<RegistrationSalesState>((set, get) => (
       };
     });
   },
+
+  updateRegistrationSalesValidationFlag: (tabId: string) => {
+    set((state) => {
+      const existingSales = state.sales[tabId];
+      // 필요한 필드 다 값이 있는지 확인 후 validationFlag 업데이트
+      const validationFlag = existingSales.salesDepartment !== '' ? true : false;
+
+      return {
+        sales: {
+          ...state.sales,
+          [tabId]: { ...existingSales, isValidated: validationFlag },
+        },
+      };
+    });
+  },
+
+  getRegistrationSalesValidationFlag: (tabId: string) => {
+    return get().sales[tabId]?.isValidated ?? false;
+  },
 }));
+
+if (import.meta.env.DEV) {
+  mountStoreDevtool('RegistrationSales Store', useRegistrationSalesStore);
+}
+
 export default useRegistrationSalesStore;

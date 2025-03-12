@@ -20,7 +20,7 @@ export interface Contract {
   additionalServices: Service[];
 
   // 필요한 필드가 다 채워졌는지 확인
-  validationFlag: boolean;
+  isValidated: boolean;
 }
 
 export interface Service {
@@ -77,7 +77,7 @@ const useRegistrationContractStore = create<RegistrationContractStoreState>((set
             serviceValue: 0,
           },
           additionalServices: [],
-          validationFlag: false,
+          isValidated: false,
         },
       },
     }));
@@ -112,7 +112,7 @@ const useRegistrationContractStore = create<RegistrationContractStoreState>((set
   updateRegistarationContractValidationFlag: (tabId: string) => {
     set((state) => {
       const existingContract = state.contracts[tabId];
-      // 필요한 필드 다 값이 있는지 확인 후 validationFlag 업데이트
+      // 필요한 필드 다 값이 있는지 확인 후 isValidated 업데이트
       const validationFlag =
         existingContract.contractType !== '' &&
         existingContract.sellType !== '' &&
@@ -120,21 +120,21 @@ const useRegistrationContractStore = create<RegistrationContractStoreState>((set
         existingContract.sim !== '' &&
         existingContract.imei !== '' &&
         existingContract.deviceModelName !== '' &&
-        existingContract.service.serviceId !== ''
+        existingContract?.service?.serviceId
           ? true
           : false;
 
       return {
         contracts: {
           ...state.contracts,
-          [tabId]: { ...existingContract, validationFlag: validationFlag },
+          [tabId]: { ...existingContract, isValidated: validationFlag },
         },
       };
     });
   },
 
   getRegistarationContractValidationFlag: (tabId: string) => {
-    return get().contracts[tabId]?.validationFlag ?? false;
+    return get().contracts[tabId]?.isValidated ?? false;
   },
 }));
 

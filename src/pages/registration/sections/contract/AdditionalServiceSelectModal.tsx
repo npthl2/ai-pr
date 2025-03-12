@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 
 import { Modal, Box, TextField, Paper, Checkbox, Typography, IconButton } from '@mui/material';
 import { Table, TableBody, TableContainer, TableHead } from '@mui/material';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { Modal, Box, TextField, Paper, Radio, Typography, IconButton } from '@mui/material';
 import { Table, TableBody, TableContainer, TableHead } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -29,6 +29,7 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
   const [selectedPlan, setSelectedPlan] = useState<PlanItem | null>(null);
   const { data } = useServicesQuery();
   const planList = useMemo(() => {
+    console.log('memo!!!!!!!!!!!!memo', data);
     return (
       data?.map((plan) => ({
         id: plan.serviceId,
@@ -40,6 +41,7 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
   const [filteredPlanList, setFilteredPlanList] = useState<PlanItem[]>(planList);
 
   useEffect(() => {
+    console.log('planList!!!!!!!!!!!!planList', planList);
     setFilteredPlanList(planList);
   }, [planList]);
 

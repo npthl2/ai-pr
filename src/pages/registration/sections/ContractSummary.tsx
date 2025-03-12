@@ -12,6 +12,7 @@ import {
 import { SECTION_IDS, SECTION_TITLES, SectionId } from '@constants/RegistrationConstants';
 import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
 import useRegistrationContractStore from '@stores/registration/RegistrationContractStore';
+import useRegistrationSalesStore from '@stores/registration/RegistrationSalesStore';
 interface ContractSummaryProps {
   contractTabId: string;
   setIsSaveRequested: (isSaveRequested: boolean) => void;
@@ -24,8 +25,10 @@ const ContractSummary = ({
   isExpanded,
 }: ContractSummaryProps) => {
   const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
+  const { getRegistrationSalesInfo } = useRegistrationSalesStore();
   const { getRegistrationContractInfo } = useRegistrationContractStore();
   const customerInfo = getRegistrationCustomerInfo(contractTabId);
+  const salesInfo = getRegistrationSalesInfo(contractTabId);
   const contractInfo = getRegistrationContractInfo(contractTabId);
 
   return (
@@ -58,7 +61,7 @@ const ContractSummary = ({
             <SummaryItem>
               <Typography variant='body2'>판매채널정보</Typography>
               <Typography variant='body2' color='text.secondary'>
-                -
+                {isExpanded(SECTION_IDS.CONTRACT, true) ? salesInfo?.salesDepartment : '-'}
               </Typography>
             </SummaryItem>
           </Box>

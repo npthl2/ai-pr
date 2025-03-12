@@ -29,45 +29,45 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
     handleSectionComplete: (sectionId: SectionId) => void,
     completedSections: SectionId[],
   ) => [
-    // {
-    //   id: SECTION_IDS.CUSTOMER,
-    //   title: SECTION_TITLES[SECTION_IDS.CUSTOMER],
-    //   component: (
-    //     <CustomerSection
-    //       contractTabId={contractTabId}
-    //       onComplete={() => handleSectionComplete(SECTION_IDS.CUSTOMER)}
-    //       completed={completedSections.includes(SECTION_IDS.CUSTOMER)}
-    //     />
-    //   ),
-    //   canExpand: () => true,
-    // },
-    // {
-    //   id: SECTION_IDS.INVOICE,
-    //   title: SECTION_TITLES[SECTION_IDS.INVOICE],
-    //   component: (
-    //     <InvoiceSection
-    //       contractTabId={contractTabId}
-    //       onComplete={() => handleSectionComplete(SECTION_IDS.INVOICE)}
-    //       completed={completedSections.includes(SECTION_IDS.INVOICE)}
-    //     />
-    //   ),
-    //   canExpand: (completedSections: SectionId[]) =>
-    //     completedSections.includes(SECTION_IDS.CUSTOMER),
-    // },
-    // {
-    //   id: SECTION_IDS.SALES,
-    //   title: SECTION_TITLES[SECTION_IDS.SALES],
-    //   component: (
-    //     <SalesSection
-    //       contractTabId={contractTabId}
-    //       onComplete={() => handleSectionComplete(SECTION_IDS.SALES)}
-    //       completed={completedSections.includes(SECTION_IDS.SALES)}
-    //     />
-    //   ),
-    //   canExpand: (completedSections: SectionId[]) =>
-    //     completedSections.includes(SECTION_IDS.CUSTOMER) &&
-    //     completedSections.includes(SECTION_IDS.INVOICE),
-    // },
+    {
+      id: SECTION_IDS.CUSTOMER,
+      title: SECTION_TITLES[SECTION_IDS.CUSTOMER],
+      component: (
+        <CustomerSection
+          contractTabId={contractTabId}
+          onComplete={() => handleSectionComplete(SECTION_IDS.CUSTOMER)}
+          completed={completedSections.includes(SECTION_IDS.CUSTOMER)}
+        />
+      ),
+      canExpand: () => true,
+    },
+    {
+      id: SECTION_IDS.INVOICE,
+      title: SECTION_TITLES[SECTION_IDS.INVOICE],
+      component: (
+        <InvoiceSection
+          contractTabId={contractTabId}
+          onComplete={() => handleSectionComplete(SECTION_IDS.INVOICE)}
+          completed={completedSections.includes(SECTION_IDS.INVOICE)}
+        />
+      ),
+      canExpand: (completedSections: SectionId[]) =>
+        completedSections.includes(SECTION_IDS.CUSTOMER),
+    },
+    {
+      id: SECTION_IDS.SALES,
+      title: SECTION_TITLES[SECTION_IDS.SALES],
+      component: (
+        <SalesSection
+          contractTabId={contractTabId}
+          onComplete={() => handleSectionComplete(SECTION_IDS.SALES)}
+          completed={completedSections.includes(SECTION_IDS.SALES)}
+        />
+      ),
+      canExpand: (completedSections: SectionId[]) =>
+        completedSections.includes(SECTION_IDS.CUSTOMER) &&
+        completedSections.includes(SECTION_IDS.INVOICE),
+    },
     {
       id: SECTION_IDS.CONTRACT,
       title: SECTION_TITLES[SECTION_IDS.CONTRACT],
@@ -78,7 +78,10 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
           completed={completedSections.includes(SECTION_IDS.CONTRACT)}
         />
       ),
-      canExpand: (completedSections: SectionId[]) => true,
+      canExpand: (completedSections: SectionId[]) =>
+        completedSections.includes(SECTION_IDS.CUSTOMER) &&
+        completedSections.includes(SECTION_IDS.INVOICE) &&
+        completedSections.includes(SECTION_IDS.SALES),
     },
     {
       id: SECTION_IDS.DEVICE,
@@ -91,9 +94,9 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
         />
       ),
       canExpand: (completedSections: SectionId[]) =>
-        // completedSections.includes(SECTION_IDS.CUSTOMER) &&
-        // completedSections.includes(SECTION_IDS.INVOICE) &&
-        // completedSections.includes(SECTION_IDS.SALES) &&
+        completedSections.includes(SECTION_IDS.CUSTOMER) &&
+        completedSections.includes(SECTION_IDS.INVOICE) &&
+        completedSections.includes(SECTION_IDS.SALES) &&
         completedSections.includes(SECTION_IDS.CONTRACT),
     },
   ];
