@@ -103,6 +103,8 @@ export interface ContractInfo {
     service: Service;
     // 부가서비스 리스트
     additionalServices: Service[];
+    // 가입 완료 여부
+    isValidated: boolean;
 }
 
 // 서비스 정보 인터페이스
@@ -177,6 +179,8 @@ export interface SalesInfo {
   salesContactPoint?: string; // 접점
   finalSeller?: string; // 판매자=최종판매자:stg
   supporter?: string; // 서포터
+  // 가입 완료 여부
+  isValidated: boolean;
 }
 
 // UI용 등록 정보 인터페이스

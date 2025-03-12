@@ -11,10 +11,13 @@ import {
 } from './RegistrationSummary.styled';
 import { SECTION_IDS, SECTION_TITLES, REGISTRATION_STATUS } from '@constants/RegistrationConstants';
 import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRegistrationInfo } from '@hooks/useRegistrationInfo';
 import useRegistrationStore from '@stores/registration/RegistrationStore';
 import { useRegistrationMutation } from '@api/queries/registration/useRegistrationMutation';
+import useRegistrationContractStore from '@stores/registration/RegistrationContractStore';
+import useRegistrationDeviceStore from '@stores/registration/RegistrationDeviceStore';
+import useRegistrationSalesStore from '@stores/registration/RegistrationSalesStore';
 
 interface ContractSummaryProps {
   contractTabId: string;
@@ -29,12 +32,72 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
   const { setRegistrationInfo, updateRegistrationStatus } = useRegistrationStore();
   const [loading, setLoading] = useState(false);
   const registrationMutation = useRegistrationMutation();
+  
+  // 저장 버튼 활성화 상태 관리
+  const [isButtonEnabled, setIsButtonEnabled] = useState(false);
+  
+  // 각 스토어를 구독하여 변경 사항을 감지
+  useEffect(() => {
+    // 각 스토어의 상태를 확인하는 함수
+    const checkValidation = () => {
+      try {
+
+        const contractStore = useRegistrationContractStore.getState() as any;
+        const deviceStore = useRegistrationDeviceStore.getState() as any;
+        const salesStore = useRegistrationSalesStore.getState() as any;
+
+        // 개발 환경인 경우 useRegistrationInfo의 모킹 데이터 사용
+        let contractInfo: any;
+        let deviceInfo: any;
+        let salesInfo: any;
+
+        
+        if (process.env.NODE_ENV === 'development') {
+          contractInfo = { isValidated: true };
+          deviceInfo = { isValidated: true };
+          salesInfo = { isValidated: true };
+        } else {
+      
+        // 각 스토어에서 데이터 가져오기
+        //TODO : 개발환경 삭제, const 추가 필요
+        contractInfo = contractStore.getRegistrationContractInfo?.(contractTabId);
+        deviceInfo = deviceStore.getRegistrationDeviceInfo?.(contractTabId);
+        salesInfo = salesStore.getRegistrationSalesInfo?.(contractTabId);
+      }
+        // 모든 스토어의 isValidated 값 확인
+        const isAllValidated = 
+          (contractInfo?.isValidated || false) && 
+          (deviceInfo?.isValidated || false) && 
+          (salesInfo?.isValidated || false);
+        
+        setIsButtonEnabled(isAllValidated);
+      } catch (error) {
+        console.error('검증 상태 확인 중 오류 발생:', error);
+        setIsButtonEnabled(false);
+      }
+    };
+    
+    // 초기 검증 상태 확인
+    checkValidation();
+    
+    // 각 스토어 구독
+    const unsubscribeContract = useRegistrationContractStore.subscribe(checkValidation);
+    const unsubscribeDevice = useRegistrationDeviceStore.subscribe(checkValidation);
+    const unsubscribeSales = useRegistrationSalesStore.subscribe(checkValidation);
+    
+    // 컴포넌트 언마운트 시 구독 해제
+    return () => {
+      unsubscribeContract();
+      unsubscribeDevice();
+      unsubscribeSales();
+    };
+  }, [contractTabId]);
 
   const handleSave = async () => {
     try {
       setLoading(true);
 
-      // 1. 모든 데이터 가져오기 (현재는 customerStore만 구현됨)
+      // 1. 모든 데이터 가져오기
       const registrationInfo = useRegistrationInfo(contractTabId);
 
       // 2. zustand에 저장하고 상태를 PENDING으로 설정
@@ -220,7 +283,7 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
             color='primary'
             size='large'
             onClick={handleSave}
-            disabled={loading}
+            disabled={loading || !isButtonEnabled}
           >
             {loading ? '저장 중...' : '저장'}
           </Button>

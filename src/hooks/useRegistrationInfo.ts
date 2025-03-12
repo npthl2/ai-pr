@@ -56,7 +56,8 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
       sim: 'USIM',
       imei: '123456789012345',
       service: defaultServiceMock,
-      additionalServices: defaultAdditionalServicesMock
+      additionalServices: defaultAdditionalServicesMock,
+      isValidated: true
     };
     
     storeInvoiceInfo = {
@@ -102,7 +103,8 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
       salesDepartment: '온라인지점',
       salesContactPoint: '온라인',
       finalSeller: '홍길동',
-      supporter: '김지원'
+      supporter: '김지원',
+      isValidated: true
     };
   } else {
     // 개발 환경에서는 스토어에서 데이터를 가져옵니다
@@ -156,7 +158,8 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     sim: storeContractInfo?.sim || '', // SIM 정보 예시
     imei: storeContractInfo?.imei || '', // IMEI 정보 예시
     service: storeContractInfo?.service || defaultService,
-    additionalServices: storeContractInfo?.additionalServices || defaultAdditionalServices
+    additionalServices: storeContractInfo?.additionalServices || defaultAdditionalServices,
+    isValidated: storeContractInfo?.isValidated || false
   };
   
   // 테스트를 위한 Invoice 인터페이스 예시 데이터
@@ -205,7 +208,8 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     salesDepartment: storeSalesInfo?.salesDepartment || '',
     salesContactPoint: storeSalesInfo?.salesContactPoint || '',
     finalSeller: storeSalesInfo?.finalSeller || '',
-    supporter: storeSalesInfo?.supporter || ''
+    supporter: storeSalesInfo?.supporter || '',
+    isValidated: storeSalesInfo?.isValidated || false
   };
 
   const registrationInfo: RegistrationInfo = { 
