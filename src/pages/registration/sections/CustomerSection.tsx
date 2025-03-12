@@ -106,7 +106,12 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
         </LeftSection>
 
         <RightSection>
-          <Button variant='outlined' size='small' onClick={handleOnClick}>
+          <Button
+            variant='outlined'
+            size='small'
+            onClick={handleOnClick}
+            data-testid='name-verification-button'
+          >
             실명인증
           </Button>
         </RightSection>

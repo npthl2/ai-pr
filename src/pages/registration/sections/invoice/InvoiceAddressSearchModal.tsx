@@ -16,6 +16,7 @@ const InvoiceAddressSearchModal = ({
 }: InvoiceAddressSearchModalProps) => {
   return (
     <Dialog
+      data-testid='address-search-modal'
       title='주소 검색'
       size='medium'
       content={<DaumPostcode onComplete={onComplete} defaultQuery={postcode} />}

@@ -68,9 +68,10 @@ const Dialog = ({
   onClose,
   onConfirm,
   isConfirmDisabled = false,
+  ...props
 }: DialogProps) => {
   return (
-    <StyledDialog open={open} size={size} onClose={onClose}>
+    <StyledDialog open={open} size={size} onClose={onClose} {...props}>
       <StyledDialogTitle>
         <Typography
           variant='h6'
@@ -90,6 +91,7 @@ const Dialog = ({
             onClick={onClose}
             variant='outlined'
             sx={(theme) => ({ borderColor: theme.palette.grey[200] })}
+            data-testid='dialog-close-button'
           >
             <Typography variant='body1' sx={(theme) => ({ color: theme.palette.text.primary })}>
               {closeLabel}
@@ -102,6 +104,7 @@ const Dialog = ({
             color='primary'
             variant='contained'
             disabled={isConfirmDisabled}
+            data-testid='dialog-confirm-button'
           >
             <Typography
               variant='body1'

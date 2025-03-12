@@ -479,6 +479,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                     absoluteHelperText
                     onBlur={handleFocusOut('recipient')}
                     inputRef={recipientRef}
+                    data-testid='invoice-recipient-input'
                   />
                 )}
               </Box>
@@ -505,6 +506,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                           checked={invoiceFormData.invoiceType === option.value}
                           onChange={handleRadioChange('invoiceType')}
                           label={option.label}
+                          data-testid={`invoice-type-radio-${option.value}`}
                         />
                       ))}
                     </StyledRadioGroup>
@@ -523,6 +525,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                         helperText={helperText.invoiceEmailId}
                         absoluteHelperText
                         onBlur={handleFocusOut('invoiceEmailId')}
+                        data-testid='invoice-email-id-input'
                       />
                       <Box>
                         <Select
@@ -535,6 +538,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                           helperText={helperText.invoiceEmailDomainType}
                           absoluteHelperText
                           onClose={handleFocusOut('invoiceEmailDomainType')}
+                          data-testid='invoice-email-domain-type-select'
                         >
                           {invoiceEmailDomainOptions.map((option) => (
                             <MenuItem
@@ -560,6 +564,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                         helperText={helperText.invoiceEmailDomain}
                         absoluteHelperText
                         onBlur={handleFocusOut('invoiceEmailDomain')}
+                        data-testid='invoice-email-domain-input'
                       />
                     </Box>
                   )}
@@ -575,7 +580,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
               </LabelWrapper>
 
               {isSaved ? (
-                <Box>
+                <Box data-testid='invoice-address'>
                   <Typography variant='body2'>
                     {`${registrationInvoiceInfo?.invoicePostalCode} / ${registrationInvoiceInfo?.invoiceAddress} / ${registrationInvoiceInfo?.invoiceAddressDetail}`}
                   </Typography>
@@ -592,6 +597,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                           onClick={() => {
                             setIsPostcodeOpen(true);
                           }}
+                          data-testid='invoice-postal-code-search-icon'
                         />
                       }
                       value={invoiceFormData.invoicePostalCode}
@@ -605,6 +611,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                           : 'inactive'
                       }
                       onBlur={handleFocusOut('invoicePostalCode')}
+                      data-testid='invoice-postal-code-input'
                     />
                     <TextField
                       size='small'
@@ -621,6 +628,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                           : 'inactive'
                       }
                       onBlur={handleFocusOut('invoiceAddress')}
+                      data-testid='invoice-address-input'
                     />
                   </Box>
                   <TextField
@@ -644,6 +652,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                     }
                     absoluteHelperText
                     onBlur={handleFocusOut('invoiceAddressDetail')}
+                    data-testid='invoice-address-detail-input'
                   />
                 </Box>
               )}
@@ -692,6 +701,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                           checked={invoiceFormData.paymentMethod === option.value}
                           onChange={handleRadioChange('paymentMethod')}
                           label={option.label}
+                          data-testid={`payment-method-radio-${option.value}`}
                         />
                       ))}
                     </StyledRadioGroup>
@@ -716,12 +726,14 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                           helperText={helperText.bankCompany}
                           absoluteHelperText
                           onClose={handleFocusOut('bankCompany')}
+                          data-testid='invoice-bank-company-select'
                         >
                           {bankCompanyOptions.map((option) => (
                             <MenuItem
                               key={option.value}
                               value={option.value}
                               onClick={() => handleSelectChange('bankCompany', option.value)}
+                              data-testid={`invoice-bank-company-menu-item-${option.value}`}
                             >
                               {option.label}
                             </MenuItem>
@@ -740,6 +752,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                         helperText={helperText.bankAccount}
                         absoluteHelperText
                         onBlur={handleFocusOut('bankAccount')}
+                        data-testid='invoice-bank-account-input'
                       />
                     </Box>
                   )}
@@ -762,6 +775,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                           helperText={helperText.cardCompany}
                           absoluteHelperText
                           onClose={handleFocusOut('cardCompany')}
+                          data-testid='invoice-card-company-select'
                         >
                           {cardCompanyOptions.map((option) => (
                             <MenuItem
@@ -786,6 +800,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                         helperText={helperText.cardNumber}
                         absoluteHelperText
                         onBlur={handleFocusOut('cardNumber')}
+                        data-testid='invoice-card-number-input'
                       />
                     </Box>
                   )}
@@ -811,6 +826,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                         checked={invoiceFormData.paymentDate === option.value}
                         onChange={handleRadioChange('paymentDate')}
                         label={option.label}
+                        data-testid={`payment-date-radio-${option.value}`}
                       />
                     ))}
                   </StyledRadioGroup>
@@ -840,6 +856,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                     helperText={helperText.paymentName}
                     absoluteHelperText
                     onBlur={handleFocusOut('paymentName')}
+                    data-testid='invoice-payment-name-input'
                   />
                 )}
               </Box>
@@ -866,6 +883,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                     helperText={helperText.birthDate}
                     absoluteHelperText
                     onBlur={handleFocusOut('birthDate')}
+                    data-testid='invoice-birth-date-input'
                   />
                 )}
               </Box>
@@ -881,6 +899,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
               onClick={handleOnComplete}
               sx={{ position: 'absolute', bottom: 16, right: 16 }}
               disabled={isDisabled || isSaved}
+              data-testid='invoice-create-button'
             >
               청구정보 생성완료
             </Button>

@@ -26,6 +26,7 @@ const InvoiceListModal = ({
 
   return (
     <Dialog
+      data-testid='invoice-search-modal'
       title='청구정보조회'
       size='medium-large'
       confirmLabel={onConfirmLabel}
@@ -57,13 +58,14 @@ const InvoiceListModal = ({
               </TableHead>
               <TableBody>
                 {invoiceList.length > 0 &&
-                  invoiceList.map((invoice) => (
-                    <TableRow key={invoice.invoiceId}>
+                  invoiceList.map((invoice, index) => (
+                    <TableRow key={invoice.invoiceId} data-testid={`invoice-list-item-${index}`}>
                       <TableCell sx={{ width: '5%', paddingLeft: '20px' }}>
                         <Radio
                           size='small'
                           checked={selectedInvoice?.invoiceId === invoice.invoiceId}
                           onChange={() => setSelectedInvoice(invoice)}
+                          data-testid={`invoice-list-item-radio-${index}`}
                         />
                       </TableCell>
                       <TableCell>
