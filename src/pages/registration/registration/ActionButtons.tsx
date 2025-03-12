@@ -1,7 +1,7 @@
 import Button from '@components/Button';
 import { Box } from '@mui/material';
 import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants';
-
+import CheckIcon from '@mui/icons-material/Check';
 interface ActionButtonsProps {
   status: RegistrationStatusType;
   onGoHome: () => void;
@@ -30,7 +30,7 @@ const ActionButtons = ({ status, onGoHome, onGoCustomerSearch }: ActionButtonsPr
           onClick={onGoCustomerSearch}
           size="small"
         >
-          고객조회로 이동
+          <CheckIcon sx={{ mr: 0.5 }} /> 고객조회로 이동
         </Button>
       )}
     </Box>

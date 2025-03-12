@@ -52,7 +52,7 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     storeContractInfo = {
       contractType: '신규가입',
       sellType: '일반판매',
-      phoneNumber: '010-5555-5555',
+      phoneNumber: '010-1234-5678',
       sim: 'USIM',
       imei: '123456789012345',
       service: defaultServiceMock,

@@ -1,8 +1,7 @@
 import {
   StatusMessageContainer,
   GifContainer,
-  StatusMessage as StyledStatusMessage,
-  ErrorMessage
+  StatusMessage as StyledStatusMessage
 } from '../RegistrationRequest.styled';
 import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants';
 
@@ -36,9 +35,16 @@ const StatusMessage = ({ status, customerName, failReason }: StatusMessageProps)
       {status === REGISTRATION_STATUS.FAILED && (
         <StatusMessageContainer>
           <StyledStatusMessage>{customerName} 고객님의 가입을 실패하였습니다.</StyledStatusMessage>
-          <ErrorMessage>
-            실패 사유: {failReason || '가입한도를 초과했습니다.'}
-          </ErrorMessage>
+          <StyledStatusMessage>
+            실패사유: {failReason || (
+              <>
+                <span style={{ color: 'red' }}>가입한도</span>
+                를 
+                <span style={{ color: 'red' }}> 초과</span>
+                했습니다.
+              </>
+            )}
+          </StyledStatusMessage>
         </StatusMessageContainer>
       )}
     </>
