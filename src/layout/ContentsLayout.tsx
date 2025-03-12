@@ -126,30 +126,28 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
           <Breadcrumb activeTabLabel={['Home', currentTab?.label || '']} />
         </ContentHeader>
         <ContentsBG>
-          <Box
-            sx={{
-              display: currentTab?.id === TabInfo.CUSTOMER_SEARCH.id ? 'block' : 'none',
-              height: '100%',
-            }}
-          >
-            <CustomerDetailContainer />
-          </Box>
-          <Box
-            sx={{
-              display: currentTab?.id === TabInfo.SERVICE_MODIFICATION.id ? 'block' : 'none',
-              height: '100%',
-            }}
-          >
-            <ServiceModification />
-          </Box>
-          <Box
-            sx={{
-              display: currentTab?.id === TabInfo.NEW_SUBSCRIPTION.id ? 'block' : 'none',
-              height: '100%',
-            }}
-          >
+          {currentTab?.id === TabInfo.NEW_SUBSCRIPTION.id ? (
             <NewContract contractTabId={customerId} />
-          </Box>
+          ) : (
+            <>
+              <Box
+                sx={{
+                  display: currentTab?.id === TabInfo.CUSTOMER_SEARCH.id ? 'block' : 'none',
+                  height: '100%',
+                }}
+              >
+                <CustomerDetailContainer />
+              </Box>
+              <Box
+                sx={{
+                  display: currentTab?.id === TabInfo.SERVICE_MODIFICATION.id ? 'block' : 'none',
+                  height: '100%',
+                }}
+              >
+                <ServiceModification />
+              </Box>
+            </>
+          )}
         </ContentsBG>
       </TabContext>
     </ContentsContainer>
