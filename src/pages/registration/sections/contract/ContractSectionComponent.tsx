@@ -16,6 +16,7 @@ import useRegistrationContractStore from '@stores/registration/RegistrationContr
 
 import {
   SectionContainer,
+  SectionInfoContainer,
   SectionTitle,
   FormRow,
   FormLabel,
@@ -136,8 +137,9 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     setSelectedPhoneNumber(phoneNumber);
   };
   const handlePhoneNumberLastFourChange = (value: string) => {
-    if (value.length <= 4) {
-      setPhoneNumberLastFour(value);
+    const replacedValue = value.replace(/[^0-9]/g, '');
+    if (replacedValue.length <= 4) {
+      setPhoneNumberLastFour(replacedValue);
       setSelectedPhoneNumber(null);
       handleUpdateStoreAndValidationCompleteFields(contractTabId, {
         phoneNumber: '',
@@ -155,15 +157,16 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
 
   // SIM 핸들러
   const handleSimNumberChange = (value: string) => {
-    setSimNumber(value);
+    const replacedValue = value.replace(/[^0-9]/g, '');
+    setSimNumber(replacedValue);
     handleUpdateStoreAndValidationCompleteFields(contractTabId, {
       sim: '',
     });
     setValidationErrors((prev) => ({
       ...prev,
       simNumber: {
-        state: !value ? 'error' : 'active',
-        helperText: !value ? '필수' : '',
+        state: !replacedValue ? 'error' : 'active',
+        helperText: !replacedValue ? 'SIM을 입력해 주세요' : '',
       },
     }));
   };
@@ -178,7 +181,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
       ...prev,
       imeiNumber: {
         state: !value ? 'error' : 'active',
-        helperText: !value ? '필수' : '',
+        helperText: !value ? 'IMEI를 입력해 주세요' : '',
       },
     }));
   };
@@ -206,13 +209,13 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
 
   const handleDeviceModelName = async (imeiNumber: string): Promise<void> => {
     const response = await registrationContractService.getDeviceModelByIMEI(imeiNumber);
-    const deviceModelName = response.deviceModelName ?? '';
+    const deviceModelName = response.deviceModelNameAlias ?? '';
     setDeviceModelName(deviceModelName);
     setValidationErrors((prev) => ({
       ...prev,
       imeiNumber: {
         state: deviceModelName === '' ? 'error' : 'active',
-        helperText: deviceModelName === '' ? '모델명은 필수입니다' : '',
+        helperText: deviceModelName === '' ? '존재하는 모델이 없습니다' : '',
       },
     }));
   };
@@ -237,7 +240,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     // Check sales type
     if (!sellType) {
       errors.salesType.state = 'error';
-      errors.salesType.helperText = '선택필수수';
+      errors.salesType.helperText = '판매유형을 선택해 주세요요';
     } else {
       errors.salesType.state = 'active';
       errors.salesType.helperText = '';
@@ -254,11 +257,9 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
 
     // Check SIM
     if (!simNumber || simNumber === '') {
-      console.log('simNumber', simNumber);
       errors.simNumber.state = 'error';
-      errors.simNumber.helperText = '필수';
+      errors.simNumber.helperText = 'SIM을 입력해 주세요';
     } else {
-      console.log('simNumber', simNumber);
       errors.simNumber.state = 'active';
       errors.simNumber.helperText = '';
     }
@@ -266,7 +267,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     // Check IMEI
     if (!imeiNumber || imeiNumber === '') {
       errors.imeiNumber.state = 'error';
-      errors.imeiNumber.helperText = '필수';
+      errors.imeiNumber.helperText = 'IMEI를 입력해 주세요';
     } else {
       errors.imeiNumber.state = 'active';
       errors.imeiNumber.helperText = '';
@@ -275,7 +276,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     // Check service plan
     if (!selectedService?.serviceId || selectedService.serviceId === '') {
       errors.servicePlan.state = 'error';
-      errors.servicePlan.helperText = '필수';
+      errors.servicePlan.helperText = '요금제를 선택해 주세요';
     } else {
       errors.servicePlan.state = 'active';
       errors.servicePlan.helperText = '';
@@ -293,9 +294,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
         <TwoColumnContainer>
           <Column>
             {/* 가입기본정보 섹션 */}
-            <div
-              style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '227px' }}
-            >
+            <SectionInfoContainer>
               <SectionTitle>
                 <Typography variant='h5'>가입기본정보</Typography>
               </SectionTitle>
@@ -337,18 +336,15 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                   helperText={validationErrors.phoneNumber.helperText}
                   absoluteHelperText={true}
                   inputRef={phoneNumberInputRef}
-                  slotProps={{
-                    htmlInput: {
-                      maxLength: 4,
-                      inputMode: 'numeric',
-                      pattern: '[0-9]*',
-                    },
+                  inputProps={{
+                    maxLength: 4,
+                    inputMode: 'numeric',
+                    pattern: '[0-9]*',
                   }}
                 />
                 <ActionButton
                   variant='outlined'
                   size='small'
-                  sx={{ width: '61px', height: '28px' }}
                   onClick={handlePhoneNumberModalOpen}
                   disabled={phoneNumberLastFour.length !== 4}
                 >
@@ -356,10 +352,10 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 </ActionButton>
                 <Typography sx={{ ml: 1 }}>{selectedPhoneNumber?.phoneNumber ?? ''}</Typography>
               </FormRow>
-            </div>
+            </SectionInfoContainer>
 
             {/* 기기정보 섹션 */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
+            <SectionInfoContainer sx={{ mt: 1 }}>
               <SectionTitle>
                 <Typography variant='h5'>기기정보</Typography>
               </SectionTitle>
@@ -372,6 +368,11 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                   sx={{ width: '160px' }}
                   size='small'
                   variant='outlined'
+                  inputProps={{
+                    maxLength: 13,
+                    inputMode: 'numeric',
+                    pattern: '[0-9]*',
+                  }}
                   value={simNumber}
                   onChange={handleSimNumberChange}
                   onBlur={() => {
@@ -380,8 +381,8 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                     });
                   }}
                   state={validationErrors.simNumber.state}
-                  // absoluteHelperText={true}
-                  // helperText={validationErrors.simNumber.helperText}
+                  absoluteHelperText={true}
+                  helperText={validationErrors.simNumber.helperText}
                 />
               </FormRow>
 
@@ -406,26 +407,14 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                   helperText={validationErrors.imeiNumber.helperText}
                 />
 
-                <Typography
-                  variant='body1'
-                  sx={{
-                    flex: '0 0 auto',
-                    whiteSpace: 'nowrap',
-                    minWidth: '200px',
-                    display: 'inline-block',
-                  }}
-                >
-                  모델명: {deviceModelName}
-                </Typography>
+                <Typography variant='body1'>모델명: {deviceModelName}</Typography>
               </FormRow>
-            </div>
+            </SectionInfoContainer>
           </Column>
 
           <Column>
             {/* 상품정보 섹션 */}
-            <div
-              style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '227px' }}
-            >
+            <SectionInfoContainer>
               <SectionTitle>
                 <Typography variant='h5'>상품정보</Typography>
               </SectionTitle>
@@ -450,18 +439,14 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                   helperText={validationErrors.servicePlan.helperText}
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      height: '32px',
                       backgroundColor: '#ffffff',
                       width: '200px',
+                      height: '28px',
                     },
                   }}
                 />
                 <Typography
                   sx={{
-                    flex: '0 0 auto',
-                    whiteSpace: 'nowrap',
-                    minWidth: '200px',
-                    display: 'inline-block',
                     ml: 2,
                   }}
                 >
@@ -493,25 +478,26 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                   </ActionButton>
                 </Box>
               </FormRow>
-
-              {selectedAdditionalServices.length > 0 && (
-                <div>
-                  <h3>선택된 추가 서비스</h3>
-                  {selectedAdditionalServices.map((service) => (
-                    <Box
-                      key={service.serviceId}
-                      sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
-                    >
-                      <Chip
-                        label={service.serviceName}
-                        onDelete={() => handleRemoveAdditionalService(service.serviceId)}
-                        sx={{ mr: 1 }}
-                      />
-                    </Box>
-                  ))}
-                </div>
-              )}
-            </div>
+              <FormRow>
+                <FormLabel></FormLabel>
+                {selectedAdditionalServices.length > 0 && (
+                  <div>
+                    {selectedAdditionalServices.map((service) => (
+                      <Box
+                        key={service.serviceId}
+                        sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
+                      >
+                        <Chip
+                          sx={{ mr: 1 }}
+                          label={`${service.serviceName} - ${service.serviceValue.toLocaleString()}원`}
+                          onDelete={() => handleRemoveAdditionalService(service.serviceId)}
+                        />
+                      </Box>
+                    ))}
+                  </div>
+                )}
+              </FormRow>
+            </SectionInfoContainer>
           </Column>
         </TwoColumnContainer>
 
@@ -553,36 +539,6 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
             exclusiveServiceIds: service.exclusiveServiceIds,
           }))}
         />
-
-        {/* Contract Store Debug Display */}
-        {/* <Box sx={{ mt: 4, borderTop: '1px dashed #ccc', pt: 2 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant='h6'>Contract Store Data</Typography>
-          <ActionButton
-            variant='outlined'
-            size='small'
-            onClick={() => setShowDebugInfo(!showDebugInfo)}
-          >
-            {showDebugInfo ? 'Hide Details' : 'Show Details'}
-          </ActionButton>
-        </Box>
-
-        {showDebugInfo && currentContract && (
-          <Box
-            sx={{
-              backgroundColor: '#f5f5f5',
-              p: 2,
-              borderRadius: 1,
-              maxHeight: '300px',
-              overflow: 'auto',
-            }}
-          >
-            <Typography variant='body2' component='pre' sx={{ whiteSpace: 'pre-wrap' }}>
-              {JSON.stringify(currentContract, null, 2)}
-            </Typography>
-          </Box>
-        )}
-      </Box> */}
       </SectionContainer>
     </Suspense>
   );

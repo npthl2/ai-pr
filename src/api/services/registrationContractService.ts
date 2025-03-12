@@ -14,6 +14,7 @@ export interface PhoneNumberAvailabilityResponse {
 export interface DeviceModelResponse {
   deviceModelId: string;
   deviceModelName: string;
+  deviceModelNameAlias: string;
   deviceType: string;
   sellingPrice: number;
 }

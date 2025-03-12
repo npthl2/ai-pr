@@ -6,7 +6,7 @@ export const StyledDialog = styled(Dialog)(({ theme }) => ({
     borderRadius: 8,
     boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
     margin: '32px',
-    maxWidth: '648px',
+    maxWidth: '600px',
     width: '100%',
   },
   '& .MuiDialog-container': {
@@ -17,12 +17,10 @@ export const StyledDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 export const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
-  width: 600,
-  height: 60,
-  paddingTop: 16,
-  paddingRight: 24,
-  paddingBottom: 16,
-  paddingLeft: 24,
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  mb: 3,
 }));
 
 export const StyledTableContainer = styled(Box)(({ theme }) => ({
@@ -43,3 +41,27 @@ export const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
   paddingBottom: 24,
   paddingLeft: 24,
 }));
+
+export const RadioIcon = styled(Box)`
+  width: 20px;
+  height: 20px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+`;
+
+export const CheckedRadioIcon = styled(Box)`
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & > div {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #fff;
+  }
+`;

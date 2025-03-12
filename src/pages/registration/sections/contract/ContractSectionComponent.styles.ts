@@ -7,8 +7,15 @@ export const SectionContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   gap: '24px',
   borderRadius: '8px',
-  // height: '227px',
+  width: '100%',
   height: '100%',
+}));
+
+export const SectionInfoContainer = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(1),
+  minWidth: '227px',
 }));
 
 export const SectionTitle = styled('div')(({ theme }) => ({
@@ -51,6 +58,10 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     borderRadius: theme.shape.borderRadius,
     backgroundColor: '#ffffff',
+    height: '28px',
+  },
+  '& .MuiFormControl-root': {
+    minWidth: '160px',
   },
 }));
 
@@ -66,6 +77,7 @@ export const PhoneNumberField = styled(TextField)(({ theme }) => ({
 export const ActionButton = styled(Button)(({ theme }) => ({
   margin: 0,
   padding: 0,
+  height: '28px',
 }));
 
 export const TwoColumnContainer = styled(Box)({
@@ -73,11 +85,13 @@ export const TwoColumnContainer = styled(Box)({
   gap: '20px',
 });
 
-export const Column = styled(Box)({
+export const Column = styled(Box)(({ theme }) => ({
+  width: '100%',
+  gap: theme.spacing(2),
   flex: 1,
   borderRight: '1px solid #e0e0e0',
   '&:last-child': {
     borderRight: 'none',
   },
   padding: '0 10px',
-});
+}));

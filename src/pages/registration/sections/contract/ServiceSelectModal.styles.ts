@@ -10,6 +10,8 @@ export const styles = {
     p: 4,
     borderRadius: 1,
     gap: '24px',
+    marginLeft: '24px',
+    marginRight: '24px',
   },
   modalHeader: {
     display: 'flex',
@@ -24,7 +26,7 @@ export const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '552px',
+    width: '100%',
     height: '64px',
     paddingTop: '16px',
     paddingRight: '24px',
@@ -35,13 +37,15 @@ export const styles = {
 
   searchInput: {
     width: '362px',
+    height: '32px',
+    backgroundColor: '#FFFFFF',
   },
   searchButton: {
-    minWidth: '80px',
+    minWidth: '61px',
+    padding: '8px',
   },
   tableContainer: {
-    width: 552,
-    height: 249,
+    height: '300px',
     overflow: 'auto',
   },
   tableTitle: {

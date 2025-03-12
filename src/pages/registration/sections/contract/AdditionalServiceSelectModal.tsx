@@ -112,10 +112,6 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
     onClose();
   };
 
-  // const isServiceSelected = (serviceId: string) => {
-  //   return selectedAdditionalServices.some((s) => s.serviceId === serviceId);
-  // };
-
   return (
     <Modal open={open} onClose={onClose}>
       <Box sx={{ ...styles.modalContainer, width: '800px', minHeight: '800px' }}>
@@ -128,45 +124,44 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
           </IconButton>
         </Box>
 
-        <Box sx={{ ...styles.searchContainer, width: '100%' }}>
-          <Box
-            sx={{
-              height: '32px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-            }}
-          >
-            <Typography sx={{ minWidth: '73px' }}>부가서비스명</Typography>
-            <TextField
-              value={filterText}
-              onChange={(e) => setFilterText(e.target.value)}
-              size='small'
-              sx={{ width: '100%' }}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  handleFilter();
-                  e.preventDefault();
-                }
-              }}
-            />
-          </Box>
-          <Button
-            onClick={handleFilter}
-            variant='contained'
-            iconComponent={<SearchIcon />}
-            iconPosition='left'
-            size='small'
-          >
-            조회
-          </Button>
-        </Box>
-
         <Box>
-          <Box sx={{ mb: 2 }}>
+          <Box sx={{ ...styles.searchContainer, width: '100%' }}>
+            <Box
+              sx={{
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+              }}
+            >
+              <Typography sx={{ minWidth: '73px' }}>부가서비스명</Typography>
+              <TextField
+                value={filterText}
+                onChange={(e) => setFilterText(e.target.value)}
+                size='small'
+                sx={styles.searchInput}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleFilter();
+                    e.preventDefault();
+                  }
+                }}
+              />
+            </Box>
+            <Button
+              onClick={handleFilter}
+              variant='contained'
+              iconComponent={<SearchIcon />}
+              iconPosition='left'
+              size='small'
+            >
+              조회
+            </Button>
+          </Box>
+          <Box sx={{ mb: 2, mt: 3 }}>
             <Typography variant='h3' component='div'>
               부가서비스 목록
-              <Typography variant='h4' component='span' sx={{ color: '#6E7782' }}>
+              <Typography variant='h4' component='span' sx={{ color: '#6E7782', ml: 1 }}>
                 {filteredServices.length}
               </Typography>
             </Typography>
@@ -220,13 +215,22 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
               {`${unselectableAdditionalService.serviceName}은(는) 선택이 불가능한 부가서비스 입니다.`}
             </Alert>
           )}
-
-          <Typography variant='h6' sx={{ mt: 2 }}>
-            선택된 부가서비스 {selectedAdditionalServices.length}
-          </Typography>
+          <Box sx={{ mb: 2, mt: 3 }}>
+            <Typography variant='h3' component='div'>
+              선택된 부가서비스
+              <Typography
+                variant='h4'
+                component='span'
+                sx={{ color: '#6E7782', ml: 1 }}
+              ></Typography>
+              {selectedAdditionalServices.length}
+            </Typography>
+          </Box>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
             {selectedAdditionalServices.map((service) => (
               <Chip
+                color='primary'
+                variant='outlined'
                 key={service.serviceId}
                 label={`${service.serviceName} - ${service.serviceValue.toLocaleString()}원`}
                 onDelete={() => handleSelect(service)}

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
 import { DialogContent, Radio, IconButton, Typography, Box } from '@mui/material';
 import { Table, TableHead, TableBody } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -17,6 +16,8 @@ import {
   StyledDialogTitle,
   StyledTableContainer,
   StyledDialogActions,
+  RadioIcon,
+  CheckedRadioIcon,
 } from './PhoneNumberSelectModal.style';
 
 interface PhoneNumber {
@@ -98,21 +99,12 @@ const PhoneNumberSelectModal: React.FC<PhoneNumberSelectModalProps> = ({
   };
 
   return (
-    <StyledDialog open={open} onClose={handleClose} maxWidth='md' fullWidth>
+    <StyledDialog open={open} onClose={handleClose}>
       <StyledDialogTitle>
         <Typography variant='h6' component='div'>
           전화번호 선택
         </Typography>
-        <IconButton
-          aria-label='close'
-          onClick={handleClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
+        <IconButton onClick={onClose} size='small'>
           <CloseIcon />
         </IconButton>
       </StyledDialogTitle>
@@ -121,7 +113,7 @@ const PhoneNumberSelectModal: React.FC<PhoneNumberSelectModalProps> = ({
         <Box sx={{ mb: 2 }}>
           <Typography variant='h3' component='div'>
             전화번호 목록
-            <Typography variant='h4' component='span' sx={{ color: '#6E7782' }}>
+            <Typography variant='h4' component='span' sx={{ color: '#6E7782', ml: 1 }}>
               {phoneNumbers.length}
             </Typography>
           </Typography>
@@ -152,37 +144,11 @@ const PhoneNumberSelectModal: React.FC<PhoneNumberSelectModalProps> = ({
                         onChange={() => handleRadioChange(phoneNumber)}
                         value={phoneNumber.id}
                         name='phone-number-radio'
-                        icon={
-                          <Box
-                            sx={{
-                              width: 20,
-                              height: 20,
-                              border: '1px solid #ccc',
-                              borderRadius: '50%',
-                            }}
-                          />
-                        }
+                        icon={<RadioIcon />}
                         checkedIcon={
-                          <Box
-                            sx={{
-                              width: 20,
-                              height: 20,
-                              borderRadius: '50%',
-                              backgroundColor: '#000',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                width: 10,
-                                height: 10,
-                                borderRadius: '50%',
-                                backgroundColor: '#fff',
-                              }}
-                            />
-                          </Box>
+                          <CheckedRadioIcon>
+                            <Box />
+                          </CheckedRadioIcon>
                         }
                       />
                     </TableCell>

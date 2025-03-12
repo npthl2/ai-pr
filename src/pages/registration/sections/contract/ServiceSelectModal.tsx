@@ -29,7 +29,6 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
   const [selectedPlan, setSelectedPlan] = useState<PlanItem | null>(null);
   const { data } = useServicesQuery();
   const planList = useMemo(() => {
-    console.log('memo!!!!!!!!!!!!memo', data);
     return (
       data?.map((plan) => ({
         id: plan.serviceId,
@@ -41,7 +40,6 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
   const [filteredPlanList, setFilteredPlanList] = useState<PlanItem[]>(planList);
 
   useEffect(() => {
-    console.log('planList!!!!!!!!!!!!planList', planList);
     setFilteredPlanList(planList);
   }, [planList]);
 
@@ -63,11 +61,6 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
     }
   };
 
-  const handleServiceSelect = (service: PlanItem) => {
-    onSelect(service);
-    onClose();
-  };
-
   return (
     <Modal open={open} onClose={onClose}>
       <Box sx={styles.modalContainer}>
@@ -80,16 +73,8 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
           </IconButton>
         </Box>
 
-        <Box sx={styles.searchContainer}>
-          <Box
-            sx={{
-              width: '419px',
-              height: '32px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-            }}
-          >
+        <Box sx={{ height: '440px' }}>
+          <Box sx={styles.searchContainer}>
             <Typography sx={{ minWidth: '60px' }}>요금제명</Typography>
             <TextField
               value={searchText}
@@ -103,23 +88,21 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
                 }
               }}
             />
+            <Button
+              onClick={handleSearch}
+              variant='contained'
+              iconComponent={<SearchIcon />}
+              iconPosition='left'
+              size='small'
+              sx={styles.searchButton}
+            >
+              조회
+            </Button>
           </Box>
-          <Button
-            onClick={handleSearch}
-            variant='contained'
-            iconComponent={<SearchIcon />}
-            iconPosition='left'
-            size='small'
-          >
-            조회
-          </Button>
-        </Box>
-
-        <Box>
-          <Box sx={{ mb: 2 }}>
+          <Box sx={{ mb: 2, mt: 3 }}>
             <Typography variant='h3' component='div'>
               요금제 목록
-              <Typography variant='h4' component='span' sx={{ color: '#6E7782' }}>
+              <Typography variant='h4' component='span' sx={{ color: '#6E7782', ml: 1 }}>
                 {filteredPlanList.length}
               </Typography>
             </Typography>
