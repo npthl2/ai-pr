@@ -12,5 +12,6 @@ export const useInvoiceQuery = (customerId: string) => {
       }
       return [];
     },
+    enabled: !!customerId,
   });
 };

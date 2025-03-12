@@ -124,7 +124,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
   const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
   const customerInfo = getRegistrationCustomerInfo(contractTabId);
   // to-do : 수정
-  const activeCustomerId = customerInfo?.customerId || 'C-0000000000';
+  const activeCustomerId = customerInfo?.customerId ?? '';
   const { getRegistrationInvoiceInfo, setRegistrationInvoiceInfo } = useRegistrationInvoiceStore();
   const registrationInvoiceInfo = getRegistrationInvoiceInfo(contractTabId);
   const openToast = useToastStore((state) => state.openToast);
@@ -420,7 +420,8 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
           onClick={() => {
             setModalOpen(true);
           }}
-          disabled={invoiceList?.length === 0 || isSaved}
+          disabled={!activeCustomerId || invoiceList?.length === 0 || isSaved}
+          data-testid='invoice-search-button'
         >
           청구정보조회
         </Button>
