@@ -12,7 +12,7 @@ type LoginErrorResponse = {
 };
 
 export const useLoginMutation = () => {
-  const { setAccessToken } = useAuthStore();
+  const { setAuth } = useAuthStore();
   const { setMemberInfo } = useMemberStore();
   const navigate = useNavigate();
 
@@ -37,7 +37,7 @@ export const useLoginMutation = () => {
             authorities: rawData.authorities,
           },
         };
-        setAccessToken(loginResponse.accessToken, loginResponse.memberInfo);
+        setAuth();
         setMemberInfo(loginResponse.memberInfo);
         navigate('/', { replace: true });
       }

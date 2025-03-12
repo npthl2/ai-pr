@@ -1,94 +1,52 @@
 import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
-import { MemberInfo } from '@model/Auth';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import useMemberStore from './MemberStore';
 
 interface AuthState {
   isAuthenticated: boolean;
-  accessToken: string | null;
-  memberInfo: MemberInfo | null;
-  setAccessToken: (token: string, memberInfo: MemberInfo) => void;
-  setAuth: (memberInfo: MemberInfo) => void;
+  setAuth: () => void;
   logout: () => void;
 }
 
 const initialState = {
   isAuthenticated: false,
-  accessToken: null,
-  memberInfo: null,
 };
 
-// localStorage에서 상태 확인
-const checkStoredState = () => {
-  try {
-    const storedData = localStorage.getItem('auth-storage');
-    if (!storedData) return initialState;
-
-    const { state } = JSON.parse(storedData);
-
-    // 상태가 불완전하면 초기화
-    if (state.isAuthenticated && (!state.accessToken || !state.memberInfo)) {
-      console.log('Incomplete auth state detected, resetting...');
-      localStorage.removeItem('auth-storage');
-      return initialState;
-    }
-
-    return state;
-  } catch (error) {
-    console.error('Error checking stored state:', error);
-    localStorage.removeItem('auth-storage');
-    return initialState;
-  }
-};
+const STORE_VERSION = 1;
+const STORE_KEY = 'auth-storage';
+const STORE_NAME = 'Auth Store';
 
 const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      ...checkStoredState(),
-      setAccessToken: (token: string, memberInfo: MemberInfo) => {
-        if (!token || !memberInfo) {
-          set(initialState);
-          return;
-        }
-        console.log('Setting access token and member info:', { token, memberInfo });
+      isAuthenticated: false,
+      setAuth: () => {
         set({
-          accessToken: token,
-          memberInfo,
           isAuthenticated: true,
         });
       },
-      setAuth: (memberInfo: MemberInfo) => {
-        if (!memberInfo) {
-          set(initialState);
-          return;
-        }
-        console.log('Setting member info:', memberInfo);
-        set((state) => ({
-          ...state,
-          memberInfo,
-          isAuthenticated: Boolean(state.accessToken),
-        }));
-      },
       logout: () => {
-        console.log('Logging out');
-        set(initialState);
-        localStorage.removeItem('auth-storage');
+        set({ isAuthenticated: false });
+        useMemberStore.getState().clearMemberInfo();
       },
     }),
     {
-      name: 'auth-storage',
+      name: STORE_KEY,
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({
-        accessToken: state.accessToken,
-        memberInfo: state.memberInfo,
-        isAuthenticated: state.isAuthenticated,
-      }),
+      version: STORE_VERSION,
+      migrate: (persistedState, persistedVersion) => {
+        if (persistedVersion < STORE_VERSION) {
+          return initialState;
+        }
+        return persistedState as AuthState;
+      },
     },
   ),
 );
 
 if (import.meta.env.DEV) {
-  mountStoreDevtool('Auth Store', useAuthStore);
+  mountStoreDevtool(STORE_NAME, useAuthStore);
 }
 
 export default useAuthStore;
