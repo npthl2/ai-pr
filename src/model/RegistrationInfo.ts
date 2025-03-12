@@ -154,8 +154,9 @@ export interface InvoiceInfo {
 // 기기 정보 인터페이스
 export interface DeviceInfo {
     deviceId?: string;
-    deviceName: string;
-    deviceEngagementType: 'installment' | 'immediate';  // 할부/즉납
+    deviceModelName: string;  // 기기 모델명
+    deviceModelNameAlias?: string;  // 기기 모델명 별칭
+    deviceEngagementType: 'PUBLIC_POSTED_SUPPERT' | 'SELECTED';  // 공시지원금/선택약정
     deviceSponsorName: string | '통합스폰서'; 
     deviceEngagementPeriod: number;  // 약정기간 12 || 24
     deviceEngagementName: '공시지원금' | '선택약정';  // 공시지원금/선택약정  
@@ -164,9 +165,10 @@ export interface DeviceInfo {
     devicePrepaidPrice: number;  // 선납금
     deviceInstallmentAmount: number;  // 할부원금
     deviceInstallmentFee: number;  // 총 할부수수료
-    deviceTotalPrice: number;  // 총 금액
+    deviceTotalPriceAmout: number;  // 총 결제금액
     deviceInstallmentPeriod: number;  // 분납개월수
     monthlyInstallmentPrice: number;  // 월/최종분납금
+    isValidated: boolean;  // 완료여부
 }
 
 // 판매 정보 인터페이스
