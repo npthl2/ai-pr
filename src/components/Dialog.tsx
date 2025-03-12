@@ -92,6 +92,7 @@ const Dialog = ({
             onClick={onClose}
             variant='outlined'
             sx={(theme) => ({ borderColor: theme.palette.grey[200] })}
+            data-testid='component-dialog-close-button'
           >
             <Typography variant='body1' sx={(theme) => ({ color: theme.palette.text.primary })}>
               {closeLabel}
@@ -104,6 +105,7 @@ const Dialog = ({
             color='primary'
             variant='contained'
             disabled={isConfirmDisabled}
+            data-testid='component-dialog-confirm-button'
           >
             <Typography
               variant='body1'

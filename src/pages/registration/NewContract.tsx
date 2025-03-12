@@ -129,7 +129,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
             behavior: 'smooth',
           });
         }
-      }, 500);
+      }, 800);
     }
   };
 

@@ -61,11 +61,11 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
     useRegistrationCustomerStore();
   const [customer, setCustomer] = useState<RegistrationCustomerInfo>(
     getRegistrationCustomerInfo(contractTabId) || {
-      name: '이영희',
-      rrno: '9001011234567',
-      isConsentPersonalInfo: true,
-      rrnoIssueDate: '20240101',
-      isConsentIdentityVerification: true,
+      name: '',
+      rrno: '',
+      isConsentPersonalInfo: false,
+      rrnoIssueDate: '',
+      isConsentIdentityVerification: false,
     },
   );
 
@@ -103,7 +103,7 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
       return '주민번호를 입력해주세요.';
     }
 
-    if (rrno.length > 5) {
+    if (rrno.length > 6) {
       const year = parseInt(rrno.substring(0, 2));
       const month = parseInt(rrno.substring(2, 4));
       const day = parseInt(rrno.substring(4, 6));
@@ -123,12 +123,20 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
       if (rrno.length > 6 && ![1, 2, 3, 4].includes(genderDigit)) {
         return '성별을 확인해주세요.';
       }
+
+      if (month < 1 || month > 12 || day < 1 || day > 31) {
+        return '주민등록증 발급일자를 확인해주세요.';
+      }
     }
 
     return '';
   };
 
   const validateRrnoIssueDate = (rrnoIssueDate: string) => {
+    if (!customer.rrnoIssueDate || customer.rrnoIssueDate.length < 8) {
+      return '주민등록증 발급일자를 입력해주세요.';
+    }
+
     if (rrnoIssueDate.length === 8) {
       const month = parseInt(rrnoIssueDate.substring(4, 6));
       const day = parseInt(rrnoIssueDate.substring(6, 8));
@@ -151,26 +159,27 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
   const handleChange = (name: string) => (value: string) => {
     if (name === 'name') {
       setNameError('');
-      if (!value.trim()) {
-        setNameError('이름을 입력해주세요.');
-      }
-    } else if (name === 'rrno') {
-      const numericValue = value.replace(/-/g, '');
-      if (!/^\d*$/.test(numericValue)) return;
-      if (numericValue.length > 13) return;
+    }
 
+    if (name === 'rrno') {
+      const numericValue = value.replace(/-/g, '');
+      if (!/^\d*$/.test(numericValue)) {
+        return;
+      }
+      if (numericValue.length > 13) {
+        return;
+      }
       setRrnoError('');
-      const error = validateRrno(numericValue);
-      setRrnoError(error);
       value = numericValue;
-    } else if (name === 'rrnoIssueDate') {
+    }
+
+    if (name === 'rrnoIssueDate') {
       if (!/^\d*$/.test(value)) return;
       if (value.length > 8) return;
 
       setRrnoIssueDateError('');
-      const error = validateRrnoIssueDate(value);
-      setRrnoIssueDateError(error);
     }
+
     setCustomer({
       ...customer,
       [name]: value,
@@ -188,9 +197,8 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
         setRrnoError(error);
       }
     } else if (name === 'rrnoIssueDate') {
-      if (!customer.rrnoIssueDate || customer.rrnoIssueDate.length < 8) {
-        setRrnoIssueDateError('주민등록증 발급일자를 입력해주세요.');
-      }
+      const error = validateRrnoIssueDate(customer.rrnoIssueDate || '');
+      setRrnoIssueDateError(error);
     }
   };
 
@@ -321,6 +329,7 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
                 error={!!nameError}
                 state={nameError ? 'error' : 'inactive'}
                 helperText={nameError}
+                data-testid='name-field'
               />
             ) : (
               <Typography sx={{ ml: -3 }}>{customer.name}</Typography>
@@ -345,6 +354,7 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
                 error={!!rrnoError}
                 state={rrnoError ? 'error' : 'inactive'}
                 helperText={rrnoError}
+                data-testid='rrno-field'
               />
             ) : (
               <Typography>{formatRrno(customer.rrno || '')}</Typography>
@@ -361,7 +371,11 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
 
             <StyledFormControlLabel
               control={
-                <StyledCheckbox size='small' disabled={isVerificationCompleted && isNameVerified} />
+                <StyledCheckbox
+                  size='small'
+                  disabled={isVerificationCompleted && isNameVerified}
+                  data-testid='personal-info-consent'
+                />
               }
               label='필수동의'
               checked={customer.isConsentPersonalInfo}
@@ -376,6 +390,7 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
             size='small'
             onClick={handleOnClick}
             disabled={!isVerificationEnabled || customer.verificationResult}
+            data-testid='verification-button'
           >
             실명인증
           </VerificationButton>
@@ -386,36 +401,45 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
 
   const renderCustomerVerification = () => {
     return (
-      <VerificationContainer>
+      <VerificationContainer data-testid='customer-verification-line'>
         <VerificationContent>
           <VerificationTitle>고객검증</VerificationTitle>
           <VerificationLabel>실명확인결과</VerificationLabel>
           {customer.verificationResult ? (
             <>
-              <VerificationStatus success>정상</VerificationStatus>
+              <VerificationStatus success data-testid='verification-status'>
+                정상
+              </VerificationStatus>
               <VerificationCheckButton
                 variant='outlined'
                 size='small'
                 color='primary'
                 onClick={handleCheckAvailableContract}
                 disabled={availableContractCount !== undefined && availableContractCount > 0}
+                data-testid='verification-check-button'
               >
                 고객정보사전체크
               </VerificationCheckButton>
               {availableContractCount !== undefined && (
                 <>
                   {availableContractCount !== 0 ? (
-                    <VerificationStatus success>통과</VerificationStatus>
+                    <VerificationStatus success data-testid='verification-pass-status'>
+                      통과
+                    </VerificationStatus>
                   ) : (
-                    <VerificationStatus>미통과</VerificationStatus>
+                    <VerificationStatus data-testid='verification-fail-status'>
+                      미통과
+                    </VerificationStatus>
                   )}
-                  <VerificationLabel>가입가능회선</VerificationLabel>
+                  <VerificationLabel data-testid='available-contract-count'>
+                    가입가능회선
+                  </VerificationLabel>
                   <Typography>{availableContractCount}</Typography>
                 </>
               )}
             </>
           ) : (
-            <VerificationStatus>실패</VerificationStatus>
+            <VerificationStatus data-testid='verification-status'>실패</VerificationStatus>
           )}
         </VerificationContent>
       </VerificationContainer>
@@ -430,7 +454,7 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
         title='부정가입확인 - 실명인증'
         size='small'
         content={
-          <Box>
+          <Box data-testid='verification-modal'>
             <DialogTitle variant='h3'>실명확인</DialogTitle>
             <DialogContent>
               <DialogLabel variant='h6'>증명자료 구분</DialogLabel>
@@ -451,6 +475,7 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
                 value={customer.rrnoIssueDate || ''}
                 onBlur={handleBlur('rrnoIssueDate')}
                 onChange={handleChange('rrnoIssueDate')}
+                data-testid='rrno-issue-date-field'
               />
             </DialogContent>
 
@@ -458,12 +483,22 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
               <DialogLabel variant='h6'>본인조회동의</DialogLabel>
               <RadioGroup>
                 <StyledRadioLabel
-                  control={<Radio checked={customer.isConsentIdentityVerification} />}
+                  control={
+                    <Radio
+                      checked={customer.isConsentIdentityVerification}
+                      data-testid='identity-verification-consent'
+                    />
+                  }
                   label='동의'
                   onChange={() => handleRadioChange(true)}
                 />
                 <StyledRadioLabelSecond
-                  control={<Radio checked={!customer.isConsentIdentityVerification} />}
+                  control={
+                    <Radio
+                      checked={!customer.isConsentIdentityVerification}
+                      data-testid='identity-verification-consent-no'
+                    />
+                  }
                   label='미동의'
                   onChange={() => handleRadioChange(false)}
                 />
@@ -477,6 +512,7 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
                     rrnoIssueDateError !== ''
                   }
                   onClick={handleNameVerification}
+                  data-testid='verification-auth-button'
                 >
                   실명인증
                 </AuthButton>
@@ -488,7 +524,11 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
               <DialogResultContainer>
                 <DialogResultGrid>
                   <DialogResultLabel variant='h6'>실명확인결과</DialogResultLabel>
-                  <DialogResultValue variant='h6' success={customer.verificationResult}>
+                  <DialogResultValue
+                    variant='h6'
+                    success={customer.verificationResult}
+                    data-testid='verification-result'
+                  >
                     {!isVerificationCompleted ? '' : customer.verificationResult ? '성공' : '실패'}
                   </DialogResultValue>
 
@@ -496,7 +536,11 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
                   <DialogResultValue variant='h6'>{customer.organization}</DialogResultValue>
 
                   <DialogResultLabel variant='h6'>실명인증결과</DialogResultLabel>
-                  <DialogResultValue variant='h6' success={customer.verificationResult}>
+                  <DialogResultValue
+                    variant='h6'
+                    success={customer.verificationResult}
+                    data-testid='verification-status'
+                  >
                     {!isVerificationCompleted ? '' : customer.verificationResult ? '정상' : '실패'}
                   </DialogResultValue>
                 </DialogResultGrid>
