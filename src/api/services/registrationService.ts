@@ -1,10 +1,6 @@
 import { RegistrationRequest, RegistrationResponseData, RegistrationStatusResponseData } from '@model/RegistrationInfo';
-import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants';
 import baseService from './baseService';
-import { CommonResponse, CommonStatus } from '@model/common/CommonResponse';
-
-// 개발 환경에서 사용할 임시 상태 저장소
-const devStatusMap: Record<string, { status: RegistrationStatusType, createdAt: number }> = {};
+import { CommonResponse } from '@model/common/CommonResponse';
 
 const registrationService = {
   // 계약 정보를 registrationInfo 및 outbox 테이블에 저장
