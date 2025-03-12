@@ -8,6 +8,8 @@ import {
   ButtonContainer,
   LeftButtonGroup,
   RightButtonGroup,
+  ItemLabel,
+  ItemValue,
 } from './RegistrationSummary.styled';
 import { SECTION_IDS, SECTION_TITLES, REGISTRATION_STATUS } from '@constants/RegistrationConstants';
 import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
@@ -172,16 +174,16 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
           <Box>
             <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.INVOICE]}</Typography>
             <SummaryItem>
-              <Typography variant='body2'>납부자명</Typography>
-              <Typography variant='body2' color='text.secondary'>
-                {customerInfo?.name || '-'}
-              </Typography>
+              <ItemLabel>납부자명</ItemLabel>
+              <ItemValue>
+                {customerInfo?.name}
+              </ItemValue>
             </SummaryItem>
             <SummaryItem>
-              <Typography variant='body2'>납부방법</Typography>
-              <Typography variant='body2' color='text.secondary'>
-                -
-              </Typography>
+              <ItemLabel>납부방법</ItemLabel>
+              <ItemValue>
+                
+              </ItemValue>
             </SummaryItem>
           </Box>
           <Divider />
@@ -189,10 +191,10 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
           <Box>
             <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.SALES]}</Typography>
             <SummaryItem>
-              <Typography variant='body2'>판매채널정보</Typography>
-              <Typography variant='body2' color='text.secondary'>
-                -
-              </Typography>
+              <ItemLabel>판매채널정보</ItemLabel>
+              <ItemValue>
+                
+              </ItemValue>
             </SummaryItem>
           </Box>
           <Divider />
@@ -200,10 +202,10 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
           <Box>
             <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.CONTRACT]}</Typography>
             <SummaryItem>
-              <Typography variant='body2'>개통요금제</Typography>
-              <Typography variant='body2' color='text.secondary'>
-                -
-              </Typography>
+              <ItemLabel>개통요금제</ItemLabel>
+              <ItemValue>
+                
+              </ItemValue>
             </SummaryItem>
           </Box>
           <Divider />
@@ -211,58 +213,60 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
           <Box>
             <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.DEVICE]}</Typography>
             <SummaryItem>
-              <Typography variant='body2'>스폰서정책</Typography>
-              <Typography variant='body2' color='text.secondary'>
-                -
-              </Typography>
+              <ItemLabel>스폰서정책</ItemLabel>
+              <ItemValue>
+                
+              </ItemValue>
             </SummaryItem>
             <SummaryItem>
-              <Typography variant='body2'>스폰서 옵션</Typography>
-              <Typography variant='body2' color='text.secondary'>
-                -
-              </Typography>
+              <ItemLabel>스폰서 옵션</ItemLabel>
+              <ItemValue>
+                
+              </ItemValue>
+            </SummaryItem>
+            <Divider />
+            <SummaryItem>
+              <ItemLabel>출고가</ItemLabel>
+              <ItemValue sx={{ fontWeight: 900 }}>
+                
+              </ItemValue>
             </SummaryItem>
             <SummaryItem>
-              <Typography variant='body2'>출고가</Typography>
-              <Typography variant='body2' color='text.secondary'>
-                -
-              </Typography>
+              <ItemLabel>공시지원금</ItemLabel>
+              <ItemValue>
+                
+              </ItemValue>
             </SummaryItem>
             <SummaryItem>
-              <Typography variant='body2'>공시지원금</Typography>
-              <Typography variant='body2' color='text.secondary'>
-                -
-              </Typography>
+              <ItemLabel>선납금</ItemLabel>
+              <ItemValue>
+                
+              </ItemValue>
+            </SummaryItem>
+            <Divider />
+            <SummaryItem>
+              <ItemLabel>할부원금</ItemLabel>
+              <ItemValue>
+                
+              </ItemValue>
             </SummaryItem>
             <SummaryItem>
-              <Typography variant='body2'>선납금</Typography>
-              <Typography variant='body2' color='text.secondary'>
-                -
-              </Typography>
+              <ItemLabel>총 할부수수료</ItemLabel>
+              <ItemValue>
+                
+              </ItemValue>
             </SummaryItem>
             <SummaryItem>
-              <Typography variant='body2'>할부원금</Typography>
-              <Typography variant='body2' color='text.secondary'>
-                -
-              </Typography>
+              <ItemLabel>총금액</ItemLabel>
+              <ItemValue>
+                
+              </ItemValue>
             </SummaryItem>
             <SummaryItem>
-              <Typography variant='body2'>총 할부수수료</Typography>
-              <Typography variant='body2' color='text.secondary'>
-                -
-              </Typography>
-            </SummaryItem>
-            <SummaryItem>
-              <Typography variant='body2'>총금액</Typography>
-              <Typography variant='body2' color='text.secondary'>
-                -
-              </Typography>
-            </SummaryItem>
-            <SummaryItem>
-              <Typography variant='body2'>월 할부금</Typography>
-              <Typography variant='body2' color='text.secondary'>
-                -
-              </Typography>
+              <ItemLabel>월 할부금</ItemLabel>
+              <ItemValue sx={{ fontWeight: 900 }}>
+                51,318원
+              </ItemValue>
             </SummaryItem>
           </Box>
         </SummaryContents>
