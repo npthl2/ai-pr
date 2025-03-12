@@ -58,43 +58,57 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
       console.log('저장된 RegistrationInfo:', savedInfo);
 
       // 3. 백엔드 API 호출 (개발 단계에서는 임시 응답 사용)
-      registrationMutation.mutate(updatedInfo, {
-        onSuccess: (response) => {
-          console.log('저장 요청 성공:', response);
-          
-          // business_process_id 저장 (폴링에 사용)
-          if (response.data && typeof response.data === 'object' && 'businessProcessId' in response.data) {
-            const businessProcessId = response.data.businessProcessId;
-            console.log('백엔드에서 반환된 businessProcessId:', businessProcessId);
+      console.log('백엔드 API 호출 시작 시간:', new Date().toISOString());
+      
+      // Promise를 반환하도록 수정하여 API 응답을 기다림
+      await new Promise((resolve, reject) => {
+        registrationMutation.mutate(updatedInfo, {
+          onSuccess: (response) => {
+            console.log('저장 요청 성공 시간:', new Date().toISOString());
+            console.log('저장 요청 성공:', response);
             
-            // business_process_id를 저장소에 업데이트
-            const updatedInfoWithId = {
-              ...updatedInfo,
-              business_process_id: businessProcessId,
-              status: REGISTRATION_STATUS.PENDING // 상태 명시적으로 설정
-            };
+            // business_process_id 저장 (폴링에 사용)
+            if (response.data && typeof response.data === 'object' && 'businessProcessId' in response.data) {
+              const businessProcessId = response.data.businessProcessId;
+              console.log('백엔드에서 반환된 businessProcessId:', businessProcessId);
+              console.log('백엔드 응답 전체:', response);
+              
+              // business_process_id를 저장소에 업데이트
+              const updatedInfoWithId = {
+                ...updatedInfo,
+                business_process_id: businessProcessId,
+                status: REGISTRATION_STATUS.PENDING // 상태 명시적으로 설정
+              };
+              
+              // 저장소에 업데이트
+              setRegistrationInfo(contractTabId, updatedInfoWithId);
+              console.log('business_process_id 저장됨:', businessProcessId);
+              
+              // 저장 후 RegistrationStore 상태 확인
+              const updatedSavedInfo = useRegistrationStore.getState().getRegistrationInfo(contractTabId);
+              console.log('business_process_id 저장 후 RegistrationInfo:', updatedSavedInfo);
+              
+              // 이 시점에서 RegistrationRequest 컴포넌트의 폴링이 시작됨
+              console.log('폴링 시작 예상 시간:', new Date().toISOString());
+              
+              // Promise 해결
+              resolve(businessProcessId);
+            } else {
+              console.warn('백엔드에서 business_process_id가 반환되지 않음');
+              // 오류 처리
+              updateRegistrationStatus(contractTabId, REGISTRATION_STATUS.FAILED);
+              reject(new Error('백엔드에서 business_process_id가 반환되지 않음'));
+            }
             
-            // 저장소에 업데이트
-            setRegistrationInfo(contractTabId, updatedInfoWithId);
-            console.log('business_process_id 저장됨:', businessProcessId);
-            
-            // 저장 후 RegistrationStore 상태 확인
-            const updatedSavedInfo = useRegistrationStore.getState().getRegistrationInfo(contractTabId);
-            console.log('business_process_id 저장 후 RegistrationInfo:', updatedSavedInfo);
-            
-            // 이 시점에서 RegistrationRequest 컴포넌트의 폴링이 시작됨
-          } else {
-            console.warn('백엔드에서 business_process_id가 반환되지 않음');
-            // 오류 처리
+            // 성공 응답 처리는 RegistrationRequest 컴포넌트에서 폴링으로 처리
+          },
+          onError: (error) => {
+            console.error('저장 요청 실패 시간:', new Date().toISOString());
+            console.error('저장 요청 실패:', error);
             updateRegistrationStatus(contractTabId, REGISTRATION_STATUS.FAILED);
-          }
-          
-          // 성공 응답 처리는 RegistrationRequest 컴포넌트에서 폴링으로 처리
-        },
-        onError: (error) => {
-          console.error('저장 요청 실패:', error);
-          updateRegistrationStatus(contractTabId, REGISTRATION_STATUS.FAILED);
-        },
+            reject(error);
+          },
+        });
       });
 
       // 4. 저장 완료 화면으로 이동 (결과와 상관없이)
