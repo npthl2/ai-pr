@@ -12,6 +12,7 @@ interface InvoiceListModalProps {
   invoiceList: Invoice[];
   onClose: () => void;
   onConfirm: (invoice: Invoice) => void;
+  onConfirmLabel: React.ReactNode;
 }
 
 const InvoiceListModal = ({
@@ -43,13 +44,13 @@ const InvoiceListModal = ({
                   <TableCell sx={{ width: '5%', paddingLeft: '20px' }}>
                     <Radio disabled size='small' />
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ width: '20%' }}>
                     <Typography>청구번호</Typography>
                   </TableCell>
                   <TableCell>
                     <Typography>수령인</Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ width: '45%' }}>
                     <Typography>납부방법</Typography>
                   </TableCell>
                 </TableRow>

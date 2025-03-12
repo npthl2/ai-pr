@@ -124,7 +124,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
   const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
   const customerInfo = getRegistrationCustomerInfo(contractTabId);
   // to-do : 수정
-  const activeCustomerId = customerInfo?.customerId || 'CUST12345678';
+  const activeCustomerId = customerInfo?.customerId || 'C-0000000000';
   const { getRegistrationInvoiceInfo, setRegistrationInvoiceInfo } = useRegistrationInvoiceStore();
   const registrationInvoiceInfo = getRegistrationInvoiceInfo(contractTabId);
   const openToast = useToastStore((state) => state.openToast);
@@ -228,24 +228,24 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
       paymentName: invoiceFormData.paymentName,
       birthDate: invoiceFormData.birthDate,
     };
+    try {
+      const result = await saveInvoiceMutation.mutateAsync(invoiceCreateRequestParams);
+      openToast('청구정보가 생성되었습니다.');
 
-    const result = await saveInvoiceMutation.mutateAsync(invoiceCreateRequestParams);
+      // 청구정보 목록 캐시 무효화
+      queryClient.invalidateQueries({ queryKey: ['invoice'] });
 
-    if (typeof result.data === 'string') {
+      // 청구정보 스토어에 저장
+      if (result.data && typeof result.data === 'object') {
+        setRegistrationInvoiceInfo(contractTabId, result.data);
+      }
+      // 다음 섹션으로 이동
+      onComplete();
+    } catch (error) {
+      console.error(error);
       openToast('청구정보 생성에 실패했습니다. 다시 시도해 주세요.');
       return;
     }
-    openToast('청구정보가 생성되었습니다.');
-
-    // 청구정보 목록 캐시 무효화
-    queryClient.invalidateQueries({ queryKey: ['invoice'] });
-
-    // 청구정보 스토어에 저장
-    if (result.data) {
-      setRegistrationInvoiceInfo(contractTabId, result.data);
-    }
-    // 다음 섹션으로 이동
-    onComplete();
   };
 
   // 청구정보 리스트 다이얼로그 - 선택 핸들러
