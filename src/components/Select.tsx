@@ -26,6 +26,7 @@ const StyledSelect = styled(MuiSelect, {
     small: 28,
     medium: 32,
   }[size],
+  backgroundColor: theme.palette.background.paper,
   '& .MuiSelect-icon': {
     color: 'inherit',
   },
