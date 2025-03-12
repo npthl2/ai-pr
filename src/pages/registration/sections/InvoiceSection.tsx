@@ -272,11 +272,11 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
   };
 
   // 다음 주소 검색 다이얼로그 - 닫기 핸들러
-  const handlePostcodeClose = () => {
+  const handleAddressModalClose = () => {
     setIsPostcodeOpen(false);
     setInvoiceError({
       ...invoiceError,
-      invoicePostalCode: true,
+      invoicePostalCode: !invoiceFormData.invoicePostalCode,
       invoiceAddress: true,
     });
   };
@@ -926,7 +926,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
       {/* 주소 검색 다이얼로그 */}
       <InvoiceAddressSearchModal
         open={isPostcodeOpen}
-        onClose={handlePostcodeClose}
+        onClose={handleAddressModalClose}
         onComplete={handleAddressSelectComplete}
         postcode={invoiceFormData.invoicePostalCode}
       />
