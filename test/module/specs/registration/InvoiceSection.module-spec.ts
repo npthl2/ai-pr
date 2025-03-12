@@ -145,9 +145,10 @@ describe('KAN-7 신규가입 진입', () => {
     page.assertToastVisible();
     page.assertToastMessage('청구정보가 생성되었습니다.');
 
-    // 청구정보조회 버튼 비활성화 확인
+    // 저장후 화면변경 확인
     page.assertComponentToBeInvisible(RECIPIENT_INPUT_NAME);
     page.assertComponentToBeVisible(INVOICE_ADDRESS_NAME);
     page.assertSalesSectionToBeExpanded();
+    page.assertTemporarySaveButtonEnabled();
   });
 });

@@ -110,5 +110,10 @@ class InvoiceSectionPage {
   assertToastMessage(message: string) {
     cy.get('#Toast').should('have.text', message);
   }
+
+  // 임시저장 버튼 inabled
+  assertTemporarySaveButtonEnabled() {
+    cy.get('[data-testid="temporary-save-button"]').should('be.enabled');
+  }
 }
 export default InvoiceSectionPage;
