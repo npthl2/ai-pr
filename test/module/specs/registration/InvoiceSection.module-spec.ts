@@ -2,6 +2,7 @@ import InvoiceSectionServiceMock from '../../mock/registration/InvoiceSectionSer
 import InvoiceSectionPage from '../../../pages/registration/InvoiceSectionPage';
 import { mockAuthStore } from '../../../support/helpers/mockAuthStore';
 import BookmarkServiceMock from '../../mock/bookmark/BookmarkServiceMock';
+import CustomerDetailServiceMock from '../../mock/customer/detail/CustomerDetailServiceMock';
 
 const CUSTOMER_SECTION_NAME = 'NEW_SUBSCRIPTION0-section-customer';
 const INVOICE_SEARCH_MODAL_NAME = 'invoice-search-modal';
@@ -27,11 +28,13 @@ describe('KAN-7 신규가입 진입', () => {
   const page = new InvoiceSectionPage();
   const service = new InvoiceSectionServiceMock();
   const bookmarkService = new BookmarkServiceMock();
+  const customerDetailService = new CustomerDetailServiceMock();
 
   before(() => {
     // 초기 셋업
     mockAuthStore();
     bookmarkService.successWhenGetBookmarkList();
+    customerDetailService.successWhenGetCustomerContracts();
 
     // 고객정보 입력
     page.visit();
@@ -67,6 +70,7 @@ describe('KAN-7 신규가입 진입', () => {
   it('KAN-37-3 청구정보가 없는 경우 청구정보조회 버튼이 비활성화 된다.', () => {
     // 재진입
     bookmarkService.successWhenGetBookmarkList();
+    customerDetailService.successWhenGetCustomerContracts();
     page.visit();
     page.clickMenuButton();
     page.clickCustomerSectionButton('신규가입');
