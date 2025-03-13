@@ -648,7 +648,6 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                       fullWidth
                       value={invoiceFormData.invoiceAddress}
                       onChange={handleInputChange('invoiceAddress')}
-                      // TO-DO : 풀면 모듈 테스트 불가
                       disabled={!invoiceFormData.invoiceAddress}
                       maxLength={40}
                       state={
