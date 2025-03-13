@@ -1,21 +1,21 @@
 /// <reference types="cypress" />
 
-const bookmarkResponse = {
-  memberId: '0',
-  bookmarks: ['NEW_SUBSCRIPTION'],
+export const bookmarkListResponse = {
+  successOrNot: 'Y',
+  statusCode: 'SUCCESS',
+  data: {
+    memberId: 'S-0001',
+    bookmarks: ['NEW_SUBSCRIPTION', 'CUSTOMER_SEARCH']
+  }
 };
 
-class BookmarkServiceMock {
-  // 즐겨찾기 목록 조회 성공 mock설정
+export class BookmarkServiceMock {
+  // 북마크 목록 조회 성공 Mock
   successWhenGetBookmarkList() {
     cy.intercept('GET', '**/v1/member/bookmark', {
       statusCode: 200,
-      body: {
-        successOrNot: 'Y',
-        statusCode: 'SUCCESS',
-        data: bookmarkResponse,
-      },
-    });
+      body: bookmarkListResponse
+    }).as('bookmarkRequest');
   }
 
   // 즐겨찾기 등록/삭제 성공 mock설정
@@ -29,4 +29,5 @@ class BookmarkServiceMock {
     });
   }
 }
+
 export default BookmarkServiceMock;

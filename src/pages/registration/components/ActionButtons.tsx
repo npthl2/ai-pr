@@ -21,6 +21,7 @@ const ActionButtons = ({ status, onGoHome, onGoCustomerSearch }: ActionButtonsPr
         variant="outlined" 
         onClick={onGoHome}
         size="small"
+        data-testid="go-home-button"
       >
         홈으로 이동
       </Button>
@@ -29,6 +30,7 @@ const ActionButtons = ({ status, onGoHome, onGoCustomerSearch }: ActionButtonsPr
           variant="outlined" 
           onClick={onGoCustomerSearch}
           size="small"
+          data-testid="go-customer-search-button"
         >
           <CheckIcon sx={{ mr: 0.5 }} /> 고객조회로 이동
         </Button>

@@ -20,21 +20,21 @@ const StatusMessage = ({ status, customerName }: StatusMessageProps) => {
     <>
       {status === REGISTRATION_STATUS.PENDING && (
         <StatusMessageContainer>
-          <StyledStatusMessage>{customerName} 고객님의 가입이 처리중입니다.</StyledStatusMessage>
+          <StyledStatusMessage data-testid="status-message">{customerName} 고객님의 가입이 처리중입니다.</StyledStatusMessage>
           <GifContainer src={pendingGifPath} alt="처리중" />
         </StatusMessageContainer>
       )}
       
       {status === REGISTRATION_STATUS.COMPLETED && (
         <StatusMessageContainer>
-          <StyledStatusMessage>{customerName} 고객님의 가입이 처리 완료되었습니다.</StyledStatusMessage>
+          <StyledStatusMessage data-testid="status-message">{customerName} 고객님의 가입이 처리 완료되었습니다.</StyledStatusMessage>
           <GifContainer src={completedGifPath} alt="완료" />
         </StatusMessageContainer>
       )}
       
       {status === REGISTRATION_STATUS.FAILED && (
         <StatusMessageContainer>
-          <StyledStatusMessage>{customerName} 고객님의 가입을 실패하였습니다.</StyledStatusMessage>
+          <StyledStatusMessage data-testid="status-message">{customerName} 고객님의 가입을 실패하였습니다.</StyledStatusMessage>
           <StyledStatusMessage>
             실패사유: {
               <>

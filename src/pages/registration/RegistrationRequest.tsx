@@ -9,10 +9,10 @@ import {
   PageTitle,
   SectionContainer
 } from './RegistrationRequest.styled';
-import StatusMessage from './component/StatusMessage';
-import SummaryInfo from './component/SummaryInfo';
-import EmailForm from './component/EmailForm';
-import ActionButtons from './component/ActionButtons';
+import StatusMessage from './components/StatusMessage';
+import SummaryInfo from './components/SummaryInfo';
+import EmailForm from './components/EmailForm';
+import ActionButtons from './components/ActionButtons';
 import { InvoiceInfo, DeviceInfo, ContractInfo, RegistrationStatus, RegistrationInfo } from '@model/RegistrationInfo';
 import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants';
 import { useEmailSendMutation } from '@api/queries/email/useEmailSendMutation';
@@ -119,44 +119,6 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
     } else {
     }
   }, [contractTabId, refetch, status, registrationData?.business_process_id]);
-// 개발 환경에서만 동작하는 테스트용 business_process_id 생성 로직
-  // useEffect(() => {
-  //   // 개발 환경에서만 동작
-  //   if (process.env.NODE_ENV !== 'development') return;
-    
-  //   // contractTabId가 있고, 저장된 정보가 있지만 business_process_id가 없는 경우에만 실행
-  //   if (contractTabId && registrationData && !registrationData.business_process_id) {
-  //     console.log('개발 환경 테스트: business_process_id 자동 생성 준비');
-      
-  //     const timer = setTimeout(() => {
-        
-  //       // 현재 저장된 정보 다시 확인 (타이머 실행 시점에 변경되었을 수 있음)
-  //       const currentInfo = useRegistrationStore.getState().getRegistrationInfo(contractTabId);
-        
-  //       // 여전히 business_process_id가 없는 경우에만 생성
-  //       if (currentInfo && !currentInfo.business_process_id) {
-  //         // 임의의 business_process_id 생성
-  //         const business_process_id = `BP_${new Date().getTime()}_${Math.floor(Math.random() * 1000)}`;
-          
-  //         // business_process_id 추가하여 저장
-  //         const updatedInfo = {
-  //           ...currentInfo,
-  //           business_process_id,
-  //           status: REGISTRATION_STATUS.PENDING
-  //         };
-          
-  //         // 저장소에 업데이트
-  //         useRegistrationStore.getState().setRegistrationInfo(contractTabId, updatedInfo);
-          
-  //         // 폴링 시작을 위해 refetch 호출
-  //         refetch();
-  //       }
-  //     }, 3000); // 3초 후 실행
-      
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [contractTabId, registrationData, refetch]);
-  // 
 
   useEffect(() => {
     if (data?.status) {
@@ -324,7 +286,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
       <ContentContainer>
         <StatusMessage 
           status={status} 
-          customerName={customerInfo?.name || ''} 
+          customerName={customerInfo?.name || ''}
         />
 
         <SectionContainer>
@@ -378,6 +340,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
                     onChange={handleEmailToggleChange}
                     disabled={status !== REGISTRATION_STATUS.COMPLETED}
                     size="small"
+                    data-testid="email-toggle"
                   />
                 }
                 label="이메일 발송"

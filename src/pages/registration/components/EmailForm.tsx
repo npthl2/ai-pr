@@ -165,6 +165,7 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
             size="small" // 작은 크기 설정
             error={!!errors.emailAddress} // 오류 상태 설정
             helperText={errors.emailAddress} // 오류 메시지 표시
+            data-testid="email-input" // 테스트용 데이터id
             sx={{
               width: '100%', // 부모 컨테이너의 전체 너비 사용
               '& .MuiOutlinedInput-root': { // 입력 필드 루트 요소 스타일
@@ -216,6 +217,7 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
             disabled={!isInputEnabled} // 비활성화 상태 설정
             size="small" // 작은 크기 설정
             error={!isCustomDomain && !!errors.emailDomain} // 오류 상태 설정
+            data-testid="domain-select-button" // 테스트용 데이터id
             sx={{
               width: '100%', // 부모 컨테이너의 전체 너비 사용
               height: '30px', // 높이 설정
@@ -307,6 +309,7 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
             onClick={handleSendEmail} // 클릭 이벤트 핸들러
             disabled={!isEmailSendEnabled} // 비활성화 상태 설정
             size="small" // 작은 크기 설정
+            data-testid="send-email-button" // 테스트용 데이터id
             sx={{ 
               height: '30px', // 높이 설정
               minWidth: '80px', // 최소 너비 설정

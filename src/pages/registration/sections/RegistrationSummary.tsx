@@ -288,8 +288,10 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
             size='large'
             onClick={handleSave}
             disabled={loading || !isButtonEnabled}
+            data-testid='save-button'
           >
             {loading ? '저장 중...' : '저장'}
+            
           </Button>
         </RightButtonGroup>
       </ButtonContainer>
