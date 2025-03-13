@@ -1,12 +1,17 @@
 import Dialog from '@components/Dialog';
-import { Box, Typography, TableBody, TableHead } from '@mui/material';
+import { Typography, TableBody, TableHead } from '@mui/material';
 import TableCell from '@components/Table/TableCell';
 import TableRow from '@components/Table/TableRow';
 import Radio from '@components/Radio';
 import { Invoice } from '@model/registration/Invoice';
 import { paymentMethodOptions } from '.././invoiceSection.model';
 import { useState } from 'react';
-import { InvoiceListTableContainer, InvoiceListTable } from './invoiceListModal.styled';
+import {
+  InvoiceListContainer,
+  TableTitleWrapper,
+  InvoiceListTableContainer,
+  InvoiceListTable,
+} from './invoiceListModal.styled';
 interface InvoiceListModalProps {
   open: boolean;
   invoiceList: Invoice[];
@@ -30,14 +35,15 @@ const InvoiceListModal = ({
       title='청구정보조회'
       size='medium-large'
       confirmLabel={onConfirmLabel}
+      isConfirmDisabled={!selectedInvoice}
       content={
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '10px' }}>
-          <Box sx={{ display: 'flex', gap: '10px' }}>
+        <InvoiceListContainer>
+          <TableTitleWrapper>
             <Typography variant='h3'>청구정보 목록</Typography>
             <Typography variant='h4' color='text.secondary'>
               {invoiceList.length}
             </Typography>
-          </Box>
+          </TableTitleWrapper>
           <InvoiceListTableContainer>
             <InvoiceListTable stickyHeader>
               <TableHead>
@@ -90,7 +96,7 @@ const InvoiceListModal = ({
               </TableBody>
             </InvoiceListTable>
           </InvoiceListTableContainer>
-        </Box>
+        </InvoiceListContainer>
       }
       onClose={onClose}
       onConfirm={() => {
