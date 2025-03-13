@@ -22,8 +22,8 @@ describe('KAN-38 가입정보 확인', () => {
     page.clickMenuButton();
     page.clickCustomerSectionButton('신규가입');
 
-    // 판매정보 완료되었다는 가정 하에 진행
-    // page.completeSalesSection();
+    // 판매정보 진행
+    page.completeSalesSection();
 
     // 가입정보 섹션 확인 - 초기값
     page.assertComponentToBeVisible('contract-section');
