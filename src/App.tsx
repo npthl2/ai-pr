@@ -28,7 +28,6 @@ import Board from '@pages/test/board/Board';
 import RegistBoard from '@pages/test/board/component/RegistBoard';
 import MemoAndHistoryPanel from '@pages/memoAndSendHistory/MemoAndSendHistoryPanel';
 import Login from '@pages/auth/Login';
-import ContractSectionComponent from '@pages/registration/sections/contract/ContractSectionComponent';
 
 function App() {
   return (
@@ -58,10 +57,6 @@ function App() {
               <Route path='test'>
                 <Route path='board' element={<Board />} />
                 <Route path='board/regist' element={<RegistBoard />} />
-                <Route
-                  path='additional-service'
-                  element={<ContractSectionComponent contractTabId='test-tab-id' />}
-                />
               </Route>
               <Route element={<ProtectedRoute />}>
                 <Route element={<MainLayout />}>
