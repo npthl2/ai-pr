@@ -11,6 +11,7 @@ export const InvoiceListContainer = styled(Box)({
 export const TableTitleWrapper = styled(Box)({
   display: 'flex',
   gap: '10px',
+  alignItems: 'center',
 });
 
 export const InvoiceListTableContainer = styled(TableContainer)(({ theme }) => ({

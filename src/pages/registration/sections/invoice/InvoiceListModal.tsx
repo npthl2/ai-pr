@@ -57,7 +57,7 @@ const InvoiceListModal = ({
                   <TableCell>
                     <Typography>수령인</Typography>
                   </TableCell>
-                  <TableCell sx={{ width: '45%' }}>
+                  <TableCell sx={{ width: '52%' }}>
                     <Typography>납부방법</Typography>
                   </TableCell>
                 </TableRow>
