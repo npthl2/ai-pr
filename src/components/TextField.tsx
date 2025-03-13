@@ -74,7 +74,7 @@ const StyledTextField = styled(MuiTextField, {
     borderColor: getBorderColor(theme, state),
   },
   '& .MuiInputBase-input::placeholder': {
-    color: theme.palette.grey[900],
+    color: theme.palette.text.secondary,
   },
 }));
 

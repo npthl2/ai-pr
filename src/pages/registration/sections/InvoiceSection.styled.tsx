@@ -65,3 +65,7 @@ export const AddressSearchIcon = styled(SearchIcon)({
 export const InvoiceCheckIcon = styled(CheckIcon)({
   fontSize: 16,
 });
+
+export const SelectLabel = styled(Typography)(({ theme }) => ({
+  color: theme.palette.text.secondary,
+}));

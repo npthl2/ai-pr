@@ -14,6 +14,7 @@ import {
   LabelWrapper,
   AddressSearchIcon,
   InvoiceCheckIcon,
+  SelectLabel,
 } from './InvoiceSection.styled';
 import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
 import Select from '@components/Select';
@@ -564,7 +565,11 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                           value={invoiceFormData.invoiceEmailDomainType}
                           size='small'
                           displayEmpty
-                          renderValue={() => invoiceFormData.invoiceEmailDomainType || '선택'}
+                          renderValue={() =>
+                            invoiceFormData.invoiceEmailDomainType || (
+                              <SelectLabel>선택</SelectLabel>
+                            )
+                          }
                           state={helperText.invoiceEmailDomainType ? 'error' : 'inactive'}
                           helperText={helperText.invoiceEmailDomainType}
                           absoluteHelperText
@@ -744,18 +749,20 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
 
                   {invoiceFormData.paymentMethod === PaymentMethod.BANK && (
                     <Box sx={{ display: 'flex', gap: '4px' }}>
-                      <Box>
+                      <Box flex={1}>
                         <Select
-                          sx={{ width: '100px' }}
+                          fullWidth
                           value={invoiceFormData.bankCompany}
                           size='small'
                           displayEmpty
                           renderValue={() =>
-                            invoiceFormData.bankCompany
-                              ? bankCompanyOptions.find(
-                                  (option) => option.value === invoiceFormData.bankCompany,
-                                )?.label
-                              : '은행*'
+                            invoiceFormData.bankCompany ? (
+                              bankCompanyOptions.find(
+                                (option) => option.value === invoiceFormData.bankCompany,
+                              )?.label
+                            ) : (
+                              <SelectLabel>은행*</SelectLabel>
+                            )
                           }
                           state={helperText.bankCompany ? 'error' : 'inactive'}
                           helperText={helperText.bankCompany}
@@ -775,35 +782,39 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                           ))}
                         </Select>
                       </Box>
-                      <TextField
-                        size='small'
-                        placeholder='계좌번호*'
-                        fullWidth
-                        value={invoiceFormData.bankAccount}
-                        onChange={handleInputChange('bankAccount')}
-                        maxLength={20}
-                        state={helperText.bankAccount ? 'error' : 'inactive'}
-                        helperText={helperText.bankAccount}
-                        absoluteHelperText
-                        onBlur={handleFocusOut('bankAccount')}
-                        data-testid='invoice-bank-account-input'
-                      />
+                      <Box flex={2}>
+                        <TextField
+                          size='small'
+                          placeholder='계좌번호*'
+                          fullWidth
+                          value={invoiceFormData.bankAccount}
+                          onChange={handleInputChange('bankAccount')}
+                          maxLength={20}
+                          state={helperText.bankAccount ? 'error' : 'inactive'}
+                          helperText={helperText.bankAccount}
+                          absoluteHelperText
+                          onBlur={handleFocusOut('bankAccount')}
+                          data-testid='invoice-bank-account-input'
+                        />
+                      </Box>
                     </Box>
                   )}
                   {invoiceFormData.paymentMethod === PaymentMethod.CARD && (
                     <Box sx={{ display: 'flex', gap: '4px' }}>
-                      <Box>
+                      <Box flex={1}>
                         <Select
-                          sx={{ width: '100px' }}
+                          fullWidth
                           value={invoiceFormData.cardCompany}
                           size='small'
                           displayEmpty
                           renderValue={() =>
-                            invoiceFormData.cardCompany
-                              ? cardCompanyOptions.find(
-                                  (option) => option.value === invoiceFormData.cardCompany,
-                                )?.label
-                              : '카드*'
+                            invoiceFormData.cardCompany ? (
+                              cardCompanyOptions.find(
+                                (option) => option.value === invoiceFormData.cardCompany,
+                              )?.label
+                            ) : (
+                              <SelectLabel>카드*</SelectLabel>
+                            )
                           }
                           state={helperText.cardCompany ? 'error' : 'inactive'}
                           helperText={helperText.cardCompany}
@@ -822,19 +833,21 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                           ))}
                         </Select>
                       </Box>
-                      <TextField
-                        size='small'
-                        placeholder={!invoiceFormData.cardNumber ? '카드번호*' : ''}
-                        fullWidth
-                        value={invoiceFormData.cardNumber}
-                        onChange={handleInputChange('cardNumber')}
-                        maxLength={16}
-                        state={helperText.cardNumber ? 'error' : 'inactive'}
-                        helperText={helperText.cardNumber}
-                        absoluteHelperText
-                        onBlur={handleFocusOut('cardNumber')}
-                        data-testid='invoice-card-number-input'
-                      />
+                      <Box flex={2}>
+                        <TextField
+                          size='small'
+                          placeholder={!invoiceFormData.cardNumber ? '카드번호*' : ''}
+                          fullWidth
+                          value={invoiceFormData.cardNumber}
+                          onChange={handleInputChange('cardNumber')}
+                          maxLength={16}
+                          state={helperText.cardNumber ? 'error' : 'inactive'}
+                          helperText={helperText.cardNumber}
+                          absoluteHelperText
+                          onBlur={handleFocusOut('cardNumber')}
+                          data-testid='invoice-card-number-input'
+                        />
+                      </Box>
                     </Box>
                   )}
                 </Box>
