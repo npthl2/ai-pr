@@ -49,6 +49,7 @@ export const CaptionTypography = styled(Typography)(({ theme }) => ({
 
 export const StyledRadioGroup = styled(RadioGroup)(({ theme }) => ({
   marginLeft: theme.spacing(1),
+  gap: '2px',
 }));
 
 export const InformationIcon = styled(ErrorOutlineIcon)(({ theme }) => ({
@@ -58,6 +59,7 @@ export const InformationIcon = styled(ErrorOutlineIcon)(({ theme }) => ({
 
 export const AddressSearchIcon = styled(SearchIcon)({
   cursor: 'pointer',
+  fontSize: 16,
 });
 
 export const InvoiceCheckIcon = styled(CheckIcon)({

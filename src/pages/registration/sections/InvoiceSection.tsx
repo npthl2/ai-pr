@@ -502,8 +502,6 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                 ) : (
                   <TextField
                     size='small'
-                    label='수령인'
-                    required
                     fullWidth
                     value={invoiceFormData.recipient}
                     onChange={handleInputChange('recipient')}
@@ -546,11 +544,10 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                     </StyledRadioGroup>
                   </Box>
                   {invoiceFormData.invoiceType === InvoiceType.EMAIL && (
-                    <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Box sx={{ display: 'flex', gap: '4px' }}>
                       <TextField
                         size='small'
-                        label='이메일주소'
-                        required
+                        placeholder='이메일주소*'
                         fullWidth
                         value={invoiceFormData.invoiceEmailId}
                         onChange={handleInputChange('invoiceEmailId')}
@@ -620,55 +617,58 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                   </Typography>
                 </Box>
               ) : (
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  <Box sx={{ gap: 1 }}>
-                    <TextField
-                      size='small'
-                      label='우편번호'
-                      fullWidth
-                      suffix={
-                        <AddressSearchIcon
-                          onClick={() => {
-                            setIsPostcodeOpen(true);
-                          }}
-                          data-testid='invoice-postal-code-search-icon'
-                        />
-                      }
-                      value={invoiceFormData.invoicePostalCode}
-                      onChange={handleInputChange('invoicePostalCode')}
-                      maxLength={5}
-                      state={
-                        helperText.invoicePostalCode ||
-                        helperText.invoiceAddress ||
-                        helperText.invoiceAddressDetail
-                          ? 'error'
-                          : 'inactive'
-                      }
-                      onBlur={handleFocusOut('invoicePostalCode')}
-                      data-testid='invoice-postal-code-input'
-                    />
-                    <TextField
-                      size='small'
-                      label='주소'
-                      fullWidth
-                      value={invoiceFormData.invoiceAddress}
-                      onChange={handleInputChange('invoiceAddress')}
-                      disabled={!invoiceFormData.invoiceAddress}
-                      maxLength={40}
-                      state={
-                        helperText.invoicePostalCode ||
-                        helperText.invoiceAddress ||
-                        helperText.invoiceAddressDetail
-                          ? 'error'
-                          : 'inactive'
-                      }
-                      onBlur={handleFocusOut('invoiceAddress')}
-                      data-testid='invoice-address-input'
-                    />
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <Box sx={{ gap: '4px' }}>
+                    <Box flex={1.3}>
+                      <TextField
+                        size='small'
+                        placeholder='우편번호'
+                        suffix={
+                          <AddressSearchIcon
+                            onClick={() => {
+                              setIsPostcodeOpen(true);
+                            }}
+                            data-testid='invoice-postal-code-search-icon'
+                          />
+                        }
+                        value={invoiceFormData.invoicePostalCode}
+                        onChange={handleInputChange('invoicePostalCode')}
+                        maxLength={5}
+                        state={
+                          helperText.invoicePostalCode ||
+                          helperText.invoiceAddress ||
+                          helperText.invoiceAddressDetail
+                            ? 'error'
+                            : 'inactive'
+                        }
+                        onBlur={handleFocusOut('invoicePostalCode')}
+                        data-testid='invoice-postal-code-input'
+                      />
+                    </Box>
+                    <Box flex={2}>
+                      <TextField
+                        size='small'
+                        label='주소'
+                        fullWidth
+                        value={invoiceFormData.invoiceAddress}
+                        onChange={handleInputChange('invoiceAddress')}
+                        disabled={!invoiceFormData.invoiceAddress}
+                        maxLength={40}
+                        state={
+                          helperText.invoicePostalCode ||
+                          helperText.invoiceAddress ||
+                          helperText.invoiceAddressDetail
+                            ? 'error'
+                            : 'inactive'
+                        }
+                        onBlur={handleFocusOut('invoiceAddress')}
+                        data-testid='invoice-address-input'
+                      />
+                    </Box>
                   </Box>
                   <TextField
                     size='small'
-                    label='상세주소'
+                    placeholder='상세주소'
                     fullWidth
                     value={invoiceFormData.invoiceAddressDetail}
                     onChange={handleInputChange('invoiceAddressDetail')}
@@ -743,7 +743,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                   </Box>
 
                   {invoiceFormData.paymentMethod === PaymentMethod.BANK && (
-                    <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Box sx={{ display: 'flex', gap: '4px' }}>
                       <Box>
                         <Select
                           sx={{ width: '100px' }}
@@ -755,7 +755,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                               ? bankCompanyOptions.find(
                                   (option) => option.value === invoiceFormData.bankCompany,
                                 )?.label
-                              : '은행'
+                              : '은행*'
                           }
                           state={helperText.bankCompany ? 'error' : 'inactive'}
                           helperText={helperText.bankCompany}
@@ -777,8 +777,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                       </Box>
                       <TextField
                         size='small'
-                        label='계좌번호'
-                        required
+                        placeholder='계좌번호*'
                         fullWidth
                         value={invoiceFormData.bankAccount}
                         onChange={handleInputChange('bankAccount')}
@@ -792,7 +791,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                     </Box>
                   )}
                   {invoiceFormData.paymentMethod === PaymentMethod.CARD && (
-                    <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Box sx={{ display: 'flex', gap: '4px' }}>
                       <Box>
                         <Select
                           sx={{ width: '100px' }}
@@ -804,7 +803,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                               ? cardCompanyOptions.find(
                                   (option) => option.value === invoiceFormData.cardCompany,
                                 )?.label
-                              : '카드'
+                              : '카드*'
                           }
                           state={helperText.cardCompany ? 'error' : 'inactive'}
                           helperText={helperText.cardCompany}
@@ -825,8 +824,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                       </Box>
                       <TextField
                         size='small'
-                        label={!invoiceFormData.cardNumber ? '카드번호' : ''}
-                        required
+                        placeholder={!invoiceFormData.cardNumber ? '카드번호*' : ''}
                         fullWidth
                         value={invoiceFormData.cardNumber}
                         onChange={handleInputChange('cardNumber')}
@@ -881,8 +879,6 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                 ) : (
                   <TextField
                     size='small'
-                    label='납부고객명'
-                    required
                     fullWidth
                     value={invoiceFormData.paymentName}
                     onChange={handleInputChange('paymentName')}
@@ -909,7 +905,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                 ) : (
                   <TextField
                     size='small'
-                    label='YYMMDD'
+                    placeholder='YYMMDD'
                     fullWidth
                     value={invoiceFormData.birthDate}
                     onChange={handleInputChange('birthDate')}
