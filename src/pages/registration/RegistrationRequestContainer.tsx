@@ -13,4 +13,4 @@ const ContractRequestContainer = ({ contractTabId }: ContractRequestContainerPro
   );
 };
 
-export default ContractRequestContainer; 
+export default ContractRequestContainer;

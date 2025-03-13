@@ -1,7 +1,7 @@
 import {
   StatusMessageContainer,
   GifContainer,
-  StatusMessage as StyledStatusMessage
+  StatusMessage as StyledStatusMessage,
 } from '../RegistrationRequest.styled';
 import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants';
 
@@ -20,26 +20,32 @@ const StatusMessage = ({ status, customerName }: StatusMessageProps) => {
     <>
       {status === REGISTRATION_STATUS.PENDING && (
         <StatusMessageContainer>
-          <StyledStatusMessage data-testid="status-message">{customerName} 고객님의 가입이 처리중입니다.</StyledStatusMessage>
-          <GifContainer src={pendingGifPath} alt="처리중" />
+          <StyledStatusMessage data-testid='status-message'>
+            {customerName} 고객님의 가입이 처리중입니다.
+          </StyledStatusMessage>
+          <GifContainer src={pendingGifPath} alt='처리중' />
         </StatusMessageContainer>
       )}
-      
+
       {status === REGISTRATION_STATUS.COMPLETED && (
         <StatusMessageContainer>
-          <StyledStatusMessage data-testid="status-message">{customerName} 고객님의 가입이 처리 완료되었습니다.</StyledStatusMessage>
-          <GifContainer src={completedGifPath} alt="완료" />
+          <StyledStatusMessage data-testid='status-message'>
+            {customerName} 고객님의 가입이 처리 완료되었습니다.
+          </StyledStatusMessage>
+          <GifContainer src={completedGifPath} alt='완료' />
         </StatusMessageContainer>
       )}
-      
+
       {status === REGISTRATION_STATUS.FAILED && (
         <StatusMessageContainer>
-          <StyledStatusMessage data-testid="status-message">{customerName} 고객님의 가입을 실패하였습니다.</StyledStatusMessage>
+          <StyledStatusMessage data-testid='status-message'>
+            {customerName} 고객님의 가입을 실패하였습니다.
+          </StyledStatusMessage>
           <StyledStatusMessage>
-            실패사유: {
+            실패사유:{' '}
+            {
               <>
-                <span style={{ color: 'red' }}>가입한도</span>
-                를 
+                <span style={{ color: 'red' }}>가입한도</span>를
                 <span style={{ color: 'red' }}> 초과</span>
                 했습니다.
               </>
@@ -51,4 +57,4 @@ const StatusMessage = ({ status, customerName }: StatusMessageProps) => {
   );
 };
 
-export default StatusMessage; 
+export default StatusMessage;

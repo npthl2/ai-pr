@@ -6,6 +6,6 @@ export const useEmailSendMutation = () => {
   return useMutation({
     mutationFn: (data: EmailSendRequest) => {
       return emailService.sendEmail(data);
-    }
+    },
   });
-}; 
+};

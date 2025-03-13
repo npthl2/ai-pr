@@ -195,7 +195,10 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
             })}
           </SectionsWrapper>
         </SectionsContainer>
-        <RegistrationSummary contractTabId={contractTabId} setIsSaveRequested={setIsSaveRequested} />
+        <RegistrationSummary
+          contractTabId={contractTabId}
+          setIsSaveRequested={setIsSaveRequested}
+        />
       </ContentWrapper>
     </Container>
   );

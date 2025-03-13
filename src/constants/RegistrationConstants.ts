@@ -20,8 +20,8 @@ export type SectionId = (typeof SECTION_IDS)[keyof typeof SECTION_IDS];
 export const REGISTRATION_STATUS = {
   PENDING: '진행중',
   COMPLETED: '완료',
-  FAILED: '실패'
+  FAILED: '실패',
 } as const;
 
 // 등록 상태 타입
-export type RegistrationStatusType = typeof REGISTRATION_STATUS[keyof typeof REGISTRATION_STATUS];
+export type RegistrationStatusType = (typeof REGISTRATION_STATUS)[keyof typeof REGISTRATION_STATUS];

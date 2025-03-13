@@ -1,10 +1,4 @@
-import { 
-  InfoSection, 
-  InfoRow, 
-  InfoLabel, 
-  InfoValue, 
-  SubSectionTitle 
-} from '../SummaryInfo.styled';
+import { InfoSection, InfoRow, InfoLabel, InfoValue, SubSectionTitle } from '../SummaryInfo.styled';
 import { SalesInfo as BaseSalesInfo } from '@model/RegistrationInfo';
 
 interface SalesInfo extends Partial<BaseSalesInfo> {
@@ -29,4 +23,4 @@ const SalesInfo = ({ salesInfo = {} }: SalesInfoProps) => {
   );
 };
 
-export default SalesInfo; 
+export default SalesInfo;

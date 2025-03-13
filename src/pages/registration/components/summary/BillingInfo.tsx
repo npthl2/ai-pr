@@ -1,11 +1,5 @@
 import { InvoiceInfo as BaseInvoiceInfo } from '@model/RegistrationInfo';
-import { 
-  InfoSection, 
-  InfoRow, 
-  InfoLabel, 
-  InfoValue, 
-  SubSectionTitle 
-} from '../SummaryInfo.styled';
+import { InfoSection, InfoRow, InfoLabel, InfoValue, SubSectionTitle } from '../SummaryInfo.styled';
 import { Box } from '@mui/material';
 
 interface InvoiceInfo extends Partial<BaseInvoiceInfo> {
@@ -22,7 +16,7 @@ const BillingInfo = ({ invoiceInfo }: BillingInfoProps) => {
       <SubSectionTitle>청구정보</SubSectionTitle>
       <InfoSection>
         <InfoRow>
-          <InfoLabel>납부자명</InfoLabel>
+          <InfoLabel>납부고객명</InfoLabel>
           <InfoValue>{invoiceInfo.paymentName || '-'}</InfoValue>
         </InfoRow>
         <InfoRow>
@@ -50,4 +44,4 @@ const BillingInfo = ({ invoiceInfo }: BillingInfoProps) => {
   );
 };
 
-export default BillingInfo; 
+export default BillingInfo;

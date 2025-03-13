@@ -1,11 +1,5 @@
 import { ContractInfo as BaseContractInfo } from '@model/RegistrationInfo';
-import { 
-  InfoSection, 
-  InfoRow, 
-  InfoLabel, 
-  InfoValue, 
-  SubSectionTitle 
-} from '../SummaryInfo.styled';
+import { InfoSection, InfoRow, InfoLabel, InfoValue, SubSectionTitle } from '../SummaryInfo.styled';
 
 interface ContractInfo extends Partial<BaseContractInfo> {
   [key: string]: any;
@@ -33,4 +27,4 @@ const SubscriptionInfo = ({ contractInfo }: SubscriptionInfoProps) => {
   );
 };
 
-export default SubscriptionInfo; 
+export default SubscriptionInfo;

@@ -17,9 +17,9 @@ const emailService = {
     //   };
     //   return Promise.resolve(mockResponse);
     // }
-    
+
     return baseService.post<EmailSendResponse, EmailSendRequest>('/adm-be/v1/email/history', data);
   },
 };
 
-export default emailService; 
+export default emailService;

@@ -50,4 +50,4 @@ export const StyledDivider = styled(Divider)(({ theme }) => ({
 export const VerticalDivider = styled(Divider)(({ theme }) => ({
   height: 'auto',
   margin: theme.spacing(0, 2),
-})); 
+}));

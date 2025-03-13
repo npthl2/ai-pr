@@ -1,9 +1,9 @@
 import { Box } from '@mui/material';
-import { 
-  InvoiceInfo as BaseInvoiceInfo, 
-  DeviceInfo as BaseDeviceInfo, 
+import {
+  InvoiceInfo as BaseInvoiceInfo,
+  DeviceInfo as BaseDeviceInfo,
   ContractInfo as BaseContractInfo,
-  SalesInfo as BaseSalesInfo
+  SalesInfo as BaseSalesInfo,
 } from '@model/RegistrationInfo';
 import { StyledDivider, VerticalDivider } from './SummaryInfo.styled';
 import BillingInfo from './summary/BillingInfo';
@@ -35,26 +35,31 @@ interface SummaryInfoProps {
   salesInfo?: SalesInfoType;
 }
 
-const SummaryInfo = ({ invoiceInfo, deviceInfo, contractInfo, salesInfo = {} }: SummaryInfoProps) => {
+const SummaryInfo = ({
+  invoiceInfo,
+  deviceInfo,
+  contractInfo,
+  salesInfo = {},
+}: SummaryInfoProps) => {
   return (
     <Box sx={{ display: 'flex', flexWrap: 'nowrap', width: '100%', gap: 3 }}>
       {/* 왼쪽 컬럼 */}
       <Box sx={{ flex: '1 1 45%', minWidth: '300px' }}>
         <BillingInfo invoiceInfo={invoiceInfo} />
-        
+
         <StyledDivider />
-        
+
         <SalesInfo salesInfo={salesInfo} />
-        
+
         <StyledDivider />
-        
+
         <SubscriptionInfo contractInfo={contractInfo} />
       </Box>
-      
+
       <Box sx={{ display: 'flex', alignItems: 'stretch' }}>
-        <VerticalDivider orientation="vertical" flexItem />
+        <VerticalDivider orientation='vertical' flexItem />
       </Box>
-      
+
       {/* 오른쪽 컬럼 */}
       <Box sx={{ flex: '1 1 45%', minWidth: '300px' }}>
         <DevicePaymentInfo deviceInfo={deviceInfo} />
@@ -63,4 +68,4 @@ const SummaryInfo = ({ invoiceInfo, deviceInfo, contractInfo, salesInfo = {} }: 
   );
 };
 
-export default SummaryInfo; 
+export default SummaryInfo;
