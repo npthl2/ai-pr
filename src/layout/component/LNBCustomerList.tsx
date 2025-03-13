@@ -40,7 +40,16 @@ const LNBCustomerList = ({ value, onChange, customers, onRemove }: LNBCustomerLi
                     position: 'relative',
                   }}
                 >
-                  <CustomerName noWrap className={hoveredTab === customer.id ? 'hovered' : ''}>
+                  <CustomerName
+                    noWrap
+                    className={
+                      hoveredTab === customer.id
+                        ? 'hovered'
+                        : value === customer.id
+                          ? 'selected'
+                          : ''
+                    }
+                  >
                     {customer.name}
                   </CustomerName>
                   {hoveredTab === customer.id && (

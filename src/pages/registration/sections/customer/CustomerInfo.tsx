@@ -6,13 +6,15 @@ import { RegistrationCustomerInfo } from '@stores/registration/RegistrationCusto
 import {
   LeftSection,
   FieldContainer,
-  FieldLabel,
+  NameLabel,
+  RrnoLabel,
   PersonalInfoLabel,
   StyledFormControlLabel,
   StyledCheckbox,
   RightSection,
   VerificationButton,
-} from '../CustomerSection.styled';
+  ReadOnlyLabel,
+} from './CustomerInfo.styled';
 import { useState, useMemo, useRef } from 'react';
 import { isValid, parse } from 'date-fns';
 
@@ -69,8 +71,10 @@ const CustomerInfo = ({
         if (rrnoInputRef.current) {
           let newPosition = cursorPosition;
           if (cursorPosition > 6) {
-            newPosition = cursorPosition;
+            newPosition =
+              cursorPosition === 7 && cleanValue.length === 7 ? cursorPosition + 1 : cursorPosition;
           }
+
           rrnoInputRef.current.setSelectionRange(newPosition, newPosition);
         }
       });
@@ -142,15 +146,16 @@ const CustomerInfo = ({
   return (
     <FormWrapper>
       <LeftSection>
-        <FieldContainer>
-          <FieldLabel>
+        <FieldContainer readOnly={isNameVerified}>
+          <NameLabel>
             이름
-            <Typography component='span' className='required'>
+            <Typography component='span' color='error'>
               *
             </Typography>
-          </FieldLabel>
+          </NameLabel>
           {customer.verificationResult === undefined || !isNameVerified ? (
             <TextField
+              sx={{ width: '168px' }}
               required
               size='small'
               value={customer.name || ''}
@@ -162,39 +167,41 @@ const CustomerInfo = ({
               data-testid='name-field'
             />
           ) : (
-            <Typography>{customer.name}</Typography>
+            <ReadOnlyLabel>{customer.name}</ReadOnlyLabel>
           )}
         </FieldContainer>
 
-        <FieldContainer>
-          <FieldLabel>
+        <FieldContainer readOnly={isNameVerified}>
+          <RrnoLabel>
             주민번호
-            <Typography component='span' className='required'>
+            <Typography component='span' color='error'>
               *
             </Typography>
-          </FieldLabel>
+          </RrnoLabel>
           {customer.verificationResult === undefined || !isNameVerified ? (
             <TextField
               required
+              sx={{ width: '168px' }}
               size='small'
               value={formatRrno(customer.rrno || '')}
               onChange={handleChange('rrno')}
               onBlur={handleBlur('rrno')}
               error={!!rrnoError}
+              placeholder='13자리의 숫자만 입력 가능'
               state={rrnoError ? 'error' : 'inactive'}
               helperText={rrnoError}
               data-testid='rrno-field'
               inputRef={rrnoInputRef}
             />
           ) : (
-            <Typography>{formatRrno(customer.rrno || '')}</Typography>
+            <ReadOnlyLabel>{formatRrno(customer.rrno || '')}</ReadOnlyLabel>
           )}
         </FieldContainer>
 
-        <FieldContainer>
+        <FieldContainer last readOnly={isNameVerified}>
           <PersonalInfoLabel>
             개인정보 활용
-            <Typography component='span' className='required'>
+            <Typography component='span' color='error'>
               *
             </Typography>
           </PersonalInfoLabel>

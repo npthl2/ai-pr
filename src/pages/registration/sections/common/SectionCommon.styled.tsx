@@ -16,6 +16,7 @@ export const FormContainer = styled(Box, {
   gap: 16,
   display: 'flex',
   flexDirection: 'column',
+  minWidth: 780,
 }));
 
 export const FormWrapper = styled(Box)({

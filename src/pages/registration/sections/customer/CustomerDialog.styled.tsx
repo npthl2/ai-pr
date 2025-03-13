@@ -13,14 +13,14 @@ export const DialogContent = styled(Box)({
   gridTemplateColumns: '140px 1fr',
   rowGap: 16,
   marginBottom: 16,
-  alignItems: 'center',
 });
 
-export const DialogLabel = styled(Typography)({
+export const DialogLabel = styled(Typography)(({ alignItems }: { alignItems?: string }) => ({
   display: 'flex',
-  alignItems: 'center',
+  alignItems: alignItems || 'center',
+  paddingTop: alignItems === 'inherit' ? 4 : 0,
   gap: 4,
-});
+}));
 
 export const DialogTextField = styled(TextField)({
   width: 216,
@@ -72,13 +72,13 @@ export const DialogResultLabel = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export const DialogResultValue = styled(Typography)<{ success?: boolean }>(
-  ({ theme, success }) => ({
-    color:
-      success !== undefined
-        ? success
-          ? theme.palette.success.main
-          : theme.palette.error.main
-        : 'inherit',
-  }),
-);
+export const DialogResultValue = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'success',
+})<{ success?: boolean }>(({ theme, success }) => ({
+  color:
+    success !== undefined
+      ? success
+        ? theme.palette.success.main
+        : theme.palette.error.main
+      : 'inherit',
+}));

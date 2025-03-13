@@ -163,7 +163,7 @@ const CustomerDialog = ({
             <DialogLabel variant='h6'>증명자료 구분</DialogLabel>
             <Typography>주민등록증</Typography>
 
-            <DialogLabel variant='h6'>
+            <DialogLabel variant='h6' alignItems='inherit'>
               주민등록증 발급일자
               <Typography component='span' color='error'>
                 *

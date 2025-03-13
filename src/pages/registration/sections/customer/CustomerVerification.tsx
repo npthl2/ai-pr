@@ -2,10 +2,10 @@ import { Typography } from '@mui/material';
 import {
   VerificationContainer,
   VerificationContent,
-  VerificationTitle,
   VerificationLabel,
   VerificationStatus,
   VerificationCheckButton,
+  VerificationGroup,
 } from './CustomerVerification.styled';
 
 interface CustomerVerificationProps {
@@ -22,43 +22,67 @@ const CustomerVerification = ({
   return (
     <VerificationContainer data-testid='customer-verification-line'>
       <VerificationContent>
-        <VerificationTitle>고객검증</VerificationTitle>
-        <VerificationLabel>실명확인결과</VerificationLabel>
-        {verificationResult ? (
-          <>
-            <VerificationStatus success data-testid='verification-status'>
+        <VerificationGroup>
+          <Typography variant='h4'>고객검증</Typography>
+        </VerificationGroup>
+
+        <VerificationGroup>
+          <Typography variant='h6' color='textSecondary'>
+            실명인증결과
+          </Typography>
+          {verificationResult ? (
+            <VerificationStatus success data-testid='verification-status' paddingRight='12px'>
               정상
             </VerificationStatus>
-            <VerificationCheckButton
-              variant='outlined'
-              size='small'
-              color='primary'
-              onClick={handleCheckAvailableContract}
-              disabled={availableContractCount !== undefined && availableContractCount > 0}
-              data-testid='verification-check-button'
-            >
-              고객정보사전체크
-            </VerificationCheckButton>
-            {availableContractCount !== undefined && (
-              <>
-                {availableContractCount !== 0 ? (
-                  <VerificationStatus success data-testid='verification-pass-status'>
-                    통과
-                  </VerificationStatus>
-                ) : (
-                  <VerificationStatus data-testid='verification-fail-status'>
-                    미통과
-                  </VerificationStatus>
-                )}
-                <VerificationLabel data-testid='available-contract-count'>
-                  가입가능회선
-                </VerificationLabel>
-                <Typography>{availableContractCount}</Typography>
-              </>
-            )}
+          ) : (
+            <VerificationStatus data-testid='verification-status'>실패</VerificationStatus>
+          )}
+        </VerificationGroup>
+
+        {verificationResult && (
+          <>
+            <VerificationGroup gap='16px'>
+              <VerificationCheckButton
+                variant='outlined'
+                size='small'
+                color='primary'
+                onClick={handleCheckAvailableContract}
+                data-testid='verification-check-button'
+              >
+                고객정보사전체크
+              </VerificationCheckButton>
+              {availableContractCount !== undefined && (
+                <>
+                  {availableContractCount !== 0 ? (
+                    <>
+                      <VerificationStatus success data-testid='verification-pass-status'>
+                        통과
+                      </VerificationStatus>
+                    </>
+                  ) : (
+                    <>
+                      <VerificationStatus data-testid='verification-fail-status'>
+                        미통과
+                      </VerificationStatus>
+                    </>
+                  )}
+                </>
+              )}
+
+              {availableContractCount !== undefined && (
+                <>
+                  <VerificationLabel
+                    variant='h6'
+                    color='textSecondary'
+                    data-testid='available-contract-count'
+                  >
+                    가입가능회선
+                  </VerificationLabel>
+                  <Typography>{availableContractCount}</Typography>
+                </>
+              )}
+            </VerificationGroup>
           </>
-        ) : (
-          <VerificationStatus data-testid='verification-status'>실패</VerificationStatus>
         )}
       </VerificationContent>
     </VerificationContainer>
