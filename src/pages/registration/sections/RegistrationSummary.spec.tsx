@@ -1,4 +1,3 @@
-import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ContractSummary from './RegistrationSummary';
@@ -54,7 +53,7 @@ vi.mock('@hooks/useRegistrationInfo', () => ({
 
 vi.mock('@api/queries/registration/useRegistrationMutation', () => ({
   useRegistrationMutation: vi.fn().mockReturnValue({
-    mutate: vi.fn((data, options) => {
+    mutate: vi.fn((options) => {
       options.onSuccess({
         data: {
           businessProcessId: 'test-business-id',
