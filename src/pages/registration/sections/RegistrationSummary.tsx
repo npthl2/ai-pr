@@ -263,7 +263,7 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
             <SummaryItem>
               <ItemLabel>월 할부금</ItemLabel>
               <ItemValue sx={{ fontWeight: 900 }}>
-                51,318원
+
               </ItemValue>
             </SummaryItem>
           </Box>
