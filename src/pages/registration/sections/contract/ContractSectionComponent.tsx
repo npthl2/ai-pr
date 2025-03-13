@@ -69,7 +69,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
 
   const [customerId, setCustomerId] = useState<string>(null);
 
-  const [subscriptionType, setSubscriptionType] = useState<string>('신규가입');
+  const [subscriptionType] = useState<string>('신규가입');
   const [sellType, setSellType] = useState<string>('신규폰');
   const [selectedPhoneNumber, setSelectedPhoneNumber] = useState<PhoneNumber | null>(null);
   const [phoneNumberLastFour, setPhoneNumberLastFour] = useState<string>('');
@@ -85,7 +85,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
   const [isServiceModalOpen, setIsServiceModalOpen] = useState<boolean>(false);
   const [isAdditionalServiceModalOpen, setIsAdditionalServiceModalOpen] = useState<boolean>(false);
 
-  const [showDebugInfo, setShowDebugInfo] = useState<boolean>(false);
+  // const [showDebugInfo, setShowDebugInfo] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, validationField>>({
     salesType: { state: 'active', helperText: '' },
     phoneNumber: { state: 'active', helperText: '' },
@@ -95,7 +95,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
   });
 
   const currentCustomerId = useCustomerStore((state) => state.selectedCustomerId);
-  const currentContract = useRegistrationContractStore((state) => state.contracts[contractTabId]);
+  // const currentContract = useRegistrationContractStore((state) => state.contracts[contractTabId]);
   const validationFlag = getRegistarationContractValidationFlag(contractTabId);
 
   const phoneNumberInputRef = useRef<HTMLInputElement>(null);
@@ -236,59 +236,59 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     helperText: string;
   }
 
-  const validateRequiredFields = (): boolean => {
-    const errors: Record<string, validationField> = {};
+  // const validateRequiredFields = (): boolean => {
+  //   const errors: Record<string, validationField> = {};
 
-    // Check sales type
-    if (!sellType) {
-      errors.salesType.state = 'error';
-      errors.salesType.helperText = '판매유형을 선택해 주세요요';
-    } else {
-      errors.salesType.state = 'active';
-      errors.salesType.helperText = '';
-    }
+  //   // Check sales type
+  //   if (!sellType) {
+  //     errors.salesType.state = 'error';
+  //     errors.salesType.helperText = '판매유형을 선택해 주세요요';
+  //   } else {
+  //     errors.salesType.state = 'active';
+  //     errors.salesType.helperText = '';
+  //   }
 
-    // Check phone number
-    if (!selectedPhoneNumber?.phoneNumber || selectedPhoneNumber.phoneNumber.length < 4) {
-      errors.phoneNumber.state = 'error';
-      errors.phoneNumber.helperText = '4자리를 입력해주세요';
-    } else {
-      errors.phoneNumber.state = 'active';
-      errors.phoneNumber.helperText = '';
-    }
+  //   // Check phone number
+  //   if (!selectedPhoneNumber?.phoneNumber || selectedPhoneNumber.phoneNumber.length < 4) {
+  //     errors.phoneNumber.state = 'error';
+  //     errors.phoneNumber.helperText = '4자리를 입력해주세요';
+  //   } else {
+  //     errors.phoneNumber.state = 'active';
+  //     errors.phoneNumber.helperText = '';
+  //   }
 
-    // Check SIM
-    if (!simNumber || simNumber === '') {
-      errors.simNumber.state = 'error';
-      errors.simNumber.helperText = 'SIM을 입력해 주세요';
-    } else {
-      errors.simNumber.state = 'active';
-      errors.simNumber.helperText = '';
-    }
+  //   // Check SIM
+  //   if (!simNumber || simNumber === '') {
+  //     errors.simNumber.state = 'error';
+  //     errors.simNumber.helperText = 'SIM을 입력해 주세요';
+  //   } else {
+  //     errors.simNumber.state = 'active';
+  //     errors.simNumber.helperText = '';
+  //   }
 
-    // Check IMEI
-    if (!imeiNumber || imeiNumber === '') {
-      errors.imeiNumber.state = 'error';
-      errors.imeiNumber.helperText = 'IMEI를 입력해 주세요';
-    } else {
-      errors.imeiNumber.state = 'active';
-      errors.imeiNumber.helperText = '';
-    }
+  //   // Check IMEI
+  //   if (!imeiNumber || imeiNumber === '') {
+  //     errors.imeiNumber.state = 'error';
+  //     errors.imeiNumber.helperText = 'IMEI를 입력해 주세요';
+  //   } else {
+  //     errors.imeiNumber.state = 'active';
+  //     errors.imeiNumber.helperText = '';
+  //   }
 
-    // Check service plan
-    if (!selectedService?.serviceId || selectedService.serviceId === '') {
-      errors.servicePlan.state = 'error';
-      errors.servicePlan.helperText = '요금제를 선택해 주세요';
-    } else {
-      errors.servicePlan.state = 'active';
-      errors.servicePlan.helperText = '';
-    }
+  //   // Check service plan
+  //   if (!selectedService?.serviceId || selectedService.serviceId === '') {
+  //     errors.servicePlan.state = 'error';
+  //     errors.servicePlan.helperText = '요금제를 선택해 주세요';
+  //   } else {
+  //     errors.servicePlan.state = 'active';
+  //     errors.servicePlan.helperText = '';
+  //   }
 
-    setValidationErrors(errors);
+  //   setValidationErrors(errors);
 
-    // 전 필드 정상 상태
-    return Object.keys(errors).length === 0;
-  };
+  //   // 전 필드 정상 상태
+  //   return Object.keys(errors).length === 0;
+  // };
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -485,14 +485,16 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
               <FormRow>
                 <FormLabel></FormLabel>
                 {selectedAdditionalServices.length > 0 && (
-                  <div>
+                  <div style={{ overflow: 'auto', maxHeight: '140px' }}>
                     {selectedAdditionalServices.map((service) => (
                       <Box
                         key={service.serviceId}
                         sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
                       >
                         <Chip
-                          sx={{ mr: 1 }}
+                          color='primary'
+                          variant='outlined'
+                          sx={{ borderColor: 'transparent', height: '20px' }}
                           label={`${service.serviceName} - ${service.serviceValue.toLocaleString()}원`}
                           onDelete={() => handleRemoveAdditionalService(service.serviceId)}
                         />

@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import { Box, Radio, Button } from '@mui/material';
 import TextField from '@components/TextField';
 
-export const SectionContainer = styled(Box)(({ theme }) => ({
+export const SectionContainer = styled(Box)(({}) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: '24px',
@@ -89,7 +89,7 @@ export const PhoneNumberField = styled(TextField)(({ theme }) => ({
   marginRight: theme.spacing(1),
 }));
 
-export const ActionButton = styled(Button)(({ theme }) => ({
+export const ActionButton = styled(Button)(({}) => ({
   margin: 0,
   padding: 0,
   height: '28px',

@@ -1,4 +1,4 @@
-import { FormContainer, FormWrapper } from './common/SectionCommon.styled';
+import { FormContainer } from './common/SectionCommon.styled';
 import ContractSectionComponent from './contract/ContractSectionComponent';
 
 interface ContractSectionProps {

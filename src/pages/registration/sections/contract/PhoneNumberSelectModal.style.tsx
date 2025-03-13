@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import { Dialog, DialogTitle, DialogActions, Box } from '@mui/material';
 
-export const StyledDialog = styled(Dialog)(({ theme }) => ({
+export const StyledDialog = styled(Dialog)(({}) => ({
   '& .MuiDialog-paper': {
     borderRadius: 8,
     boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
@@ -16,14 +16,14 @@ export const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
+export const StyledDialogTitle = styled(DialogTitle)(({}) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
   mb: 3,
 }));
 
-export const StyledTableContainer = styled(Box)(({ theme }) => ({
+export const StyledTableContainer = styled(Box)(({}) => ({
   width: 552,
   height: 249,
   overflow: 'auto',
@@ -32,7 +32,7 @@ export const StyledTableContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
+export const StyledDialogActions = styled(DialogActions)(({}) => ({
   width: 600,
   height: 68,
   gap: 8,

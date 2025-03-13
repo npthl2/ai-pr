@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box } from '@mui/material';
 import useRegistrationSalesStore from '@stores/registration/RegistrationSalesStore';
-import useCustomerStore from '@stores/CustomerStore';
+// import useCustomerStore from '@stores/CustomerStore';
 import {
   StyledTextField,
   FormLabel,
@@ -28,30 +28,27 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, on
     updateRegistrationSalesValidationFlag,
   } = useRegistrationSalesStore();
 
-  const [customerId, setCustomerId] = useState<string>('');
+  // const [customerId, setCustomerId] = useState<string>('');
 
   const [salesDepartment, setSalesDepartment] = useState<string>('');
   const [salesContractPoint, setSalesContractPoint] = useState<string>('');
   const [finalSeller, setFinalSeller] = useState<string>('');
   const [supporter, setSupporter] = useState<string>('');
 
-  const [showDebugInfo, setShowDebugInfo] = useState<boolean>(false);
+  // const [showDebugInfo, setShowDebugInfo] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, validationField>>({
     salesDepartment: { state: 'active', helperText: '' },
-    salesContractPoint: { state: 'active', helperText: '' },
-    finalSeller: { state: 'active', helperText: '' },
-    supporter: { state: 'active', helperText: '' },
   });
 
-  const currentCustomerId = useCustomerStore((state) => state.selectedCustomerId);
-  const currentSales = useRegistrationSalesStore((state) => state.sales[tabId]);
+  // const currentCustomerId = useCustomerStore((state) => state.selectedCustomerId);
+  // const currentSales = useRegistrationSalesStore((state) => state.sales[tabId]);
   const validationFlag = getRegistrationSalesValidationFlag(tabId);
 
   const salesDepartmentInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     // store 정보 생성
-    setCustomerId(currentCustomerId ?? '');
+    // setCustomerId(currentCustomerId ?? '');
     addRegistrationSalesInfo(tabId);
     // 가입대리점점 필드에 포커스 설정
     if (salesDepartmentInputRef.current) {
@@ -67,15 +64,6 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, on
     }
   }, [validationFlag]);
 
-  // useEffect(() => {
-  //   handleUpdateStoreAndValidationCompleteFields(tabId, {
-  //     salesDepartment: salesDepartment,
-  //     salesContractPoint: salesContractPoint,
-  //     finalSeller: finalSeller,
-  //     supporter: supporter,
-  //   });
-  // }, [salesDepartment, salesContractPoint, finalSeller, supporter]);
-
   // 가입대리점 핸들러
   const handleSalesDepartmentChange = (salesDepartment: string) => {
     setSalesDepartment(salesDepartment);
@@ -86,7 +74,7 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, on
       ...prev,
       salesDepartment: {
         state: !salesDepartment ? 'error' : 'active',
-        helperText: !salesDepartment ? '필수' : '',
+        helperText: !salesDepartment ? '가입대리점을 입력해 주세요' : '',
       },
     }));
   };
@@ -137,9 +125,9 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, on
                 salesDepartment: salesDepartment,
               });
             }}
-            error={salesDepartment === '' ? true : false}
-            helperText={salesDepartment === '' ? '가입대리점을 입력해 주세요' : ''}
+            state={validationErrors.salesDepartment.state}
             absoluteHelperText={true}
+            helperText={validationErrors.salesDepartment.helperText}
             slotProps={{
               htmlInput: {
                 maxLength: 10,
