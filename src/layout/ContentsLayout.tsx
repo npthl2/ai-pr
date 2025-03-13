@@ -127,6 +127,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
         </ContentHeader>
         <ContentsBG>
           <Box
+            data-testid='customer-detail-container'
             sx={{
               display: currentTab?.id === TabInfo.CUSTOMER_SEARCH.id ? 'block' : 'none',
               height: '100%',

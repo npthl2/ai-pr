@@ -197,7 +197,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
   const setSelectedMainMenu = useMenuStore((state) => state.setSelectedMainMenu);
   const selectCustomer = useCustomerStore((state) => state.selectCustomer);
   const { handleRemoveAllRegistrationInfo } = useRegistration();
-  const { customerTabs, setCustomerTabs, addCustomer, setActiveTab } = useCustomerStore();
+  const { customerTabs, setCustomerTabs, addCustomer, setActiveTab, reset } = useCustomerStore();
 
   // 홈으로 이동
   const handleGoHome = () => {
@@ -207,8 +207,13 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
     // 메인 메뉴를 홈으로 설정
     setSelectedMainMenu(MainMenu.HOME);
     
-    // 필요한 경우 추가 정리 작업 수행
-    // 예: 등록 정보 초기화, 탭 닫기 등
+    // 현재 고객 ID가 있는 경우 해당 고객의 모든 등록 정보 제거
+    if (contractTabId) {
+      handleRemoveAllRegistrationInfo(contractTabId);
+    }
+    
+    // 모든 고객 탭 닫기 (CustomerStore의 reset 함수 호출)
+    reset();
   };
 
   // 고객조회로 이동

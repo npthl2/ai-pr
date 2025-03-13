@@ -18,13 +18,20 @@ class RegistrationPage {
 
   // 신규가입 탭이 표시되는지 확인
   assertNewSubscriptionTabVisible() {
-    cy.get('[data-testid="customer-tab-NEW_SUBSCRIPTION0"]').should('be.visible');
+    cy.get('[data-testid="tab-신규가입"]').should('be.visible');
   }
-  
 
   // 가입정보 요약 섹션으로 이동
   navigateToSummarySection() {
     cy.get('[data-testid="NEW_SUBSCRIPTION0-section-summary"]').click();
+  }
+
+  assertRegistrationPending() {
+    cy.get('[data-testid="status-message"]').contains('고객님의 가입이 처리중입니다.').should('be.visible');
+  }
+
+  assertRegistrationCompleted() {
+    cy.get('[data-testid="status-message"]').contains('고객님의 가입이 처리 완료되었습니다.').should('be.visible');
   }
 
   // 가입 후 안내 섹션으로 이동
@@ -156,14 +163,21 @@ class RegistrationPage {
 
   // 홈 화면으로 이동 확인
   assertRedirectedToHome() {
+    // 홈 화면이 표시되는지 확인
     cy.get('[data-testid="home-content"]').should('be.visible');
-    cy.get('[data-testid="customer-tab-NEW_SUBSCRIPTION0"]').should('not.exist');
+    
+    // 신규가입 탭이 존재하지 않는지 확인
+    cy.get('button[id*="NEW_SUBSCRIPTION"]').should('not.exist');
   }
 
   // 고객조회 탭으로 이동 확인
   assertRedirectedToCustomerSearch() {
-    cy.get('[data-testid="customer-search-tab"]').should('be.visible');
-    cy.get('[data-testid="customer-tab-NEW_SUBSCRIPTION0"]').should('not.exist');
+    // 고객조회 탭이 표시되는지 확인
+    cy.get('button[id*="CUSTOMER_SEARCH"]').should('be.visible');
+    
+    // 신규가입 탭이 존재하지 않는지 확인
+    cy.get('button[id*="NEW_SUBSCRIPTION"]').should('not.exist');
+
   }
 
   // LNB가 닫혔는지 확인
@@ -176,9 +190,9 @@ class RegistrationPage {
   // MDI가 닫혔는지 확인
   assertMDIClosed() {
     // 고객 탭이 닫혔는지 확인
-    cy.get('[data-testid="tab-NEW_SUBSCRIPTION"]').should('not.exist');
-    cy.get('[data-testid="tab-CUSTOMER_SEARCH"]').should('not.exist');
-    cy.get('[data-testid="tab-SERVICE_MODIFICATION"]').should('not.exist');
+    cy.get('button[id*="NEW_SUBSCRIPTION"]').should('not.exist');
+    cy.get('button[id*="CUSTOMER_SEARCH"]').should('not.exist');
+    cy.get('button[id*="SERVICE_MODIFICATION"]').should('not.exist');
   }
 
   // 홈으로 이동 버튼 클릭 시 LNB와 MDI가 닫히고 홈 화면으로 이동하는지 확인
@@ -195,6 +209,12 @@ class RegistrationPage {
     // MDI가 닫혔는지 확인
     this.assertMDIClosed();
   }
+
+  // 고객조회 탭이 활성화되었는지 확인
+  assertCustomerSearchTabActive() {
+    cy.get('[data-testid="tab-고객조회"]').should('be.visible');
+  }
+
 }
 
 export default RegistrationPage; 
