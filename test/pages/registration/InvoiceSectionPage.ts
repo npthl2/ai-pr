@@ -111,9 +111,20 @@ class InvoiceSectionPage {
     cy.get('#Toast').should('have.text', message);
   }
 
-  // 임시저장 버튼 inabled
   assertTemporarySaveButtonEnabled() {
     cy.get('[data-testid="temporary-save-button"]').should('be.enabled');
+  }
+
+  typeInvoiceAddressInput(address: string) {
+    cy.get('[data-testid="invoice-address-input"] input')
+      .then(($input) => {
+        // disabled 속성 제거
+        $input.prop('disabled', false);
+        // aria-disabled 속성도 제거
+        $input.attr('aria-disabled', 'false');
+      })
+      .type(address);
+    cy.get('[data-testid="invoice-address-input"] input').type(address);
   }
 }
 export default InvoiceSectionPage;

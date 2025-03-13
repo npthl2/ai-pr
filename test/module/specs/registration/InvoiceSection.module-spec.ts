@@ -15,7 +15,6 @@ const EMAIL_DOMAIN_INPUT_NAME = 'invoice-email-domain-input';
 const CARD_NUMBER_INPUT_NAME = 'invoice-card-number-input';
 const BANK_ACCOUNT_INPUT_NAME = 'invoice-bank-account-input';
 const POSTAL_CODE_INPUT_NAME = 'invoice-postal-code-input';
-const ADDRESS_INPUT_NAME = 'invoice-address-input';
 const ADDRESS_DETAIL_INPUT_NAME = 'invoice-address-detail-input';
 const PAYMENT_NAME_INPUT_NAME = 'invoice-payment-name-input';
 const BIRTH_DATE_INPUT_NAME = 'invoice-birth-date-input';
@@ -127,8 +126,11 @@ describe('KAN-7 신규가입 진입', () => {
 
     // 데이터 입력
     page.typeInputField(RECIPIENT_INPUT_NAME, '홍길동');
-    page.typeInputField(POSTAL_CODE_INPUT_NAME, '12345');
-    page.typeInputField(ADDRESS_INPUT_NAME, '서울특별시 강남구 테헤란로 14길 6 남도빌딩 2층');
+    page.typeInputField(POSTAL_CODE_INPUT_NAME, '11111');
+
+    // disabled인 입력 필드라서 속성 조작후 입력
+    page.typeInvoiceAddressInput('서울특별시 강남구 테헤란로 14길 6 남도빌딩 2층');
+
     page.typeInputField(ADDRESS_DETAIL_INPUT_NAME, '101호');
     page.typeInputField(PAYMENT_NAME_INPUT_NAME, '홍길동');
     page.typeInputField(BIRTH_DATE_INPUT_NAME, '111111');
