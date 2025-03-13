@@ -84,7 +84,6 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
                     <Typography variant='body2'>{tab.label}</Typography>
                     {tab.closeable && (
                       <TabCloseButton
-                        size='small'
                         data-testid={`close-tab-${tab.label}`}
                         onClick={(e) => handleCloseTab(e, tab.id)}
                       >
@@ -108,7 +107,6 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
             <Typography variant='h3'>{currentTab?.label}</Typography>
             {currentTab?.label !== TabInfo.CUSTOMER_SEARCH.label && (
               <StarIconButton
-                variant='text'
                 data-testid={`bookmark-tab-${currentTab?.label}`}
                 onClick={(e) => {
                   if (!currentTab?.label || !currentTabId) return;
