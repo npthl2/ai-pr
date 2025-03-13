@@ -19,6 +19,7 @@ import {
   SectionInfoContainer,
   SectionTitle,
   FormRow,
+  FormRowSection,
   FormLabel,
   RequiredLabel,
   StyledTextField,
@@ -26,6 +27,7 @@ import {
   ActionButton,
   TwoColumnContainer,
   Column,
+  FormRowSectionPlan,
 } from './ContractSectionComponent.styles';
 import useCustomerStore from '@stores/CustomerStore';
 import registrationContractService from '@api/services/registrationContractService';
@@ -321,7 +323,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 )}
               </FormRow>
 
-              <FormRow>
+              <FormRowSection>
                 <FormLabel>
                   전화번호<RequiredLabel>*</RequiredLabel>
                 </FormLabel>
@@ -351,7 +353,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                   <Typography sx={{ fontSize: '13px' }}>번호채번</Typography>
                 </ActionButton>
                 <Typography sx={{ ml: 1 }}>{selectedPhoneNumber?.phoneNumber ?? ''}</Typography>
-              </FormRow>
+              </FormRowSection>
             </SectionInfoContainer>
 
             {/* 기기정보 섹션 */}
@@ -386,12 +388,14 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 />
               </FormRow>
 
-              <FormRow>
+              <FormRowSection sx={{ mt: 1 }}>
                 <FormLabel>
                   IMEI<RequiredLabel>*</RequiredLabel>
                 </FormLabel>
                 <StyledTextField
-                  sx={{ width: '160px' }}
+                  sx={{
+                    width: '160px',
+                  }}
                   size='small'
                   variant='outlined'
                   value={imeiNumber}
@@ -408,7 +412,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 />
 
                 <Typography variant='body1'>모델명: {deviceModelName}</Typography>
-              </FormRow>
+              </FormRowSection>
             </SectionInfoContainer>
           </Column>
 
@@ -419,7 +423,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 <Typography variant='h5'>상품정보</Typography>
               </SectionTitle>
 
-              <FormRow>
+              <FormRowSectionPlan>
                 <FormLabel>
                   요금제<RequiredLabel>*</RequiredLabel>
                 </FormLabel>
@@ -455,7 +459,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
               원`
                     : '0 원'}
                 </Typography>
-              </FormRow>
+              </FormRowSectionPlan>
 
               {/* {selectedService && selectedService.serviceId && (
               <div>

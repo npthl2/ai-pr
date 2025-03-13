@@ -15,7 +15,7 @@ export const SectionInfoContainer = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(1),
-  minWidth: '227px',
+  // minWidth: '227px',
 }));
 
 export const SectionTitle = styled('div')(({ theme }) => ({
@@ -43,6 +43,24 @@ export const FormRow = styled(Box)(({ theme }) => ({
   },
 }));
 
+export const FormRowSection = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(2),
+  '& .MuiFormControl-root': {
+    width: '160px',
+  },
+}));
+
+export const FormRowSectionPlan = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(2),
+  '& .MuiFormControl-root': {
+    width: '200px',
+  },
+}));
+
 export const FormLabel = styled('div')(({ theme }) => ({
   minWidth: '100px',
   fontWeight: 'bold',
@@ -59,9 +77,6 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
     backgroundColor: '#ffffff',
     height: '28px',
-  },
-  '& .MuiFormControl-root': {
-    minWidth: '160px',
   },
 }));
 
