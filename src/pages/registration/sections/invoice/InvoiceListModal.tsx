@@ -31,7 +31,7 @@ const InvoiceListModal = ({
       size='medium-large'
       confirmLabel={onConfirmLabel}
       content={
-        <Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '10px' }}>
           <Box sx={{ display: 'flex', gap: '10px' }}>
             <Typography variant='h3'>청구정보 목록</Typography>
             <Typography variant='h4' color='text.secondary'>
