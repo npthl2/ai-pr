@@ -49,7 +49,7 @@ interface InvoiceSectionProps {
   completed?: boolean;
 }
 
-export interface InvoiceFormData {
+interface InvoiceFormData {
   billingType: BillingType;
   recipient: string;
   invoiceType: InvoiceType;
@@ -89,21 +89,23 @@ const initialInvoiceFormData: InvoiceFormData = {
   birthDate: '',
 };
 
-interface InvoiceError {
-  recipient: boolean;
-  invoiceEmailId: boolean;
-  invoiceEmailDomainType: boolean;
-  invoiceEmailDomain: boolean;
-  invoicePostalCode: boolean;
-  invoiceAddress: boolean;
-  invoiceAddressDetail: boolean;
-  bankCompany: boolean;
-  bankAccount: boolean;
-  cardCompany: boolean;
-  cardNumber: boolean;
-  paymentName: boolean;
-  birthDate: boolean;
-}
+type InvoiceError = {
+  [key in
+    | 'recipient'
+    | 'invoiceEmailId'
+    | 'invoiceEmailDomainType'
+    | 'invoiceEmailDomain'
+    | 'invoicePostalCode'
+    | 'invoiceAddress'
+    | 'invoiceAddressDetail'
+    | 'bankCompany'
+    | 'bankAccount'
+    | 'cardCompany'
+    | 'cardNumber'
+    | 'paymentName'
+    | 'birthDate']: boolean;
+};
+
 const initialInvoiceError: InvoiceError = {
   recipient: false,
   invoiceEmailId: false,
@@ -123,7 +125,6 @@ const initialInvoiceError: InvoiceError = {
 const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSectionProps) => {
   const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
   const customerInfo = getRegistrationCustomerInfo(contractTabId);
-  // to-do : 수정
   const activeCustomerId = customerInfo?.customerId ?? '';
   const { getRegistrationInvoiceInfo, setRegistrationInvoiceInfo } = useRegistrationInvoiceStore();
   const registrationInvoiceInfo = getRegistrationInvoiceInfo(contractTabId);
@@ -148,10 +149,38 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
     isEmailDomain: (value: string) => value === '' || /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value),
     isBankAccount: (value: string) => value === '' || /^[0-9]{10,20}$/.test(value),
     isCardNumber: (value: string) => value === '' || /^[0-9]{16}$/.test(value),
-    isBirthDate: (value: string) =>
-      value === '' ||
-      /^[0-9]{2}[0][0-9][0123][0-9]$/.test(value) ||
-      /^[0-9]{2}[1][0-2][0123][0-9]$/.test(value),
+    isBirthDate: (value: string) => {
+      if (value === '') return true;
+      if (!/^\d{6}$/.test(value)) return false;
+
+      const year = value.substring(0, 2);
+      const month = value.substring(2, 4);
+      const day = value.substring(4, 6);
+
+      // 19xx년과 20xx년 둘중 하나라도 맞는 날짜면 true 반환
+      const isValid19xx = (() => {
+        const date = new Date(`19${year}-${month}-${day}`);
+        return (
+          !isNaN(date.getTime()) &&
+          date.getFullYear() === parseInt(`19${year}`) &&
+          date.getMonth() + 1 === parseInt(month) &&
+          date.getDate() === parseInt(day)
+        );
+      })();
+
+      const isValid20xx = (() => {
+        const date = new Date(`20${year}-${month}-${day}`);
+        return (
+          !isNaN(date.getTime()) &&
+          date.getFullYear() === parseInt(`20${year}`) &&
+          date.getMonth() + 1 === parseInt(month) &&
+          date.getDate() === parseInt(day)
+        );
+      })();
+
+      // 둘 중 하나라도 유효하면 true 반환
+      return isValid19xx || isValid20xx;
+    },
   };
 
   // 입력 필드 변경 핸들러
