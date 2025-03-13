@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { Typography, useTheme } from '@mui/material';
 import {
   VerificationContainer,
   VerificationContent,
@@ -19,6 +19,8 @@ const CustomerVerification = ({
   availableContractCount,
   handleCheckAvailableContract,
 }: CustomerVerificationProps) => {
+  const theme = useTheme();
+
   return (
     <VerificationContainer data-testid='customer-verification-line'>
       <VerificationContent>
@@ -39,18 +41,27 @@ const CustomerVerification = ({
           )}
         </VerificationGroup>
 
-        {verificationResult && (
-          <>
-            <VerificationGroup gap='16px'>
-              <VerificationCheckButton
-                variant='outlined'
-                size='small'
-                color='primary'
-                onClick={handleCheckAvailableContract}
-                data-testid='verification-check-button'
-              >
-                고객정보사전체크
-              </VerificationCheckButton>
+        <VerificationGroup gap='16px'>
+          <VerificationCheckButton
+            sx={{
+              ...(!verificationResult && {
+                '&:disabled': {
+                  backgroundColor: 'inherit',
+                  borderColor: `${theme.palette.grey[100]}`,
+                },
+              }),
+            }}
+            variant='outlined'
+            size='small'
+            color='primary'
+            onClick={handleCheckAvailableContract}
+            disabled={!verificationResult}
+            data-testid='verification-check-button'
+          >
+            고객정보사전체크
+          </VerificationCheckButton>
+          {verificationResult && (
+            <>
               {availableContractCount !== undefined && (
                 <>
                   {availableContractCount !== 0 ? (
@@ -81,9 +92,9 @@ const CustomerVerification = ({
                   <Typography>{availableContractCount}</Typography>
                 </>
               )}
-            </VerificationGroup>
-          </>
-        )}
+            </>
+          )}
+        </VerificationGroup>
       </VerificationContent>
     </VerificationContainer>
   );
