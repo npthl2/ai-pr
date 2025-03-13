@@ -43,6 +43,7 @@ import { SelectChangeEvent } from '@mui/material';
 import useRegistrationInvoiceStore from '@stores/registration/RegistrationInvoiceStore';
 import InvoiceAddressSearchModal from './invoice/InvoiceAddressSearchModal';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTheme } from '@mui/material/styles';
 
 interface InvoiceSectionProps {
   contractTabId: string;
@@ -124,6 +125,7 @@ const initialInvoiceError: InvoiceError = {
 };
 
 const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSectionProps) => {
+  const theme = useTheme();
   const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
   const customerInfo = getRegistrationCustomerInfo(contractTabId);
   const activeCustomerId = customerInfo?.customerId ?? '';
@@ -457,6 +459,9 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
           }}
           disabled={!activeCustomerId || invoiceList?.length === 0 || isSaved}
           data-testid='invoice-search-button'
+          sx={{
+            backgroundColor: theme.palette.primary.contrastText,
+          }}
         >
           청구정보조회
         </Button>
