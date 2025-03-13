@@ -312,9 +312,9 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 <FormLabel>
                   판매유형<RequiredLabel>*</RequiredLabel>
                 </FormLabel>
-                <RadioGroup row value={sellType} onChange={(e) => setSellType(e.target.value)}>
-                  <FormControlLabel value='신규폰' control={<StyledRadio />} label='신규폰' />
-                  <FormControlLabel value='중고폰' control={<StyledRadio />} label='중고폰' />
+                <RadioGroup row value={sellType} onChange={(e) => setSellType(e.target.value)} data-testid='sell-type-radio'>
+                  <FormControlLabel value='신규폰' control={<StyledRadio />} label='신규폰'  data-testid='sell-type-radio-0'/>
+                  <FormControlLabel value='중고폰' control={<StyledRadio />} label='중고폰'  data-testid='sell-type-radio-1'/>
                 </RadioGroup>
                 {validationErrors.salesType.state === 'error' && (
                   <Typography color='error' variant='caption' sx={{ ml: 1 }}>
@@ -343,16 +343,18 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                     inputMode: 'numeric',
                     pattern: '[0-9]*',
                   }}
+                  data-testid='end-phone-number-input'
                 />
                 <ActionButton
                   variant='outlined'
                   size='small'
                   onClick={handlePhoneNumberModalOpen}
                   disabled={phoneNumberLastFour.length !== 4}
+                  data-testid='select-phone-number-button'
                 >
                   <Typography sx={{ fontSize: '13px' }}>번호채번</Typography>
                 </ActionButton>
-                <Typography sx={{ ml: 1 }}>{selectedPhoneNumber?.phoneNumber ?? ''}</Typography>
+                <Typography sx={{ ml: 1 }} data-testid='selected-phone-number-typo'>{selectedPhoneNumber?.phoneNumber ?? ''}</Typography>
               </FormRowSection>
             </SectionInfoContainer>
 
@@ -385,6 +387,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                   state={validationErrors.simNumber.state}
                   absoluteHelperText={true}
                   helperText={validationErrors.simNumber.helperText}
+                  data-testid='SIM-input'
                 />
               </FormRow>
 
@@ -409,9 +412,10 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                   state={validationErrors.imeiNumber.state}
                   absoluteHelperText={true}
                   helperText={validationErrors.imeiNumber.helperText}
+                  data-testid='IMEI-input'
                 />
 
-                <Typography variant='body1'>모델명: {deviceModelName}</Typography>
+                <Typography variant='body1' data-testid='model-name-typo'>모델명: {deviceModelName}</Typography>
               </FormRowSection>
             </SectionInfoContainer>
           </Column>
@@ -434,7 +438,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position='end'>
-                        <SearchIcon onClick={handleServiceModalOpen} sx={{ cursor: 'pointer' }} />
+                        <SearchIcon onClick={handleServiceModalOpen} sx={{ cursor: 'pointer' }} data-testid='service-select-icon' />
                       </InputAdornment>
                     ),
                     readOnly: true,
@@ -453,10 +457,10 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                   sx={{
                     ml: 2,
                   }}
+                  data-testid='selected-service-price-typo'
                 >
                   {selectedService
-                    ? `${selectedService.serviceValue.toLocaleString()} 
-              원`
+                    ? `${selectedService.serviceValue.toLocaleString()}원`
                     : '0 원'}
                 </Typography>
               </FormRowSectionPlan>
@@ -477,6 +481,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                     sx={{ width: '100px', height: '28px' }}
                     onClick={handleAdditionalServiceModalOpen}
                     disabled={!selectedService?.serviceId}
+                    data-testid='additional-service-button'
                   >
                     부가서비스 선택
                   </ActionButton>
@@ -486,7 +491,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 <FormLabel></FormLabel>
                 {selectedAdditionalServices.length > 0 && (
                   <div style={{ overflow: 'auto', maxHeight: '140px' }}>
-                    {selectedAdditionalServices.map((service) => (
+                    {selectedAdditionalServices.map((service, index) => (
                       <Box
                         key={service.serviceId}
                         sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
@@ -497,6 +502,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                           sx={{ borderColor: 'transparent', height: '20px' }}
                           label={`${service.serviceName} - ${service.serviceValue.toLocaleString()}원`}
                           onDelete={() => handleRemoveAdditionalService(service.serviceId)}
+                          data-testid={`selected-additional-service-chip-${index}`}
                         />
                       </Box>
                     ))}

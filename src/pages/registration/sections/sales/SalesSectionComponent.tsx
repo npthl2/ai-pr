@@ -134,6 +134,7 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, on
               },
             }}
             inputRef={salesDepartmentInputRef}
+            data-testid='sales-department-input'
           />
         </FormGroup>
         <FormGroup>
@@ -151,6 +152,7 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, on
                 maxLength: 10,
               },
             }}
+            data-testid='sales-contact-point-input'
           />
         </FormGroup>
         <FormGroup>
@@ -168,6 +170,7 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, on
                 maxLength: 10,
               },
             }}
+            data-testid='finalseller-input'
           />
         </FormGroup>
         <FormGroup>
@@ -185,6 +188,7 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, on
                 maxLength: 10,
               },
             }}
+            data-testid='supporter-input'
           />
         </FormGroup>
       </FormRow>

@@ -25,6 +25,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
   const [completedSections, setCompletedSections] = useState<SectionId[]>([
     SECTION_IDS.CUSTOMER,
     SECTION_IDS.INVOICE,
+      SECTION_IDS.SALES,
   ]);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const createSections = (

@@ -62,7 +62,7 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
   };
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open} onClose={onClose} data-testid='service-select-modal'>
       <Box sx={styles.modalContainer}>
         <Box sx={styles.modalHeader}>
           <Typography variant='h6' component='h2'>
@@ -87,6 +87,7 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
                   e.preventDefault();
                 }
               }}
+              data-testid='service-select-search-input'
             />
             <Button
               onClick={handleSearch}
@@ -95,6 +96,7 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
               iconPosition='left'
               size='small'
               sx={styles.searchButton}
+              data-testid='service-select-search-button'
             >
               조회
             </Button>
@@ -123,13 +125,14 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
                 </TableHead>
                 <TableBody>
                   {filteredPlanList.length > 0 ? (
-                    filteredPlanList.map((plan) => (
-                      <TableRow key={plan.id} sx={styles.tableRow}>
+                    filteredPlanList.map((plan, index) => (
+                      <TableRow key={plan.id} sx={styles.tableRow} data-testid='service-select-table-row'>
                         <TableCell>
                           <Radio
                             checked={selectedPlan?.id === plan.id}
                             onChange={() => setSelectedPlan(plan)}
                             size='small'
+                            data-testid={`service-select-radio-${index}`}
                           />
                         </TableCell>
                         <TableCell>{plan.name}</TableCell>
@@ -160,6 +163,7 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
             iconComponent={<CheckIcon />}
             iconPosition='left'
             size='small'
+            data-testid='confirm-service-button'
           >
             선택
           </Button>

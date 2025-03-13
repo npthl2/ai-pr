@@ -99,7 +99,7 @@ const PhoneNumberSelectModal: React.FC<PhoneNumberSelectModalProps> = ({
   };
 
   return (
-    <StyledDialog open={open} onClose={handleClose}>
+    <StyledDialog open={open} onClose={handleClose} data-testid='select-phone-number-modal'>
       <StyledDialogTitle>
         <Typography variant='h6' component='div'>
           전화번호 선택
@@ -132,18 +132,19 @@ const PhoneNumberSelectModal: React.FC<PhoneNumberSelectModalProps> = ({
             </TableHead>
             <TableBody>
               {phoneNumbers.length > 0 ? (
-                phoneNumbers.map((phoneNumber) => (
+                phoneNumbers.map((phoneNumber, index) => (
                   <TableRow
                     disableEffect={true}
                     key={phoneNumber.id}
                     onClick={() => handleRadioChange(phoneNumber)}
+                    data-testid='available-phone-number-list'
                   >
                     <TableCell>
                       <Radio
                         checked={selectedPhoneNumber?.id === phoneNumber.id}
                         onChange={() => handleRadioChange(phoneNumber)}
                         value={phoneNumber.id}
-                        name='phone-number-radio'
+                        data-testid={`phone-number-radio-${index}`}
                         icon={<RadioIcon />}
                         checkedIcon={
                           <CheckedRadioIcon>
@@ -189,6 +190,7 @@ const PhoneNumberSelectModal: React.FC<PhoneNumberSelectModalProps> = ({
           iconComponent={<CheckIcon />}
           iconPosition='left'
           size='small'
+          data-testid='confirm-available-phone-number-button'
         >
           선택
         </Button>

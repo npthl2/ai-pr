@@ -113,7 +113,7 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
   };
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open} onClose={onClose} data-testid='additional-service-select-modal'>
       <Box sx={{ ...styles.modalContainer, width: '800px', minHeight: '800px' }}>
         <Box sx={styles.modalHeader}>
           <Typography variant='h6' component='h2'>
@@ -179,7 +179,7 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
                 </TableHead>
                 <TableBody>
                   {filteredServices.length > 0 ? (
-                    filteredServices.map((service) => (
+                    filteredServices.map((service, index) => (
                       <TableRow key={service.serviceId}>
                         <TableCell>
                           <Checkbox
@@ -187,6 +187,7 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
                               (s) => s.serviceId === service.serviceId,
                             )}
                             onChange={() => handleSelect(service)}
+                            data-testid={`additional-service-list-checkbox-${index}`}
                           />
                         </TableCell>
                         <TableCell>{service.serviceValueType}</TableCell>
@@ -210,7 +211,7 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
         </Box>
         <Box sx={{ minHeight: '131px' }}>
           {unselectableAdditionalService && (
-            <Alert severity='error' sx={{ mt: 2 }}>
+            <Alert severity='error' sx={{ mt: 2 }} data-testid='additional-service-exclusive-alert'>
               *
               {`${unselectableAdditionalService.serviceName}은(는) 선택이 불가능한 부가서비스 입니다.`}
             </Alert>
@@ -248,6 +249,7 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
             iconComponent={<CheckIcon />}
             iconPosition='left'
             size='small'
+            data-testid='confirm-additional-service-button'
           >
             완료
           </Button>
