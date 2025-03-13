@@ -312,7 +312,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
     setInvoiceError({
       ...invoiceError,
       invoicePostalCode: !invoiceFormData.invoicePostalCode,
-      invoiceAddress: true,
+      invoiceAddress: !invoiceFormData.invoiceAddress,
     });
   };
 
