@@ -1,5 +1,96 @@
 /// <reference types="cypress" />
 
+// 기본 고객 정보
+export const storeCustomerInfoMock = {
+  customerId: '100000000001',
+  name: '박철수',
+  rrno: '781012-12345678',
+  rrnoIssueDate: '19781012',
+  authHistoryId: 0,
+  isConsentPersonalInfo: false,
+  isConsentIdentityVerification: false,
+  verificationResult: false,
+  organization: '',
+  availableContractCount: 1
+};
+
+// 기본 서비스 정보
+export const storeServiceMock = {
+  serviceId: 'S001',
+  serviceName: '5G 프리미엄 요금제',
+  serviceValueType: 'KRW',
+  serviceValue: 55000
+};
+
+// 기본 추가 서비스 정보
+export const storeAdditionalServicesMock = [
+  {
+    serviceId: 'A001',
+    serviceName: '데이터 안심옵션',
+    serviceValueType: 'KRW',
+    serviceValue: 5000
+  }
+];
+
+// 모킹 데이터 생성
+export const storeContractInfoMock = {
+  contractType: '신규가입',
+  sellType: '일반판매',
+  phoneNumber: '010-1234-5678',
+  sim: 'USIM',
+  imei: '123456789012345',
+  service: storeServiceMock,
+  additionalServices: storeAdditionalServicesMock,
+  isValidated: true
+};
+
+export const storeInvoiceInfoMock = {
+  invoiceId: 'INV' + new Date().getTime(),
+  customerId: storeCustomerInfoMock?.customerId || '',
+  billingType: '휴대폰',
+  recipient: storeCustomerInfoMock?.name || '홍길동',
+  invoiceType: '이메일',
+  invoiceEmail: 'user@example.com',
+  invoicePostalCode: '06164',
+  invoiceAddress: '서울특별시 강남구 테헤란로 123',
+  invoiceAddressDetail: '5층 501호',
+  paymentMethod: 'BANK',
+  bankCompany: '국민은행',
+  bankAccount: '123-456-789012',
+  cardCompany: '신한카드',
+  cardNumber: '1234-5678-9012-3456',
+  paymentDate: '25',
+  paymentName: storeCustomerInfoMock?.name || '홍길동',
+  birthDate: '19900101'
+};
+
+export const storeDeviceInfoMock = {
+  deviceId: '1',
+  deviceModelName: '갤럭시 S23 Ultra',
+  deviceModelNameAlias: 'Galaxy S23 Ultra',
+  deviceEngagementType: 'PUBLIC_POSTED_SUPPERT',
+  deviceSponsorName: '통합스폰서',
+  deviceEngagementPeriod: 24,
+  deviceEngagementName: '공시지원금',
+  deviceSalesPrice: 1200000,
+  deviceDiscountPrice: 300000,
+  devicePrepaidPrice: 100000,
+  deviceInstallmentAmount: 800000,
+  deviceInstallmentFee: 24000,
+  deviceTotalPriceAmout: 824000,
+  deviceInstallmentPeriod: 24,
+  monthlyInstallmentPrice: 34333,
+  isValidated: true
+};
+
+export const storeSalesInfoMock = {
+  salesDepartment: '온라인지점',
+  salesContactPoint: '온라인',
+  finalSeller: '홍길동',
+  supporter: '김지원',
+  isValidated: true
+};
+
 export const successRegistrationResponse = {
   successOrNot: 'Y',
   statusCode: 'SUCCESS',
@@ -83,7 +174,7 @@ export const successContractInfoResponse = {
   }
 };
 
-const successGetCustomerContracts = {
+export const successGetCustomerContracts = {
   successOrNot: 'Y',
   statusCode: 'SUCCESS',
   data: {

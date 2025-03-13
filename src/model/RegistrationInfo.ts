@@ -100,15 +100,15 @@ export interface ContractInfo {
     // IMEI 정보
     imei: string;
     // 요금제 정보
-    service: Service;
+    service: ServiceInfo;
     // 부가서비스 리스트
-    additionalServices: Service[];
+    additionalServices: ServiceInfo[];
     // 가입 완료 여부
     isValidated: boolean;
 }
 
 // 서비스 정보 인터페이스
-export interface Service {
+export interface ServiceInfo {
     serviceId: string;
     serviceName: string;
     serviceValueType: string;

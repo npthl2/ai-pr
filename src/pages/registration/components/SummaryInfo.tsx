@@ -51,7 +51,6 @@ const SummaryInfo = ({ invoiceInfo, deviceInfo, contractInfo, salesInfo = {} }: 
         <SubscriptionInfo contractInfo={contractInfo} />
       </Box>
       
-      {/* 세로 구분선 - 모바일에서는 숨김 */}
       <Box sx={{ display: 'flex', alignItems: 'stretch' }}>
         <VerticalDivider orientation="vertical" flexItem />
       </Box>

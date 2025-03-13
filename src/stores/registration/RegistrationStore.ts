@@ -2,19 +2,6 @@ import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
 import { RegistrationInfo } from '@model/RegistrationInfo';
 import { RegistrationStatusType } from '@constants/RegistrationConstants';
-
-// import { RegistrationCustomerInfo } from './RegistrationCustomerStore';
-
-// // 계약 정보 저장을 위한 데이터 타입 정의
-// export interface RegistrationInfo {
-//   customer: RegistrationCustomerInfo; // 고객 정보
-//   contract: Record<string, any>; // 계약 정보
-//   invoice: Record<string, any>; // 청구서 정보
-//   device: Record<string, any>; // 기기 정보
-//   sales: Record<string, any>; // 판매 정보
-//   status?: 'PENDING' | 'COMPLETED' | 'FAILED'; // 저장 상태 추가
-// }
-
 // 스토어 상태 인터페이스 정의
 export interface RegistrationStoreState {
   registrationInfo: Record<string, RegistrationInfo>; // 계약 ID를 키로 갖는 저장된 계약 데이터 객체

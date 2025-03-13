@@ -13,7 +13,7 @@ import StatusMessage from './components/StatusMessage';
 import SummaryInfo from './components/SummaryInfo';
 import EmailForm from './components/EmailForm';
 import ActionButtons from './components/ActionButtons';
-import { InvoiceInfo, DeviceInfo, ContractInfo, RegistrationStatus, RegistrationInfo } from '@model/RegistrationInfo';
+import { InvoiceInfo, DeviceInfo, ContractInfo, RegistrationStatus, RegistrationInfo, CustomerInfo, SalesInfo } from '@model/RegistrationInfo';
 import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants';
 import { useEmailSendMutation } from '@api/queries/email/useEmailSendMutation';
 import { EmailSendRequest } from '@model/Email';
@@ -48,52 +48,52 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
   const registrationData = contractTabId ? getRegistrationInfo(contractTabId) : undefined;
   
   // 각 정보 추출
-  const customerInfo = registrationData?.customer;
+  const customerInfo = registrationData?.customer as CustomerInfo;
   const invoiceInfo = registrationData?.invoice as InvoiceInfo;
   const deviceInfo = registrationData?.device as DeviceInfo;
   const contractInfo = registrationData?.contract as ContractInfo;
-  const salesInfo = registrationData?.sales;
+  const salesInfo = registrationData?.sales as SalesInfo;
 
-  // 저장 상태를 폴링하는 쿼리
+  // 등록 상태를 폴링하는 쿼리
   const { data, isError, refetch } = useQuery({
     queryKey: ['registrationStatus', contractTabId, registrationData?.business_process_id],
     queryFn: async () => {
       console.log('폴링 정보:', [contractTabId, registrationData?.business_process_id]);
       
-      if (!contractTabId) return { status: REGISTRATION_STATUS.PENDING } as RegistrationStatus;
-      
-      // business_process_id가 있는 경우에만 폴링 실행
-      // business_process_id가 없으면 아직 저장되지 않은 상태이므로 PENDING 반환
-      const business_process_id = registrationData?.business_process_id;
-      
-      if (!business_process_id) {
+      // 필수 정보가 없는 경우 PENDING 상태 반환
+      if (!contractTabId || !registrationData?.business_process_id) {
         return { status: REGISTRATION_STATUS.PENDING } as RegistrationStatus;
       }
       
       try {
-        const response = await registrationService.getRegistrationStatus(business_process_id);
+        // 등록 상태 조회 API 호출
+        const response = await registrationService.getRegistrationStatus(registrationData.business_process_id);
         
-        // 응답 데이터 변환
-        if (response.data && typeof response.data === 'object') {
-          const statusData = response.data;
-          
-          return {
-            status: statusData.status === 'COMPLETED' ? REGISTRATION_STATUS.COMPLETED :
-                   statusData.status === 'FAILED' ? REGISTRATION_STATUS.FAILED :
-                   REGISTRATION_STATUS.PENDING,
-            ...(statusData.contractId ? { contract_id: statusData.contractId } : {}),
-            ...(statusData.reason ? { reason: statusData.reason } : {})
-          } as RegistrationStatus;
+        // 응답 데이터가 없거나 객체가 아닌 경우 PENDING 상태 반환
+        if (!response.data || typeof response.data !== 'object') {
+          return { status: REGISTRATION_STATUS.PENDING } as RegistrationStatus;
         }
         
-        return { status: REGISTRATION_STATUS.PENDING } as RegistrationStatus;
+        const statusData = response.data;
+        
+        // 응답 데이터 변환 및 반환
+        return {
+          // 상태 매핑
+          status: statusData.status === 'COMPLETED' ? REGISTRATION_STATUS.COMPLETED :
+                 statusData.status === 'FAILED' ? REGISTRATION_STATUS.FAILED :
+                 REGISTRATION_STATUS.PENDING,
+          // 선택적 필드 추가
+          ...(statusData.contractId ? { contract_id: statusData.contractId } : {}),
+          ...(statusData.reason ? { reason: statusData.reason } : {})
+        } as RegistrationStatus;
       } catch (error) {
         console.error('상태 조회 중 오류 발생:', error);
         return { status: REGISTRATION_STATUS.PENDING } as RegistrationStatus;
       }
     },
-    refetchInterval: status === REGISTRATION_STATUS.PENDING ? 3000 : false, // PENDING 상태일 때만 3초마다 폴링
-    enabled: !!contractTabId && status === REGISTRATION_STATUS.PENDING && !!registrationData?.business_process_id, // business_process_id가 있을 때만 활성화
+    // 쿼리 옵션
+    refetchInterval: status === REGISTRATION_STATUS.PENDING ? 2000 : false, // PENDING 상태일 때만 2초마다 폴링
+    enabled: !!contractTabId && status === REGISTRATION_STATUS.PENDING && !!registrationData?.business_process_id, // 필요한 정보가 있을 때만 활성화
     staleTime: 0, // 항상 최신 데이터 사용
     gcTime: 0, // 캐시 사용하지 않음
     retry: 3, // 실패 시 3번까지 재시도
@@ -102,64 +102,58 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
 
   // 컴포넌트 마운트 시 초기 상태 설정
   useEffect(() => {
-    if (contractTabId) {
+    // contractTabId가 없는 경우 처리하지 않음
+    if (!contractTabId) return;
 
-      // 현재 저장된 정보 확인
-      const savedInfo = useRegistrationStore.getState().getRegistrationInfo(contractTabId);
-    
-      // business_process_id 확인
-      if (savedInfo?.business_process_id) {
-        // business_process_id가 있고 상태가 PENDING인 경우에만 폴링 시작
-        if (status === REGISTRATION_STATUS.PENDING) {
-          refetch();
-        } else {
-        }
-      } else {
-      }
-    } else {
+    // 현재 저장된 정보 확인
+    const savedInfo = useRegistrationStore.getState().getRegistrationInfo(contractTabId);
+  
+    // business_process_id가 있고 상태가 PENDING인 경우에만 폴링 시작
+    if (savedInfo?.business_process_id && status === REGISTRATION_STATUS.PENDING) {
+      refetch();
     }
-  }, [contractTabId, refetch, status, registrationData?.business_process_id]);
+  }, [contractTabId, refetch, status]);
 
   useEffect(() => {
-    if (data?.status) {
-      // 타입 안전성을 위해 status 값을 검증
-      const newStatus = data.status === REGISTRATION_STATUS.COMPLETED ? REGISTRATION_STATUS.COMPLETED : 
-                        data.status === REGISTRATION_STATUS.FAILED ? REGISTRATION_STATUS.FAILED : REGISTRATION_STATUS.PENDING;
-      
-      console.log('상태 업데이트:', status, '->', newStatus);
-      
-      // 상태가 변경된 경우에만 업데이트
-      if (status !== newStatus) {
-        setStatus(newStatus);
-        if (contractTabId) {
-          // 상태 업데이트 및 contract_id가 있으면 함께 저장
-          updateRegistrationStatus(contractTabId, newStatus);
-          
-          // contract_id가 있고 상태가 COMPLETED인 경우 RegistrationStore에 저장
-          if (data.contract_id && newStatus === REGISTRATION_STATUS.COMPLETED && registrationData) {
-            // 기존 정보 복사 후 contract_id 추가
-            const updatedInfo: RegistrationInfo = {
-              ...registrationData,
-              contract_id: data.contract_id,
-              status: newStatus // 상태도 함께 업데이트
-            };
-            useRegistrationStore.getState().setRegistrationInfo(contractTabId, updatedInfo);
-          }
-        }
-      } else {
-      }
-      
-      // 실패 시 사유 설정
-      if (data.status === REGISTRATION_STATUS.FAILED && 'reason' in data) {
-      }
-    } else {
-    }
-    
+    // 에러 발생 시 처리
     if (isError) {
       setStatus(REGISTRATION_STATUS.FAILED);
       if (contractTabId) {
         updateRegistrationStatus(contractTabId, REGISTRATION_STATUS.FAILED);
       }
+      return;
+    }
+
+    // 데이터가 없는 경우 처리하지 않음
+    if (!data?.status) return;
+
+    // 타입 안전성을 위해 status 값을 검증
+    const newStatus = data.status === REGISTRATION_STATUS.COMPLETED ? REGISTRATION_STATUS.COMPLETED : 
+                      data.status === REGISTRATION_STATUS.FAILED ? REGISTRATION_STATUS.FAILED : 
+                      REGISTRATION_STATUS.PENDING;
+    
+    console.log('상태 업데이트:', status, '->', newStatus);
+    
+    // 상태가 변경되지 않은 경우 처리하지 않음
+    if (status === newStatus) return;
+    
+    // 상태 업데이트
+    setStatus(newStatus);
+    
+    // contractTabId가 없는 경우 처리하지 않음
+    if (!contractTabId) return;
+    
+    // 상태 업데이트
+    updateRegistrationStatus(contractTabId, newStatus);
+    
+    // contract_id가 있고 상태가 COMPLETED인 경우 RegistrationStore에 저장
+    if (data.contract_id && newStatus === REGISTRATION_STATUS.COMPLETED && registrationData) {
+      const updatedInfo: RegistrationInfo = {
+        ...registrationData,
+        contract_id: data.contract_id,
+        status: newStatus
+      };
+      useRegistrationStore.getState().setRegistrationInfo(contractTabId, updatedInfo);
     }
   }, [data, isError, contractTabId, updateRegistrationStatus, registrationData, status]);
 

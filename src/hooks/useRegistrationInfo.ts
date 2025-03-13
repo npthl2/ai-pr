@@ -1,9 +1,10 @@
-import { RegistrationInfo, CustomerInfo, InvoiceInfo, SalesInfo, ContractInfo, DeviceInfo } from '@model/RegistrationInfo';
+import { RegistrationInfo, CustomerInfo, InvoiceInfo, SalesInfo, ContractInfo, DeviceInfo, ServiceInfo } from '@model/RegistrationInfo';
 import useRegistrationContractStore from '@stores/registration/RegistrationContractStore';
 import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
 import useRegistrationDeviceStore from '@stores/registration/RegistrationDeviceStore';
 import useRegistrationInvoiceStore from '@stores/registration/RegistrationInvoiceStore';
 import useRegistrationSalesStore from '@stores/registration/RegistrationSalesStore';
+import { storeCustomerInfoMock, storeContractInfoMock, storeInvoiceInfoMock, storeDeviceInfoMock, storeSalesInfoMock } from '../../test/module/mock/registration/RegistrationServiceMock';
 /**
  * 계약 탭 ID를 기반으로 등록 정보를 가져오는 훅
  * @param contractTapId 계약 탭 ID
@@ -20,95 +21,28 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
   const salesStore = useRegistrationSalesStore.getState();
   
   // 각 스토어에서 데이터를 가져옵니다
-  const storeCustomerInfo = customerStore.getRegistrationCustomerInfo(contractTapId);
+  // const storeCustomerInfo = customerStore.getRegistrationCustomerInfo(contractTapId);
   // const storeContractInfo = contractStore.getRegistrationContractInfo(contractTapId);
   // const storeInvoiceInfo = invoiceStore.getRegistrationInvoiceInfo(contractTapId);
   // const storeDeviceInfo = deviceStore.getRegistrationDeviceInfo(contractTapId);
   // const storeSalesInfo = salesStore.getRegistrationSalesInfo(contractTapId);
   
-  // 개발 환경인 경우 모킹 데이터를 사용
-  let storeContractInfo, storeInvoiceInfo, storeDeviceInfo, storeSalesInfo;
+  // 각 세션별 스토어 정의 전으로 Mock 데이터를 사용
+  // TODO 스토어 정의 후 삭제 필요 (~ 53 line)
+  let storeCustomerInfo, storeContractInfo, storeInvoiceInfo, storeDeviceInfo, storeSalesInfo;
   
   if (process.env.NODE_ENV === 'development') {
-    // 기본 서비스 정보
-    const defaultServiceMock = {
-      serviceId: 'S001',
-      serviceName: '5G 프리미엄 요금제',
-      serviceValueType: 'KRW',
-      serviceValue: 55000
-    };
     
-    // 기본 추가 서비스 정보
-    const defaultAdditionalServicesMock = [
-      {
-        serviceId: 'A001',
-        serviceName: '데이터 안심옵션',
-        serviceValueType: 'KRW',
-        serviceValue: 5000
-      }
-    ];
-    
-    // 모킹 데이터 생성
-    storeContractInfo = {
-      contractType: '신규가입',
-      sellType: '일반판매',
-      phoneNumber: '010-1234-5678',
-      sim: 'USIM',
-      imei: '123456789012345',
-      service: defaultServiceMock,
-      additionalServices: defaultAdditionalServicesMock,
-      isValidated: true
-    };
-    
-    storeInvoiceInfo = {
-      invoiceId: 'INV' + new Date().getTime(),
-      customerId: storeCustomerInfo?.customerId || '',
-      billingType: '휴대폰',
-      recipient: storeCustomerInfo?.name || '홍길동',
-      invoiceType: '이메일',
-      invoiceEmail: 'user@example.com',
-      invoicePostalCode: '06164',
-      invoiceAddress: '서울특별시 강남구 테헤란로 123',
-      invoiceAddressDetail: '5층 501호',
-      paymentMethod: 'BANK',
-      bankCompany: '국민은행',
-      bankAccount: '123-456-789012',
-      cardCompany: '신한카드',
-      cardNumber: '1234-5678-9012-3456',
-      paymentDate: '25',
-      paymentName: storeCustomerInfo?.name || '홍길동',
-      birthDate: '19900101'
-    };
-    
-    storeDeviceInfo = {
-      deviceId: '1',
-      deviceModelName: '갤럭시 S23 Ultra',
-      deviceModelNameAlias: 'Galaxy S23 Ultra',
-      deviceEngagementType: 'PUBLIC_POSTED_SUPPERT',
-      deviceSponsorName: '통합스폰서',
-      deviceEngagementPeriod: 24,
-      deviceEngagementName: '공시지원금',
-      deviceSalesPrice: 1200000,
-      deviceDiscountPrice: 300000,
-      devicePrepaidPrice: 100000,
-      deviceInstallmentAmount: 800000,
-      deviceInstallmentFee: 24000,
-      deviceTotalPriceAmout: 824000,
-      deviceInstallmentPeriod: 24,
-      monthlyInstallmentPrice: 34333,
-      isValidated: true
-    };
-    
-    storeSalesInfo = {
-      salesDepartment: '온라인지점',
-      salesContactPoint: '온라인',
-      finalSeller: '홍길동',
-      supporter: '김지원',
-      isValidated: true
-    };
+    storeCustomerInfo = storeCustomerInfoMock;
+    storeContractInfo = storeContractInfoMock;
+    storeInvoiceInfo = storeInvoiceInfoMock;
+    storeDeviceInfo = storeDeviceInfoMock;
+    storeSalesInfo = storeSalesInfoMock;
+
   } else {
     // 개발 환경에서는 스토어에서 데이터를 가져옵니다
     try {
+      storeCustomerInfo = (customerStore as any).getRegistrationCustomerInfo?.(contractTapId);
       storeContractInfo = (contractStore as any).getRegistrationContractInfo?.(contractTapId);
       storeInvoiceInfo = (invoiceStore as any).getRegistrationInvoiceInfo?.(contractTapId);
       storeDeviceInfo = (deviceStore as any).getRegistrationDeviceInfo?.(contractTapId);
@@ -120,7 +54,7 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
   
   // 새로운 CustomerInfo 형태로 변환
   const customerInfo: CustomerInfo = {
-    customerId: storeCustomerInfo?.customerId || '3', //TODO customerId null로 변경 필요(메일 발송 테스트를 위해 임시 사용)
+    customerId: storeCustomerInfo?.customerId || '',
     name: storeCustomerInfo?.name || '',
     rrno: storeCustomerInfo?.rrno || '',
     rrnoIssueDate: storeCustomerInfo?.rrnoIssueDate || '',
@@ -133,7 +67,7 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
   };
   
   // 기본 서비스 정보
-  const defaultService = {
+  const defaultService: ServiceInfo = {
     serviceId: '',
     serviceName: '',
     serviceValueType: '',
@@ -141,7 +75,7 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
   };
   
   // 기본 추가 서비스 정보
-  const defaultAdditionalServices = [
+  const defaultAdditionalServices: ServiceInfo[] = [
     {
       serviceId: '',
       serviceName: ' ',
