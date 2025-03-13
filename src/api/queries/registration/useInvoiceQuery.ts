@@ -5,7 +5,7 @@ import { isInvoiceResponse } from '@model/registration/Invoice';
 export const useInvoiceQuery = (customerId: string) => {
   return useQuery({
     queryKey: ['invoice', customerId],
-    queryFn: () => registrationService.getMemos(customerId),
+    queryFn: () => registrationService.getInvoiceList(customerId),
     select: (response) => {
       if (isInvoiceResponse(response.data)) {
         return response.data;
