@@ -551,20 +551,22 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                   </Box>
                   {invoiceFormData.invoiceType === InvoiceType.EMAIL && (
                     <Box sx={{ display: 'flex', gap: '4px' }}>
-                      <TextField
-                        size='small'
-                        placeholder='이메일주소*'
-                        fullWidth
-                        value={invoiceFormData.invoiceEmailId}
-                        onChange={handleInputChange('invoiceEmailId')}
-                        maxLength={200}
-                        state={helperText.invoiceEmailId ? 'error' : 'inactive'}
-                        helperText={helperText.invoiceEmailId}
-                        absoluteHelperText
-                        onBlur={handleFocusOut('invoiceEmailId')}
-                        data-testid='invoice-email-id-input'
-                      />
-                      <Box>
+                      <Box flex={1}>
+                        <TextField
+                          size='small'
+                          placeholder='이메일주소*'
+                          // fullWidth
+                          value={invoiceFormData.invoiceEmailId}
+                          onChange={handleInputChange('invoiceEmailId')}
+                          maxLength={200}
+                          state={helperText.invoiceEmailId ? 'error' : 'inactive'}
+                          helperText={helperText.invoiceEmailId}
+                          absoluteHelperText
+                          onBlur={handleFocusOut('invoiceEmailId')}
+                          data-testid='invoice-email-id-input'
+                        />
+                      </Box>
+                      <Box flex={1}>
                         <Select
                           sx={{ width: '100px' }}
                           value={invoiceFormData.invoiceEmailDomainType}
@@ -594,19 +596,21 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                           ))}
                         </Select>
                       </Box>
-                      <TextField
-                        size='small'
-                        disabled={invoiceFormData.invoiceEmailDomainType !== '직접입력'}
-                        fullWidth
-                        value={invoiceFormData.invoiceEmailDomain}
-                        onChange={handleInputChange('invoiceEmailDomain')}
-                        maxLength={53}
-                        state={helperText.invoiceEmailDomain ? 'error' : 'inactive'}
-                        helperText={helperText.invoiceEmailDomain}
-                        absoluteHelperText
-                        onBlur={handleFocusOut('invoiceEmailDomain')}
-                        data-testid='invoice-email-domain-input'
-                      />
+                      <Box flex={1.5}>
+                        <TextField
+                          size='small'
+                          disabled={invoiceFormData.invoiceEmailDomainType !== '직접입력'}
+                          fullWidth
+                          value={invoiceFormData.invoiceEmailDomain}
+                          onChange={handleInputChange('invoiceEmailDomain')}
+                          maxLength={53}
+                          state={helperText.invoiceEmailDomain ? 'error' : 'inactive'}
+                          helperText={helperText.invoiceEmailDomain}
+                          absoluteHelperText
+                          onBlur={handleFocusOut('invoiceEmailDomain')}
+                          data-testid='invoice-email-domain-input'
+                        />
+                      </Box>
                     </Box>
                   )}
                 </Box>
@@ -787,7 +791,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                           ))}
                         </Select>
                       </Box>
-                      <Box flex={2}>
+                      <Box flex={2.5}>
                         <TextField
                           size='small'
                           placeholder='계좌번호*'
