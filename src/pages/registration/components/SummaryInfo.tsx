@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
 import {
-  InvoiceInfo as BaseInvoiceInfo,
-  DeviceInfo as BaseDeviceInfo,
-  ContractInfo as BaseContractInfo,
+  InvoiceInfo,
+  DeviceInfo,
+  ContractInfo,
   SalesInfo as BaseSalesInfo,
 } from '@model/RegistrationInfo';
 import { StyledDivider, VerticalDivider } from './SummaryInfo.styled';
@@ -10,19 +10,6 @@ import BillingInfo from './summary/BillingInfo';
 import SalesInfo from './summary/SalesInfo';
 import SubscriptionInfo from './summary/SubscriptionInfo';
 import DevicePaymentInfo from './summary/DevicePaymentInfo';
-
-// 더 유연한 타입 정의 (UI 표시용)
-interface InvoiceInfo extends Partial<BaseInvoiceInfo> {
-  [key: string]: any;
-}
-
-interface DeviceInfo extends Partial<BaseDeviceInfo> {
-  [key: string]: any;
-}
-
-interface ContractInfo extends Partial<BaseContractInfo> {
-  [key: string]: any;
-}
 
 interface SalesInfoType extends Partial<BaseSalesInfo> {
   [key: string]: any;

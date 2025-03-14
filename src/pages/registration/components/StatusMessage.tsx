@@ -17,45 +17,42 @@ const StatusMessage = ({ status, customerName }: StatusMessageProps) => {
   const pendingGifPath = '/images/Registration-Progressing.gif';
   const completedGifPath = '/images/Registration-Completed.gif';
 
-  return (
-    <>
-      {status === REGISTRATION_STATUS.PENDING && (
-        <StatusMessageContainer>
-          <StyledStatusMessage data-testid='status-message'>
-            {customerName} 고객님의 가입이 처리중입니다.
-          </StyledStatusMessage>
-          <PendingGifContainer src={pendingGifPath} alt='처리중' />
-        </StatusMessageContainer>
-      )}
+  // 상태별 설정 정의
+  const statusConfig = {
+    [REGISTRATION_STATUS.PENDING]: {
+      message: `${customerName} 고객님의 가입이 처리중입니다.`,
+      gif: <PendingGifContainer src={pendingGifPath} alt="처리중" />,
+      failureReason: null,
+    },
+    [REGISTRATION_STATUS.COMPLETED]: {
+      message: `${customerName} 고객님의 가입이 처리 완료되었습니다.`,
+      gif: <CompletedGifContainer src={completedGifPath} alt="완료" />,
+      failureReason: null,
+    },
+    [REGISTRATION_STATUS.FAILED]: {
+      message: `${customerName} 고객님의 가입을 실패하였습니다.`,
+      gif: null, // 실패 시 GIF가 필요 없다면 null 처리
+      failureReason: (
+        <StyledStatusMessage>
+          실패사유:{' '}
+          <span style={{ color: 'red' }}>가입한도</span>를
+          <span style={{ color: 'red' }}> 초과</span> 했습니다.
+        </StyledStatusMessage>
+      ),
+    },
+  };
 
-      {status === REGISTRATION_STATUS.COMPLETED && (
-        <StatusMessageContainer>
-          <StyledStatusMessage data-testid='status-message'>
-            {customerName} 고객님의 가입이 처리 완료되었습니다.
-          </StyledStatusMessage>
-          <CompletedGifContainer src={completedGifPath} alt='완료' />
-        </StatusMessageContainer>
-      )}
+  const statusData = statusConfig[status];
 
-      {status === REGISTRATION_STATUS.FAILED && (
-        <StatusMessageContainer>
-          <StyledStatusMessage data-testid='status-message'>
-            {customerName} 고객님의 가입을 실패하였습니다.
-          </StyledStatusMessage>
-          <StyledStatusMessage>
-            실패사유:{' '}
-            {
-              <>
-                <span style={{ color: 'red' }}>가입한도</span>를
-                <span style={{ color: 'red' }}> 초과</span>
-                했습니다.
-              </>
-            }
-          </StyledStatusMessage>
-        </StatusMessageContainer>
-      )}
-    </>
-  );
+  return statusData ? (
+    <StatusMessageContainer>
+      <StyledStatusMessage data-testid="status-message">
+        {statusData.message}
+      </StyledStatusMessage>
+      {statusData.gif}
+      {statusData.failureReason}
+    </StatusMessageContainer>
+  ) : null;
 };
 
 export default StatusMessage;
