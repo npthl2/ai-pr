@@ -436,6 +436,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
         if (key === 'cardCompany' || key === 'cardNumber') {
           return invoiceFormData['paymentMethod'] === PaymentMethod.CARD;
         }
+        return true;
       }),
     [invoiceFormData, helperText],
   );
