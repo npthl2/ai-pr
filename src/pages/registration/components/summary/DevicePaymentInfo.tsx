@@ -1,4 +1,4 @@
-import { DeviceInfo as BaseDeviceInfo } from '@model/RegistrationInfo';
+import { DeviceInfo} from '@model/RegistrationInfo';
 import {
   InfoSection,
   InfoRow,
@@ -7,11 +7,6 @@ import {
   SubSectionTitle,
   StyledDivider,
 } from '../SummaryInfo.styled';
-
-interface DeviceInfo extends Partial<BaseDeviceInfo> {
-  [key: string]: any;
-}
-
 interface DevicePaymentInfoProps {
   deviceInfo: DeviceInfo;
 }
@@ -80,8 +75,8 @@ const DevicePaymentInfo = ({ deviceInfo }: DevicePaymentInfoProps) => {
         <InfoRow>
           <InfoLabel>총 금액</InfoLabel>
           <InfoValue sx={{ fontWeight: 'bold' }}>
-            {deviceInfo.deviceTotalPrice
-              ? `${deviceInfo.deviceTotalPrice.toLocaleString()} 원`
+            {deviceInfo.deviceTotalPriceAmout
+              ? `${deviceInfo.deviceTotalPriceAmout.toLocaleString()} 원`
               : '-'}
           </InfoValue>
         </InfoRow>

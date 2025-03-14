@@ -1,10 +1,6 @@
-import { InvoiceInfo as BaseInvoiceInfo } from '@model/RegistrationInfo';
+import { InvoiceInfo } from '@model/RegistrationInfo';
 import { InfoSection, InfoRow, InfoLabel, InfoValue, SubSectionTitle } from '../SummaryInfo.styled';
 import { Box } from '@mui/material';
-
-interface InvoiceInfo extends Partial<BaseInvoiceInfo> {
-  [key: string]: any;
-}
 
 interface BillingInfoProps {
   invoiceInfo: InvoiceInfo;
