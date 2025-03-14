@@ -7,8 +7,8 @@ export interface RegistrationInfo {
   invoice: InvoiceInfo;
   device: DeviceInfo;
   sales: SalesInfo;
-  businessProcessId?: string; // 업무 프로세스 ID (백엔드에서 생성)
-  status?: RegistrationStatusType; // 저장 상태
+  businessProcessId: string; // 업무 프로세스 ID (백엔드에서 생성)
+  status: RegistrationStatusType; // 저장 상태
   contract_id?: string; // 계약 ID
 }
 
@@ -159,7 +159,7 @@ export interface DeviceInfo {
 // 판매 정보 인터페이스
 export interface SalesInfo {
   salesDepartment?: string; // 가입대리점=판매부서:stg
-  salesContactPoint?: string; // 접점
+  salesContractPoint?: string; // 접점
   finalSeller?: string; // 판매자=최종판매자:stg
   supporter?: string; // 서포터
   // 가입 완료 여부

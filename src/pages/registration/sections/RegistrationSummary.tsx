@@ -55,14 +55,12 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested, completedSections,
         const contractStore = useRegistrationContractStore.getState() as any;
         // const deviceStore = useRegistrationDeviceStore.getState() as any;
         const salesStore = useRegistrationSalesStore.getState() as any;
-        // const invoiceStore = useRegistrationInvoiceStore.getState() as any;
 
         // 개발 환경인 경우 useRegistrationInfo의 모킹 데이터 사용
         //TODO : 개발환경 삭제, const 추가 필요
         let contractInfo: any;
         // let deviceInfo: any;
         let salesInfo: any;
-        // let invoiceInfo: any;
         if (process.env.NODE_ENV === 'development') {
           contractInfo = { isValidated: true };
           salesInfo = { isValidated: true };
@@ -72,7 +70,6 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested, completedSections,
           contractInfo = contractStore.getRegistrationContractInfo?.(contractTabId);
           // deviceInfo = deviceStore.getRegistrationDeviceInfo?.(contractTabId);
           salesInfo = salesStore.getRegistrationSalesInfo?.(contractTabId);
-          // invoiceInfo = invoiceStore.getRegistrationInvoiceInfo?.(contractTabId);
         }
         // 모든 스토어의 isValidated 값 확인
         const isAllValidated =
