@@ -44,7 +44,8 @@ const StyledTextField = styled(MuiTextField, {
     padding: 0,
     minHeight: 'inherit',
     height: 'auto',
-    color: state === 'error' ? theme.palette.error.main : theme.palette.text.primary,
+    color: theme.palette.text.primary,
+
     '&.MuiInputBase-inputMultiline': {
       alignContent: 'center',
     },
