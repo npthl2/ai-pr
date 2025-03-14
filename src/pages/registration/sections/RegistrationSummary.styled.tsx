@@ -1,4 +1,5 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import { grey } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
 
 export const SummaryContainer = styled(Box)({
@@ -8,7 +9,7 @@ export const SummaryContainer = styled(Box)({
 });
 
 export const SummarySection = styled(Box)({
-  padding: '16px 20px',
+  padding: '12px 16px',
 });
 
 export const SummaryContents = styled(Box)(({ theme }) => ({
@@ -51,4 +52,15 @@ export const RightButtonGroup = styled(Box)({
   '& > button': {
     flex: 1,
   },
+});
+
+export const ItemLabel = styled(Typography)({
+  fontSize: '14px',
+  color: grey[600],
+  fontWeight: 500,
+});
+
+export const ItemValue = styled(Typography)({
+  fontSize: '14px',
+  fontWeight: 500,
 });
