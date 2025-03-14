@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Box, TextField, Paper, Radio, Typography, IconButton } from '@mui/material';
 import { Table, TableBody, TableContainer, TableHead } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -9,35 +9,20 @@ import TableCell from '@components/Table/TableCell';
 import Button from '@components/Button';
 import { styles } from './ServiceSelectModal.styles';
 import { useServicesQuery } from '@api/queries/registration/useRegistrationContractQuery';
-
-interface PlanItem {
-  id: string;
-  name: string;
-  amount: number;
-  additionalInfo?: string;
-}
+import { Service } from './types';
 
 interface ServiceSelectModalProps {
   open: boolean;
   onClose: () => void;
-  onSelect: (selectedFee: PlanItem) => void;
+  onSelect: (selectedFee: Service) => void;
 }
 
 const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, onSelect }) => {
   // 상태관리
   const [searchText, setSearchText] = useState<string>('');
-  const [selectedPlan, setSelectedPlan] = useState<PlanItem | null>(null);
-  const { data } = useServicesQuery();
-  const planList = useMemo(() => {
-    return (
-      data?.map((plan) => ({
-        id: plan.serviceId,
-        name: plan.serviceName,
-        amount: plan.serviceValue,
-      })) ?? []
-    );
-  }, [data]);
-  const [filteredPlanList, setFilteredPlanList] = useState<PlanItem[]>(planList);
+  const [selectedPlan, setSelectedPlan] = useState<Service | null>(null);
+  const { data: planList } = useServicesQuery();
+  const [filteredPlanList, setFilteredPlanList] = useState<Service[]>(planList);
 
   useEffect(() => {
     setFilteredPlanList(planList);
@@ -47,7 +32,9 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
   const handleSearch = () => {
     if (searchText) {
       setFilteredPlanList(
-        planList.filter((plan) => plan.name.toLowerCase().includes(searchText.toLowerCase())),
+        planList.filter((plan) =>
+          plan.serviceName.toLowerCase().includes(searchText.toLowerCase()),
+        ),
       );
     } else {
       setFilteredPlanList(planList);
@@ -125,22 +112,24 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
                 </TableHead>
                 <TableBody>
                   {filteredPlanList.length > 0 ? (
-                    filteredPlanList.map((plan, index) => (
+                    filteredPlanList.map((service, index) => (
                       <TableRow
-                        key={plan.id}
+                        key={service.serviceId}
                         sx={styles.tableRow}
                         data-testid='service-select-table-row'
                       >
                         <TableCell>
                           <Radio
-                            checked={selectedPlan?.id === plan.id}
-                            onChange={() => setSelectedPlan(plan)}
+                            checked={selectedPlan?.serviceId === service.serviceId}
+                            onChange={() => setSelectedPlan(service)}
                             size='small'
                             data-testid={`service-select-radio-${index}`}
                           />
                         </TableCell>
-                        <TableCell>{plan.name}</TableCell>
-                        <TableCell>{plan.amount.toLocaleString()}</TableCell>
+                        <TableCell>{service.serviceName}</TableCell>
+                        <TableCell>
+                          {service.serviceValue ? service.serviceValue.toLocaleString() : ''}
+                        </TableCell>
                       </TableRow>
                     ))
                   ) : (

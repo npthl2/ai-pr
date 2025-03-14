@@ -1,9 +1,9 @@
 export interface PhoneNumber {
   id: number;
-  status: string;
+  statusCode: string;
   phoneNumber: string;
-  provider: string;
-  expirationDate: string;
+  phoneNumberProvider: string;
+  lastUpdateStatusDatetime: string;
 }
 
 export interface Service {

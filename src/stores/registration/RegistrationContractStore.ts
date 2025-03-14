@@ -53,7 +53,6 @@ const useRegistrationContractStore = create<RegistrationContractStoreState>((set
   addRegistrationContractInfo: (tabId, contract) => {
     const existingContract = get().contracts[tabId];
     if (existingContract) {
-      console.log(`Contract with tabId: ${tabId} already exists.`);
       return;
     }
 
@@ -98,7 +97,6 @@ const useRegistrationContractStore = create<RegistrationContractStoreState>((set
   removeRegistrationContractInfo: (tabId: string) => {
     set((state) => {
       // 불변성을 유지하기 위해 새로운 객체 생성
-      console.log('removeRegistrationContractInfo - tabId', tabId);
       const updatedContracts = { ...state.contracts };
       delete updatedContracts[tabId];
 

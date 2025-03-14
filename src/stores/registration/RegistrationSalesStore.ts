@@ -35,7 +35,6 @@ const useRegistrationSalesStore = create<RegistrationSalesState>((set, get) => (
   addRegistrationSalesInfo: (tabId) => {
     const existingSales = get().sales[tabId];
     if (existingSales) {
-      console.log(`Sales with tabId: ${tabId} already exists.`);
       return;
     }
 
@@ -69,7 +68,6 @@ const useRegistrationSalesStore = create<RegistrationSalesState>((set, get) => (
   removeRegistrationSalesInfo: (tabId: string) => {
     set((state) => {
       // 불변성을 유지하기 위해 새로운 객체 생성
-      console.log('removeRegistrationSalesInfo - tabId', tabId);
       const updatedSales = { ...state.sales };
       delete updatedSales[tabId];
 

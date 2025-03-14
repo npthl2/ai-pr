@@ -58,7 +58,6 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, on
 
   // 모든 필드가 채워졌는지 확인하여 완료 되었을 때만 아코디언 활성화 함수 호출(한번 활성화 되면 비활성화 X)
   useEffect(() => {
-    console.log('validationFlag', validationFlag);
     if (validationFlag) {
       onComplete();
     }

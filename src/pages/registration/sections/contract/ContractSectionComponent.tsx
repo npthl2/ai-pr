@@ -33,25 +33,14 @@ import {
 } from './ContractSectionComponent.styles';
 import useCustomerStore from '@stores/CustomerStore';
 import registrationContractService from '@api/services/registrationContractService';
+import { PhoneNumber, Service, AdditionalService } from './types';
 
-interface PhoneNumber {
-  id: number;
-  status: string;
-  phoneNumber: string;
-  provider: string;
-  expirationDate: string;
-}
-
-interface Service {
-  serviceId: string;
-  serviceName: string;
-  serviceValueType: string;
-  serviceValue: number;
-}
-
-interface AdditionalService extends Service {
-  exclusiveServiceIds: string[];
-}
+const defaultService: Service = {
+  serviceId: '',
+  serviceName: '',
+  serviceValueType: '',
+  serviceValue: 0,
+};
 
 interface ContractSectionComponentProps {
   contractTabId: string;
@@ -69,7 +58,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     getRegistarationContractValidationFlag,
   } = useRegistrationContractStore();
 
-  const [customerId, setCustomerId] = useState<string>(null);
+  const [customerId, setCustomerId] = useState<string>('');
 
   const [subscriptionType] = useState<string>('신규가입');
   const [sellType, setSellType] = useState<string>('신규폰');
@@ -87,7 +76,6 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
   const [isServiceModalOpen, setIsServiceModalOpen] = useState<boolean>(false);
   const [isAdditionalServiceModalOpen, setIsAdditionalServiceModalOpen] = useState<boolean>(false);
 
-  // const [showDebugInfo, setShowDebugInfo] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, validationField>>({
     salesType: { state: 'active', helperText: '' },
     phoneNumber: { state: 'active', helperText: '' },
@@ -97,7 +85,6 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
   });
 
   const currentCustomerId = useCustomerStore((state) => state.selectedCustomerId);
-  // const currentContract = useRegistrationContractStore((state) => state.contracts[contractTabId]);
   const validationFlag = getRegistarationContractValidationFlag(contractTabId);
 
   const phoneNumberInputRef = useRef<HTMLInputElement>(null);
@@ -118,7 +105,6 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
   // 모든 필드가 채워졌는지 확인하여 완료 되었을 때만 아코디언 활성화 함수 호출(한번 활성화 되면 비활성화 X)
   useEffect(() => {
     if (validationFlag) {
-      console.log('contract section validationFlag', validationFlag);
       onComplete();
     }
   }, [validationFlag]);
@@ -128,7 +114,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     handleUpdateStoreAndValidationCompleteFields(contractTabId, {
       sellType: sellType,
       phoneNumber: selectedPhoneNumber?.phoneNumber ?? '',
-      service: selectedService,
+      service: selectedService ?? defaultService,
       additionalServices: selectedAdditionalServices,
       deviceModelName: deviceModelName,
     });
@@ -137,9 +123,8 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
   // 전화번호 - 번호 채번 핸들러
   const handlePhoneNumberModalOpen = () => setIsPhoneNumberModalOpen(true);
   const handlePhoneNumberModalClose = () => setIsPhoneNumberModalOpen(false);
-  const handlePhoneNumberSelect = (phoneNumber: PhoneNumber) => {
-    setSelectedPhoneNumber(phoneNumber);
-  };
+  const handlePhoneNumberSelect = (phoneNumber: PhoneNumber) => setSelectedPhoneNumber(phoneNumber);
+
   const handlePhoneNumberLastFourChange = (value: string) => {
     const replacedValue = value.replace(/[^0-9]/g, '');
     if (replacedValue.length <= 4) {
@@ -434,13 +419,6 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 </Typography>
               </FormRowSectionPlan>
 
-              {/* {selectedService && selectedService.serviceId && (
-              <div>
-                <h3>선택된 서비스</h3>
-                <p>{selectedService.serviceName}</p>
-              </div>
-            )} */}
-
               <FormRow>
                 <FormLabel>부가서비스</FormLabel>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -494,15 +472,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
         <ServiceSelectModal
           open={isServiceModalOpen}
           onClose={handleServiceModalClose}
-          onSelect={(selectedPlan) => {
-            const serviceData: Service = {
-              serviceId: selectedPlan.id.toString(),
-              serviceName: selectedPlan.name,
-              serviceValueType: 'amount',
-              serviceValue: selectedPlan.amount,
-            };
-            handleServiceSelect(serviceData);
-          }}
+          onSelect={handleServiceSelect}
         />
 
         <AdditionalServiceSelectModal

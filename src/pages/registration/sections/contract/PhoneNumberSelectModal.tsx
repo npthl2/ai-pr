@@ -19,14 +19,7 @@ import {
   RadioIcon,
   CheckedRadioIcon,
 } from './PhoneNumberSelectModal.style';
-
-interface PhoneNumber {
-  id: number;
-  statusCode: string;
-  phoneNumber: string;
-  phoneNumberProvider: string;
-  lastUpdateStatusDatetime: string;
-}
+import { PhoneNumber } from './types';
 
 interface PhoneNumberSelectModalProps {
   open: boolean;

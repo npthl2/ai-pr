@@ -13,14 +13,7 @@ import Alert from '@components/Alert';
 import registrationContractService from '@api/services/registrationContractService';
 import { useAdditionalServicesQuery } from '@api/queries/registration/useRegistrationContractQuery';
 import { styles } from './ServiceSelectModal.styles';
-
-interface AdditionalService {
-  serviceValueType: string;
-  serviceName: string;
-  serviceValue: number;
-  serviceId: string;
-  exclusiveServiceIds: string[];
-}
+import { AdditionalService } from './types';
 
 interface AdditionalServiceModalProps {
   open: boolean;
@@ -81,8 +74,6 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
   };
 
   const handleSelect = async (service: AdditionalService) => {
-    console.log('selected additional service', service);
-    console.log('selectedServiceId from plans', selectedServiceId);
     const hasConflict = await checkExclusiveService(selectedServiceId, service.serviceId);
 
     if (hasConflict) {
