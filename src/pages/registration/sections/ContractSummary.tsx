@@ -10,7 +10,7 @@ import {
   RightButtonGroup,
 } from './ContractSummary.styled';
 import { SECTION_IDS, SECTION_TITLES } from '@constants/RegistrationConstants';
-import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
+import useRegistrationInvoiceStore from '@stores/registration/RegistrationInvoiceStore';
 
 interface ContractSummaryProps {
   contractTabId: string;
@@ -18,8 +18,8 @@ interface ContractSummaryProps {
 }
 
 const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryProps) => {
-  const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
-  const customerInfo = getRegistrationCustomerInfo(contractTabId);
+  const { getRegistrationInvoiceInfo } = useRegistrationInvoiceStore();
+  const registrationInvoiceInfo = getRegistrationInvoiceInfo(contractTabId);
 
   return (
     <SummaryContainer>
@@ -32,15 +32,15 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
           <Box>
             <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.INVOICE]}</Typography>
             <SummaryItem>
-              <Typography variant='body2'>납부자명</Typography>
+              <Typography variant='body2'>납부고객명</Typography>
               <Typography variant='body2' color='text.secondary'>
-                {customerInfo?.name || '-'}
+                {registrationInvoiceInfo?.recipient || '-'}
               </Typography>
             </SummaryItem>
             <SummaryItem>
               <Typography variant='body2'>납부방법</Typography>
               <Typography variant='body2' color='text.secondary'>
-                -
+                {registrationInvoiceInfo?.paymentMethod || '-'}
               </Typography>
             </SummaryItem>
           </Box>
@@ -130,7 +130,13 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
 
       <ButtonContainer>
         <LeftButtonGroup>
-          <Button variant='outlined' color='grey' size='large'>
+          <Button
+            variant='outlined'
+            color='grey'
+            size='large'
+            disabled={!registrationInvoiceInfo}
+            data-testid='temporary-save-button'
+          >
             임시저장
           </Button>
           <Button variant='outlined' color='grey' size='large'>

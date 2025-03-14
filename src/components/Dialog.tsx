@@ -10,16 +10,15 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
-
-type DialogSize = 'small' | 'medium' | 'large';
+type DialogSize = 'small' | 'medium' | 'medium-large' | 'large';
 
 interface DialogProps extends Omit<MuiDialogProps, 'content'> {
   size?: DialogSize;
   title: string;
   content: string | React.ReactNode;
   closeLabel?: string;
+  confirmLabel?: string | React.ReactNode;
   confirmIcon?: React.ReactNode;
-  confirmLabel?: string;
   isConfirmDisabled?: boolean;
   onClose: () => void;
   onConfirm?: () => void;
@@ -29,9 +28,10 @@ const StyledDialog = styled(MuiDialog, { shouldForwardProp: (prop) => prop !== '
 }>(({ theme, size }) => ({
   '& .MuiDialog-paper': {
     backgroundColor: theme.palette.background.paper,
-    width: {
+    minWidth: {
       small: 400,
       medium: 600,
+      'medium-large': 800,
       large: 1000,
     }[size],
   },
@@ -71,9 +71,10 @@ const Dialog = ({
   onClose,
   onConfirm,
   isConfirmDisabled = false,
+  ...props
 }: DialogProps) => {
   return (
-    <StyledDialog open={open} size={size} onClose={onClose}>
+    <StyledDialog open={open} size={size} onClose={onClose} {...props}>
       <StyledDialogTitle>
         <Typography
           variant='h6'
