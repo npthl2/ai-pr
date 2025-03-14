@@ -717,7 +717,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
           <InvoiceCard isSaved={isSaved}>
             {/* 납부방법 */}
             <Box>
-              <LabelWrapper>
+              <LabelWrapper width='90px'>
                 <LabelTypography>납부방법</LabelTypography>
                 <MandatoryTypography>*</MandatoryTypography>
               </LabelWrapper>
@@ -795,7 +795,6 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                         <TextField
                           size='small'
                           placeholder='계좌번호*'
-                          fullWidth
                           value={invoiceFormData.bankAccount}
                           onChange={handleInputChange('bankAccount')}
                           maxLength={20}
@@ -865,7 +864,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
 
             {/* 납부일 */}
             <Box>
-              <LabelWrapper>
+              <LabelWrapper width='90px'>
                 <LabelTypography>납부일</LabelTypography>
                 <MandatoryTypography>*</MandatoryTypography>
               </LabelWrapper>
@@ -891,7 +890,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
 
             {/* 납부고객명 */}
             <Box>
-              <LabelWrapper>
+              <LabelWrapper width='90px'>
                 <LabelTypography>납부고객명</LabelTypography>
                 <MandatoryTypography>*</MandatoryTypography>
               </LabelWrapper>
@@ -917,7 +916,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
 
             {/* 생년월일 */}
             <Box>
-              <LabelWrapper>
+              <LabelWrapper width='90px'>
                 <LabelTypography>생년월일</LabelTypography>
                 <MandatoryTypography>*</MandatoryTypography>
               </LabelWrapper>

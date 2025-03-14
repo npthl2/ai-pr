@@ -22,12 +22,12 @@ export const InvoiceCard = styled(Card, {
   },
 }));
 
-export const LabelWrapper = styled(Box)({
+export const LabelWrapper = styled(Box)<{ width?: string }>(({ width = '100px' }) => ({
   display: 'flex',
-  width: '100px',
-  minWidth: '100px',
+  width,
+  minWidth: width,
   alignItems: 'top',
-});
+}));
 
 export const MandatoryTypography = styled(Typography)(({ theme }) => ({
   color: theme.palette.secondary.main,
