@@ -2,20 +2,20 @@ import React, { useState, useEffect, useRef, Suspense } from 'react';
 import {
   Box,
   Typography,
-  Chip,
   RadioGroup,
   FormControlLabel,
   InputAdornment,
   TextField,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
 import AdditionalServiceSelectModal from './AdditionalServiceSelectModal';
 import ServiceSelectModal from './ServiceSelectModal';
 import PhoneNumberSelectModal from './PhoneNumberSelectModal';
 import useRegistrationContractStore, {
   Contract,
 } from '@stores/registration/RegistrationContractStore';
-
+import Button from '@components/Button'; 
 import {
   SectionContainer,
   SectionInfoContainer,
@@ -454,16 +454,20 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                     {selectedAdditionalServices.map((service, index) => (
                       <Box
                         key={service.serviceId}
-                        sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
+                        sx={{ display: 'flex', alignItems: 'center', mb: 1}}
                       >
-                        <Chip
-                          color='primary'
-                          variant='outlined'
-                          sx={{ borderColor: 'transparent', height: '20px' }}
-                          label={`${service.serviceName} - ${service.serviceValue.toLocaleString()}원`}
-                          onDelete={() => handleRemoveAdditionalService(service.serviceId)}
-                          data-testid={`selected-additional-service-chip-${index}`}
-                        />
+                        <Typography>
+                          {`${service.serviceName} - ${service.serviceValue.toLocaleString()}원`}
+                          </Typography>
+                          <Button
+                            variant='text'
+                            color='primary'
+                            size='small' 
+                            iconComponent={<CloseIcon />}
+                            style={{ marginRight: 8 }}
+                            onClick={() => handleRemoveAdditionalService(service.serviceId)}
+                            data-testid={`selected-additional-service-chip-${index}`}
+                          />
                       </Box>
                     ))}
                   </div>
