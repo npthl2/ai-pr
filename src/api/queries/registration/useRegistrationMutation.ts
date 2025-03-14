@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import registrationService from '@api/services/registrationService';
-import { RegistrationInfo, RegistrationRequest, Outbox } from '@model/RegistrationInfo';
+import { RegistrationInfo, RegistrationRequest } from '@model/RegistrationInfo';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useRegistrationMutation = () => {
@@ -20,20 +20,10 @@ export const useRegistrationMutation = () => {
       // 글로벌 트랜잭션 ID 생성 (프론트엔드에서 생성)
       const g_tr_id = `GTR_${uuidv4()}`;
 
-      // Outbox 이벤트 생성 (DB 테이블 구조에 맞게)
-      const outbox: Outbox = {
-        eventType: 'SaveRequest',
-        eventHubName: 'test', //TODO: 수정 필요
-        payload: registrationInfo,
-        status: 'READY_TO_PUBLISH',
-        g_tr_id,
-      };
-
       // RegistrationRequest 생성
       const request: RegistrationRequest = {
         g_tr_id,
-        registrationInfo,
-        outbox,
+        registrationInfo
       };
 
       return registrationService.saveRegistration(request);

@@ -12,27 +12,10 @@ export interface RegistrationInfo {
   contract_id?: string; // 계약 ID
 }
 
-// Outbox 테이블 구조에 맞는 이벤트 모델
-export interface Outbox {
-  eventId?: string; // 백엔드에서 생성되는 ID (DB 시퀀스 채번)
-  eventType: string; // 이벤트 타입
-  eventHubName: string; // 이벤트허브명
-  payload: any; // 요청 데이터
-  status: string; // 상태
-  g_tr_id: string; // 글로벌 트랜잭션 ID
-  tr_ps_seq?: number; // 트랜잭션 처리 순서
-  business_process_id?: string; // 비즈니스 처리 아이디 (백엔드에서 생성)
-  requestTime?: string; // 요청 발생 일시
-  publishedTime?: string; // 발행 일시
-  first_create_member_id?: string; // 최초 생성자 ID
-  last_update_member_id?: string; // 최종 수정자 ID
-}
-
 // DB 테이블 구조에 맞는 요청 모델
 export interface RegistrationRequest {
   g_tr_id: string; // 글로벌 트랜잭션 ID (프론트엔드에서 생성)
   registrationInfo: RegistrationInfo; // 가입 정보 (JSON으로 저장됨)
-  outbox: Outbox; // 이벤트 소싱용 Outbox
   first_create_member_id?: string; // 최초 생성자 ID
   last_update_member_id?: string; // 최종 수정자 ID
 }
