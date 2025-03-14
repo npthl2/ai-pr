@@ -19,7 +19,7 @@ export const DialogLabel = styled(Typography)(({ alignItems }: { alignItems?: st
   display: 'flex',
   alignItems: alignItems || 'center',
   paddingTop: alignItems === 'inherit' ? 4 : 0,
-  gap: 4,
+  gap: 1,
 }));
 
 export const DialogTextField = styled(TextField)({

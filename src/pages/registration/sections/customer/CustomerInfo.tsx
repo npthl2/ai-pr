@@ -15,7 +15,7 @@ import {
   VerificationButton,
   ReadOnlyLabel,
 } from './CustomerInfo.styled';
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { isValid, parse } from 'date-fns';
 
 interface CustomerInfoProps {
@@ -39,6 +39,7 @@ const CustomerInfo = ({
   const [nameError, setNameError] = useState<string>('');
   const [rrnoError, setRrnoError] = useState<string>('');
   const rrnoInputRef = useRef<HTMLInputElement>(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
 
   const isVerificationEnabled = useMemo(() => {
     return (
@@ -146,6 +147,10 @@ const CustomerInfo = ({
     return value;
   };
 
+  useEffect(() => {
+    nameInputRef.current?.focus();
+  }, []);
+
   return (
     <FormWrapper>
       <LeftSection>
@@ -168,6 +173,7 @@ const CustomerInfo = ({
               state={nameError ? 'error' : 'inactive'}
               helperText={nameError}
               data-testid='name-field'
+              inputRef={nameInputRef}
             />
           ) : (
             <ReadOnlyLabel>{customer.name}</ReadOnlyLabel>

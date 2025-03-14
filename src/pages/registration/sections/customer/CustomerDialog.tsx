@@ -188,7 +188,13 @@ const CustomerDialog = ({
           </DialogContent>
 
           <DialogContent>
-            <DialogLabel variant='h6'>본인조회동의</DialogLabel>
+            <DialogLabel variant='h6'>
+              본인조회동의
+              <Typography component='span' color='error'>
+                *
+              </Typography>
+            </DialogLabel>
+
             <RadioGroup>
               <StyledRadioLabel
                 control={

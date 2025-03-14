@@ -25,21 +25,21 @@ export const FieldContainer = styled(Box, {
 export const NameLabel = styled(Box)({
   display: 'flex',
   minWidth: 36,
-  gap: 4,
+  gap: 1,
   paddingTop: 3,
 });
 
 export const RrnoLabel = styled(Box)({
   display: 'flex',
   minWidth: 60,
-  gap: 4,
+  gap: 1,
   paddingTop: 3,
 });
 
 export const PersonalInfoLabel = styled(Box)({
   display: 'flex',
   minWidth: 100,
-  gap: 4,
+  gap: 1,
   paddingTop: 3,
 });
 
