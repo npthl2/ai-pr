@@ -260,28 +260,17 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
       paymentName: invoiceFormData.paymentName,
       birthDate: invoiceFormData.birthDate,
     };
-    try {
-      const result = await saveInvoiceMutation.mutateAsync(invoiceCreateRequestParams);
-      if (result.data && typeof result.data === 'string') {
-        openToast('청구정보 생성에 실패했습니다. 다시 시도해 주세요.');
-        return;
-      }
 
+    const result = await saveInvoiceMutation.mutateAsync(invoiceCreateRequestParams);
+
+    if (result.data && typeof result.data === 'object') {
       openToast('청구정보가 생성되었습니다.');
-
       // 청구정보 목록 캐시 무효화
       queryClient.invalidateQueries({ queryKey: ['invoice', activeCustomerId] });
-
       // 청구정보 스토어에 저장
-      if (result.data && typeof result.data === 'object') {
-        setRegistrationInvoiceInfo(contractTabId, result.data);
-      }
+      setRegistrationInvoiceInfo(contractTabId, result.data);
       // 다음 섹션으로 이동
       onComplete();
-    } catch (error) {
-      console.error(error);
-      openToast('청구정보 생성에 실패했습니다. 다시 시도해 주세요.');
-      return;
     }
   };
 
