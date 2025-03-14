@@ -116,38 +116,49 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
         </Box>
 
         <Box>
-          <Box sx={{ ...styles.searchContainer, width: '100%' }}>
+          <Box sx={{ ...styles.searchContainer, width: '100%', gap: '10px' }}>
             <Box
               sx={{
                 height: '32px',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
+                flex: 7,
               }}
             >
-              <Typography sx={{ minWidth: '73px' }}>부가서비스명</Typography>
-              <TextField
-                value={filterText}
-                onChange={(e) => setFilterText(e.target.value)}
-                size='small'
-                sx={styles.searchInput}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    handleFilter();
-                    e.preventDefault();
-                  }
-                }}
-              />
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: '2px', flex: 1 }}>
+                <Typography
+                  sx={{ minWidth: '60px', fontWeight: '600', fontSize: '14px', color: '#272E35' }}
+                >
+                  부가서비스명
+                </Typography>
+              </Box>
+              <Box sx={{ flex: 6 }}>
+                <TextField
+                  value={filterText}
+                  onChange={(e) => setFilterText(e.target.value)}
+                  size='small'
+                  sx={{ backgroundColor: '#FFFFFF', width: '100%' }}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      handleFilter();
+                      e.preventDefault();
+                    }
+                  }}
+                />
+              </Box>
             </Box>
-            <Button
-              onClick={handleFilter}
-              variant='contained'
-              iconComponent={<SearchIcon />}
-              iconPosition='left'
-              size='small'
-            >
-              조회
-            </Button>
+            <Box sx={{ flex: 1, alignItems: 'center' }}>
+              <Button
+                onClick={handleFilter}
+                variant='contained'
+                iconComponent={<SearchIcon />}
+                iconPosition='left'
+                size='small'
+              >
+                조회
+              </Button>
+            </Box>
           </Box>
           <Box sx={{ mb: 2, mt: 3 }}>
             <Typography variant='h3' component='div'>

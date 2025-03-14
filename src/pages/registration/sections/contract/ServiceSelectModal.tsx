@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Box, TextField, Paper, Radio, Typography, IconButton } from '@mui/material';
+import { Modal, Box, Paper, Radio, Typography, IconButton } from '@mui/material';
 import { Table, TableBody, TableContainer, TableHead } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
@@ -10,6 +10,7 @@ import Button from '@components/Button';
 import { styles } from './ServiceSelectModal.styles';
 import { useServicesQuery } from '@api/queries/registration/useRegistrationContractQuery';
 import { Service } from './types';
+import TextField from '@components/TextField';
 
 interface ServiceSelectModalProps {
   open: boolean;
@@ -62,32 +63,39 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
 
         <Box sx={{ height: '440px' }}>
           <Box sx={styles.searchContainer}>
-            <Typography sx={{ minWidth: '60px' }}>요금제명</Typography>
-            <TextField
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value.trim())}
-              size='small'
-              sx={styles.searchInput}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  handleSearch();
-                  e.preventDefault();
-                }
-              }}
-              data-testid='service-select-search-input'
-            />
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+              <Typography
+                sx={{ minWidth: '60px', fontWeight: '600', fontSize: '14px', color: '#272E35' }}
+              >
+                요금제명
+              </Typography>
+              <TextField
+                value={searchText}
+                onChange={setSearchText}
+                size='medium'
+                sx={styles.searchInput}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearch();
+                    e.preventDefault();
+                  }
+                }}
+                data-testid='service-select-search-input'
+              />
+            </Box>
             <Button
               onClick={handleSearch}
               variant='contained'
               iconComponent={<SearchIcon />}
               iconPosition='left'
-              size='small'
+              size='medium'
               sx={styles.searchButton}
               data-testid='service-select-search-button'
             >
               조회
             </Button>
           </Box>
+
           <Box sx={{ mb: 2, mt: 3 }}>
             <Typography variant='h3' component='div'>
               요금제 목록
@@ -147,7 +155,7 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
         </Box>
 
         <Box sx={styles.modalFooter}>
-          <Button onClick={onClose} sx={styles.cancelButton}>
+          <Button onClick={onClose} variant='outlined' color='grey' sx={styles.cancelButton}>
             취소
           </Button>
           <Button

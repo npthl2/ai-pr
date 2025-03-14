@@ -10,8 +10,6 @@ export const styles = {
     p: 4,
     borderRadius: 1,
     gap: '24px',
-    marginLeft: '24px',
-    marginRight: '24px',
   },
   modalHeader: {
     display: 'flex',
@@ -37,12 +35,11 @@ export const styles = {
 
   searchInput: {
     width: '362px',
-    height: '32px',
     backgroundColor: '#FFFFFF',
   },
   searchButton: {
     minWidth: '61px',
-    padding: '8px',
+    padding: '6px',
   },
   tableContainer: {
     height: '300px',
