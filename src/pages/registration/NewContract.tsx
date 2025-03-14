@@ -13,8 +13,8 @@ import SalesSection from './sections/SalesSection';
 import ContractSection from './sections/ContractSection';
 import DeviceSection from './sections/DeviceSection';
 import { SectionId, SECTION_IDS, SECTION_TITLES } from '@constants/RegistrationConstants';
-import ContractRequest from './ContractRequest';
-import ContractSummary from './sections/ContractSummary';
+import RegistrationRequest from './RegistrationRequest';
+import RegistrationSummary from './sections/RegistrationSummary';
 import InvoiceSection from './sections/InvoiceSection';
 interface NewContractProps {
   contractTabId: string;
@@ -144,7 +144,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
     return completedSections.includes(sectionId) || (expanded === sectionId && canExpand);
   };
   return isSaveRequested ? (
-    <ContractRequest />
+    <RegistrationRequest contractTabId={contractTabId} />
   ) : (
     <Container>
       <ContentWrapper>
@@ -189,7 +189,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
             })}
           </SectionsWrapper>
         </SectionsContainer>
-        <ContractSummary
+        <RegistrationSummary
           contractTabId={contractTabId}
           setIsSaveRequested={setIsSaveRequested}
           completedSections={completedSections}
