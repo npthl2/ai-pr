@@ -39,7 +39,12 @@ export const StatusMessageContainer = styled(Box)({
   alignItems: 'center',
 });
 
-export const GifContainer = styled('img')({
+export const CompletedGifContainer = styled('img')({
+  width: 140,
+  height: 120,
+});
+
+export const PendingGifContainer = styled('img')({
   width: 100,
   height: 100,
 });

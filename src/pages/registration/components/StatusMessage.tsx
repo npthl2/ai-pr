@@ -1,7 +1,8 @@
 import {
   StatusMessageContainer,
-  GifContainer,
+  PendingGifContainer,
   StatusMessage as StyledStatusMessage,
+  CompletedGifContainer,
 } from '../RegistrationRequest.styled';
 import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants';
 
@@ -23,7 +24,7 @@ const StatusMessage = ({ status, customerName }: StatusMessageProps) => {
           <StyledStatusMessage data-testid='status-message'>
             {customerName} 고객님의 가입이 처리중입니다.
           </StyledStatusMessage>
-          <GifContainer src={pendingGifPath} alt='처리중' />
+          <PendingGifContainer src={pendingGifPath} alt='처리중' />
         </StatusMessageContainer>
       )}
 
@@ -32,7 +33,7 @@ const StatusMessage = ({ status, customerName }: StatusMessageProps) => {
           <StyledStatusMessage data-testid='status-message'>
             {customerName} 고객님의 가입이 처리 완료되었습니다.
           </StyledStatusMessage>
-          <GifContainer src={completedGifPath} alt='완료' />
+          <CompletedGifContainer src={completedGifPath} alt='완료' />
         </StatusMessageContainer>
       )}
 
