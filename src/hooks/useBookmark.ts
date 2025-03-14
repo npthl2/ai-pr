@@ -9,8 +9,8 @@ export const useBookmark = () => {
   const bookmarkMutation = useBookmarkMutation();
 
   const handleBookmarkClick = useCallback(
-    debounce((event: React.MouseEvent<HTMLButtonElement>, itemId: string) => {
-      event.stopPropagation();
+    debounce((e: React.MouseEvent<HTMLElement>, itemId: string) => {
+      e.stopPropagation();
 
       const previousBookmarks = [...(menuItems.bookmarks || [])];
       const targetMenu = SUBSCRIPTION_MENUS.find((menu) => menu.id === itemId);

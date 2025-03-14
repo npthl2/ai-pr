@@ -13,6 +13,9 @@ import { SECTION_IDS, SECTION_TITLES, SectionId } from '@constants/RegistrationC
 import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
 import useRegistrationContractStore from '@stores/registration/RegistrationContractStore';
 import useRegistrationSalesStore from '@stores/registration/RegistrationSalesStore';
+import { SECTION_IDS, SECTION_TITLES } from '@constants/RegistrationConstants';
+import useRegistrationInvoiceStore from '@stores/registration/RegistrationInvoiceStore';
+
 interface ContractSummaryProps {
   contractTabId: string;
   setIsSaveRequested: (isSaveRequested: boolean) => void;
@@ -30,6 +33,9 @@ const ContractSummary = ({
   const customerInfo = getRegistrationCustomerInfo(contractTabId);
   const salesInfo = getRegistrationSalesInfo(contractTabId);
   const contractInfo = getRegistrationContractInfo(contractTabId);
+const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryProps) => {
+  const { getRegistrationInvoiceInfo } = useRegistrationInvoiceStore();
+  const registrationInvoiceInfo = getRegistrationInvoiceInfo(contractTabId);
 
   return (
     <SummaryContainer>
@@ -42,15 +48,15 @@ const ContractSummary = ({
           <Box>
             <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.INVOICE]}</Typography>
             <SummaryItem>
-              <Typography variant='body2'>납부자명</Typography>
+              <Typography variant='body2'>납부고객명</Typography>
               <Typography variant='body2' color='text.secondary'>
-                {customerInfo?.name || '-'}
+                {registrationInvoiceInfo?.recipient || '-'}
               </Typography>
             </SummaryItem>
             <SummaryItem>
               <Typography variant='body2'>납부방법</Typography>
               <Typography variant='body2' color='text.secondary'>
-                -
+                {registrationInvoiceInfo?.paymentMethod || '-'}
               </Typography>
             </SummaryItem>
           </Box>
@@ -142,7 +148,13 @@ const ContractSummary = ({
 
       <ButtonContainer>
         <LeftButtonGroup>
-          <Button variant='outlined' color='grey' size='large'>
+          <Button
+            variant='outlined'
+            color='grey'
+            size='large'
+            disabled={!registrationInvoiceInfo}
+            data-testid='temporary-save-button'
+          >
             임시저장
           </Button>
           <Button variant='outlined' color='grey' size='large'>

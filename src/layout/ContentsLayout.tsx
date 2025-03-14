@@ -84,7 +84,6 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
                     <Typography variant='body2'>{tab.label}</Typography>
                     {tab.closeable && (
                       <TabCloseButton
-                        size='small'
                         data-testid={`close-tab-${tab.label}`}
                         onClick={(e) => handleCloseTab(e, tab.id)}
                       >
@@ -108,7 +107,6 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
             <Typography variant='h3'>{currentTab?.label}</Typography>
             {currentTab?.label !== TabInfo.CUSTOMER_SEARCH.label && (
               <StarIconButton
-                variant='text'
                 data-testid={`bookmark-tab-${currentTab?.label}`}
                 onClick={(e) => {
                   if (!currentTab?.label || !currentTabId) return;
@@ -126,30 +124,28 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
           <Breadcrumb activeTabLabel={['Home', currentTab?.label || '']} />
         </ContentHeader>
         <ContentsBG>
-          <Box
-            sx={{
-              display: currentTab?.id === TabInfo.CUSTOMER_SEARCH.id ? 'block' : 'none',
-              height: '100%',
-            }}
-          >
-            <CustomerDetailContainer />
-          </Box>
-          <Box
-            sx={{
-              display: currentTab?.id === TabInfo.SERVICE_MODIFICATION.id ? 'block' : 'none',
-              height: '100%',
-            }}
-          >
-            <ServiceModification />
-          </Box>
-          <Box
-            sx={{
-              display: currentTab?.id === TabInfo.NEW_SUBSCRIPTION.id ? 'block' : 'none',
-              height: '100%',
-            }}
-          >
+          {currentTab?.id === TabInfo.NEW_SUBSCRIPTION.id ? (
             <NewContract contractTabId={customerId} />
-          </Box>
+          ) : (
+            <>
+              <Box
+                sx={{
+                  display: currentTab?.id === TabInfo.CUSTOMER_SEARCH.id ? 'block' : 'none',
+                  height: '100%',
+                }}
+              >
+                <CustomerDetailContainer />
+              </Box>
+              <Box
+                sx={{
+                  display: currentTab?.id === TabInfo.SERVICE_MODIFICATION.id ? 'block' : 'none',
+                  height: '100%',
+                }}
+              >
+                <ServiceModification />
+              </Box>
+            </>
+          )}
         </ContentsBG>
       </TabContext>
     </ContentsContainer>

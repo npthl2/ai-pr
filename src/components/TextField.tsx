@@ -21,6 +21,7 @@ interface CustomTextFieldProps
   helperText?: string;
   onChange: (value: string) => void;
   absoluteHelperText?: boolean;
+  maxLength?: number;
 }
 
 const getBorderColor = (theme: any, state: TextFieldState) =>
@@ -34,8 +35,10 @@ const getBorderColor = (theme: any, state: TextFieldState) =>
 const StyledTextField = styled(MuiTextField, {
   shouldForwardProp: (prop) => prop !== 'state',
 })<{ size: TextFieldSize; state: TextFieldState }>(({ theme, size, state }) => ({
-  backgroundColor: state === 'disabled' ? theme.palette.grey[100] : 'none',
+  backgroundColor: state === 'disabled' ? theme.palette.background.paper : 'none',
   '& .MuiInputBase-root': {
+    backgroundColor:
+      state === 'disabled' ? theme.palette.grey[100] : theme.palette.background.paper,
     minHeight: size === 'small' ? 28 : 32,
     padding: size === 'small' ? '0px 8px' : '0px 10px',
   },
@@ -43,7 +46,8 @@ const StyledTextField = styled(MuiTextField, {
     padding: 0,
     minHeight: 'inherit',
     height: 'auto',
-    color: state === 'error' ? theme.palette.error.main : theme.palette.text.primary,
+    color: theme.palette.text.primary,
+
     '&.MuiInputBase-inputMultiline': {
       alignContent: 'center',
     },
@@ -71,6 +75,9 @@ const StyledTextField = styled(MuiTextField, {
   },
   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
     borderColor: getBorderColor(theme, state),
+  },
+  '& .MuiInputBase-input::placeholder': {
+    color: theme.palette.text.secondary,
   },
 }));
 
@@ -100,10 +107,14 @@ const TextField = ({
   InputProps,
   InputLabelProps,
   absoluteHelperText = false,
+  maxLength,
   ...props
 }: CustomTextFieldProps) => {
   const currentState: TextFieldState = disabled ? 'disabled' : state;
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (maxLength && e.target.value.length > maxLength) {
+      return;
+    }
     onChange(e.target.value);
   };
 

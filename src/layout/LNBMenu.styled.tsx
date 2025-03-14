@@ -98,12 +98,13 @@ export const LNBMenuItem = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const StarIconButton = styled(Button)(({ theme }) => ({
-  minWidth: 'auto',
-  padding: 4,
-  marginLeft: 8,
-  color: theme.palette.action.active,
+export const StarIconButton = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  padding: '4px',
   '&:hover': {
     backgroundColor: 'transparent',
   },
-}));
+});

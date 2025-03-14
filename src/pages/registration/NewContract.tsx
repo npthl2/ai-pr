@@ -22,12 +22,9 @@ interface NewContractProps {
 const NewContract = ({ contractTabId }: NewContractProps) => {
   const [isSaveRequested, setIsSaveRequested] = useState(false);
   const [expanded, setExpanded] = useState<SectionId>(SECTION_IDS.CUSTOMER);
-  const [completedSections, setCompletedSections] = useState<SectionId[]>([
-    SECTION_IDS.CUSTOMER,
-    SECTION_IDS.INVOICE,
-    SECTION_IDS.SALES,
-  ]);
+  const [completedSections, setCompletedSections] = useState<SectionId[]>([]);
   const wrapperRef = useRef<HTMLDivElement>(null);
+
   const createSections = (
     contractTabId: string,
     handleSectionComplete: (sectionId: SectionId) => void,
@@ -125,13 +122,15 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
             behavior: 'smooth',
           });
         }
-      }, 100);
+      }, 800);
     }
   };
+
   const sections = useMemo(
     () => createSections(contractTabId, handleSectionComplete, completedSections),
     [contractTabId, handleSectionComplete, completedSections],
   );
+
   const handleChange = (panel: SectionId) => (_: React.SyntheticEvent, isExpanded: boolean) => {
     const sectionIndex = sections.findIndex((section) => section.id === panel);
     const previousSectionsCompleted = sections
@@ -154,6 +153,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
             {sections.map((section) => {
               const canExpand = section.canExpand(completedSections);
               const isCurrentExpanded = isExpanded(section.id, canExpand);
+
               return (
                 <StyledAccordion
                   key={`${contractTabId}-${section.id}`}
