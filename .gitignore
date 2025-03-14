@@ -24,3 +24,6 @@ dist-ssr
 *.sln
 *.sw?
 test/unit/coverage
+
+.cursor/reviews/
+pr_review_info.sh
