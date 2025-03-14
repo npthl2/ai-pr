@@ -22,7 +22,7 @@ interface DeviceSectionProps {
   onComplete: () => void;
   completed?: boolean;
 }
-//////////////////////////////////////////
+
 const DeviceSection = ({ contractTabId, onComplete, completed }: DeviceSectionProps) => {
   const { getRegistrationDeviceInfo } = useRegistrationDeviceStore();
   const deviceInfo = getRegistrationDeviceInfo(contractTabId);

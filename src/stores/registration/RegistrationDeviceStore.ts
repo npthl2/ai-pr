@@ -45,6 +45,7 @@ const useRegistrationDeviceStore = create<RegistrationDeviceState>((set, get) =>
   previousContractValues: {},
 
   setDisplayMode: (displayMode: string) => {
+    console.log('[RegistrationDeviceStore] setDisplayMode:', displayMode);
     set(() => ({
       displayMode,
     }));
@@ -84,17 +85,7 @@ const useRegistrationDeviceStore = create<RegistrationDeviceState>((set, get) =>
     // Check for contract changes before setting device info
     get().checkForContractChanges(contractTapId);
 
-    if (info.devicePaymentType === 'installment') {
-      // Clear the store data for this contractTapId
-      set((state) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { [contractTapId]: _, ...rest } = state.registrationDevices;
-        return {
-          registrationDevices: rest,
-        };
-      });
-    }
-    // Then set the new info
+    // Then set the new info (removed the clearing of data)
     set((state) => {
       return {
         registrationDevices: {

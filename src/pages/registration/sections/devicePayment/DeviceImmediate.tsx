@@ -1,14 +1,27 @@
-import {
-  Typography,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  Box,
-  styled,
-  Button,
-} from '@mui/material';
+import { Typography, Radio, RadioGroup, FormControlLabel, Box, Button } from '@mui/material';
 import { useState, useEffect } from 'react';
 import useRegistrationDeviceStore from '@stores/registration/RegistrationDeviceStore';
+import {
+  InfoRow,
+  SectionTitle,
+  ContentWrapper,
+  DeviceInfoContainer,
+  DeviceInfoLabel,
+  DeviceInfoValue,
+  SponsorTypeLabel,
+  SponsorTypeValue,
+  RequiredFieldLabel,
+  RequiredMark,
+  RadioGroupContainer,
+  PriceInfoContainer,
+  PriceDivider,
+  PriceLabel,
+  PriceValue,
+  DiscountValue,
+  TotalPriceLabel,
+  TotalPriceValue,
+  ButtonContainer,
+} from './DeviceImmediate.styled';
 
 interface DevicePaymentImmediateProps {
   onClose: () => void;
@@ -19,34 +32,6 @@ interface DevicePaymentImmediateProps {
   ) => void;
   contractTabId: string;
 }
-
-const InfoRow = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  marginBottom: '2px',
-  '& > :first-of-type': {
-    marginRight: '16px',
-  },
-});
-
-const SectionTitle = styled(Typography)({
-  width: '133px',
-  height: '27px',
-  marginBottom: '12px',
-  marginTop: '12px',
-  fontFamily: 'Pretendard',
-  fontWeight: '700',
-  fontSize: '18px',
-  lineHeight: '27px',
-  letterSpacing: 0,
-  color: '#272E35',
-});
-
-const ContentWrapper = styled(Box)({
-  width: '470px',
-  padding: '8px',
-  overflow: 'hidden',
-});
 
 const DevicePaymentImmediate = ({
   onClose,
@@ -127,145 +112,32 @@ const DevicePaymentImmediate = ({
     <>
       <ContentWrapper>
         <Box sx={{ maxWidth: '100%' }}>
-          <Box
-            sx={{
-              maxWidth: '100%',
-              height: '66px',
-              gap: '2px',
-              paddingTop: '8px',
-              paddingRight: '16px',
-              paddingBottom: '8px',
-              paddingLeft: '16px',
-              borderRadius: '4px',
-              background:
-                'linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), linear-gradient(0deg, #2196F3, #2196F3)',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
+          <DeviceInfoContainer>
             <InfoRow>
-              <Typography
-                variant='body2'
-                sx={{
-                  color: '#6E7782',
-                  fontFamily: 'Pretendard',
-                  fontWeight: '600',
-                  fontSize: '14px',
-                  lineHeight: '21px',
-                  letterSpacing: '0px',
-                  width: '37px',
-                  height: '21px',
-                }}
-              >
-                단말기
-              </Typography>
-              <Typography
-                variant='body2'
-                sx={{
-                  width: '128px',
-                  height: '21px',
-                  fontFamily: 'Pretendard',
-                  fontWeight: '700',
-                  fontSize: '14px',
-                  lineHeight: '21px',
-                  letterSpacing: '0px',
-                  color: '#272E35',
-                  textAlign: 'left',
-                }}
-              >
-                SM-F711NK
-              </Typography>
+              <DeviceInfoLabel variant='body2'>단말기</DeviceInfoLabel>
+              <DeviceInfoValue variant='body2'>SM-F711NK</DeviceInfoValue>
             </InfoRow>
             <InfoRow>
-              <Typography
-                variant='body2'
-                sx={{
-                  color: '#6E7782',
-                  fontFamily: 'Pretendard',
-                  fontWeight: '600',
-                  fontSize: '14px',
-                  lineHeight: '21px',
-                  letterSpacing: '0px',
-                  width: '37px',
-                  height: '21px',
-                }}
-              >
-                요금제
-              </Typography>
-              <Typography
-                variant='body2'
-                sx={{
-                  width: '128px',
-                  height: '21px',
-                  fontFamily: 'Pretendard',
-                  fontWeight: '700',
-                  fontSize: '14px',
-                  lineHeight: '21px',
-                  letterSpacing: '0px',
-                  color: '#272E35',
-                  textAlign: 'left',
-                }}
-              >
-                넷플릭스 초이스 스페셜
-              </Typography>
+              <DeviceInfoLabel variant='body2'>요금제</DeviceInfoLabel>
+              <DeviceInfoValue variant='body2'>넷플릭스 초이스 스페셜</DeviceInfoValue>
             </InfoRow>
-          </Box>
+          </DeviceInfoContainer>
 
           <SectionTitle sx={{ gap: '1px' }}>단말기 스폰서 정보</SectionTitle>
           <InfoRow sx={{ mb: 0.1 }}>
-            <Typography
-              variant='body2'
-              sx={{
-                width: '120px',
-                height: '21px',
-                fontFamily: 'Pretendard',
-                fontWeight: '600',
-                fontSize: '14px',
-                lineHeight: '21px',
-                letterSpacing: '0px',
-                color: '#272E35',
-              }}
-            >
+            <SponsorTypeLabel variant='body2' sx={{ width: '120px' }}>
               스폰서 유형
-            </Typography>
-            <Typography
-              variant='body2'
-              sx={{
-                width: '61px',
-                height: '21px',
-                fontFamily: 'Pretendard',
-                fontWeight: '400',
-                fontSize: '14px',
-                lineHeight: '21px',
-                letterSpacing: '0px',
-                color: '#272E35',
-              }}
-            >
-              통합스폰서
-            </Typography>
+            </SponsorTypeLabel>
+            <SponsorTypeValue variant='body2'>통합스폰서</SponsorTypeValue>
           </InfoRow>
 
           <Box sx={{ mb: 0.1, display: 'flex', alignItems: 'center' }}>
-            <Typography
-              variant='body2'
-              sx={{
-                width: '120px',
-                height: '21px',
-                fontFamily: 'Pretendard',
-                fontWeight: '600',
-                fontSize: '14px',
-                lineHeight: '21px',
-                letterSpacing: '0px',
-                mr: 1.5,
-              }}
-            >
+            <RequiredFieldLabel variant='body2'>
               <Box component='span' sx={{ color: '#272E35' }}>
                 약정기간
               </Box>
-              <Box component='span' sx={{ color: '#FE2E36' }}>
-                *
-              </Box>
-            </Typography>
+              <RequiredMark sx={{ display: 'inline' }}>*</RequiredMark>
+            </RequiredFieldLabel>
             <RadioGroup
               value={engagementPeriod}
               onChange={(e) => setEngagementPeriod(e.target.value)}
@@ -286,140 +158,76 @@ const DevicePaymentImmediate = ({
           </Box>
 
           <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-            <Typography
-              variant='body2'
-              sx={{
-                width: '120px',
-                fontFamily: 'Pretendard',
-                fontWeight: '600',
-                fontSize: '14px',
-                lineHeight: '21px',
-                letterSpacing: '0px',
-                mr: 1.5,
-              }}
-            >
-              <Box component='span' sx={{ color: '#272E35' }}>
+            <RequiredFieldLabel variant='body2'>
+              <Box component='span' sx={{ color: '#272E35', display: 'inline' }}>
                 지원금 선택
               </Box>
-              <Box component='span' sx={{ color: '#FE2E36' }}>
-                *
-              </Box>
-            </Typography>
-            <RadioGroup
-              value={deviceEngagementType}
-              onChange={handleEngagementTypeChange}
-              row
-              sx={{ '& .MuiFormControlLabel-root': { mr: 1 } }}
-            >
-              <FormControlLabel
-                value='PUBLIC_POSTED_SUPPORT'
-                control={<Radio size='small' />}
-                label={<Typography variant='body2'>공시지원금</Typography>}
-              />
-              <FormControlLabel
-                value='SELECTED'
-                control={<Radio size='small' />}
-                label={<Typography variant='body2'>선택약정 (요금제의 25% 할인)</Typography>}
-              />
-            </RadioGroup>
+              <RequiredMark sx={{ display: 'inline' }}>*</RequiredMark>
+            </RequiredFieldLabel>
+            <RadioGroupContainer>
+              <RadioGroup
+                value={deviceEngagementType}
+                onChange={handleEngagementTypeChange}
+                row
+                sx={{ display: 'flex', flexWrap: 'nowrap', width: '120px' }}
+              >
+                <FormControlLabel
+                  value='PUBLIC_POSTED_SUPPORT'
+                  control={<Radio size='small' />}
+                  label={
+                    <Typography variant='body2' noWrap>
+                      공시지원금
+                    </Typography>
+                  }
+                  sx={{ minWidth: 'auto', marginRight: '8px' }}
+                />
+                <FormControlLabel
+                  value='SELECTED'
+                  control={<Radio size='small' />}
+                  label={
+                    <Typography variant='body2' noWrap>
+                      선택약정 (요금제의 25% 할인)
+                    </Typography>
+                  }
+                  sx={{ minWidth: 'auto' }}
+                />
+              </RadioGroup>
+            </RadioGroupContainer>
           </Box>
 
           <SectionTitle sx={{ mt: 0.25, mb: 0.25 }}>단말기 금액 정보</SectionTitle>
-          <Box
-            sx={{
-              width: '422px',
-              height: '152px',
-              gap: '12px',
-              padding: '16px',
-              bgcolor: '#F7F9FA',
-              borderRadius: '8px',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
+          <PriceInfoContainer>
             <InfoRow sx={{ width: '390px', height: '21px' }}>
-              <Typography variant='body2' sx={{ flex: 1 }}>
+              <PriceLabel variant='body2'>
                 <Box component='span' sx={{ color: '#272E35', paddingLeft: '10px', gap: '16px' }}>
                   {' '}
                   단말출고가{' '}
                 </Box>
-              </Typography>
-              <Typography
-                variant='body2'
-                sx={{
-                  width: '164px',
-                  height: '21px',
-                  fontFamily: 'Pretendard',
-                  fontWeight: '700',
-                  fontSize: '14px',
-                  lineHeight: '21px',
-                  letterSpacing: '0px',
-                  textAlign: 'right',
-                  color: '#272E35',
-                }}
-              >
-                1,155,000 원
-              </Typography>
+              </PriceLabel>
+              <PriceValue variant='body2'>1,155,000 원</PriceValue>
             </InfoRow>
             <InfoRow>
-              <Typography variant='body2' sx={{ flex: 1 }}>
-                - 공시지원금
-              </Typography>
-              <Typography variant='body2' sx={{ minWidth: '80px', textAlign: 'right' }}>
-                {discountPrice.toLocaleString()} 원
-              </Typography>
+              <PriceLabel variant='body2'>- 공시지원금</PriceLabel>
+              <DiscountValue variant='body2'>{discountPrice.toLocaleString()} 원</DiscountValue>
             </InfoRow>
-            <Box
-              sx={{
-                width: '390px',
-                height: '1px',
-                borderWidth: '1px',
-                border: '1px solid #05151F',
-              }}
-            />
+            <PriceDivider />
             <InfoRow>
-              <Typography
-                variant='subtitle2'
-                sx={{
-                  width: '190px',
-                  height: '21px',
-                  fontFamily: 'Pretendard',
-                  fontWeight: '600',
-                  fontSize: '14px',
-                  lineHeight: '21px',
-                  letterSpacing: '0px',
-                }}
-              >
-                총금액
-              </Typography>
-              <Typography
-                variant='subtitle2'
-                sx={{
-                  width: '184px',
-                  height: '42px',
-                  fontFamily: 'Pretendard',
-                  fontWeight: '400',
-                  fontSize: '28px',
-                  lineHeight: '150%',
-                  letterSpacing: '0px',
-                  textAlign: 'right',
-                  color: '#272E35',
-                }}
-              >
+              <TotalPriceLabel variant='subtitle2'>총금액</TotalPriceLabel>
+              <TotalPriceValue variant='subtitle2'>
                 {totalPrice.toLocaleString()} 원
-              </Typography>
+              </TotalPriceValue>
             </InfoRow>
-          </Box>
+          </PriceInfoContainer>
         </Box>
       </ContentWrapper>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, p: 2 }}>
+      <ButtonContainer>
         <Button variant='outlined' onClick={onClose}>
           취소
         </Button>
         <Button variant='contained' onClick={handleConfirm}>
           확인
         </Button>
-      </Box>
+      </ButtonContainer>
     </>
   );
 };

@@ -1,15 +1,34 @@
-import {
-  Typography,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  TextField,
-  Box,
-  styled,
-  Button,
-} from '@mui/material';
+import { Typography, Radio, RadioGroup, FormControlLabel, Box, Button } from '@mui/material';
 import { useState, useEffect } from 'react';
 import useRegistrationDeviceStore from '@stores/registration/RegistrationDeviceStore';
+import {
+  InfoRow,
+  SectionTitle,
+  ContentWrapper,
+  DeviceInfoContainer,
+  DeviceInfoLabel,
+  DeviceInfoValue,
+  SponsorTypeLabel,
+  SponsorTypeValue,
+  RequiredFieldLabel,
+  RequiredMark,
+  RadioGroupContainer,
+  PriceInfoContainer,
+  PriceDivider,
+  FinalPriceDivider,
+  PriceLabel,
+  PriceValue,
+  DiscountValue,
+  PrepaidAmountContainer,
+  PrepaidAmountLabel,
+  PrepaidAmountTextField,
+  CurrencyUnit,
+  InstallmentPeriodLabel,
+  InstallmentPeriodContainer,
+  MonthlyPaymentLabel,
+  MonthlyPaymentValue,
+  ButtonContainer,
+} from './DevicePaymentInstallment.styled';
 
 interface DevicePaymentInstallmentProps {
   onClose: () => void;
@@ -20,34 +39,6 @@ interface DevicePaymentInstallmentProps {
   ) => void;
   contractTabId: string;
 }
-
-const InfoRow = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  marginBottom: '2px',
-  '& > :first-of-type': {
-    marginRight: '16px',
-  },
-});
-
-const SectionTitle = styled(Typography)({
-  width: '133px',
-  height: '27px',
-  marginBottom: '12px',
-  marginTop: '12px',
-  fontFamily: 'Pretendard',
-  fontWeight: '700',
-  fontSize: '18px',
-  lineHeight: '27px',
-  letterSpacing: 0,
-  color: '#272E35',
-});
-
-const ContentWrapper = styled(Box)({
-  width: '470px',
-  padding: '8px',
-  overflow: 'hidden',
-});
 
 const DevicePaymentInstallment = ({
   onClose,
@@ -75,7 +66,12 @@ const DevicePaymentInstallment = ({
     if (existingDeviceInfo && existingDeviceInfo.deviceId) {
       setEngagementPeriod(existingDeviceInfo.deviceEngagementPeriod.toString());
       setDeviceEngagementType(existingDeviceInfo.deviceEngagementType);
-      setInstallmentPeriod(existingDeviceInfo.deviceInstallmentPeriod.toString());
+      // Set installmentPeriod to '24' if it's 0 or invalid
+      setInstallmentPeriod(
+        existingDeviceInfo.deviceInstallmentPeriod > 0
+          ? existingDeviceInfo.deviceInstallmentPeriod.toString()
+          : '24',
+      );
       setPrepaidPrice(existingDeviceInfo.devicePrepaidPrice.toString());
       setDiscountPrice(existingDeviceInfo.deviceDiscountPrice);
       setInstallmentTotalAmount(existingDeviceInfo.deviceInstallmentAmount);
@@ -164,368 +160,144 @@ const DevicePaymentInstallment = ({
     <>
       <ContentWrapper>
         <Box sx={{ maxWidth: '100%' }}>
-          <Box
-            sx={{
-              maxWidth: '100%',
-              height: '66px',
-              gap: '2px',
-              paddingTop: '8px',
-              paddingRight: '16px',
-              paddingBottom: '8px',
-              paddingLeft: '16px',
-              borderRadius: '4px',
-              background:
-                'linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), linear-gradient(0deg, #2196F3, #2196F3)',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
+          <DeviceInfoContainer>
             <InfoRow>
-              <Typography
-                variant='body2'
-                sx={{
-                  color: '#6E7782',
-                  fontFamily: 'Pretendard',
-                  fontWeight: '600',
-                  fontSize: '14px',
-                  lineHeight: '21px',
-                  letterSpacing: '0px',
-                  width: '37px',
-                  height: '21px',
-                }}
-              >
-                단말기
-              </Typography>
-              <Typography
-                variant='body2'
-                sx={{
-                  width: '128px',
-                  height: '21px',
-                  fontFamily: 'Pretendard',
-                  fontWeight: '700',
-                  fontSize: '14px',
-                  lineHeight: '21px',
-                  letterSpacing: '0px',
-                  color: '#272E35',
-                  textAlign: 'left',
-                }}
-              >
-                SM-F711NK
-              </Typography>
+              <DeviceInfoLabel>단말기</DeviceInfoLabel>
+              <DeviceInfoValue>SM-F711NK</DeviceInfoValue>
             </InfoRow>
             <InfoRow>
-              <Typography
-                variant='body2'
-                sx={{
-                  color: '#6E7782',
-                  fontFamily: 'Pretendard',
-                  fontWeight: '600',
-                  fontSize: '14px',
-                  lineHeight: '21px',
-                  letterSpacing: '0px',
-                  width: '37px',
-                  height: '21px',
-                }}
-              >
-                요금제
-              </Typography>
-              <Typography
-                variant='body2'
-                sx={{
-                  width: '128px',
-                  height: '21px',
-                  fontFamily: 'Pretendard',
-                  fontWeight: '700',
-                  fontSize: '14px',
-                  lineHeight: '21px',
-                  letterSpacing: '0px',
-                  color: '#272E35',
-                  textAlign: 'left',
-                }}
-              >
-                넷플릭스 초이스 스페셜
-              </Typography>
+              <DeviceInfoLabel>요금제</DeviceInfoLabel>
+              <DeviceInfoValue>넷플릭스 초이스 스페셜</DeviceInfoValue>
             </InfoRow>
-          </Box>
+          </DeviceInfoContainer>
 
-          <SectionTitle sx={{ gap: '1px' }}>단말기 스폰서 정보</SectionTitle>
+          <SectionTitle>단말기 스폰서 정보</SectionTitle>
           <InfoRow sx={{ mb: 0.1 }}>
-            <Typography
-              variant='body2'
-              sx={{
-                width: '120px',
-                height: '21px',
-                fontFamily: 'Pretendard',
-                fontWeight: '600',
-                fontSize: '14px',
-                lineHeight: '21px',
-                letterSpacing: '0px',
-                color: '#272E35',
-              }}
-            >
-              스폰서 유형
-            </Typography>
-            <Typography
-              variant='body2'
-              sx={{
-                width: '61px',
-                height: '21px',
-                fontFamily: 'Pretendard',
-                fontWeight: '400',
-                fontSize: '14px',
-                lineHeight: '21px',
-                letterSpacing: '0px',
-                color: '#272E35',
-              }}
-            >
-              통합스폰서
-            </Typography>
+            <SponsorTypeLabel>스폰서 유형</SponsorTypeLabel>
+            <SponsorTypeValue>통합스폰서</SponsorTypeValue>
           </InfoRow>
 
           <Box sx={{ mb: 0.1, display: 'flex', alignItems: 'center' }}>
-            <Typography
-              variant='body2'
-              sx={{
-                width: '120px',
-                height: '21px',
-                fontFamily: 'Pretendard',
-                fontWeight: '600',
-                fontSize: '14px',
-                lineHeight: '21px',
-                letterSpacing: '0px',
-                mr: 1.5,
-              }}
-            >
-              <Box component='span' sx={{ color: '#272E35' }}>
+            <RequiredFieldLabel>
+              <Box
+                component='span'
+                sx={{ color: '#272E35', display: 'inline-flex', alignItems: 'center' }}
+              >
                 약정기간
+                <RequiredMark>*</RequiredMark>
               </Box>
-              <Box component='span' sx={{ color: '#FE2E36' }}>
-                *
-              </Box>
-            </Typography>
-            <RadioGroup
-              value={engagementPeriod}
-              onChange={(e) => setEngagementPeriod(e.target.value)}
-              row
-              sx={{ '& .MuiFormControlLabel-root': { mr: 2 } }}
-            >
-              <FormControlLabel
-                value='12'
-                control={<Radio size='small' />}
-                label={<Typography variant='body2'>12개월</Typography>}
-              />
-              <FormControlLabel
-                value='24'
-                control={<Radio size='small' />}
-                label={<Typography variant='body2'>24개월</Typography>}
-              />
-            </RadioGroup>
+            </RequiredFieldLabel>
+            <RadioGroupContainer>
+              <RadioGroup
+                value={engagementPeriod}
+                onChange={(e) => setEngagementPeriod(e.target.value)}
+                row
+                sx={{ '& .MuiFormControlLabel-root': { mr: 2 } }}
+              >
+                <FormControlLabel
+                  value='12'
+                  control={<Radio size='small' />}
+                  label={<Typography variant='body2'>12개월</Typography>}
+                />
+                <FormControlLabel
+                  value='24'
+                  control={<Radio size='small' />}
+                  label={<Typography variant='body2'>24개월</Typography>}
+                />
+              </RadioGroup>
+            </RadioGroupContainer>
           </Box>
 
           <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-            <Typography
-              variant='body2'
-              sx={{
-                width: '120px',
-                fontFamily: 'Pretendard',
-                fontWeight: '600',
-                fontSize: '14px',
-                lineHeight: '21px',
-                letterSpacing: '0px',
-                mr: 1.5,
-              }}
-            >
-              <Box component='span' sx={{ color: '#272E35' }}>
+            <RequiredFieldLabel>
+              <Box
+                component='span'
+                sx={{ color: '#272E35', display: 'inline-flex', alignItems: 'center' }}
+              >
                 지원금 선택
+                <RequiredMark>*</RequiredMark>
               </Box>
-              <Box component='span' sx={{ color: '#FE2E36' }}>
-                *
-              </Box>
-            </Typography>
-            <RadioGroup
-              value={deviceEngagementType}
-              onChange={handleEngagementTypeChange}
-              row
-              sx={{ '& .MuiFormControlLabel-root': { mr: 1 } }}
-            >
-              <FormControlLabel
-                value='PUBLIC_POSTED_SUPPORT'
-                control={<Radio size='small' />}
-                label={<Typography variant='body2'>공시지원금</Typography>}
-              />
-              <FormControlLabel
-                value='SELECTED'
-                control={<Radio size='small' />}
-                label={<Typography variant='body2'>선택약정 (요금제의 25% 할인)</Typography>}
-              />
-            </RadioGroup>
+            </RequiredFieldLabel>
+            <RadioGroupContainer>
+              <RadioGroup
+                value={deviceEngagementType}
+                onChange={handleEngagementTypeChange}
+                row
+                sx={{ '& .MuiFormControlLabel-root': { mr: 2 } }}
+              >
+                <FormControlLabel
+                  value='PUBLIC_POSTED_SUPPORT'
+                  control={<Radio size='small' />}
+                  label={<Typography variant='body2'>공시지원금</Typography>}
+                />
+                <FormControlLabel
+                  value='SELECTED'
+                  control={<Radio size='small' />}
+                  label={<Typography variant='body2'>선택약정 (요금제의 25% 할인)</Typography>}
+                />
+              </RadioGroup>
+            </RadioGroupContainer>
           </Box>
 
           <SectionTitle sx={{ mt: 0.25, mb: 0.25 }}>단말기 금액 정보</SectionTitle>
-          <Box
-            sx={{
-              width: '422px',
-              height: '350px',
-              gap: '12px',
-              padding: '16px',
-              bgcolor: '#F7F9FA',
-              borderRadius: '8px',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <InfoRow sx={{ width: '390px', height: '21px' }}>
-              <Typography variant='body2' sx={{ flex: 1 }}>
+          <PriceInfoContainer>
+            <InfoRow>
+              <PriceLabel>
                 <Box component='span' sx={{ color: '#272E35', paddingLeft: '10px', gap: '16px' }}>
                   {' '}
                   단말출고가{' '}
                 </Box>
-              </Typography>
-              <Typography
-                variant='body2'
-                sx={{
-                  width: '164px',
-                  height: '21px',
-                  fontFamily: 'Pretendard',
-                  fontWeight: '700',
-                  fontSize: '14px',
-                  lineHeight: '21px',
-                  letterSpacing: '0px',
-                  textAlign: 'right',
-                  color: '#272E35',
-                }}
-              >
-                1,155,000 원
-              </Typography>
+              </PriceLabel>
+              <PriceValue>1,155,000 원</PriceValue>
             </InfoRow>
             <InfoRow>
-              <Typography variant='body2' sx={{ flex: 1 }}>
-                - 공시지원금
-              </Typography>
-              <Typography variant='body2' sx={{ minWidth: '80px', textAlign: 'right' }}>
-                {discountPrice.toLocaleString()} 원
-              </Typography>
+              <PriceLabel>- 공시지원금</PriceLabel>
+              <DiscountValue>{discountPrice.toLocaleString()} 원</DiscountValue>
             </InfoRow>
-            <InfoRow sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Typography variant='body2' sx={{ minWidth: '170px' }}>
-                <Box component='span' sx={{ color: '#272E35' }}>
+            <PrepaidAmountContainer>
+              <PrepaidAmountLabel>
+                <Box
+                  component='span'
+                  sx={{ color: '#272E35', display: 'inline-flex', alignItems: 'center' }}
+                >
                   - 선납금
+                  <RequiredMark>*</RequiredMark>
                 </Box>
-                <Box component='span' sx={{ color: '#FE2E36' }}>
-                  *
-                </Box>
-              </Typography>
-              <TextField
+              </PrepaidAmountLabel>
+              <PrepaidAmountTextField
                 size='small'
                 value={prepaidPrice}
                 onChange={handlePrepaidPriceChange}
-                sx={{
-                  minWidth: '168px',
-                  height: '28px',
-                  backgroundColor: '#FFFFFF',
-                  '& .MuiOutlinedInput-root': {
-                    height: '28px',
-                    paddingRight: '12px',
-                    paddingLeft: '12px',
-                    borderRadius: '4px',
-                    '& input': {
-                      textAlign: 'right',
-                      padding: '4px 0',
-                    },
-                    '& fieldset': {
-                      borderWidth: '1px',
-                      borderColor: '#E0E3E7',
-                    },
-                    '&:hover fieldset': {
-                      borderColor: '#B2BAC2',
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#2196F3',
-                    },
-                  },
-                }}
               />
-              <Typography variant='body2' sx={{ minWidth: '12px', textAlign: 'right' }}>
-                {' '}
-                원
-              </Typography>
-            </InfoRow>
-            <Box
-              sx={{
-                width: '390px',
-                height: '1px',
-                borderWidth: '1px',
-                border: '1px solid rgba(112, 121, 142, 0.16)',
-              }}
-            />
+              <CurrencyUnit> 원</CurrencyUnit>
+            </PrepaidAmountContainer>
+            <PriceDivider />
             <InfoRow>
-              <Typography variant='body2' sx={{ flex: 1 }}>
-                할부원금
-              </Typography>
-              <Typography
-                variant='body2'
-                sx={{
-                  width: '164px',
-                  height: '21px',
-                  fontFamily: 'Pretendard',
-                  fontWeight: '700',
-                  fontSize: '14px',
-                  lineHeight: '21px',
-                  letterSpacing: '0px',
-                  textAlign: 'right',
-                  color: '#272E35',
-                }}
-              >
-                {installmentTotalAmount.toLocaleString()} 원
-              </Typography>
+              <PriceLabel>할부원금</PriceLabel>
+              <PriceValue>{installmentTotalAmount.toLocaleString()} 원</PriceValue>
             </InfoRow>
             <InfoRow>
-              <Typography variant='body2' sx={{ flex: 1 }}>
-                + 총 할부수수료 (할부원금의 5.9%)
-              </Typography>
-              <Typography variant='body2' sx={{ minWidth: '80px', textAlign: 'right' }}>
-                {installmentFee.toLocaleString()} 원
-              </Typography>
+              <PriceLabel>+ 총 할부수수료 (할부원금의 5.9%)</PriceLabel>
+              <DiscountValue>{installmentFee.toLocaleString()} 원</DiscountValue>
             </InfoRow>
-            <Box
-              sx={{
-                width: '390px',
-                height: '1px',
-                borderWidth: '1px',
-                border: '1px solid rgba(112, 121, 142, 0.16)',
-              }}
-            />
+            <PriceDivider />
             <InfoRow>
               <Typography variant='subtitle2' sx={{ flex: 1 }}>
                 총금액
               </Typography>
-              <Typography
-                variant='subtitle2'
-                sx={{
-                  width: '164px',
-                  height: '21px',
-                  fontFamily: 'Pretendard',
-                  fontWeight: '700',
-                  fontSize: '14px',
-                  lineHeight: '21px',
-                  letterSpacing: '0px',
-                  textAlign: 'right',
-                  color: '#272E35',
-                }}
-              >
-                {totalPrice.toLocaleString()} 원
-              </Typography>
+              <PriceValue>{totalPrice.toLocaleString()} 원</PriceValue>
             </InfoRow>
             <InfoRow>
-              <Typography variant='body2' sx={{ minWidth: '190px', height: '20px', gap: '16px' }}>
-                <Box component='span' sx={{ color: '#272E35' }}>
+              <InstallmentPeriodLabel>
+                <Box
+                  component='span'
+                  sx={{ color: '#272E35', display: 'inline-flex', alignItems: 'center' }}
+                >
                   분납개월수
+                  <RequiredMark>*</RequiredMark>
                 </Box>
-                <Box component='span' sx={{ color: '#FE2E36' }}>
-                  *
-                </Box>
-              </Typography>
-              <Box sx={{ width: '168px', height: '21px' }}>
+              </InstallmentPeriodLabel>
+              <InstallmentPeriodContainer>
                 <RadioGroup
                   value={installmentPeriod}
                   onChange={(e) => setInstallmentPeriod(e.target.value)}
@@ -543,59 +315,26 @@ const DevicePaymentInstallment = ({
                     label={<Typography variant='body2'>24개월</Typography>}
                   />
                 </RadioGroup>
-              </Box>
+              </InstallmentPeriodContainer>
             </InfoRow>
-            <Box
-              sx={{
-                width: '390px',
-                height: '1px',
-                borderWidth: '1px',
-                border: '1px solid #05151F',
-              }}
-            />
+            <FinalPriceDivider />
             <InfoRow>
-              <Typography
-                variant='subtitle2'
-                sx={{
-                  width: '190px',
-                  height: '21px',
-                  fontFamily: 'Pretendard',
-                  fontWeight: '600',
-                  fontSize: '14px',
-                  lineHeight: '21px',
-                  letterSpacing: '0px',
-                }}
-              >
-                월/최종분납금
-              </Typography>
-              <Typography
-                variant='subtitle2'
-                sx={{
-                  width: '184px',
-                  height: '42px',
-                  fontFamily: 'Pretendard',
-                  fontWeight: '400',
-                  fontSize: '28px',
-                  lineHeight: '150%',
-                  letterSpacing: '0px',
-                  textAlign: 'right',
-                  color: '#272E35',
-                }}
-              >
+              <MonthlyPaymentLabel>월/최종분납금</MonthlyPaymentLabel>
+              <MonthlyPaymentValue>
                 {monthlyInstallmentPrice.toLocaleString()} 원
-              </Typography>
+              </MonthlyPaymentValue>
             </InfoRow>
-          </Box>
+          </PriceInfoContainer>
         </Box>
       </ContentWrapper>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, p: 2 }}>
+      <ButtonContainer>
         <Button variant='outlined' onClick={onClose}>
           취소
         </Button>
         <Button variant='contained' onClick={handleConfirm}>
           확인
         </Button>
-      </Box>
+      </ButtonContainer>
     </>
   );
 };
