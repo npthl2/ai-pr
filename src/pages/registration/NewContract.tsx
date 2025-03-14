@@ -9,7 +9,6 @@ import {
   StyledAccordion,
 } from './NewContract.styled';
 import CustomerSection from './sections/CustomerSection';
-
 import SalesSection from './sections/SalesSection';
 import ContractSection from './sections/ContractSection';
 import DeviceSection from './sections/DeviceSection';
@@ -17,11 +16,9 @@ import { SectionId, SECTION_IDS, SECTION_TITLES } from '@constants/RegistrationC
 import RegistrationRequest from './RegistrationRequest';
 import RegistrationSummary from './sections/RegistrationSummary';
 import InvoiceSection from './sections/InvoiceSection';
-
 interface NewContractProps {
   contractTabId: string;
 }
-
 const NewContract = ({ contractTabId }: NewContractProps) => {
   const [isSaveRequested, setIsSaveRequested] = useState(false);
   const [expanded, setExpanded] = useState<SectionId>(SECTION_IDS.CUSTOMER);
@@ -104,15 +101,12 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
         completedSections.includes(SECTION_IDS.CONTRACT),
     },
   ];
-
   const handleSectionComplete = (sectionId: SectionId) => {
     setCompletedSections((prev) => [...prev, sectionId]);
     const currentIndex = sections.findIndex((section) => section.id === sectionId);
-
     if (currentIndex < sections.length - 1) {
       const nextSection = sections[currentIndex + 1];
       setExpanded(nextSection.id);
-
       setTimeout(() => {
         const sectionElement = document.getElementById(
           `${contractTabId}-section-${nextSection.id}`,
@@ -123,7 +117,6 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
             const el = document.getElementById(`${contractTabId}-section-${section.id}`);
             return height + (el?.offsetHeight || 0);
           }, 0);
-
           wrapperRef.current.scrollTo({
             top: totalPreviousHeight,
             behavior: 'smooth',
@@ -143,16 +136,13 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
     const previousSectionsCompleted = sections
       .slice(0, sectionIndex)
       .every((section) => completedSections.includes(section.id));
-
     if (previousSectionsCompleted) {
       setExpanded(isExpanded ? panel : SECTION_IDS.CUSTOMER);
     }
   };
-
   const isExpanded = (sectionId: SectionId, canExpand: boolean) => {
     return completedSections.includes(sectionId) || (expanded === sectionId && canExpand);
   };
-
   return isSaveRequested ? (
     <RegistrationRequest contractTabId={contractTabId} />
   ) : (
@@ -202,10 +192,10 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
         <RegistrationSummary
           contractTabId={contractTabId}
           setIsSaveRequested={setIsSaveRequested}
+          completedSections={completedSections}
         />
       </ContentWrapper>
     </Container>
   );
 };
-
 export default NewContract;

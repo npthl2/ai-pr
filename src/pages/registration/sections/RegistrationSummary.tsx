@@ -11,27 +11,33 @@ import {
   ItemLabel,
   ItemValue,
 } from './RegistrationSummary.styled';
-import { SECTION_IDS, SECTION_TITLES, REGISTRATION_STATUS } from '@constants/RegistrationConstants';
+import { SECTION_IDS, SECTION_TITLES, REGISTRATION_STATUS, SectionId } from '@constants/RegistrationConstants';
 // import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
 import { useState, useEffect } from 'react';
 import { useRegistrationInfo } from '@hooks/useRegistrationInfo';
 import useRegistrationStore from '@stores/registration/RegistrationStore';
 import { useRegistrationMutation } from '@api/queries/registration/useRegistrationMutation';
-import useRegistrationContractStore from '@stores/registration/RegistrationContractStore';
 import useRegistrationDeviceStore from '@stores/registration/RegistrationDeviceStore';
-import useRegistrationSalesStore from '@stores/registration/RegistrationSalesStore';
 import useRegistrationInvoiceStore from '@stores/registration/RegistrationInvoiceStore';
+import useRegistrationContractStore from '@stores/registration/RegistrationContractStore';
+import useRegistrationSalesStore from '@stores/registration/RegistrationSalesStore';
 
 interface ContractSummaryProps {
   contractTabId: string;
   setIsSaveRequested: (isSaveRequested: boolean) => void;
+  completedSections: SectionId[];
 }
 
-const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryProps) => {
+const ContractSummary = ({ contractTabId, setIsSaveRequested, completedSections, }: ContractSummaryProps) => {
   // const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
   // const customerInfo = getRegistrationCustomerInfo(contractTabId);
   const { getRegistrationInvoiceInfo } = useRegistrationInvoiceStore();
+  const { getRegistrationSalesInfo } = useRegistrationSalesStore();
+  const { getRegistrationContractInfo } = useRegistrationContractStore();
+
   const registrationInvoiceInfo = getRegistrationInvoiceInfo(contractTabId);
+  const salesInfo = getRegistrationSalesInfo(contractTabId);
+  const contractInfo = getRegistrationContractInfo(contractTabId);
 
   // 모든 계약 관련 데이터 가져오기
   const { setRegistrationInfo, updateRegistrationStatus } = useRegistrationStore();
@@ -193,7 +199,9 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
             <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.SALES]}</Typography>
             <SummaryItem>
               <ItemLabel>판매채널정보</ItemLabel>
-              <ItemValue></ItemValue>
+              <ItemValue>
+              {completedSections.includes(SECTION_IDS.SALES) ? salesInfo?.salesDepartment : ''}
+              </ItemValue>
             </SummaryItem>
           </Box>
           <Divider />
@@ -202,7 +210,11 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
             <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.CONTRACT]}</Typography>
             <SummaryItem>
               <ItemLabel>개통요금제</ItemLabel>
-              <ItemValue></ItemValue>
+              <ItemValue>
+                {completedSections.includes(SECTION_IDS.CONTRACT)
+                    ? contractInfo?.service?.serviceName
+                    : '-'}
+              </ItemValue>
             </SummaryItem>
           </Box>
           <Divider />

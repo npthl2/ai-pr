@@ -12,6 +12,11 @@ const baseService = {
     const response: AxiosResponse<CommonResponse<T>> = await axiosInstance.post(endpoint, data);
     return response.data;
   },
+
+  async put<T, D>(endpoint: string, data: D): Promise<CommonResponse<T>> {
+    const response: AxiosResponse<CommonResponse<T>> = await axiosInstance.put(endpoint, data);
+    return response.data;
+  },
 };
 
 export default baseService;
