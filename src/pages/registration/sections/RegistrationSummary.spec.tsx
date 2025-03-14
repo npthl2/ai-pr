@@ -35,7 +35,7 @@ vi.mock('@stores/registration/RegistrationStore', () => ({
     updateRegistrationStatus: vi.fn(),
     getState: vi.fn().mockReturnValue({
       getRegistrationInfo: vi.fn().mockReturnValue({
-        business_process_id: 'test-id',
+        businessProcessId: 'test-id',
       }),
     }),
   }),

@@ -17,10 +17,10 @@ const registrationService = {
 
   // 저장 상태 조회
   getRegistrationStatus(
-    business_process_id: string,
+    businessProcessId: string,
   ): Promise<CommonResponse<RegistrationStatusResponseData>> {
     return baseService.get<RegistrationStatusResponseData>(
-      `/cca-be/v1/registration-common/${business_process_id}`,
+      `/cca-be/v1/registration-common/${businessProcessId}`,
     );
   },
 };

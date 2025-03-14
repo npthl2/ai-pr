@@ -129,7 +129,7 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
               // business_process_id를 저장소에 업데이트
               const updatedInfoWithId = {
                 ...updatedInfo,
-                business_process_id: businessProcessId,
+                businessProcessId: businessProcessId,
                 status: REGISTRATION_STATUS.PENDING, // 상태 명시적으로 설정
               };
 

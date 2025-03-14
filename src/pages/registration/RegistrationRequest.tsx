@@ -64,19 +64,19 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
 
   // 등록 상태를 폴링하는 쿼리
   const { data, isError, refetch } = useQuery({
-    queryKey: ['registrationStatus', contractTabId, registrationData?.business_process_id],
+    queryKey: ['registrationStatus', contractTabId, registrationData?.businessProcessId],
     queryFn: async () => {
-      console.log('폴링 정보:', [contractTabId, registrationData?.business_process_id]);
+      console.log('폴링 정보:', [contractTabId, registrationData?.businessProcessId]);
 
       // 필수 정보가 없는 경우 PENDING 상태 반환
-      if (!contractTabId || !registrationData?.business_process_id) {
+      if (!contractTabId || !registrationData?.businessProcessId) {
         return { status: REGISTRATION_STATUS.PENDING } as RegistrationStatus;
       }
 
       try {
         // 등록 상태 조회 API 호출
         const response = await registrationService.getRegistrationStatus(
-          registrationData.business_process_id,
+          registrationData.businessProcessId,
         );
 
         // 응답 데이터가 없거나 객체가 아닌 경우 PENDING 상태 반환
@@ -109,7 +109,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
     enabled:
       !!contractTabId &&
       status === REGISTRATION_STATUS.PENDING &&
-      !!registrationData?.business_process_id, // 필요한 정보가 있을 때만 활성화
+      !!registrationData?.businessProcessId, // 필요한 정보가 있을 때만 활성화
     staleTime: 0, // 항상 최신 데이터 사용
     gcTime: 0, // 캐시 사용하지 않음
     retry: 3, // 실패 시 3번까지 재시도
@@ -125,7 +125,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
     const savedInfo = useRegistrationStore.getState().getRegistrationInfo(contractTabId);
 
     // business_process_id가 있고 상태가 PENDING인 경우에만 폴링 시작
-    if (savedInfo?.business_process_id && status === REGISTRATION_STATUS.PENDING) {
+    if (savedInfo?.businessProcessId && status === REGISTRATION_STATUS.PENDING) {
       refetch();
     }
   }, [contractTabId, refetch, status]);

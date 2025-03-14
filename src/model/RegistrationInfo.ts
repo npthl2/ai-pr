@@ -7,7 +7,7 @@ export interface RegistrationInfo {
   invoice: InvoiceInfo;
   device: DeviceInfo;
   sales: SalesInfo;
-  business_process_id?: string; // 업무 프로세스 ID (백엔드에서 생성)
+  businessProcessId?: string; // 업무 프로세스 ID (백엔드에서 생성)
   status?: RegistrationStatusType; // 저장 상태
   contract_id?: string; // 계약 ID
 }
@@ -41,7 +41,7 @@ export interface RegistrationStatusResponse {
 
 // 백엔드 응답 모델
 export interface RegistrationResponse {
-  business_process_id: string; // 업무 프로세스 ID (백엔드에서 생성)
+  businessProcessId: string; // 업무 프로세스 ID (백엔드에서 생성)
   status: RegistrationStatusType; // 처리 상태
   contract_id?: string; // 계약 ID (있는 경우)
   created_at: string; // 생성 시간
