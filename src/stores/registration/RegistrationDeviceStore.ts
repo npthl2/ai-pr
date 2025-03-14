@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import useRegistrationContractStore from './RegistrationContractStore';
+// import useRegistrationContractStore from './RegistrationContractStore';
 
 export interface RegistrationDeviceInfo {
   deviceId: string;
@@ -36,7 +36,7 @@ export interface RegistrationDeviceState {
   removeRegistrationDeviceInfo: (contractTapId: string) => void;
   clearRegistrationDeviceInfo: () => void;
   // New method to check for contract changes
-  checkForContractChanges: (contractTapId: string) => void;
+  // checkForContractChanges: (contractTapId: string) => void;
 }
 
 const useRegistrationDeviceStore = create<RegistrationDeviceState>((set, get) => ({
@@ -53,7 +53,7 @@ const useRegistrationDeviceStore = create<RegistrationDeviceState>((set, get) =>
 
   getRegistrationDeviceInfo: (contractTapId: string) => {
     // Check for contract changes before returning device info
-    get().checkForContractChanges(contractTapId);
+    //get().checkForContractChanges(contractTapId);
 
     const deviceInfo = get().registrationDevices[contractTapId];
 
@@ -83,7 +83,7 @@ const useRegistrationDeviceStore = create<RegistrationDeviceState>((set, get) =>
 
   setRegistrationDeviceInfo: (contractTapId: string, info: RegistrationDeviceInfo) => {
     // Check for contract changes before setting device info
-    get().checkForContractChanges(contractTapId);
+    //get().checkForContractChanges(contractTapId);
 
     // Then set the new info (removed the clearing of data)
     set((state) => {
@@ -109,53 +109,53 @@ const useRegistrationDeviceStore = create<RegistrationDeviceState>((set, get) =>
   },
 
   // New method to check for changes in the contract store
-  checkForContractChanges: (contractTapId: string) => {
-    // Get current contract information
-    const contractStore = useRegistrationContractStore.getState();
-    const contract = contractStore.getRegistrationContractInfo(contractTapId);
+  // checkForContractChanges: (contractTapId: string) => {
+  //   // Get current contract information
+  //   const contractStore = useRegistrationContractStore.getState();
+  //   const contract = contractStore.getRegistrationContractInfo(contractTapId);
 
-    if (!contract) return;
+  //   if (!contract) return;
 
-    // Get current values
-    const currentImei = contract.imei || '';
-    const currentServiceId = contract.service?.serviceId || '';
+  //   // Get current values
+  //   const currentImei = contract.imei || '';
+  //   const currentServiceId = contract.service?.serviceId || '';
 
-    // Get previous values
-    const previousValues = get().previousContractValues[contractTapId] || {
-      imei: '',
-      serviceId: '',
-    };
+  //   // Get previous values
+  //   const previousValues = get().previousContractValues[contractTapId] || {
+  //     imei: '',
+  //     serviceId: '',
+  //   };
 
-    // Check if values have changed - only consider it a change if:
-    // 1. We had a previous non-empty value
-    // 2. The current value is different from the previous value
-    const imeiChanged =
-      previousValues.imei !== '' && currentImei !== '' && currentImei !== previousValues.imei;
+  //   // Check if values have changed - only consider it a change if:
+  //   // 1. We had a previous non-empty value
+  //   // 2. The current value is different from the previous value
+  //   const imeiChanged =
+  //     previousValues.imei !== '' && currentImei !== '' && currentImei !== previousValues.imei;
 
-    const serviceIdChanged =
-      previousValues.serviceId !== '' &&
-      currentServiceId !== '' &&
-      currentServiceId !== previousValues.serviceId;
+  //   const serviceIdChanged =
+  //     previousValues.serviceId !== '' &&
+  //     currentServiceId !== '' &&
+  //     currentServiceId !== previousValues.serviceId;
 
-    // If either value has changed, reset device info
-    if (imeiChanged || serviceIdChanged) {
-      // Remove device info for this tabId
-      get().removeRegistrationDeviceInfo(contractTapId);
-    }
+  //   // If either value has changed, reset device info
+  //   if (imeiChanged || serviceIdChanged) {
+  //     // Remove device info for this tabId
+  //     get().removeRegistrationDeviceInfo(contractTapId);
+  //   }
 
-    // Only update previous values if they are not empty
-    if (currentImei !== '' || currentServiceId !== '') {
-      set((state) => ({
-        previousContractValues: {
-          ...state.previousContractValues,
-          [contractTapId]: {
-            imei: currentImei || previousValues.imei,
-            serviceId: currentServiceId || previousValues.serviceId,
-          },
-        },
-      }));
-    }
-  },
+  //   // Only update previous values if they are not empty
+  //   if (currentImei !== '' || currentServiceId !== '') {
+  //     set((state) => ({
+  //       previousContractValues: {
+  //         ...state.previousContractValues,
+  //         [contractTapId]: {
+  //           imei: currentImei || previousValues.imei,
+  //           serviceId: currentServiceId || previousValues.serviceId,
+  //         },
+  //       },
+  //     }));
+  //   }
+  // },
 }));
 
 export default useRegistrationDeviceStore;
