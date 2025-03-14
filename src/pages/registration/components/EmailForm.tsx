@@ -305,6 +305,7 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
               size='small' // 작은 크기 설정
               error={!!errors.emailDomain} // 오류 상태 설정
               helperText={errors.emailDomain} // 오류 메시지 표시
+              data-testid='custom-domain-input' // 테스트용 데이터id 추가
               sx={{
                 width: '100%', // 부모 컨테이너의 전체 너비 사용
                 '& .MuiOutlinedInput-root': {

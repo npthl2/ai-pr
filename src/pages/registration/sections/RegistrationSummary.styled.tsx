@@ -9,7 +9,7 @@ export const SummaryContainer = styled(Box)({
 });
 
 export const SummarySection = styled(Box)({
-  padding: '16px 20px',
+  padding: '12px 16px',
 });
 
 export const SummaryContents = styled(Box)(({ theme }) => ({
@@ -61,6 +61,6 @@ export const ItemLabel = styled(Typography)({
 });
 
 export const ItemValue = styled(Typography)({
-  fontSize: '16px',
+  fontSize: '14px',
   fontWeight: 500,
 });

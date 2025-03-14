@@ -72,8 +72,8 @@ class RegistrationPage {
     // 직접입력 옵션 선택
     this.selectEmailDomain('직접입력');
     
-    // 도메인 직접 입력 필드에 입력
-    cy.get('input[placeholder="직접 입력"]').clear().type(domain);
+    // 도메인 직접 입력 필드에 입력 (data-testid 사용)
+    cy.get('[data-testid="custom-domain-input"]').clear().type(domain);
   }
 
   // 이메일 발송 버튼 클릭

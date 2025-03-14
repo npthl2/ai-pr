@@ -179,8 +179,8 @@ describe('KAN-39 가입정보 요약 테스트', () => {
       // 이메일 주소 입력
       registrationPage.inputEmailAddress('test');
       
-      // 이메일 도메인 선택 (예: gmail.com)
-      registrationPage.selectEmailDomain('gmail.com');
+      // 이메일 도메인 직접 입력
+      registrationPage.inputCustomEmailDomain('example.com');
       
       // 이메일 발송 버튼 클릭
       registrationPage.clickSendEmailButton();
