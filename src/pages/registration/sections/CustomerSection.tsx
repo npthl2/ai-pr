@@ -51,14 +51,6 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
   }, [availableContractCount]);
 
   const handleOnClick = () => {
-    // TO-DO : 추후 삭제
-    // setRegistrationCustomerInfo(contractTabId, {
-    //   customerId: 'C-0000000000',
-    //   name: customer.name,
-    //   rrno: customer.rrno,
-    //   isConsent: customer.isConsent,
-    // });
-    // onComplete();
     setIsDialogOpen(true);
   };
 

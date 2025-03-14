@@ -3,7 +3,8 @@ import InvoiceSectionPage from '../../../pages/registration/InvoiceSectionPage';
 import { mockAuthStore } from '../../../support/helpers/mockAuthStore';
 import BookmarkServiceMock from '../../mock/bookmark/BookmarkServiceMock';
 import CustomerDetailServiceMock from '../../mock/customer/detail/CustomerDetailServiceMock';
-
+import CustomerSectionPage from '../../../pages/registration/CustomerSectionPage';
+import CustomerSectionServiceMock from '../../mock/registration/CustomerSectionServiceMock';
 const CUSTOMER_SECTION_NAME = 'NEW_SUBSCRIPTION0-section-customer';
 const INVOICE_SEARCH_MODAL_NAME = 'invoice-search-modal';
 const ADDRESS_SEARCH_MODAL_NAME = 'address-search-modal';
@@ -29,6 +30,8 @@ describe('KAN-7 신규가입 진입', () => {
   const service = new InvoiceSectionServiceMock();
   const bookmarkService = new BookmarkServiceMock();
   const customerDetailService = new CustomerDetailServiceMock();
+  const customerSectionPage = new CustomerSectionPage();
+  const customerSectionService = new CustomerSectionServiceMock();
 
   before(() => {
     // 초기 셋업
@@ -40,15 +43,21 @@ describe('KAN-7 신규가입 진입', () => {
     page.visit();
     page.clickMenuButton();
     page.clickCustomerSectionButton('신규가입');
-    page.assertComponentToBeVisible(CUSTOMER_SECTION_NAME);
-    page.assertCustomerSectionToBeExpanded();
+    customerSectionPage.typeNameField('홍길동');
+    customerSectionPage.typeRrnoField('9001011234567');
+    customerSectionPage.checkPersonalInfoConsent();
+    customerSectionPage.clickVerificationButton();
+    customerSectionService.successWhenCustomerNameVerification('Y');
+    customerSectionService.successWhenCreateCustomer();
+    customerSectionPage.typeRrnoIssueDateField('20230101');
+    customerSectionPage.checkIdentityVerificationConsent();
+    customerSectionPage.clickVerificationAuthButton();
+    customerSectionPage.clickVerificationConfirmButton();
+    customerSectionService.successWhenGetAvailableCustomerContract(2);
 
     // 실명인증
     service.successWhenGetInvoiceList();
-    page.clickNameVerificationButton();
-    page.assertInvoiceSectionToBeExpanded();
-    page.assertInvoiceSearchButtonEnabled();
-    page.assertInvoiceCreateButtonDisabled();
+    customerSectionPage.clickVerificationCheckButton();
   });
 
   // 청구정보 있는 경우
@@ -74,11 +83,21 @@ describe('KAN-7 신규가입 진입', () => {
     page.visit();
     page.clickMenuButton();
     page.clickCustomerSectionButton('신규가입');
+    customerSectionPage.typeNameField('홍길동');
+    customerSectionPage.typeRrnoField('9001011234567');
+    customerSectionPage.checkPersonalInfoConsent();
+    customerSectionPage.clickVerificationButton();
+    customerSectionService.successWhenCustomerNameVerification('Y');
+    customerSectionService.successWhenCreateCustomer();
+    customerSectionPage.typeRrnoIssueDateField('20230101');
+    customerSectionPage.checkIdentityVerificationConsent();
+    customerSectionPage.clickVerificationAuthButton();
+    customerSectionPage.clickVerificationConfirmButton();
+    customerSectionService.successWhenGetAvailableCustomerContract(2);
 
     // 청구정보 없는 경우
-    page.assertComponentToBeVisible(CUSTOMER_SECTION_NAME);
     service.successWhenGetEmptyInvoiceList();
-    page.clickNameVerificationButton();
+    customerSectionPage.clickVerificationCheckButton();
     page.assertInvoiceSectionToBeExpanded();
     page.assertInvoiceSearchButtonDisabled();
     page.assertInvoiceCreateButtonDisabled();

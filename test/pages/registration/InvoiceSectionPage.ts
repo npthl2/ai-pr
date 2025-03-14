@@ -56,7 +56,7 @@ class InvoiceSectionPage {
   }
 
   clickModalConfirmButton() {
-    cy.get('[data-testid="dialog-confirm-button"]').click();
+    cy.get('[data-testid="component-dialog-confirm-button"]').click();
   }
 
   clickVerificationButton() {
