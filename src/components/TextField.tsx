@@ -34,8 +34,10 @@ const getBorderColor = (theme: any, state: TextFieldState) =>
 const StyledTextField = styled(MuiTextField, {
   shouldForwardProp: (prop) => prop !== 'state',
 })<{ size: TextFieldSize; state: TextFieldState }>(({ theme, size, state }) => ({
-  backgroundColor: state === 'disabled' ? theme.palette.grey[100] : 'none',
+  backgroundColor: state === 'disabled' ? theme.palette.background.paper : 'none',
   '& .MuiInputBase-root': {
+    backgroundColor:
+      state === 'disabled' ? theme.palette.grey[100] : theme.palette.background.paper,
     minHeight: size === 'small' ? 28 : 32,
     padding: size === 'small' ? '0px 8px' : '0px 10px',
   },
@@ -43,7 +45,6 @@ const StyledTextField = styled(MuiTextField, {
     padding: 0,
     minHeight: 'inherit',
     height: 'auto',
-    color: state === 'error' ? theme.palette.error.main : theme.palette.text.primary,
     '&.MuiInputBase-inputMultiline': {
       alignContent: 'center',
     },

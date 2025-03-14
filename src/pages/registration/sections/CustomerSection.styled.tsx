@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const FormContainer = styled(Box)(({ theme }) => ({
@@ -15,26 +15,3 @@ export const FormWrapper = styled(Box)({
   justifyContent: 'space-between',
   width: '100%',
 });
-
-export const LeftSection = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  gap: 24,
-});
-
-export const RightSection = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-});
-
-export const FieldContainer = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  gap: 12,
-});
-
-export const FieldLabel = styled(Typography)(({ theme }) => ({
-  minWidth: 60,
-  height: 21,
-  color: theme.palette.text.secondary,
-}));

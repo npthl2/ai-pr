@@ -45,4 +45,7 @@ export const CustomerName = styled(Typography)(({ theme }) => ({
   '&.hovered': {
     transform: 'translateX(-10px)',
   },
+  '&.selected': {
+    fontWeight: 700,
+  },
 }));

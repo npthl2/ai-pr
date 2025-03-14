@@ -20,7 +20,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
         <Typography>청구정보 폼 내용 {contractTabId} </Typography>
         <Typography>{customerInfo?.name}</Typography>
         <Typography>{customerInfo?.rrno}</Typography>
-        <Typography>{customerInfo?.isConsent ? '동의' : '미동의'}</Typography>
+
         {/* TODO : 완료가 되면 onComplete 함수를 호출해서 다음 섹션으로 넘어가는 작업 필요 */}
         <Button variant='contained' color='primary' onClick={onComplete}>
           완료

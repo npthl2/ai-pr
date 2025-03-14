@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
+
 type DialogSize = 'small' | 'medium' | 'large';
 
 interface DialogProps extends Omit<MuiDialogProps, 'content'> {
@@ -17,6 +18,7 @@ interface DialogProps extends Omit<MuiDialogProps, 'content'> {
   title: string;
   content: string | React.ReactNode;
   closeLabel?: string;
+  confirmIcon?: React.ReactNode;
   confirmLabel?: string;
   isConfirmDisabled?: boolean;
   onClose: () => void;
@@ -65,6 +67,7 @@ const Dialog = ({
   content,
   closeLabel = '취소',
   confirmLabel = '확인',
+  confirmIcon,
   onClose,
   onConfirm,
   isConfirmDisabled = false,
@@ -90,6 +93,7 @@ const Dialog = ({
             onClick={onClose}
             variant='outlined'
             sx={(theme) => ({ borderColor: theme.palette.grey[200] })}
+            data-testid='component-dialog-close-button'
           >
             <Typography variant='body1' sx={(theme) => ({ color: theme.palette.text.primary })}>
               {closeLabel}
@@ -102,11 +106,17 @@ const Dialog = ({
             color='primary'
             variant='contained'
             disabled={isConfirmDisabled}
+            data-testid='component-dialog-confirm-button'
           >
             <Typography
               variant='body1'
-              sx={(theme) => ({ color: theme.palette.primary.contrastText })}
+              sx={(theme) => ({
+                color: theme.palette.primary.contrastText,
+                display: 'flex',
+                alignItems: 'center',
+              })}
             >
+              {confirmIcon && confirmIcon}
               {confirmLabel}
             </Typography>
           </StyledButton>
