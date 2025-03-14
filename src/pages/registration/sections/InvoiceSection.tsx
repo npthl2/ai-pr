@@ -270,7 +270,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
       openToast('청구정보가 생성되었습니다.');
 
       // 청구정보 목록 캐시 무효화
-      queryClient.invalidateQueries({ queryKey: ['invoice'] });
+      queryClient.invalidateQueries({ queryKey: ['invoice', activeCustomerId] });
 
       // 청구정보 스토어에 저장
       if (result.data && typeof result.data === 'object') {
