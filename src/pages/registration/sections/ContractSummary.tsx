@@ -9,17 +9,28 @@ import {
   LeftButtonGroup,
   RightButtonGroup,
 } from './ContractSummary.styled';
-import { SECTION_IDS, SECTION_TITLES } from '@constants/RegistrationConstants';
+import { SECTION_IDS, SECTION_TITLES, SectionId } from '@constants/RegistrationConstants';
 import useRegistrationInvoiceStore from '@stores/registration/RegistrationInvoiceStore';
+import useRegistrationContractStore from '@stores/registration/RegistrationContractStore';
+import useRegistrationSalesStore from '@stores/registration/RegistrationSalesStore';
 
 interface ContractSummaryProps {
   contractTabId: string;
   setIsSaveRequested: (isSaveRequested: boolean) => void;
+  completedSections: SectionId[];
 }
 
-const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryProps) => {
+const ContractSummary = ({
+  contractTabId,
+  setIsSaveRequested,
+  completedSections,
+}: ContractSummaryProps) => {
   const { getRegistrationInvoiceInfo } = useRegistrationInvoiceStore();
+  const { getRegistrationSalesInfo } = useRegistrationSalesStore();
+  const { getRegistrationContractInfo } = useRegistrationContractStore();
   const registrationInvoiceInfo = getRegistrationInvoiceInfo(contractTabId);
+  const salesInfo = getRegistrationSalesInfo(contractTabId);
+  const contractInfo = getRegistrationContractInfo(contractTabId);
 
   return (
     <SummaryContainer>
@@ -51,7 +62,7 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
             <SummaryItem>
               <Typography variant='body2'>판매채널정보</Typography>
               <Typography variant='body2' color='text.secondary'>
-                -
+                {completedSections.includes(SECTION_IDS.SALES) ? salesInfo?.salesDepartment : '-'}
               </Typography>
             </SummaryItem>
           </Box>
@@ -62,7 +73,9 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
             <SummaryItem>
               <Typography variant='body2'>개통요금제</Typography>
               <Typography variant='body2' color='text.secondary'>
-                -
+                {completedSections.includes(SECTION_IDS.CONTRACT)
+                  ? contractInfo?.service?.serviceName
+                  : '-'}
               </Typography>
             </SummaryItem>
           </Box>
