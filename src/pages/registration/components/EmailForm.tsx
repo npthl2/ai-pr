@@ -2,9 +2,10 @@ import { MenuItem, Box } from '@mui/material'; // Material UI 컴포넌트 임�
 import Button from '@components/Button'; // 커스텀 버튼 컴포넌트 임포트
 import TextField from '@components/TextField'; // 커스텀 텍스트필드 컴포넌트 임포트
 import Select from '@components/Select'; // 커스텀 셀렉트 컴포넌트 임포트
-import { EmailSeparator } from '../RegistrationRequest.styled'; // 이메일 구분자 스타일 임포트
+import { EmailFormContainer, EmailSeparator } from '../RegistrationRequest.styled'; // 이메일 구분자 스타일 임포트
 import { useState, useEffect } from 'react'; // React 훅 임포트
 import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants'; // 등록 상태 타입 임포트
+import { InputDomainContainer, SendButtonContainer, EmailAddressContainer, DomainSelectContainer } from './EmailForm.styled';
 
 // 이메일 폼 컴포넌트 props 인터페이스 정의
 interface EmailFormProps {
@@ -148,25 +149,9 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
     <Box sx={{ width: '100%', p: 1 }}>
       {' '}
       {/* 최상위 컨테이너: 전체 너비 사용, 패딩 추가 */}
-      <Box
-        sx={{
-          display: 'flex', // 자식 요소들을 가로로 배치
-          alignItems: 'flex-start', // 자식 요소들을 상단 정렬로 변경
-          flexWrap: 'nowrap', // 자식 요소들이 한 줄에 유지되도록 설정
-          gap: 1, // 자식 요소들 사이의 간격
-        }}
-      >
+      <EmailFormContainer>
         {/* 이메일 주소 입력 필드 컨테이너 */}
-        <Box
-          sx={{
-            width: '30%', // 컨테이너 너비를 비율로 설정
-            minWidth: '100px', // 최소 너비 설정
-            flexShrink: 1, // 공간이 부족할 때 축소 허용
-            minHeight: '40px', // 최소 높이 설정 (오류 메시지 공간 확보)
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
+        <EmailAddressContainer>
           <TextField
             value={emailAddress} // 이메일 주소 상태 바인딩
             onChange={handleEmailAddressChange} // 변경 이벤트 핸들러
@@ -198,7 +183,7 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
               },
             }}
           />
-        </Box>
+        </EmailAddressContainer>
 
         {/* @ 구분자 컨테이너 */}
         <Box
@@ -223,16 +208,7 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
         </Box>
 
         {/* 도메인 선택 드롭다운 컨테이너 */}
-        <Box
-          sx={{
-            width: '14%', // 컨테이너 너비를 비율로 설정
-            minWidth: '140px', // 최소 너비 설정
-            flexShrink: 0, // 공간이 부족할 때 축소 허용
-            minHeight: '40px', // 최소 높이 설정 (오류 메시지 공간 확보)
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
+        <DomainSelectContainer>
           <Select
             value={emailDomainType} // 선택된 도메인 타입 바인딩
             onChange={(e) => handleDomainChange(e.target.value as string)} // 변경 이벤트 핸들러
@@ -282,20 +258,11 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
               {errors.emailDomain}
             </Box>
           )}
-        </Box>
+        </DomainSelectContainer>
 
         {/* 직접입력 선택 시 나타나는 도메인 입력 필드 컨테이너 */}
         {isCustomDomain && ( // 직접 입력 모드일 때만 렌더링
-          <Box
-            sx={{
-              width: '14%', // 컨테이너 너비를 비율로 설정
-              minWidth: '140px', // 최소 너비 설정
-              flexShrink: 0, // 공간이 부족할 때 축소 허용
-              minHeight: '40px', // 최소 높이 설정 (오류 메시지 공간 확보)
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
+          <InputDomainContainer>
             <TextField
               value={emailDomain} // 도메인 상태 바인딩
               onChange={handleEmailDomainChange} // 변경 이벤트 핸들러
@@ -327,20 +294,11 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
                 },
               }}
             />
-          </Box>
+          </InputDomainContainer>
         )}
 
         {/* 발송하기 버튼 컨테이너 */}
-        <Box
-          sx={{
-            flexShrink: 0, // 컨테이너가 축소될 때 크기 유지
-            height: '30px', // 높이 설정
-            width: '5%',
-            minWidth: '80px', // 최소 너비 설정
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
+        <SendButtonContainer>
           <Button
             variant='contained' // 채워진 버튼 스타일
             onClick={handleSendEmail} // 클릭 이벤트 핸들러
@@ -355,8 +313,8 @@ const EmailForm = ({ status, onSendEmail, isEnabled, isLoading = false }: EmailF
           >
             {isLoading ? '발송중...' : '발송하기'}
           </Button>
-        </Box>
-      </Box>
+        </SendButtonContainer>
+      </EmailFormContainer>
     </Box>
   );
 };

@@ -22,16 +22,21 @@ const BillingInfo = ({ invoiceInfo }: BillingInfoProps) => {
         <InfoRow>
           <InfoLabel>납부방법</InfoLabel>
           <InfoValue>
-            {invoiceInfo.paymentMethod || '-'}
             {invoiceInfo.paymentMethod === 'BANK' && (
-              <Box sx={{ mt: 1 }}>
-                {invoiceInfo.bankCompany} / {invoiceInfo.bankAccount}
-              </Box>
+              <>
+                <Box>은행계좌 자동이체</Box>
+                <Box sx={{ mt: 1 }}>
+                  {invoiceInfo.bankCompany} / {invoiceInfo.bankAccount}
+                </Box>
+              </>
             )}
             {invoiceInfo.paymentMethod === 'CARD' && (
-              <Box sx={{ mt: 1 }}>
-                {invoiceInfo.cardCompany} / {invoiceInfo.cardNumber}
-              </Box>
+              <>
+                <Box>카드</Box>
+                <Box sx={{ mt: 1 }}>
+                  {invoiceInfo.cardCompany} / {invoiceInfo.cardNumber}
+                </Box>
+              </>
             )}
           </InfoValue>
         </InfoRow>
