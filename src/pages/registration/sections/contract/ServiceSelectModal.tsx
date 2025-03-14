@@ -65,7 +65,7 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
             <Typography sx={{ minWidth: '60px' }}>요금제명</Typography>
             <TextField
               value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
+              onChange={(e) => setSearchText(e.target.value.trim())}
               size='small'
               sx={styles.searchInput}
               onKeyPress={(e) => {
@@ -96,6 +96,7 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
               </Typography>
             </Typography>
           </Box>
+
           <Box sx={styles.tableContainer}>
             <TableContainer component={Paper} sx={styles.table}>
               <Table>

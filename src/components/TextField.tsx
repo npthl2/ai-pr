@@ -145,6 +145,8 @@ const TextField = ({
               position: 'absolute',
               bottom: -20,
               left: 0,
+              width: '100%',
+              whiteSpace: 'nowrap',
             }}
           >
             {helperText}

@@ -163,9 +163,15 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
                 <TableHead>
                   <TableRow variant='head'>
                     <TableCell width='48px'></TableCell>
-                    <TableCell width='100px'>구분</TableCell>
-                    <TableCell width='300px'>부가서비스명</TableCell>
-                    <TableCell width='304px'>요금 (원)</TableCell>
+                    <TableCell width='100px'>
+                      <Typography>구분</Typography>
+                    </TableCell>
+                    <TableCell width='300px'>
+                      <Typography>부가서비스명</Typography>
+                    </TableCell>
+                    <TableCell width='304px'>
+                      <Typography>요금 (원)</Typography>
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -203,7 +209,6 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
         <Box sx={{ minHeight: '131px' }}>
           {unselectableAdditionalService && (
             <Alert severity='error' sx={{ mt: 2 }} data-testid='additional-service-exclusive-alert'>
-              *
               {`${unselectableAdditionalService.serviceName}은(는) 선택이 불가능한 부가서비스 입니다.`}
             </Alert>
           )}
@@ -231,7 +236,7 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
           </Box>
         </Box>
         <Box sx={styles.modalFooter}>
-          <Button onClick={onClose} sx={styles.cancelButton}>
+          <Button onClick={onClose} variant='outlined' color='grey' sx={styles.cancelButton}>
             취소
           </Button>
           <Button

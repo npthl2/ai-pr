@@ -1,6 +1,7 @@
 import { styled } from '@mui/material/styles';
-import { Box, Radio, Button } from '@mui/material';
+import { Box, Radio } from '@mui/material';
 import TextField from '@components/TextField';
+import Button from '@components/Button';
 
 export const SectionContainer = styled(Box)(({}) => ({
   display: 'flex',
@@ -48,6 +49,15 @@ export const FormRowSection = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   gap: theme.spacing(2),
   '& .MuiFormControl-root': {
+    width: '140px',
+  },
+}));
+
+export const FormRowSectionIEMI = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(2),
+  '& .MuiFormControl-root': {
     width: '160px',
   },
 }));
@@ -75,7 +85,7 @@ export const RequiredLabel = styled('span')(({ theme }) => ({
 export const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#FFFFFF',
     height: '28px',
   },
 }));
@@ -93,6 +103,7 @@ export const ActionButton = styled(Button)(({}) => ({
   margin: 0,
   padding: 0,
   height: '28px',
+  backgroundColor: '#FFFFFF',
 }));
 
 export const TwoColumnContainer = styled(Box)({

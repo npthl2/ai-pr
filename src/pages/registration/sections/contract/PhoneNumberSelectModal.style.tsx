@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
 import { Dialog, DialogTitle, DialogActions, Box } from '@mui/material';
+import TableCell from '@components/Table/TableCell';
 
 export const StyledDialog = styled(Dialog)(({}) => ({
   '& .MuiDialog-paper': {
@@ -65,3 +66,8 @@ export const CheckedRadioIcon = styled(Box)`
     background-color: #fff;
   }
 `;
+
+export const StyledTableHeaderCell = styled(TableCell)(({}) => ({
+  backgroundColor: '#f5f5f5',
+  fontWeight: 500,
+}));

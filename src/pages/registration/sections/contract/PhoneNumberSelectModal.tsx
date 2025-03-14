@@ -117,10 +117,18 @@ const PhoneNumberSelectModal: React.FC<PhoneNumberSelectModalProps> = ({
             <TableHead>
               <TableRow variant='head'>
                 <TableCell width='48px'></TableCell>
-                <TableCell width='100px'>상태</TableCell>
-                <TableCell width='134px'>전화번호</TableCell>
-                <TableCell width='110px'>번호부여회사</TableCell>
-                <TableCell width='160px'>상태변경일</TableCell>
+                <TableCell width='100px'>
+                  <Typography>상태</Typography>
+                </TableCell>
+                <TableCell width='134px'>
+                  <Typography>전화번호</Typography>
+                </TableCell>
+                <TableCell width='110px'>
+                  <Typography>번호부여회사</Typography>
+                </TableCell>
+                <TableCell width='160px'>
+                  <Typography>상태변경일</Typography>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

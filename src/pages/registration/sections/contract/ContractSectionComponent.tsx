@@ -30,6 +30,7 @@ import {
   TwoColumnContainer,
   Column,
   FormRowSectionPlan,
+  FormRowSectionIEMI,
 } from './ContractSectionComponent.styles';
 import useCustomerStore from '@stores/CustomerStore';
 import registrationContractService from '@api/services/registrationContractService';
@@ -77,11 +78,11 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
   const [isAdditionalServiceModalOpen, setIsAdditionalServiceModalOpen] = useState<boolean>(false);
 
   const [validationErrors, setValidationErrors] = useState<Record<string, validationField>>({
-    salesType: { state: 'active', helperText: '' },
-    phoneNumber: { state: 'active', helperText: '' },
-    simNumber: { state: 'active', helperText: '' },
-    imeiNumber: { state: 'active', helperText: '' },
-    servicePlan: { state: 'active', helperText: '' },
+    salesType: { state: 'inactive', helperText: '' },
+    phoneNumber: { state: 'inactive', helperText: '' },
+    simNumber: { state: 'inactive', helperText: '' },
+    imeiNumber: { state: 'inactive', helperText: '' },
+    servicePlan: { state: 'inactive', helperText: '' },
   });
 
   const currentCustomerId = useCustomerStore((state) => state.selectedCustomerId);
@@ -137,7 +138,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
       setValidationErrors((prev) => ({
         ...prev,
         phoneNumber: {
-          state: value.length < 4 ? 'error' : 'active',
+          state: value.length < 4 ? 'error' : 'inactive',
           helperText: value.length < 4 ? '4자리를 입력해주세요' : '',
         },
       }));
@@ -154,7 +155,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     setValidationErrors((prev) => ({
       ...prev,
       simNumber: {
-        state: !replacedValue ? 'error' : 'active',
+        state: !replacedValue ? 'error' : 'inactive',
         helperText: !replacedValue ? 'SIM을 입력해 주세요' : '',
       },
     }));
@@ -169,7 +170,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     setValidationErrors((prev) => ({
       ...prev,
       imeiNumber: {
-        state: !value ? 'error' : 'active',
+        state: !value ? 'error' : 'inactive',
         helperText: !value ? 'IMEI를 입력해 주세요' : '',
       },
     }));
@@ -203,7 +204,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     setValidationErrors((prev) => ({
       ...prev,
       imeiNumber: {
-        state: deviceModelName === '' ? 'error' : 'active',
+        state: deviceModelName === '' ? 'error' : 'inactive',
         helperText: deviceModelName === '' ? '존재하는 모델이 없습니다' : '',
       },
     }));
@@ -219,7 +220,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
   };
 
   interface validationField {
-    state: 'error' | 'active';
+    state: 'error' | 'inactive';
     helperText: string;
   }
 
@@ -275,36 +276,48 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 <FormLabel>
                   전화번호<RequiredLabel>*</RequiredLabel>
                 </FormLabel>
-                <StyledTextField
-                  placeholder='뒤 4자리*'
-                  size='small'
-                  sx={{ width: '140px' }}
-                  variant='outlined'
-                  value={phoneNumberLastFour}
-                  onChange={(value) => handlePhoneNumberLastFourChange(value)}
-                  state={validationErrors.phoneNumber.state}
-                  helperText={validationErrors.phoneNumber.helperText}
-                  absoluteHelperText={true}
-                  inputRef={phoneNumberInputRef}
-                  inputProps={{
-                    maxLength: 4,
-                    inputMode: 'numeric',
-                    pattern: '[0-9]*',
-                  }}
-                  data-testid='end-phone-number-input'
-                />
-                <ActionButton
-                  variant='outlined'
-                  size='small'
-                  onClick={handlePhoneNumberModalOpen}
-                  disabled={phoneNumberLastFour.length !== 4}
-                  data-testid='select-phone-number-button'
-                >
-                  <Typography sx={{ fontSize: '13px' }}>번호채번</Typography>
-                </ActionButton>
-                <Typography sx={{ ml: 1 }} data-testid='selected-phone-number-typo'>
-                  {selectedPhoneNumber?.phoneNumber ?? ''}
-                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                  <Box>
+                    <Box sx={{ display: 'flex', gap: '2px', flexDirection: 'row' }}>
+                      <Box>
+                        <StyledTextField
+                          placeholder='뒤 4자리*'
+                          size='small'
+                          variant='outlined'
+                          value={phoneNumberLastFour}
+                          onChange={(value) => handlePhoneNumberLastFourChange(value)}
+                          state={validationErrors.phoneNumber.state}
+                          helperText={validationErrors.phoneNumber.helperText}
+                          absoluteHelperText={true}
+                          inputRef={phoneNumberInputRef}
+                          inputProps={{
+                            maxLength: 4,
+                            inputMode: 'numeric',
+                            pattern: '[0-9]*',
+                          }}
+                          data-testid='end-phone-number-input'
+                        />
+                      </Box>
+                      <Box>
+                        <ActionButton
+                          variant='outlined'
+                          size='small'
+                          onClick={handlePhoneNumberModalOpen}
+                          disabled={phoneNumberLastFour.length !== 4}
+                          data-testid='select-phone-number-button'
+                        >
+                          <Typography sx={{ fontSize: '13px' }}>번호채번</Typography>
+                        </ActionButton>
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  <Box>
+                    <Typography sx={{ ml: 1 }} data-testid='selected-phone-number-typo'>
+                      {selectedPhoneNumber?.phoneNumber ?? ''}
+                    </Typography>
+                  </Box>
+                </Box>
               </FormRowSection>
             </SectionInfoContainer>
 
@@ -341,7 +354,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 />
               </FormRow>
 
-              <FormRowSection sx={{ mt: 1 }}>
+              <FormRowSectionIEMI sx={{ mt: 1 }}>
                 <FormLabel>
                   IMEI<RequiredLabel>*</RequiredLabel>
                 </FormLabel>
@@ -368,7 +381,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 <Typography variant='body1' data-testid='model-name-typo'>
                   모델명: {deviceModelName}
                 </Typography>
-              </FormRowSection>
+              </FormRowSectionIEMI>
             </SectionInfoContainer>
           </Column>
 
