@@ -1,4 +1,4 @@
-import { DeviceInfo} from '@model/RegistrationInfo';
+import { DeviceInfo } from '@model/RegistrationInfo';
 import {
   InfoSection,
   InfoRow,

@@ -15,7 +15,6 @@ import { CommonResponse } from '@model/common/CommonResponse';
 import { REGISTRATION_STATUS } from '@constants/RegistrationConstants';
 
 const registrationService = {
-
   getInvoiceList(customerId: string): Promise<CommonResponse<InvoiceRetrieveResponse>> {
     return baseService.get(`/cca-be/v1/invoice/${customerId}`);
   },
@@ -41,9 +40,7 @@ const registrationService = {
   },
 
   // 저장 상태 조회 및 데이터 변환 (오류 처리 포함)
-  async getRegistrationStatusWithMapping(
-    businessProcessId: string,
-  ): Promise<RegistrationStatus> {
+  async getRegistrationStatusWithMapping(businessProcessId: string): Promise<RegistrationStatus> {
     try {
       const response = await this.getRegistrationStatus(businessProcessId);
 

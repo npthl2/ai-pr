@@ -23,7 +23,7 @@ export const useRegistrationMutation = () => {
       // RegistrationRequest 생성
       const request: RegistrationRequest = {
         gTrId,
-        registrationInfo
+        registrationInfo,
       };
 
       return registrationService.saveRegistration(request);

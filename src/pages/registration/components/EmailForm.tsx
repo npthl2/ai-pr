@@ -5,7 +5,12 @@ import Select from '@components/Select'; // 커스텀 셀렉트 컴포넌트 임
 import { EmailFormContainer, EmailSeparator } from '../RegistrationRequest.styled'; // 이메일 구분자 스타일 임포트
 import { useState, useEffect } from 'react'; // React 훅 임포트
 import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants'; // 등록 상태 타입 임포트
-import { InputDomainContainer, SendButtonContainer, EmailAddressContainer, DomainSelectContainer } from './EmailForm.styled';
+import {
+  InputDomainContainer,
+  SendButtonContainer,
+  EmailAddressContainer,
+  DomainSelectContainer,
+} from './EmailForm.styled';
 
 // 이메일 폼 컴포넌트 props 인터페이스 정의
 interface EmailFormProps {

@@ -33,7 +33,6 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
   const { getRegistrationInvoiceInfo } = useRegistrationInvoiceStore();
   const registrationInvoiceInfo = getRegistrationInvoiceInfo(contractTabId);
 
-
   // 모든 계약 관련 데이터 가져오기
   const { setRegistrationInfo, updateRegistrationStatus } = useRegistrationStore();
   const [loading, setLoading] = useState(false);
@@ -255,12 +254,12 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
       <ButtonContainer>
         <LeftButtonGroup>
           <Button
-              variant='outlined'
-              color='grey'
-              size='large'
-              disabled={!registrationInvoiceInfo}
-              data-testid='temporary-save-button'
-            >
+            variant='outlined'
+            color='grey'
+            size='large'
+            disabled={!registrationInvoiceInfo}
+            data-testid='temporary-save-button'
+          >
             임시저장
           </Button>
           <Button variant='outlined' color='grey' size='large'>

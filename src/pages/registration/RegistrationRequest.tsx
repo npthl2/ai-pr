@@ -67,7 +67,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
     queryKey: ['registrationStatus', contractTabId, registrationData?.businessProcessId],
     queryFn: async () => {
       console.log('폴링 정보:', [contractTabId, registrationData?.businessProcessId]);
-      
+
       // 필수 정보가 없는 경우 PENDING 상태 반환
       if (!contractTabId || !registrationData?.businessProcessId) {
         return { status: REGISTRATION_STATUS.PENDING } as RegistrationStatus;
@@ -75,7 +75,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
 
       // API 서비스 레이어에서 상태 조회 및 데이터 변환 처리
       return registrationService.getRegistrationStatusWithMapping(
-        registrationData.businessProcessId
+        registrationData.businessProcessId,
       );
     },
     // 쿼리 옵션

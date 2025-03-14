@@ -1,7 +1,6 @@
 import { ContractInfo } from '@model/RegistrationInfo';
 import { InfoSection, InfoRow, InfoLabel, InfoValue, SubSectionTitle } from '../SummaryInfo.styled';
 
-
 interface SubscriptionInfoProps {
   contractInfo: ContractInfo;
 }
