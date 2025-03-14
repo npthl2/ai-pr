@@ -24,7 +24,7 @@ export const SectionTitle = styled(Typography)({
 });
 
 export const ContentWrapper = styled(Box)({
-  width: '410px',
+  width: '400px',
   padding: '0px',
   overflow: 'hidden',
 });
@@ -68,7 +68,7 @@ export const DeviceInfoValue = styled(Typography)({
 });
 
 export const SponsorTypeLabel = styled(Typography)({
-  width: '120px',
+  width: '95px',
   height: '21px',
   fontFamily: 'Pretendard',
   fontWeight: '600',
@@ -110,7 +110,7 @@ export const RadioGroupContainer = styled(Box)({
 });
 
 export const PriceInfoContainer = styled(Box)({
-  width: '410px',
+  width: '400px',
   height: '350px',
   gap: '12px',
   padding: '16px',
@@ -121,14 +121,14 @@ export const PriceInfoContainer = styled(Box)({
 });
 
 export const PriceDivider = styled(Box)({
-  width: '410px',
+  width: '400px',
   height: '1px',
   borderWidth: '1px',
   border: '1px solid rgba(112, 121, 142, 0.16)',
 });
 
 export const FinalPriceDivider = styled(Box)({
-  width: '410px',
+  width: '400px',
   height: '1px',
   borderWidth: '1px',
   border: '1px solid #05151F',
@@ -139,7 +139,7 @@ export const PriceLabel = styled(Typography)({
 });
 
 export const PriceValue = styled(Typography)({
-  width: '164px',
+  width: '168px',
   height: '21px',
   fontFamily: 'Pretendard',
   fontWeight: '700',
@@ -203,7 +203,7 @@ export const InstallmentPeriodLabel = styled(Typography)({
 });
 
 export const InstallmentPeriodContainer = styled(Box)({
-  width: '168px',
+  minWidth: '168px',
   height: '21px',
   display: 'flex',
   justifyContent: 'flex-end',
