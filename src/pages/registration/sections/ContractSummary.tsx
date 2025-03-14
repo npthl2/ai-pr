@@ -10,11 +10,9 @@ import {
   RightButtonGroup,
 } from './ContractSummary.styled';
 import { SECTION_IDS, SECTION_TITLES, SectionId } from '@constants/RegistrationConstants';
-import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
+import useRegistrationInvoiceStore from '@stores/registration/RegistrationInvoiceStore';
 import useRegistrationContractStore from '@stores/registration/RegistrationContractStore';
 import useRegistrationSalesStore from '@stores/registration/RegistrationSalesStore';
-import { SECTION_IDS, SECTION_TITLES } from '@constants/RegistrationConstants';
-import useRegistrationInvoiceStore from '@stores/registration/RegistrationInvoiceStore';
 
 interface ContractSummaryProps {
   contractTabId: string;
@@ -27,15 +25,12 @@ const ContractSummary = ({
   setIsSaveRequested,
   completedSections,
 }: ContractSummaryProps) => {
-  const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
+  const { getRegistrationInvoiceInfo } = useRegistrationInvoiceStore();
   const { getRegistrationSalesInfo } = useRegistrationSalesStore();
   const { getRegistrationContractInfo } = useRegistrationContractStore();
-  const customerInfo = getRegistrationCustomerInfo(contractTabId);
+  const registrationInvoiceInfo = getRegistrationInvoiceInfo(contractTabId);
   const salesInfo = getRegistrationSalesInfo(contractTabId);
   const contractInfo = getRegistrationContractInfo(contractTabId);
-const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryProps) => {
-  const { getRegistrationInvoiceInfo } = useRegistrationInvoiceStore();
-  const registrationInvoiceInfo = getRegistrationInvoiceInfo(contractTabId);
 
   return (
     <SummaryContainer>
