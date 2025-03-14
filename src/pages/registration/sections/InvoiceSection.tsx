@@ -941,17 +941,19 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
 
           {/* 청구정보 생성완료 버튼 */}
           {!isSaved && (
-            <Button
-              variant='contained'
-              color='primary'
-              size='small'
-              onClick={handleOnComplete}
-              sx={{ position: 'absolute', bottom: 16, right: 16 }}
-              disabled={isDisabled || isSaved}
-              data-testid='invoice-create-button'
-            >
-              청구정보 생성완료
-            </Button>
+            <Box sx={{ marginTop: '16px' }}>
+              <Button
+                variant='contained'
+                color='primary'
+                size='small'
+                onClick={handleOnComplete}
+                sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                disabled={isDisabled || isSaved}
+                data-testid='invoice-create-button'
+              >
+                청구정보 생성완료
+              </Button>
+            </Box>
           )}
         </Grid>
       </Grid>
