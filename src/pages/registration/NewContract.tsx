@@ -1,6 +1,6 @@
 import { Typography, AccordionSummary, AccordionDetails } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import {
   Container,
   ContentWrapper,
@@ -28,12 +28,15 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
   const [completedSections, setCompletedSections] = useState<SectionId[]>([]);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const sections = [
+  const createSections = (
+    contractTabId: string,
+    handleSectionComplete: (sectionId: SectionId) => void,
+    completedSections: SectionId[],
+  ) => [
     {
       id: SECTION_IDS.CUSTOMER,
       title: SECTION_TITLES[SECTION_IDS.CUSTOMER],
-      component: () => (
-        // TODO : 자신의 부분만 수정하고 나머지 부분 수정 시 공유할 것. 예시 코드 참고
+      component: (
         <CustomerSection
           contractTabId={contractTabId}
           onComplete={() => handleSectionComplete(SECTION_IDS.CUSTOMER)}
@@ -45,8 +48,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
     {
       id: SECTION_IDS.INVOICE,
       title: SECTION_TITLES[SECTION_IDS.INVOICE],
-      component: () => (
-        // TODO : 자신의 부분만 수정하고 나머지 부분 수정 시 공유할 것. 예시 코드 참고
+      component: (
         <InvoiceSection
           contractTabId={contractTabId}
           onComplete={() => handleSectionComplete(SECTION_IDS.INVOICE)}
@@ -59,8 +61,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
     {
       id: SECTION_IDS.SALES,
       title: SECTION_TITLES[SECTION_IDS.SALES],
-      component: () => (
-        // TODO : 자신의 부분만 수정하고 나머지 부분 수정 시 공유할 것. 예시 코드 참고
+      component: (
         <SalesSection
           contractTabId={contractTabId}
           onComplete={() => handleSectionComplete(SECTION_IDS.SALES)}
@@ -74,8 +75,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
     {
       id: SECTION_IDS.CONTRACT,
       title: SECTION_TITLES[SECTION_IDS.CONTRACT],
-      component: () => (
-        // TODO : 자신의 부분만 수정하고 나머지 부분 수정 시 공유할 것. 예시 코드 참고
+      component: (
         <ContractSection
           contractTabId={contractTabId}
           onComplete={() => handleSectionComplete(SECTION_IDS.CONTRACT)}
@@ -90,8 +90,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
     {
       id: SECTION_IDS.DEVICE,
       title: SECTION_TITLES[SECTION_IDS.DEVICE],
-      component: () => (
-        // TODO : 자신의 부분만 수정하고 나머지 부분 수정 시 공유할 것. 예시 코드 참고
+      component: (
         <DeviceSection
           contractTabId={contractTabId}
           onComplete={() => handleSectionComplete(SECTION_IDS.DEVICE)}
@@ -130,9 +129,14 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
             behavior: 'smooth',
           });
         }
-      }, 100);
+      }, 800);
     }
   };
+
+  const sections = useMemo(
+    () => createSections(contractTabId, handleSectionComplete, completedSections),
+    [contractTabId, handleSectionComplete, completedSections],
+  );
 
   const handleChange = (panel: SectionId) => (_: React.SyntheticEvent, isExpanded: boolean) => {
     const sectionIndex = sections.findIndex((section) => section.id === panel);
@@ -157,15 +161,15 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
         <SectionsContainer>
           <SectionsWrapper ref={wrapperRef}>
             {sections.map((section) => {
-              const SectionComponent = section.component;
               const canExpand = section.canExpand(completedSections);
+              const isCurrentExpanded = isExpanded(section.id, canExpand);
 
               return (
                 <StyledAccordion
                   key={`${contractTabId}-${section.id}`}
                   id={`${contractTabId}-section-${section.id}`}
                   data-testid={`${contractTabId}-section-${section.id}`}
-                  expanded={isExpanded(section.id, canExpand)}
+                  expanded={isCurrentExpanded}
                   onChange={handleChange(section.id)}
                   disableGutters
                   elevation={0}
@@ -188,7 +192,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
                     sx={{ p: 3 }}
                     data-testid={`${contractTabId}-section-${section.id}-details`}
                   >
-                    <SectionComponent />
+                    {section.component}
                   </AccordionDetails>
                 </StyledAccordion>
               );

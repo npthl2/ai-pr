@@ -11,6 +11,12 @@ import unmaskingService from '@api/services/unmaskingService';
 import { format } from 'date-fns';
 import { Customer } from '@model/Customer';
 
+interface MaskedTarget {
+  customerId: string;
+  contractId: string;
+  maskingType: string;
+}
+
 interface GNBCustomerProps {
   name: string; // 이름
   rrno: string; // 주민번호
@@ -37,7 +43,7 @@ const GNBCustomer = ({ name, rrno, gender, age }: GNBCustomerProps) => {
     setUnmasking(false);
   };
 
-  const onUnmask = async (unmaskedItem: string) => {
+  const onUnmask = async (unmaskedItem: string, _param: MaskedTarget, reason: string) => {
     // 마스킹은 한번에 하나만 마스킹 된다고 정의되어 있는데, GNB에서는 한번에 2개가 다 마스킹 해제되어야해서 한번 더 호출함.
     // 추후 여러 건을 한번에 호출해서 마스킹해제하는 API 및 함수 필요
     const response = await unmaskingService.unmasking({
@@ -47,7 +53,7 @@ const GNBCustomer = ({ name, rrno, gender, age }: GNBCustomerProps) => {
       requestMemberId: memberInfo?.memberId || '',
       requestMemberConnectedIp: '10.231.58.61', // common 에서 X-Authorization-Id 사용하는 걸로 변경 예정.. 나중에.....
       customerId: selectedCustomer?.id || '',
-      requestUnmaskingReason: '',
+      requestUnmaskingReason: reason,
     });
 
     if (response?.data && typeof response.data === 'object' && 'unmaskedItem' in response.data) {

@@ -4,14 +4,11 @@ on:
   workflow_dispatch:
   push:
     branches: [ "develop" ]
-  pull_request:
-    branches: [ "develop" ]
-    types: ["closed"]
 
 jobs:
   ci:
     name: Build and push container image
-    runs-on: ubuntu-latest
+    runs-on: arc-runner-rnr
     permissions:
       contents: write
       packages: write
@@ -85,11 +82,10 @@ jobs:
   cd:
     name: Update manifests and sync argocd app
     needs: ci
-    runs-on: ubuntu-latest
+    runs-on: arc-runner-rnr
     permissions:
       contents: read
       packages: write
-    if: github.event_name == 'push'
 
     steps:
 

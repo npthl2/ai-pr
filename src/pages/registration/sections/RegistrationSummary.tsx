@@ -12,7 +12,7 @@ import {
   ItemValue,
 } from './RegistrationSummary.styled';
 import { SECTION_IDS, SECTION_TITLES, REGISTRATION_STATUS } from '@constants/RegistrationConstants';
-import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
+// import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
 import { useState, useEffect } from 'react';
 import { useRegistrationInfo } from '@hooks/useRegistrationInfo';
 import useRegistrationStore from '@stores/registration/RegistrationStore';
@@ -20,6 +20,7 @@ import { useRegistrationMutation } from '@api/queries/registration/useRegistrati
 import useRegistrationContractStore from '@stores/registration/RegistrationContractStore';
 import useRegistrationDeviceStore from '@stores/registration/RegistrationDeviceStore';
 import useRegistrationSalesStore from '@stores/registration/RegistrationSalesStore';
+import useRegistrationInvoiceStore from '@stores/registration/RegistrationInvoiceStore';
 
 interface ContractSummaryProps {
   contractTabId: string;
@@ -27,8 +28,11 @@ interface ContractSummaryProps {
 }
 
 const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryProps) => {
-  const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
-  const customerInfo = getRegistrationCustomerInfo(contractTabId);
+  // const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
+  // const customerInfo = getRegistrationCustomerInfo(contractTabId);
+  const { getRegistrationInvoiceInfo } = useRegistrationInvoiceStore();
+  const registrationInvoiceInfo = getRegistrationInvoiceInfo(contractTabId);
+
 
   // 모든 계약 관련 데이터 가져오기
   const { setRegistrationInfo, updateRegistrationStatus } = useRegistrationStore();
@@ -46,13 +50,14 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
         const contractStore = useRegistrationContractStore.getState() as any;
         // const deviceStore = useRegistrationDeviceStore.getState() as any;
         const salesStore = useRegistrationSalesStore.getState() as any;
+        // const invoiceStore = useRegistrationInvoiceStore.getState() as any;
 
         // 개발 환경인 경우 useRegistrationInfo의 모킹 데이터 사용
         //TODO : 개발환경 삭제, const 추가 필요
         let contractInfo: any;
         // let deviceInfo: any;
         let salesInfo: any;
-
+        // let invoiceInfo: any;
         if (process.env.NODE_ENV === 'development') {
           contractInfo = { isValidated: true };
           salesInfo = { isValidated: true };
@@ -62,6 +67,7 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
           contractInfo = contractStore.getRegistrationContractInfo?.(contractTabId);
           // deviceInfo = deviceStore.getRegistrationDeviceInfo?.(contractTabId);
           salesInfo = salesStore.getRegistrationSalesInfo?.(contractTabId);
+          // invoiceInfo = invoiceStore.getRegistrationInvoiceInfo?.(contractTabId);
         }
         // 모든 스토어의 isValidated 값 확인
         const isAllValidated =
@@ -175,11 +181,11 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
             <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.INVOICE]}</Typography>
             <SummaryItem>
               <ItemLabel>납부고객명</ItemLabel>
-              <ItemValue>{customerInfo?.name}</ItemValue>
+              <ItemValue>{registrationInvoiceInfo?.recipient}</ItemValue>
             </SummaryItem>
             <SummaryItem>
               <ItemLabel>납부방법</ItemLabel>
-              <ItemValue></ItemValue>
+              <ItemValue>{registrationInvoiceInfo?.paymentMethod}</ItemValue>
             </SummaryItem>
           </Box>
           <Divider />
@@ -248,7 +254,13 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested }: ContractSummaryP
 
       <ButtonContainer>
         <LeftButtonGroup>
-          <Button variant='outlined' color='grey' size='large'>
+          <Button
+              variant='outlined'
+              color='grey'
+              size='large'
+              disabled={!registrationInvoiceInfo}
+              data-testid='temporary-save-button'
+            >
             임시저장
           </Button>
           <Button variant='outlined' color='grey' size='large'>

@@ -1,23 +1,24 @@
 import {
   Dialog as MuiDialog,
   DialogProps as MuiDialogProps,
-  DialogTitle,
+  Button,
   DialogContent,
   DialogActions,
-  Button,
   Typography,
   IconButton,
+  Box,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
-type DialogSize = 'small' | 'medium' | 'large';
+type DialogSize = 'small' | 'medium' | 'medium-large' | 'large';
 
 interface DialogProps extends Omit<MuiDialogProps, 'content'> {
   size?: DialogSize;
   title: string;
   content: string | React.ReactNode;
   closeLabel?: string;
-  confirmLabel?: string;
+  confirmLabel?: string | React.ReactNode;
+  confirmIcon?: React.ReactNode;
   isConfirmDisabled?: boolean;
   onClose: () => void;
   onConfirm?: () => void;
@@ -27,15 +28,17 @@ const StyledDialog = styled(MuiDialog, { shouldForwardProp: (prop) => prop !== '
 }>(({ theme, size }) => ({
   '& .MuiDialog-paper': {
     backgroundColor: theme.palette.background.paper,
-    width: {
+    minWidth: {
       small: 400,
       medium: 600,
+      'medium-large': 800,
       large: 1000,
     }[size],
   },
 }));
-const StyledDialogTitle = styled(DialogTitle)({
+const StyledDialogTitle = styled(Box)({
   padding: '16px 24px',
+  position: 'relative',
 });
 const StyledButton = styled(Button)({
   padding: '5px 8px',
@@ -64,12 +67,14 @@ const Dialog = ({
   content,
   closeLabel = '취소',
   confirmLabel = '확인',
+  confirmIcon,
   onClose,
   onConfirm,
   isConfirmDisabled = false,
+  ...props
 }: DialogProps) => {
   return (
-    <StyledDialog open={open} size={size} onClose={onClose}>
+    <StyledDialog open={open} size={size} onClose={onClose} {...props}>
       <StyledDialogTitle>
         <Typography
           variant='h6'
@@ -89,6 +94,7 @@ const Dialog = ({
             onClick={onClose}
             variant='outlined'
             sx={(theme) => ({ borderColor: theme.palette.grey[200] })}
+            data-testid='component-dialog-close-button'
           >
             <Typography variant='body1' sx={(theme) => ({ color: theme.palette.text.primary })}>
               {closeLabel}
@@ -101,11 +107,17 @@ const Dialog = ({
             color='primary'
             variant='contained'
             disabled={isConfirmDisabled}
+            data-testid='component-dialog-confirm-button'
           >
             <Typography
               variant='body1'
-              sx={(theme) => ({ color: theme.palette.primary.contrastText })}
+              sx={(theme) => ({
+                color: theme.palette.primary.contrastText,
+                display: 'flex',
+                alignItems: 'center',
+              })}
             >
+              {confirmIcon && confirmIcon}
               {confirmLabel}
             </Typography>
           </StyledButton>

@@ -4,7 +4,7 @@ export interface RegistrationCustomerInfo {
   customerId?: string;
   name: string;
   rrno: string;
-  authHistoryId?: number;
+  customerNameVerificationHistoryId?: number;
   isConsentPersonalInfo?: boolean;
   rrnoIssueDate: string;
   isConsentIdentityVerification?: boolean;
