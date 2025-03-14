@@ -38,3 +38,26 @@ export interface Work {
   id: string;
   name: string;
 }
+
+export interface CreateCustomerRequestParams {
+  customerName: string;
+  rrno: string;
+  customerNameVerificationHistoryId: number;
+}
+
+export interface CreateCustomerResponse {
+  customerId: string;
+}
+
+export interface CustomerNameVerificationRequestParams {
+  customerName: string;
+  rrno: string;
+  rrnoIssueDate: string;
+}
+
+export interface CustomerNameVerificationResponse {
+  customerNameVerificationHistoryId: number;
+  nameVerificationResult: string;
+  checkResult: string;
+  organization: string;
+}

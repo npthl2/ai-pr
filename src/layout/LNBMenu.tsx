@@ -231,7 +231,6 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
                     >
                       <Typography>{item.name}</Typography>
                       <StarIconButton
-                        variant='text'
                         data-testid={`bookmark-button-${item.name}`}
                         onClick={(e) => {
                           e.stopPropagation();

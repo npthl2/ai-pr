@@ -80,7 +80,7 @@ class InvoiceSectionPage {
   }
 
   clickDialogCloseButton() {
-    cy.get('[data-testid="dialog-close-button"]').click();
+    cy.get('[data-testid="component-dialog-close-button"]').click();
   }
 
   typeInputField(fieldName: string, value: string) {

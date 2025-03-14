@@ -1,9 +1,5 @@
 /// <reference types="cypress" />
 
-import LoginServiceMock from '../../module/mock/login/LoginServiceMock';
-import LoginPage from '../login/LoginPage';
-import { amber } from '@mui/material/colors';
-
 class LayoutPage {
   constructor() {}
 

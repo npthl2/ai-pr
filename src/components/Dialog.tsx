@@ -1,12 +1,12 @@
 import {
   Dialog as MuiDialog,
   DialogProps as MuiDialogProps,
-  DialogTitle,
+  Button,
   DialogContent,
   DialogActions,
-  Button,
   Typography,
   IconButton,
+  Box,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
@@ -18,6 +18,7 @@ interface DialogProps extends Omit<MuiDialogProps, 'content'> {
   content: string | React.ReactNode;
   closeLabel?: string;
   confirmLabel?: string | React.ReactNode;
+  confirmIcon?: React.ReactNode;
   isConfirmDisabled?: boolean;
   onClose: () => void;
   onConfirm?: () => void;
@@ -35,8 +36,9 @@ const StyledDialog = styled(MuiDialog, { shouldForwardProp: (prop) => prop !== '
     }[size],
   },
 }));
-const StyledDialogTitle = styled(DialogTitle)({
+const StyledDialogTitle = styled(Box)({
   padding: '16px 24px',
+  position: 'relative',
 });
 const StyledButton = styled(Button)({
   padding: '5px 8px',
@@ -65,6 +67,7 @@ const Dialog = ({
   content,
   closeLabel = '취소',
   confirmLabel = '확인',
+  confirmIcon,
   onClose,
   onConfirm,
   isConfirmDisabled = false,
@@ -91,7 +94,7 @@ const Dialog = ({
             onClick={onClose}
             variant='outlined'
             sx={(theme) => ({ borderColor: theme.palette.grey[200] })}
-            data-testid='dialog-close-button'
+            data-testid='component-dialog-close-button'
           >
             <Typography variant='body1' sx={(theme) => ({ color: theme.palette.text.primary })}>
               {closeLabel}
@@ -104,12 +107,17 @@ const Dialog = ({
             color='primary'
             variant='contained'
             disabled={isConfirmDisabled}
-            data-testid='dialog-confirm-button'
+            data-testid='component-dialog-confirm-button'
           >
             <Typography
               variant='body1'
-              sx={(theme) => ({ color: theme.palette.primary.contrastText })}
+              sx={(theme) => ({
+                color: theme.palette.primary.contrastText,
+                display: 'flex',
+                alignItems: 'center',
+              })}
             >
+              {confirmIcon && confirmIcon}
               {confirmLabel}
             </Typography>
           </StyledButton>

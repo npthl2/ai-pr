@@ -1,13 +1,12 @@
-import Button from '@components/Button';
-import TextField from '@components/TextField';
-import { Checkbox, FormControlLabel, Typography } from '@mui/material';
-import { FormContainer, FormWrapper } from './common/SectionCommon.styled';
-import { LeftSection, RightSection, FieldContainer, FieldLabel } from './CustomerSection.styled';
-
-import { useState } from 'react';
+import { FormContainer } from './common/SectionCommon.styled';
+import { useState, useEffect, useMemo } from 'react';
 import useRegistrationCustomerStore, {
   RegistrationCustomerInfo,
 } from '@stores/registration/RegistrationCustomerStore';
+import { useAvailableCustomerContractQuery } from '@api/queries/contract/useAvailableCustomerContractQuery';
+import CustomerInfo from './customer/CustomerInfo';
+import CustomerVerification from './customer/CustomerVerification';
+import CustomerDialog from './customer/CustomerDialog';
 
 interface CustomerSectionProps {
   contractTabId: string;
@@ -22,100 +21,102 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
     getRegistrationCustomerInfo(contractTabId) || {
       name: '',
       rrno: '',
-      isConsent: false,
+      isConsentPersonalInfo: false,
+      rrnoIssueDate: '',
+      isConsentIdentityVerification: false,
     },
   );
 
-  const handleChange = (name: string) => (value: string) => {
-    setCustomer({
-      ...customer,
-      [name]: value,
-    });
-  };
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isNameVerified, setIsNameVerified] = useState(false);
 
-  const handleCheckboxChange = (name: string) => (_: React.SyntheticEvent, checked: boolean) => {
-    setCustomer({
-      ...customer,
-      [name]: checked,
+  const [callAvailableContract, setCallAvailableContract] = useState(false);
+  const { data: availableContractCount, refetch: refetchAvailableContract } =
+    useAvailableCustomerContractQuery(customer.customerId || '', {
+      enabled: !!customer.customerId && callAvailableContract,
     });
-  };
+
+  useEffect(() => {
+    if (availableContractCount) {
+      setCustomer({
+        ...customer,
+        availableContractCount: availableContractCount,
+      });
+
+      setRegistrationCustomerInfo(contractTabId, customer);
+      if (availableContractCount > 0 && callAvailableContract) {
+        onComplete();
+      }
+    }
+  }, [availableContractCount]);
 
   const handleOnClick = () => {
-    // setRegistrationCustomerInfo(contractTabId, customer);
-
     // TO-DO : 추후 삭제
-    setRegistrationCustomerInfo(contractTabId, {
-      customerId: 'C-0000000000',
-      name: customer.name,
-      rrno: customer.rrno,
-      isConsent: customer.isConsent,
-    });
-    onComplete();
+    // setRegistrationCustomerInfo(contractTabId, {
+    //   customerId: 'C-0000000000',
+    //   name: customer.name,
+    //   rrno: customer.rrno,
+    //   isConsent: customer.isConsent,
+    // });
+    // onComplete();
+    setIsDialogOpen(true);
   };
+
+  const handleDialogClose = () => {
+    setCustomer({
+      ...customer,
+      customerId: undefined,
+      customerNameVerificationHistoryId: undefined,
+      verificationResult: undefined,
+      organization: undefined,
+    });
+
+    setIsDialogOpen(false);
+  };
+
+  const handleVerificationComplete = () => {
+    setIsNameVerified(true);
+    setIsDialogOpen(false);
+  };
+
+  const handleCheckAvailableContract = () => {
+    if (customer.customerId) {
+      setCallAvailableContract(true);
+      if (callAvailableContract) {
+        refetchAvailableContract();
+      }
+    }
+  };
+
+  const isVerificationCompleted = useMemo(() => {
+    return customer.verificationResult !== undefined;
+  }, [customer.verificationResult]);
 
   return (
     <FormContainer completed={completed}>
-      <FormWrapper>
-        <LeftSection>
-          <FieldContainer>
-            <FieldLabel>
-              이름
-              <Typography component='span' className='required'>
-                *
-              </Typography>
-            </FieldLabel>
-            <TextField
-              required
-              size='small'
-              value={customer.name}
-              onChange={handleChange('name')}
-            />
-          </FieldContainer>
-
-          <FieldContainer>
-            <FieldLabel>
-              주민번호
-              <Typography component='span' className='required'>
-                *
-              </Typography>
-            </FieldLabel>
-            <TextField
-              required
-              size='small'
-              placeholder='13자리의 숫자만 입력 가능'
-              value={customer.rrno}
-              onChange={handleChange('rrno')}
-            />
-          </FieldContainer>
-
-          <FieldContainer>
-            <FieldLabel>
-              개인정보 활용
-              <Typography component='span' className='required'>
-                *
-              </Typography>
-            </FieldLabel>
-            <FormControlLabel
-              control={<Checkbox />}
-              label='필수동의'
-              sx={{ minWidth: 100 }}
-              checked={customer.isConsent}
-              onChange={handleCheckboxChange('isConsent')}
-            />
-          </FieldContainer>
-        </LeftSection>
-
-        <RightSection>
-          <Button
-            variant='outlined'
-            size='small'
-            onClick={handleOnClick}
-            data-testid='name-verification-button'
-          >
-            실명인증
-          </Button>
-        </RightSection>
-      </FormWrapper>
+      <CustomerInfo
+        isDialogOpen={isDialogOpen}
+        customer={customer}
+        setCustomer={setCustomer}
+        isVerificationCompleted={isVerificationCompleted}
+        isNameVerified={isNameVerified}
+        handleOnClick={handleOnClick}
+      />
+      {isNameVerified && isVerificationCompleted && !isDialogOpen && (
+        <CustomerVerification
+          verificationResult={customer.verificationResult || false}
+          availableContractCount={availableContractCount}
+          handleCheckAvailableContract={handleCheckAvailableContract}
+        />
+      )}
+      <CustomerDialog
+        isOpen={isDialogOpen}
+        customer={customer}
+        setCustomer={setCustomer}
+        isVerificationCompleted={isVerificationCompleted}
+        handleClose={handleDialogClose}
+        handleVerificationComplete={handleVerificationComplete}
+      />
     </FormContainer>
   );
 };
