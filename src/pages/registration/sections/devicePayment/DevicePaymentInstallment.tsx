@@ -223,22 +223,30 @@ const DevicePaymentInstallment = ({
                 value={deviceEngagementType}
                 onChange={handleEngagementTypeChange}
                 row
-                sx={{ 
+                sx={{
                   '& .MuiFormControlLabel-root': { mr: 2 },
                   display: 'flex',
                   flexWrap: 'nowrap',
-                  width: '100%'
+                  width: '100%',
                 }}
               >
                 <FormControlLabel
                   value='PUBLIC_POSTED_SUPPORT'
                   control={<Radio size='small' />}
-                  label={<Typography variant='body2' noWrap>공시지원금</Typography>}
+                  label={
+                    <Typography variant='body2' noWrap>
+                      공시지원금
+                    </Typography>
+                  }
                 />
                 <FormControlLabel
                   value='SELECTED'
                   control={<Radio size='small' />}
-                  label={<Typography variant='body2' noWrap>선택약정 (요금제의 25% 할인)</Typography>}
+                  label={
+                    <Typography variant='body2' noWrap>
+                      선택약정 (요금제의 25% 할인)
+                    </Typography>
+                  }
                 />
               </RadioGroup>
             </RadioGroupContainer>
