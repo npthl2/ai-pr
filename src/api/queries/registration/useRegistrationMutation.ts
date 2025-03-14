@@ -18,11 +18,11 @@ export const useRegistrationMutation = () => {
       };
 
       // 글로벌 트랜잭션 ID 생성 (프론트엔드에서 생성)
-      const g_tr_id = `GTR_${uuidv4()}`;
+      const gTrId = `GTR_${uuidv4()}`;
 
       // RegistrationRequest 생성
       const request: RegistrationRequest = {
-        g_tr_id,
+        gTrId,
         registrationInfo
       };
 
