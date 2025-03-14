@@ -32,12 +32,12 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
 
   const [callAvailableContract, setCallAvailableContract] = useState(false);
   const { data: availableContractCount, refetch: refetchAvailableContract } =
-    useAvailableCustomerContractQuery(customer.customerId || '', {
+    useAvailableCustomerContractQuery(contractTabId, customer.customerId || '', {
       enabled: !!customer.customerId && callAvailableContract,
     });
 
   useEffect(() => {
-    if (availableContractCount) {
+    if (availableContractCount !== undefined) {
       setCustomer({
         ...customer,
         availableContractCount: availableContractCount,
@@ -97,7 +97,7 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
       {isNameVerified && isVerificationCompleted && !isDialogOpen && (
         <CustomerVerification
           verificationResult={customer.verificationResult || false}
-          availableContractCount={availableContractCount}
+          availableContractCount={customer.availableContractCount}
           handleCheckAvailableContract={handleCheckAvailableContract}
         />
       )}
