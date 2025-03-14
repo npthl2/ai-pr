@@ -87,13 +87,14 @@ const CustomerSection = ({ contractTabId, onComplete, completed }: CustomerSecti
   return (
     <FormContainer completed={completed}>
       <CustomerInfo
+        isDialogOpen={isDialogOpen}
         customer={customer}
         setCustomer={setCustomer}
         isVerificationCompleted={isVerificationCompleted}
         isNameVerified={isNameVerified}
         handleOnClick={handleOnClick}
       />
-      {isNameVerified && isVerificationCompleted && (
+      {isNameVerified && isVerificationCompleted && !isDialogOpen && (
         <CustomerVerification
           verificationResult={customer.verificationResult || false}
           availableContractCount={availableContractCount}

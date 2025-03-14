@@ -56,7 +56,8 @@ const CustomerDialog = ({
       if (!/^\d*$/.test(value)) return;
       if (value.length > 8) return;
 
-      setRrnoIssueDateError('');
+      const error = validateRrnoIssueDate(value);
+      setRrnoIssueDateError(error);
     }
 
     setCustomer({
@@ -80,7 +81,7 @@ const CustomerDialog = ({
   };
 
   const validateRrnoIssueDate = (rrnoIssueDate: string) => {
-    if (!rrnoIssueDate || rrnoIssueDate.length < 8) {
+    if (!rrnoIssueDate.trim()) {
       return '주민등록증 발급일자를 입력해주세요.';
     }
 
@@ -97,6 +98,10 @@ const CustomerDialog = ({
       if (!isValid(issueDate) || issueDate > today) {
         return '주민등록증 발급일자를 확인해주세요.';
       }
+    }
+
+    if (rrnoIssueDate.length < 8) {
+      return '주민등록증 발급일자 확인해주세요.';
     }
 
     return '';

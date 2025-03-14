@@ -19,6 +19,7 @@ import { useState, useMemo, useRef } from 'react';
 import { isValid, parse } from 'date-fns';
 
 interface CustomerInfoProps {
+  isDialogOpen: boolean;
   customer: RegistrationCustomerInfo;
   setCustomer: (customer: RegistrationCustomerInfo) => void;
   isVerificationCompleted: boolean;
@@ -27,6 +28,7 @@ interface CustomerInfoProps {
 }
 
 const CustomerInfo = ({
+  isDialogOpen,
   customer,
   setCustomer,
   isVerificationCompleted,
@@ -61,7 +63,8 @@ const CustomerInfo = ({
         return;
       }
 
-      setRrnoError('');
+      const error = validateRrno(cleanValue);
+      setRrnoError(error);
       setCustomer({
         ...customer,
         [name]: cleanValue,
@@ -92,11 +95,7 @@ const CustomerInfo = ({
       setNameError('이름을 입력해주세요.');
     } else if (name === 'rrno') {
       const error = validateRrno(customer.rrno || '');
-      if (!customer.rrno || customer.rrno.length < 13) {
-        setRrnoError('주민번호 13자리를 입력해주세요.');
-      } else {
-        setRrnoError(error);
-      }
+      setRrnoError(error);
     }
   };
 
@@ -125,12 +124,16 @@ const CustomerInfo = ({
       today.setHours(0, 0, 0, 0);
 
       if (!isValid(birthDate) || birthDate > today) {
-        return '생년월일을 확인해 주세요.';
+        return '생년월일을 확인해주세요.';
       }
 
       if (![1, 2, 3, 4].includes(genderDigit)) {
         return '성별을 확인해주세요.';
       }
+    }
+
+    if (rrno.length < 13) {
+      return '주민번호를 확인해주세요.';
     }
 
     return '';
@@ -153,7 +156,7 @@ const CustomerInfo = ({
               *
             </Typography>
           </NameLabel>
-          {customer.verificationResult === undefined || !isNameVerified ? (
+          {customer.verificationResult === undefined || !isNameVerified || isDialogOpen ? (
             <TextField
               sx={{ width: '168px' }}
               required
@@ -178,7 +181,7 @@ const CustomerInfo = ({
               *
             </Typography>
           </RrnoLabel>
-          {customer.verificationResult === undefined || !isNameVerified ? (
+          {customer.verificationResult === undefined || !isNameVerified || isDialogOpen ? (
             <TextField
               required
               sx={{ width: '168px' }}
@@ -209,7 +212,7 @@ const CustomerInfo = ({
             control={
               <StyledCheckbox
                 size='small'
-                disabled={isVerificationCompleted && isNameVerified}
+                disabled={isVerificationCompleted && isNameVerified && !isDialogOpen}
                 data-testid='personal-info-consent'
               />
             }
@@ -225,7 +228,7 @@ const CustomerInfo = ({
           variant='outlined'
           size='small'
           onClick={handleOnClick}
-          disabled={!isVerificationEnabled || customer.verificationResult}
+          disabled={!isVerificationEnabled || customer.verificationResult || isDialogOpen}
           data-testid='verification-button'
         >
           실명인증

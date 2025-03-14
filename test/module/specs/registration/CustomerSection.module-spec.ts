@@ -33,7 +33,7 @@ describe('KAN-2 신규가입 화면 진입', () => {
 
     page.clickRrnoField();
     page.clickNameField();
-    page.expectRrnoErrorToBeVisible('주민번호 13자리를 입력해주세요.');
+    page.expectRrnoErrorToBeVisible('주민번호를 입력해주세요.');
   });
 
   it('KAN-36-4 고객정보의 이름, 주민번호를 바르게 입력하고 개인정보활용 동의를 체크했을때 실명인증 버튼이 활성화 된다', () => {
