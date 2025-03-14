@@ -150,7 +150,7 @@ const DeviceSection = ({ contractTabId, onComplete, completed }: DeviceSectionPr
       </FormWrapper>
       <Dialog
         open={openPaymentDialog}
-        size='custom'
+        size='small'
         title='단말기결제 정보 입력'
         content={
           dialogType === 'installment' ? (
@@ -160,13 +160,11 @@ const DeviceSection = ({ contractTabId, onComplete, completed }: DeviceSectionPr
               contractTabId={contractTabId}
             />
           ) : (
-            ((
-              <DeviceImmediate
-                onClose={handleCloseDialog}
-                onDevicePayment={handleDevicePayment}
-                contractTabId={contractTabId}
-              />
-            ) as React.ReactNode)
+            <DeviceImmediate
+              onClose={handleCloseDialog}
+              onDevicePayment={handleDevicePayment}
+              contractTabId={contractTabId}
+            />
           )
         }
         onClose={handleCloseDialog}
@@ -174,9 +172,9 @@ const DeviceSection = ({ contractTabId, onComplete, completed }: DeviceSectionPr
         confirmLabel=''
         sx={{
           '& .MuiDialog-paper': {
-            maxWidth: '470px !important',
-            width: '470px !important',
-            height: '769px',
+            maxWidth: '480px !important',
+            width: '480px !important',
+            height: dialogType === 'installment' ? '769px' : '600px',
             borderRadius: '4px',
             background: '#FFFFFF',
             boxShadow: `0px 11px 15px -7px #00000033,
