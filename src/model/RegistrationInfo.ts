@@ -14,7 +14,7 @@ export interface RegistrationInfo {
 
 // DB 테이블 구조에 맞는 요청 모델
 export interface RegistrationRequest {
-  g_tr_id: string; // 글로벌 트랜잭션 ID (프론트엔드에서 생성)
+  gTrId: string; // 글로벌 트랜잭션 ID (프론트엔드에서 생성)
   registrationInfo: RegistrationInfo; // 가입 정보 (JSON으로 저장됨)
   first_create_member_id?: string; // 최초 생성자 ID
   last_update_member_id?: string; // 최종 수정자 ID
