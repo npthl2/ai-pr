@@ -19,6 +19,14 @@ export interface DeviceModelResponse {
   sellingPrice: number;
 }
 
+const initialDeviceModel: DeviceModelResponse = {
+  deviceModelId: '',
+  deviceModelName: '',
+  deviceModelNameAlias: '',
+  deviceType: '',
+  sellingPrice: 0,
+};
+
 export interface ServiceResponse {
   serviceId: string;
   serviceName: string;
@@ -29,10 +37,6 @@ export interface ServiceResponse {
   validStartDateTime: string;
   validEndDateTime: string;
 }
-
-// export interface AdditionalServiceResponse extends ServiceResponse {
-//   excludeServiceIds: string[];
-// }
 
 // Request Types
 export interface ClaimPhoneNumberRequest {
@@ -60,7 +64,10 @@ const registrationContractService = {
     const response = await baseService.get<PhoneNumberAvailabilityResponse[]>(
       `/ctt-be/v1/phone-numbers/availability?endPhoneNumber=${endPhoneNumber}&customerId=${customerId}`,
     );
-    return response.data as PhoneNumberAvailabilityResponse[];
+    if (!response.data || !Array.isArray(response.data)) {
+      return [];
+    }
+    return response.data;
   },
 
   /**
@@ -86,7 +93,11 @@ const registrationContractService = {
     const response = await baseService.get<DeviceModelResponse>(
       `/ctt-be/v1/device-inventories/${imei}/device-model`,
     );
-    return response.data as DeviceModelResponse;
+
+    if (!response.data || typeof response.data !== 'object') {
+      return initialDeviceModel;
+    }
+    return response.data;
   },
 
   /**

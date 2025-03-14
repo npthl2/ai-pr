@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box } from '@mui/material';
-import useRegistrationSalesStore from '@stores/registration/RegistrationSalesStore';
+import useRegistrationSalesStore, { Sales } from '@stores/registration/RegistrationSalesStore';
 // import useCustomerStore from '@stores/CustomerStore';
 import {
   StyledTextField,
@@ -103,7 +103,10 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, on
     });
   };
 
-  const handleUpdateStoreAndValidationCompleteFields = (tabId: string, partialSales: any) => {
+  const handleUpdateStoreAndValidationCompleteFields = (
+    tabId: string,
+    partialSales: Partial<Sales>,
+  ) => {
     // 스토어에 변경사항 업데이트 하고 모든 필드가 채워졌는지 validation field도 업데이트
     updateRegistrationSalesInfo(tabId, partialSales);
     updateRegistrationSalesValidationFlag(tabId);

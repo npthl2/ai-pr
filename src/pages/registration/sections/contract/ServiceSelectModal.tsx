@@ -126,7 +126,11 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
                 <TableBody>
                   {filteredPlanList.length > 0 ? (
                     filteredPlanList.map((plan, index) => (
-                      <TableRow key={plan.id} sx={styles.tableRow} data-testid='service-select-table-row'>
+                      <TableRow
+                        key={plan.id}
+                        sx={styles.tableRow}
+                        data-testid='service-select-table-row'
+                      >
                         <TableCell>
                           <Radio
                             checked={selectedPlan?.id === plan.id}

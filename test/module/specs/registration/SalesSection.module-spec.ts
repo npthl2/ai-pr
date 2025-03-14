@@ -21,7 +21,7 @@ describe('KAN-38  판매정보 확인', () => {
     page.assertSalesSectionToBeExpanded();
   });
 
-  it('KAN-38-1 판매처가 포커스 되어있다다', () => {
+  it('KAN-38-1 판매처가 포커스 되어있다', () => {
     page.isFocusedOnSalesDepartmentInput();
   });
 
@@ -30,7 +30,7 @@ describe('KAN-38  판매정보 확인', () => {
     page.assertContractSectionToBeExpanded();
   });
 
-  it('KAN-38-3 모두 10자리까지만 입력된다다', () => {
+  it('KAN-38-3 모두 10자리까지만 입력된다', () => {
     page.typeSalesComponentInputSuccess('sales-contact-point-input');
     page.typeSalesComponentInputSuccess('finalseller-input');
     page.typeSalesComponentInputSuccess('supporter-input');

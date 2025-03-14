@@ -12,7 +12,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import AdditionalServiceSelectModal from './AdditionalServiceSelectModal';
 import ServiceSelectModal from './ServiceSelectModal';
 import PhoneNumberSelectModal from './PhoneNumberSelectModal';
-import useRegistrationContractStore from '@stores/registration/RegistrationContractStore';
+import useRegistrationContractStore, {
+  Contract,
+} from '@stores/registration/RegistrationContractStore';
 
 import {
   SectionContainer,
@@ -224,7 +226,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
 
   const handleUpdateStoreAndValidationCompleteFields = (
     contractTabId: string,
-    partialContract: any,
+    partialContract: Partial<Contract>,
   ) => {
     // 스토어에 변경사항 업데이트 하고 모든 필드가 채워졌는지 validation field도 업데이트
     updateRegistrationContractInfo(contractTabId, partialContract);
@@ -235,60 +237,6 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     state: 'error' | 'active';
     helperText: string;
   }
-
-  // const validateRequiredFields = (): boolean => {
-  //   const errors: Record<string, validationField> = {};
-
-  //   // Check sales type
-  //   if (!sellType) {
-  //     errors.salesType.state = 'error';
-  //     errors.salesType.helperText = '판매유형을 선택해 주세요요';
-  //   } else {
-  //     errors.salesType.state = 'active';
-  //     errors.salesType.helperText = '';
-  //   }
-
-  //   // Check phone number
-  //   if (!selectedPhoneNumber?.phoneNumber || selectedPhoneNumber.phoneNumber.length < 4) {
-  //     errors.phoneNumber.state = 'error';
-  //     errors.phoneNumber.helperText = '4자리를 입력해주세요';
-  //   } else {
-  //     errors.phoneNumber.state = 'active';
-  //     errors.phoneNumber.helperText = '';
-  //   }
-
-  //   // Check SIM
-  //   if (!simNumber || simNumber === '') {
-  //     errors.simNumber.state = 'error';
-  //     errors.simNumber.helperText = 'SIM을 입력해 주세요';
-  //   } else {
-  //     errors.simNumber.state = 'active';
-  //     errors.simNumber.helperText = '';
-  //   }
-
-  //   // Check IMEI
-  //   if (!imeiNumber || imeiNumber === '') {
-  //     errors.imeiNumber.state = 'error';
-  //     errors.imeiNumber.helperText = 'IMEI를 입력해 주세요';
-  //   } else {
-  //     errors.imeiNumber.state = 'active';
-  //     errors.imeiNumber.helperText = '';
-  //   }
-
-  //   // Check service plan
-  //   if (!selectedService?.serviceId || selectedService.serviceId === '') {
-  //     errors.servicePlan.state = 'error';
-  //     errors.servicePlan.helperText = '요금제를 선택해 주세요';
-  //   } else {
-  //     errors.servicePlan.state = 'active';
-  //     errors.servicePlan.helperText = '';
-  //   }
-
-  //   setValidationErrors(errors);
-
-  //   // 전 필드 정상 상태
-  //   return Object.keys(errors).length === 0;
-  // };
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -312,9 +260,24 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 <FormLabel>
                   판매유형<RequiredLabel>*</RequiredLabel>
                 </FormLabel>
-                <RadioGroup row value={sellType} onChange={(e) => setSellType(e.target.value)} data-testid='sell-type-radio'>
-                  <FormControlLabel value='신규폰' control={<StyledRadio />} label='신규폰'  data-testid='sell-type-radio-0'/>
-                  <FormControlLabel value='중고폰' control={<StyledRadio />} label='중고폰'  data-testid='sell-type-radio-1'/>
+                <RadioGroup
+                  row
+                  value={sellType}
+                  onChange={(e) => setSellType(e.target.value)}
+                  data-testid='sell-type-radio'
+                >
+                  <FormControlLabel
+                    value='신규폰'
+                    control={<StyledRadio />}
+                    label='신규폰'
+                    data-testid='sell-type-radio-0'
+                  />
+                  <FormControlLabel
+                    value='중고폰'
+                    control={<StyledRadio />}
+                    label='중고폰'
+                    data-testid='sell-type-radio-1'
+                  />
                 </RadioGroup>
                 {validationErrors.salesType.state === 'error' && (
                   <Typography color='error' variant='caption' sx={{ ml: 1 }}>
@@ -354,7 +317,9 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 >
                   <Typography sx={{ fontSize: '13px' }}>번호채번</Typography>
                 </ActionButton>
-                <Typography sx={{ ml: 1 }} data-testid='selected-phone-number-typo'>{selectedPhoneNumber?.phoneNumber ?? ''}</Typography>
+                <Typography sx={{ ml: 1 }} data-testid='selected-phone-number-typo'>
+                  {selectedPhoneNumber?.phoneNumber ?? ''}
+                </Typography>
               </FormRowSection>
             </SectionInfoContainer>
 
@@ -415,7 +380,9 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                   data-testid='IMEI-input'
                 />
 
-                <Typography variant='body1' data-testid='model-name-typo'>모델명: {deviceModelName}</Typography>
+                <Typography variant='body1' data-testid='model-name-typo'>
+                  모델명: {deviceModelName}
+                </Typography>
               </FormRowSection>
             </SectionInfoContainer>
           </Column>
@@ -438,7 +405,11 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position='end'>
-                        <SearchIcon onClick={handleServiceModalOpen} sx={{ cursor: 'pointer' }} data-testid='service-select-icon' />
+                        <SearchIcon
+                          onClick={handleServiceModalOpen}
+                          sx={{ cursor: 'pointer' }}
+                          data-testid='service-select-icon'
+                        />
                       </InputAdornment>
                     ),
                     readOnly: true,
@@ -459,9 +430,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                   }}
                   data-testid='selected-service-price-typo'
                 >
-                  {selectedService
-                    ? `${selectedService.serviceValue.toLocaleString()}원`
-                    : '0 원'}
+                  {selectedService ? `${selectedService.serviceValue.toLocaleString()}원` : '0 원'}
                 </Typography>
               </FormRowSectionPlan>
 
