@@ -24,7 +24,7 @@ export const FormGroup = styled('div')(({ theme }) => ({
   flexWrap: 'nowrap',
   alignItems: 'center',
   height: '28px',
-  marginBottom: '6px',
+  marginBottom: '8px',
 }));
 
 export const FormLabel = styled('div')(({ theme }) => ({

@@ -155,16 +155,12 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     setValidationErrors((prev) => ({
       ...prev,
       simNumber: {
-        state: !replacedValue
-            ? 'error'
-            : replacedValue.length < 13
-                ? 'error'
-                : 'inactive',
+        state: !replacedValue ? 'error' : replacedValue.length < 13 ? 'error' : 'inactive',
         helperText: !replacedValue
-            ? 'SIM을 입력해 주세요'
-            : replacedValue.length < 13
-                ? '숫자 13자를 입력해주세요'
-                : '',
+          ? 'SIM을 입력해 주세요'
+          : replacedValue.length < 13
+            ? '숫자 13자를 입력해주세요'
+            : '',
       },
     }));
   };
