@@ -63,9 +63,11 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
 
         <Box sx={{ height: '440px' }}>
           <Box sx={styles.searchContainer}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+
+
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px', flexGrow: 1 }}>
               <Typography
-                sx={{ minWidth: '60px', fontWeight: '600', fontSize: '14px', color: '#272E35' }}
+                sx={{ fontWeight: '600', fontSize: '14px', color: '#272E35', whiteSpace: 'nowrap' }}
               >
                 요금제명
               </Typography>
@@ -73,7 +75,7 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
                 value={searchText}
                 onChange={setSearchText}
                 size='medium'
-                sx={styles.searchInput}
+                sx={{ backgroundColor: '#FFFFFF'}}
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
                     handleSearch();
@@ -83,17 +85,20 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
                 data-testid='service-select-search-input'
               />
             </Box>
+
             <Button
               onClick={handleSearch}
               variant='contained'
               iconComponent={<SearchIcon />}
               iconPosition='left'
               size='medium'
-              sx={styles.searchButton}
+              sx={{ minWidth: '61px', padding: '6px'}}
               data-testid='service-select-search-button'
             >
               조회
             </Button>
+
+
           </Box>
 
           <Box sx={{ mb: 2, mt: 3 }}>

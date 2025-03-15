@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
-import { Modal, Box, TextField, Paper, Checkbox, Typography, IconButton } from '@mui/material';
+import { Modal, Box, Paper, Checkbox, Typography, IconButton } from '@mui/material';
 import { Table, TableBody, TableContainer, TableHead } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
@@ -9,6 +9,7 @@ import TableRow from '@components/Table/TableRow';
 import TableCell from '@components/Table/TableCell';
 import Button from '@components/Button';
 import { Chip } from '@components/Chip';
+import TextField from '@components/TextField';
 import Alert from '@components/Alert';
 import registrationContractService from '@api/services/registrationContractService';
 import { useAdditionalServicesQuery } from '@api/queries/registration/useRegistrationContractQuery';
@@ -116,29 +117,28 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
         </Box>
 
         <Box>
-          <Box sx={{ ...styles.searchContainer, width: '100%', gap: '10px' }}>
+          <Box sx={{...styles.searchContainer, width: '100%'}}>
+
             <Box
               sx={{
-                height: '32px',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
-                flex: 7,
+                flexGrow: 1,
               }}
             >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: '2px', flex: 1 }}>
                 <Typography
-                  sx={{ minWidth: '60px', fontWeight: '600', fontSize: '14px', color: '#272E35' }}
+                  sx={{ fontWeight: '600', fontSize: '14px', color: '#272E35', whiteSpace: 'nowrap' }}
                 >
                   부가서비스명
                 </Typography>
-              </Box>
-              <Box sx={{ flex: 6 }}>
+
+
                 <TextField
                   value={filterText}
                   onChange={(e) => setFilterText(e.target.value)}
                   size='small'
-                  sx={{ backgroundColor: '#FFFFFF', width: '100%' }}
+                  sx={{ backgroundColor: '#FFFFFF' }}
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
                       handleFilter();
@@ -146,19 +146,20 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
                     }
                   }}
                 />
-              </Box>
+
             </Box>
-            <Box sx={{ flex: 1, alignItems: 'center' }}>
+
               <Button
                 onClick={handleFilter}
                 variant='contained'
                 iconComponent={<SearchIcon />}
                 iconPosition='left'
-                size='small'
+                size='medium'
+                sx={{ minWidth: '61px', padding: '6px'}}
               >
                 조회
               </Button>
-            </Box>
+
           </Box>
           <Box sx={{ mb: 2, mt: 3 }}>
             <Typography variant='h3' component='div'>
