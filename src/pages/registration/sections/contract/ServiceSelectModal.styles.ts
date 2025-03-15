@@ -33,6 +33,12 @@ export const styles = {
     backgroundColor: '#EDEFF1',
     gap: '24px',
   },
+  searchInputContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    flexGrow: 1,
+  },
 
   // searchInput: {
   //   // width: '362px',
