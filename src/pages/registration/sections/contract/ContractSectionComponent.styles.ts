@@ -35,7 +35,7 @@ export const SectionTitle = styled('div')(({ theme }) => ({
 export const FormRow = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(2),
+  gap: theme.spacing(1.5),
   '& > *:first-of-type': {
     flex: '0 0 auto',
   },
@@ -47,28 +47,28 @@ export const FormRow = styled(Box)(({ theme }) => ({
 export const FormRowSection = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(2),
-  '& .MuiFormControl-root': {
-    width: '140px',
-  },
+  gap: theme.spacing(1.5),
+  marginBottom: '6px',
 }));
 
-export const FormRowSectionIEMI = styled(Box)(({ theme }) => ({
+export const FormRowSectionDevice = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(2),
+  gap: theme.spacing(1.5),
   '& .MuiFormControl-root': {
     width: '160px',
   },
+  marginBottom: '6px',
 }));
 
 export const FormRowSectionPlan = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(2),
+  gap: theme.spacing(1.5),
   '& .MuiFormControl-root': {
     width: '200px',
   },
+  marginBottom: '6px',
 }));
 
 export const FormLabel = styled('div')(({ theme }) => ({
@@ -86,7 +86,7 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     borderRadius: theme.shape.borderRadius,
     backgroundColor: '#FFFFFF',
-    height: '28px',
+    minHeight: '28px',
   },
 }));
 
