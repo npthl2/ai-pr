@@ -199,7 +199,7 @@ const ContractSummary = ({
               <ItemValue>
                 {completedSections.includes(SECTION_IDS.CONTRACT)
                   ? contractInfo?.service?.serviceName
-                  : '-'}
+                  : ''}
               </ItemValue>
             </SummaryItem>
           </Box>
