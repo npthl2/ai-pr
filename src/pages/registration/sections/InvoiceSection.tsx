@@ -458,7 +458,7 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
       </Box>
 
       {/* 구분선 */}
-      <Divider orientation='horizontal' flexItem sx={{ mx: 1, margin: '5px 0 20px' }} />
+      <Divider orientation='horizontal' flexItem sx={{ mx: 1, marginTop: '-10px' }} />
 
       {/* 하단 영역 */}
       <Grid container spacing={2} sx={{ marginRight: '-16px' }}>

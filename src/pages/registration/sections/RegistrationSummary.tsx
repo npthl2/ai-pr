@@ -11,8 +11,12 @@ import {
   ItemLabel,
   ItemValue,
 } from './RegistrationSummary.styled';
-import { SECTION_IDS, SECTION_TITLES, REGISTRATION_STATUS, SectionId } from '@constants/RegistrationConstants';
-// import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
+import {
+  SECTION_IDS,
+  SECTION_TITLES,
+  REGISTRATION_STATUS,
+  SectionId,
+} from '@constants/RegistrationConstants';
 import { useState, useEffect } from 'react';
 import { useRegistrationInfo } from '@hooks/useRegistrationInfo';
 import useRegistrationStore from '@stores/registration/RegistrationStore';
@@ -28,16 +32,20 @@ interface ContractSummaryProps {
   completedSections: SectionId[];
 }
 
-const ContractSummary = ({ contractTabId, setIsSaveRequested, completedSections, }: ContractSummaryProps) => {
-  // const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
-  // const customerInfo = getRegistrationCustomerInfo(contractTabId);
+const ContractSummary = ({
+  contractTabId,
+  setIsSaveRequested,
+  completedSections,
+}: ContractSummaryProps) => {
   const { getRegistrationInvoiceInfo } = useRegistrationInvoiceStore();
   const { getRegistrationSalesInfo } = useRegistrationSalesStore();
   const { getRegistrationContractInfo } = useRegistrationContractStore();
+  const { getRegistrationDeviceInfo } = useRegistrationDeviceStore();
 
   const registrationInvoiceInfo = getRegistrationInvoiceInfo(contractTabId);
   const salesInfo = getRegistrationSalesInfo(contractTabId);
   const contractInfo = getRegistrationContractInfo(contractTabId);
+  const deviceInfo = getRegistrationDeviceInfo(contractTabId);
 
   // 모든 계약 관련 데이터 가져오기
   const { setRegistrationInfo, updateRegistrationStatus } = useRegistrationStore();
@@ -52,29 +60,10 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested, completedSections,
     // 각 스토어의 상태를 확인하는 함수
     const checkValidation = () => {
       try {
-        const contractStore = useRegistrationContractStore.getState() as any;
-        // const deviceStore = useRegistrationDeviceStore.getState() as any;
-        const salesStore = useRegistrationSalesStore.getState() as any;
-
-        // 개발 환경인 경우 useRegistrationInfo의 모킹 데이터 사용
-        //TODO : 개발환경 삭제, const 추가 필요
-        let contractInfo: any;
-        // let deviceInfo: any;
-        let salesInfo: any;
-        if (process.env.NODE_ENV === 'development') {
-          contractInfo = { isValidated: true };
-          salesInfo = { isValidated: true };
-        } else {
-          // 각 스토어에서 데이터 가져오기
-          //TODO : 개발환경 삭제, const 추가 필요
-          contractInfo = contractStore.getRegistrationContractInfo?.(contractTabId);
-          // deviceInfo = deviceStore.getRegistrationDeviceInfo?.(contractTabId);
-          salesInfo = salesStore.getRegistrationSalesInfo?.(contractTabId);
-        }
         // 모든 스토어의 isValidated 값 확인
         const isAllValidated =
           (contractInfo?.isValidated || false) &&
-          // (deviceInfo?.isValidated || false) &&
+          (deviceInfo?.isValidated || false) &&
           (salesInfo?.isValidated || false);
 
         setIsButtonEnabled(isAllValidated);
@@ -98,7 +87,7 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested, completedSections,
       unsubscribeDevice();
       unsubscribeSales();
     };
-  }, [contractTabId]);
+  }, [contractTabId, contractInfo, salesInfo, deviceInfo]);
 
   const handleSave = async () => {
     try {
@@ -183,7 +172,7 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested, completedSections,
             <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.INVOICE]}</Typography>
             <SummaryItem>
               <ItemLabel>납부고객명</ItemLabel>
-              <ItemValue>{registrationInvoiceInfo?.recipient}</ItemValue>
+              <ItemValue>{registrationInvoiceInfo?.paymentName}</ItemValue>
             </SummaryItem>
             <SummaryItem>
               <ItemLabel>납부방법</ItemLabel>
@@ -197,7 +186,7 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested, completedSections,
             <SummaryItem>
               <ItemLabel>판매채널정보</ItemLabel>
               <ItemValue>
-              {completedSections.includes(SECTION_IDS.SALES) ? salesInfo?.salesDepartment : ''}
+                {completedSections.includes(SECTION_IDS.SALES) ? salesInfo?.salesDepartment : ''}
               </ItemValue>
             </SummaryItem>
           </Box>
@@ -209,8 +198,8 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested, completedSections,
               <ItemLabel>개통요금제</ItemLabel>
               <ItemValue>
                 {completedSections.includes(SECTION_IDS.CONTRACT)
-                    ? contractInfo?.service?.serviceName
-                    : '-'}
+                  ? contractInfo?.service?.serviceName
+                  : ''}
               </ItemValue>
             </SummaryItem>
           </Box>
@@ -220,41 +209,74 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested, completedSections,
             <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.DEVICE]}</Typography>
             <SummaryItem>
               <ItemLabel>스폰서정책</ItemLabel>
-              <ItemValue></ItemValue>
+              <ItemValue>{deviceInfo?.isValidated ? '통합스폰서' : ''}</ItemValue>
             </SummaryItem>
             <SummaryItem>
               <ItemLabel>스폰서 옵션</ItemLabel>
-              <ItemValue></ItemValue>
+              <ItemValue>
+                {deviceInfo?.isValidated ? deviceInfo?.deviceEngagementName : ''}
+                {deviceInfo?.deviceEngagementPeriod
+                  ? ` (${deviceInfo.deviceEngagementPeriod}개월)`
+                  : ''}
+              </ItemValue>
             </SummaryItem>
             <Divider />
             <SummaryItem>
               <ItemLabel>출고가</ItemLabel>
-              <ItemValue sx={{ fontWeight: 900 }}></ItemValue>
+              <ItemValue sx={{ fontWeight: 900 }}>
+                {deviceInfo?.deviceSalesPrice
+                  ? `${deviceInfo.deviceSalesPrice.toLocaleString()}원`
+                  : '-'}
+              </ItemValue>
             </SummaryItem>
             <SummaryItem>
               <ItemLabel>공시지원금</ItemLabel>
-              <ItemValue></ItemValue>
+              <ItemValue>
+                {deviceInfo?.deviceDiscountPrice
+                  ? `${deviceInfo.deviceDiscountPrice.toLocaleString()}원`
+                  : '-'}
+              </ItemValue>
             </SummaryItem>
             <SummaryItem>
               <ItemLabel>선납금</ItemLabel>
-              <ItemValue></ItemValue>
+              <ItemValue>
+                {deviceInfo?.devicePrepaidPrice
+                  ? `${deviceInfo.devicePrepaidPrice.toLocaleString()}원`
+                  : '-'}
+              </ItemValue>
             </SummaryItem>
             <Divider />
             <SummaryItem>
               <ItemLabel>할부원금</ItemLabel>
-              <ItemValue></ItemValue>
+              <ItemValue>
+                {deviceInfo?.deviceInstallmentAmount
+                  ? `${deviceInfo.deviceInstallmentAmount.toLocaleString()}원`
+                  : '-'}
+              </ItemValue>
             </SummaryItem>
             <SummaryItem>
               <ItemLabel>총 할부수수료</ItemLabel>
-              <ItemValue></ItemValue>
+              <ItemValue>
+                {deviceInfo?.deviceInstallmentFee
+                  ? `${deviceInfo.deviceInstallmentFee.toLocaleString()}원`
+                  : '-'}
+              </ItemValue>
             </SummaryItem>
             <SummaryItem>
               <ItemLabel>총금액</ItemLabel>
-              <ItemValue></ItemValue>
+              <ItemValue>
+                {deviceInfo?.deviceTotalPrice
+                  ? `${deviceInfo.deviceTotalPrice.toLocaleString()}원`
+                  : '-'}
+              </ItemValue>
             </SummaryItem>
             <SummaryItem>
               <ItemLabel>월 할부금</ItemLabel>
-              <ItemValue sx={{ fontWeight: 900 }}></ItemValue>
+              <ItemValue sx={{ fontWeight: 900 }}>
+                {deviceInfo?.monthlyInstallmentPrice
+                  ? `${deviceInfo.monthlyInstallmentPrice.toLocaleString()}원`
+                  : '-'}
+              </ItemValue>
             </SummaryItem>
           </Box>
         </SummaryContents>

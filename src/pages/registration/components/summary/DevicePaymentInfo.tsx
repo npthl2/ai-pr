@@ -75,8 +75,8 @@ const DevicePaymentInfo = ({ deviceInfo }: DevicePaymentInfoProps) => {
         <InfoRow>
           <InfoLabel>총 금액</InfoLabel>
           <InfoValue sx={{ fontWeight: 'bold' }}>
-            {deviceInfo.deviceTotalPriceAmout
-              ? `${deviceInfo.deviceTotalPriceAmout.toLocaleString()} 원`
+            {deviceInfo.deviceTotalPrice
+              ? `${deviceInfo.deviceTotalPrice.toLocaleString()} 원`
               : '-'}
           </InfoValue>
         </InfoRow>

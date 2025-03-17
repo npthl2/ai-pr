@@ -12,9 +12,7 @@ import useRegistrationCustomerStore from '@stores/registration/RegistrationCusto
 import useRegistrationInvoiceStore from '@stores/registration/RegistrationInvoiceStore';
 import useRegistrationSalesStore from '@stores/registration/RegistrationSalesStore';
 import { RegistrationStatusType } from '@constants/RegistrationConstants';
-import {
-  storeDeviceInfoMock,
-} from '../../test/module/mock/registration/RegistrationServiceMock';
+import useRegistrationDeviceStore from '@stores/registration/RegistrationDeviceStore';
 /**
  * 계약 탭 ID를 기반으로 등록 정보를 가져오는 훅
  * @param contractTapId 계약 탭 ID
@@ -23,41 +21,17 @@ import {
 export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => {
   // 각 스토어의 상태를 가져옵니다
   const customerStore = useRegistrationCustomerStore.getState();
-  // 아직 구현되지 않은 스토어들은 주석 처리
   const contractStore = useRegistrationContractStore.getState();
   const invoiceStore = useRegistrationInvoiceStore.getState();
-  // const deviceStore = useRegistrationDeviceStore.getState();
+  const deviceStore = useRegistrationDeviceStore.getState();
   const salesStore = useRegistrationSalesStore.getState();
 
   // 각 스토어에서 데이터를 가져옵니다
   const storeCustomerInfo = customerStore.getRegistrationCustomerInfo(contractTapId);
   const storeContractInfo = contractStore.getRegistrationContractInfo(contractTapId);
   const storeInvoiceInfo = invoiceStore.getRegistrationInvoiceInfo(contractTapId);
-  // const storeDeviceInfo = deviceStore.getRegistrationDeviceInfo(contractTapId);
+  const storeDeviceInfo = deviceStore.getRegistrationDeviceInfo(contractTapId);
   const storeSalesInfo = salesStore.getRegistrationSalesInfo(contractTapId);
-
-  // // 각 세션별 스토어 정의 전으로 Mock 데이터를 사용
-  // // TODO 스토어 정의 후 삭제 필요 (~ 53 line)
-  let storeDeviceInfo;
-
-  if (process.env.NODE_ENV === 'development') {
-  //   storeCustomerInfo = storeCustomerInfoMock;
-  //   storeContractInfo = storeContractInfoMock;
-  //   storeInvoiceInfo = storeInvoiceInfoMock;
-    storeDeviceInfo = storeDeviceInfoMock;
-  //   storeSalesInfo = storeSalesInfoMock;
-  // } else {
-  //   // 개발 환경에서는 스토어에서 데이터를 가져옵니다
-  //   try {
-  //     storeCustomerInfo = (customerStore as any).getRegistrationCustomerInfo?.(contractTapId);
-  //     storeContractInfo = (contractStore as any).getRegistrationContractInfo?.(contractTapId);
-  //     storeInvoiceInfo = (invoiceStore as any).getRegistrationInvoiceInfo?.(contractTapId);
-      // storeDeviceInfo = (deviceStore as any).getRegistrationDeviceInfo?.(contractTapId);
-  //     storeSalesInfo = (salesStore as any).getRegistrationSalesInfo?.(contractTapId);
-  //   } catch (error) {
-  //     console.error('스토어에서 데이터를 가져오는 중 오류가 발생했습니다:', error);
-  //   }
-  }
 
   // 새로운 CustomerInfo 형태로 변환
   const customerInfo: CustomerInfo = {
@@ -91,7 +65,6 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     },
   ];
 
-  // 테스트를 위한 Contract 인터페이스 예시 데이터
   const contractInfo: ContractInfo = {
     contractType: storeContractInfo?.contractType || '', // 가입유형 예시
     sellType: storeContractInfo?.sellType || '', // 판매유형 예시
@@ -103,7 +76,6 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     isValidated: storeContractInfo?.isValidated || false,
   };
 
-  // 테스트를 위한 Invoice 인터페이스 예시 데이터
   const invoiceInfo: InvoiceInfo = {
     invoiceId: storeInvoiceInfo?.invoiceId || '',
     customerId: customerInfo.customerId || '',
@@ -124,12 +96,13 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     birthDate: storeInvoiceInfo?.birthDate || '',
   };
 
-  // 테스트를 위한 Device 인터페이스 예시 데이터
   const deviceInfo: DeviceInfo = {
     deviceId: storeDeviceInfo?.deviceId || '',
-    deviceModelName: storeDeviceInfo?.deviceModelName || '',
-    deviceModelNameAlias: storeDeviceInfo?.deviceModelNameAlias || '',
-    deviceEngagementType: storeDeviceInfo?.deviceEngagementType as 'PUBLIC_POSTED_SUPPERT' | 'SELECTED',
+    deviceName: storeDeviceInfo?.deviceName || '',
+    deviceNameAlias: storeDeviceInfo?.deviceNameAlias || '',
+    deviceEngagementType: storeDeviceInfo?.deviceEngagementType as
+      | 'PUBLIC_POSTED_SUPPERT'
+      | 'SELECTED',
     deviceSponsorName: storeDeviceInfo?.deviceSponsorName || '',
     deviceEngagementPeriod: storeDeviceInfo?.deviceEngagementPeriod || 0,
     deviceEngagementName: storeDeviceInfo?.deviceEngagementName as '공시지원금' | '선택약정',
@@ -138,13 +111,12 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     devicePrepaidPrice: storeDeviceInfo?.devicePrepaidPrice || 0,
     deviceInstallmentAmount: storeDeviceInfo?.deviceInstallmentAmount || 0,
     deviceInstallmentFee: storeDeviceInfo?.deviceInstallmentFee || 0,
-    deviceTotalPriceAmout: storeDeviceInfo?.deviceTotalPriceAmout || 0,
+    deviceTotalPrice: storeDeviceInfo?.deviceTotalPrice || 0,
     deviceInstallmentPeriod: storeDeviceInfo?.deviceInstallmentPeriod || 0,
     monthlyInstallmentPrice: storeDeviceInfo?.monthlyInstallmentPrice || 0,
     isValidated: storeDeviceInfo?.isValidated || false,
   };
 
-  // 테스트를 위한 Sales 인터페이스 예시 데이터
   const salesInfo: SalesInfo = {
     salesDepartment: storeSalesInfo?.salesDepartment || '',
     salesContractPoint: storeSalesInfo?.salesContractPoint || '',
