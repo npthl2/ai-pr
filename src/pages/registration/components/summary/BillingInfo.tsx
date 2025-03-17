@@ -26,7 +26,7 @@ const BillingInfo = ({ invoiceInfo }: BillingInfoProps) => {
                 </Box>
               </>
             )}
-            {invoiceInfo.paymentMethod === '카드자동이체' && (
+            {invoiceInfo.paymentMethod === '카드' && (
               <>
                 <Box>카드</Box>
                 <Box sx={{ mt: 1 }}>

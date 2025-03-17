@@ -63,29 +63,11 @@ const ContractSummary = ({
     // 각 스토어의 상태를 확인하는 함수
     const checkValidation = () => {
       try {
-        const contractStore = useRegistrationContractStore.getState() as any;
-        // const deviceStore = useRegistrationDeviceStore.getState() as any;
-        const salesStore = useRegistrationSalesStore.getState() as any;
 
-        // 개발 환경인 경우 useRegistrationInfo의 모킹 데이터 사용
-        //TODO : 개발환경 삭제, const 추가 필요
-        let contractInfo: any;
-        // let deviceInfo: any;
-        let salesInfo: any;
-        if (process.env.NODE_ENV === 'development') {
-          contractInfo = { isValidated: true };
-          salesInfo = { isValidated: true };
-        } else {
-          // 각 스토어에서 데이터 가져오기
-          //TODO : 개발환경 삭제, const 추가 필요
-          contractInfo = contractStore.getRegistrationContractInfo?.(contractTabId);
-          // deviceInfo = deviceStore.getRegistrationDeviceInfo?.(contractTabId);
-          salesInfo = salesStore.getRegistrationSalesInfo?.(contractTabId);
-        }
         // 모든 스토어의 isValidated 값 확인
         const isAllValidated =
           (contractInfo?.isValidated || false) &&
-          // (deviceInfo?.isValidated || false) &&
+          (deviceInfo?.isValidated || false) &&
           (salesInfo?.isValidated || false);
 
         setIsButtonEnabled(isAllValidated);
@@ -109,7 +91,7 @@ const ContractSummary = ({
       unsubscribeDevice();
       unsubscribeSales();
     };
-  }, [contractTabId]);
+  }, [contractTabId, contractInfo, salesInfo, deviceInfo]);
 
   const handleSave = async () => {
     try {
