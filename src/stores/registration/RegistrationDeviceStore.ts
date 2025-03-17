@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { mountStoreDevtool } from 'simple-zustand-devtools';
 // import useRegistrationContractStore from './RegistrationContractStore';
 
 export interface RegistrationDeviceInfo {
@@ -157,5 +158,9 @@ const useRegistrationDeviceStore = create<RegistrationDeviceState>((set, get) =>
   //   }
   // },
 }));
+
+if (import.meta.env.DEV) {
+  mountStoreDevtool('RegistrationDevice Store', useRegistrationDeviceStore);
+}
 
 export default useRegistrationDeviceStore;
