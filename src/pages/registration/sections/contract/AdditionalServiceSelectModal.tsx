@@ -118,20 +118,13 @@ const AdditionalServiceSelectModal: React.FC<AdditionalServiceModalProps> = ({
 
         <Box>
           <Box sx={{ ...styles.searchContainer, width: '100%' }}>
-            <Box
-              sx={styles.searchInputContainer}
-            >
-              <Typography
-                sx={{ fontWeight: '600', whiteSpace: 'nowrap' }}
-              >
-                부가서비스명
-              </Typography>
+            <Box sx={styles.searchInputContainer}>
+              <Typography sx={{ fontWeight: '600', whiteSpace: 'nowrap' }}>부가서비스명</Typography>
 
               <TextField
                 value={filterText}
                 onChange={setFilterText}
-                sx={{ backgroundColor: '#FFFFFF' }}
-                onKeyPress={(e) => {
+                onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     handleFilter();
                     e.preventDefault();

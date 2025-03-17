@@ -64,16 +64,12 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
         <Box sx={{ height: '440px' }}>
           <Box sx={styles.searchContainer}>
             <Box sx={styles.searchInputContainer}>
-              <Typography
-                sx={{ fontWeight: '600', whiteSpace: 'nowrap' }}
-              >
-                요금제명
-              </Typography>
+              <Typography sx={{ fontWeight: '600', whiteSpace: 'nowrap' }}>요금제명</Typography>
               <TextField
                 value={searchText}
                 onChange={setSearchText}
                 sx={{ backgroundColor: '#FFFFFF' }}
-                onKeyPress={(e) => {
+                onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     handleSearch();
                     e.preventDefault();

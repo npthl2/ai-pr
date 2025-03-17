@@ -39,11 +39,6 @@ export const styles = {
     gap: '8px',
     flexGrow: 1,
   },
-
-  // searchInput: {
-  //   // width: '362px',
-  //   backgroundColor: '#FFFFFF',
-  // },
   searchButton: {
     minWidth: '61px',
     padding: '6px',

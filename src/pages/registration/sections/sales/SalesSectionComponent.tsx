@@ -124,7 +124,6 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, on
             value={salesDepartment}
             onChange={handleSalesDepartmentChange}
             onBlur={() => {
-              console.log('blur');
               handleUpdateStoreAndValidationCompleteFields(tabId, {
                 salesDepartment: salesDepartment,
               });
