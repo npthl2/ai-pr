@@ -6,6 +6,7 @@ import Radio from '@components/Radio';
 import { Invoice } from '@model/registration/Invoice';
 import { paymentMethodOptions } from '.././invoiceSection.model';
 import { useState } from 'react';
+import CheckIcon from '@mui/icons-material/Check';
 import {
   InvoiceListContainer,
   TableTitleWrapper,
@@ -17,16 +18,9 @@ interface InvoiceListModalProps {
   invoiceList: Invoice[];
   onClose: () => void;
   onConfirm: (invoice: Invoice) => void;
-  onConfirmLabel: React.ReactNode;
 }
 
-const InvoiceListModal = ({
-  open,
-  onClose,
-  onConfirm,
-  invoiceList,
-  onConfirmLabel,
-}: InvoiceListModalProps) => {
+const InvoiceListModal = ({ open, onClose, onConfirm, invoiceList }: InvoiceListModalProps) => {
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
 
   return (
@@ -34,7 +28,8 @@ const InvoiceListModal = ({
       data-testid='invoice-search-modal'
       title='청구정보조회'
       size='medium-large'
-      confirmLabel={onConfirmLabel}
+      confirmLabel='선택'
+      confirmIcon={<CheckIcon sx={{ mr: 1, fontSize: '16px' }} />}
       isConfirmDisabled={!selectedInvoice}
       content={
         <InvoiceListContainer>

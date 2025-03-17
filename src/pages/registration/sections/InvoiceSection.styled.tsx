@@ -1,7 +1,6 @@
 import { Typography, RadioGroup, Card, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import CheckIcon from '@mui/icons-material/Check';
 import SearchIcon from '@mui/icons-material/Search';
 
 export const InvoiceCard = styled(Card, {
@@ -59,10 +58,6 @@ export const InformationIcon = styled(ErrorOutlineIcon)(({ theme }) => ({
 
 export const AddressSearchIcon = styled(SearchIcon)({
   cursor: 'pointer',
-  fontSize: 16,
-});
-
-export const InvoiceCheckIcon = styled(CheckIcon)({
   fontSize: 16,
 });
 
