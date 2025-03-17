@@ -17,7 +17,6 @@ import {
   REGISTRATION_STATUS,
   SectionId,
 } from '@constants/RegistrationConstants';
-// import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
 import { useState, useEffect } from 'react';
 import { useRegistrationInfo } from '@hooks/useRegistrationInfo';
 import useRegistrationStore from '@stores/registration/RegistrationStore';
@@ -38,13 +37,11 @@ const ContractSummary = ({
   setIsSaveRequested,
   completedSections,
 }: ContractSummaryProps) => {
-  // const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
   const { getRegistrationInvoiceInfo } = useRegistrationInvoiceStore();
   const { getRegistrationSalesInfo } = useRegistrationSalesStore();
   const { getRegistrationContractInfo } = useRegistrationContractStore();
   const { getRegistrationDeviceInfo } = useRegistrationDeviceStore();
 
-  // const customerInfo = getRegistrationCustomerInfo(contractTabId);
   const registrationInvoiceInfo = getRegistrationInvoiceInfo(contractTabId);
   const salesInfo = getRegistrationSalesInfo(contractTabId);
   const contractInfo = getRegistrationContractInfo(contractTabId);
@@ -63,7 +60,6 @@ const ContractSummary = ({
     // 각 스토어의 상태를 확인하는 함수
     const checkValidation = () => {
       try {
-
         // 모든 스토어의 isValidated 값 확인
         const isAllValidated =
           (contractInfo?.isValidated || false) &&

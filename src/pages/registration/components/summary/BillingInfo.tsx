@@ -34,6 +34,11 @@ const BillingInfo = ({ invoiceInfo }: BillingInfoProps) => {
                 </Box>
               </>
             )}
+            {invoiceInfo.paymentMethod === '지로' && (
+              <>
+                <Box>지로</Box>
+              </>
+            )}
           </InfoValue>
         </InfoRow>
         <InfoRow>

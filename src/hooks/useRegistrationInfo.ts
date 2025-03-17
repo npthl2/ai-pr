@@ -21,7 +21,6 @@ import useRegistrationDeviceStore from '@stores/registration/RegistrationDeviceS
 export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => {
   // 각 스토어의 상태를 가져옵니다
   const customerStore = useRegistrationCustomerStore.getState();
-  // 아직 구현되지 않은 스토어들은 주석 처리
   const contractStore = useRegistrationContractStore.getState();
   const invoiceStore = useRegistrationInvoiceStore.getState();
   const deviceStore = useRegistrationDeviceStore.getState();
@@ -66,7 +65,6 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     },
   ];
 
-  // 테스트를 위한 Contract 인터페이스 예시 데이터
   const contractInfo: ContractInfo = {
     contractType: storeContractInfo?.contractType || '', // 가입유형 예시
     sellType: storeContractInfo?.sellType || '', // 판매유형 예시
@@ -78,7 +76,7 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     isValidated: storeContractInfo?.isValidated || false,
   };
 
-  // 테스트를 위한 Invoice 인터페이스 예시 데이터
+
   const invoiceInfo: InvoiceInfo = {
     invoiceId: storeInvoiceInfo?.invoiceId || '',
     customerId: customerInfo.customerId || '',
@@ -99,7 +97,7 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     birthDate: storeInvoiceInfo?.birthDate || '',
   };
 
-  // 테스트를 위한 Device 인터페이스 예시 데이터
+
   const deviceInfo: DeviceInfo = {
     deviceId: storeDeviceInfo?.deviceId || '',
     deviceName: storeDeviceInfo?.deviceName || '',
@@ -121,7 +119,7 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     isValidated: storeDeviceInfo?.isValidated || false,
   };
 
-  // 테스트를 위한 Sales 인터페이스 예시 데이터
+
   const salesInfo: SalesInfo = {
     salesDepartment: storeSalesInfo?.salesDepartment || '',
     salesContractPoint: storeSalesInfo?.salesContractPoint || '',
