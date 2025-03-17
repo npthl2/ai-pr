@@ -138,8 +138,8 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
       setValidationErrors((prev) => ({
         ...prev,
         phoneNumber: {
-          state: value.length < 4 ? 'error' : 'inactive',
-          helperText: value.length < 4 ? '4자리를 입력해주세요' : '',
+          state: replacedValue.length < 4 ? 'error' : 'inactive',
+          helperText: replacedValue.length < 4 ? '4자리를 입력해주세요' : '',
         },
       }));
     }
