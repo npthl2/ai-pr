@@ -5,6 +5,7 @@ import contractService from '@api/services/contractService';
 import { AvailableCustomerContractResponse } from '@model/Contract';
 
 export const useAvailableCustomerContractQuery = (
+  contractTabId: string,
   customerId: string,
   options?: Omit<
     UseQueryOptions<CommonResponse<AvailableCustomerContractResponse>, unknown, number>,
@@ -12,7 +13,7 @@ export const useAvailableCustomerContractQuery = (
   >,
 ) => {
   return useQuery({
-    queryKey: ['availableCustomerContract', customerId],
+    queryKey: ['availableCustomerContract', contractTabId, customerId],
     queryFn: () => contractService.getAvailableCustomerContractCount(customerId),
     select: (data: CommonResponse<AvailableCustomerContractResponse>) => {
       if (typeof data.data === 'string') return 0;
