@@ -115,7 +115,11 @@ describe('ContractSummary 컴포넌트', () => {
 
     // When: 컴포넌트를 렌더링하면
     render(
-      <ContractSummary contractTabId={contractTabId} setIsSaveRequested={setIsSaveRequestedMock} completedSections={[]} />,
+      <ContractSummary
+        contractTabId={contractTabId}
+        setIsSaveRequested={setIsSaveRequestedMock}
+        completedSections={[]}
+      />,
     );
 
     // Then: 컴포넌트가 올바르게 렌더링되어야 함
@@ -131,7 +135,11 @@ describe('ContractSummary 컴포넌트', () => {
 
     // When: 컴포넌트를 렌더링하면
     render(
-      <ContractSummary contractTabId={contractTabId} setIsSaveRequested={setIsSaveRequestedMock} completedSections={[]} />,
+      <ContractSummary
+        contractTabId={contractTabId}
+        setIsSaveRequested={setIsSaveRequestedMock}
+        completedSections={[]}
+      />,
     );
 
     // Then: 저장 버튼이 활성화되어야 함
@@ -150,7 +158,11 @@ describe('ContractSummary 컴포넌트', () => {
 
     // When: 컴포넌트를 렌더링하면
     render(
-      <ContractSummary contractTabId={contractTabId} setIsSaveRequested={setIsSaveRequestedMock} completedSections={[]} />,
+      <ContractSummary
+        contractTabId={contractTabId}
+        setIsSaveRequested={setIsSaveRequestedMock}
+        completedSections={[]}
+      />,
     );
 
     // Then: 저장 버튼이 비활성화되어야 함
@@ -167,7 +179,11 @@ describe('ContractSummary 컴포넌트', () => {
 
     // When: 컴포넌트를 렌더링하면
     render(
-      <ContractSummary contractTabId={contractTabId} setIsSaveRequested={setIsSaveRequestedMock} completedSections={[]} />,
+      <ContractSummary
+        contractTabId={contractTabId}
+        setIsSaveRequested={setIsSaveRequestedMock}
+        completedSections={[]}
+      />,
     );
 
     // Then: 저장 버튼이 비활성화되어야 함
@@ -184,7 +200,11 @@ describe('ContractSummary 컴포넌트', () => {
 
     // When: 컴포넌트를 렌더링하면
     render(
-      <ContractSummary contractTabId={contractTabId} setIsSaveRequested={setIsSaveRequestedMock} completedSections={[]} />,
+      <ContractSummary
+        contractTabId={contractTabId}
+        setIsSaveRequested={setIsSaveRequestedMock}
+        completedSections={[]}
+      />,
     );
 
     // Then: 저장 버튼이 비활성화되어야 함
@@ -198,7 +218,11 @@ describe('ContractSummary 컴포넌트', () => {
 
     // When: 컴포넌트를 렌더링하고 저장 버튼을 클릭하면
     render(
-      <ContractSummary contractTabId={contractTabId} setIsSaveRequested={setIsSaveRequestedMock} completedSections={[]} />,
+      <ContractSummary
+        contractTabId={contractTabId}
+        setIsSaveRequested={setIsSaveRequestedMock}
+        completedSections={[]}
+      />,
     );
 
     // 저장 버튼 클릭
@@ -221,7 +245,11 @@ describe('ContractSummary 컴포넌트', () => {
 
     // When: 컴포넌트를 렌더링하고 저장 버튼을 클릭하면
     render(
-      <ContractSummary contractTabId={contractTabId} setIsSaveRequested={setIsSaveRequestedMock} completedSections={[]} />,
+      <ContractSummary
+        contractTabId={contractTabId}
+        setIsSaveRequested={setIsSaveRequestedMock}
+        completedSections={[]}
+      />,
     );
 
     // 저장 버튼 클릭
@@ -243,7 +271,11 @@ describe('ContractSummary 컴포넌트', () => {
 
     // When: 컴포넌트를 렌더링하면
     render(
-      <ContractSummary contractTabId={contractTabId} setIsSaveRequested={setIsSaveRequestedMock} completedSections={[]} />,
+      <ContractSummary
+        contractTabId={contractTabId}
+        setIsSaveRequested={setIsSaveRequestedMock}
+        completedSections={[]}
+      />,
     );
 
     // Then: 임시저장 버튼이 렌더링되어야 함

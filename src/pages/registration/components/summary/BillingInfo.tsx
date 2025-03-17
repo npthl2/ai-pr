@@ -18,7 +18,7 @@ const BillingInfo = ({ invoiceInfo }: BillingInfoProps) => {
         <InfoRow>
           <InfoLabel>납부방법</InfoLabel>
           <InfoValue>
-            {invoiceInfo.paymentMethod === 'BANK' && (
+            {invoiceInfo.paymentMethod === '은행계좌 자동이체' && (
               <>
                 <Box>은행계좌 자동이체</Box>
                 <Box sx={{ mt: 1 }}>
@@ -26,12 +26,17 @@ const BillingInfo = ({ invoiceInfo }: BillingInfoProps) => {
                 </Box>
               </>
             )}
-            {invoiceInfo.paymentMethod === 'CARD' && (
+            {invoiceInfo.paymentMethod === '카드' && (
               <>
                 <Box>카드</Box>
                 <Box sx={{ mt: 1 }}>
                   {invoiceInfo.cardCompany} / {invoiceInfo.cardNumber}
                 </Box>
+              </>
+            )}
+            {invoiceInfo.paymentMethod === '지로' && (
+              <>
+                <Box>지로</Box>
               </>
             )}
           </InfoValue>

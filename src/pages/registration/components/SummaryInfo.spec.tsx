@@ -24,9 +24,7 @@ vi.mock('./summary/SubscriptionInfo', () => ({
 
 vi.mock('./summary/DevicePaymentInfo', () => ({
   default: ({ deviceInfo }: { deviceInfo: DeviceInfo }) => (
-    <div data-testid='device-payment-info'>
-      DevicePaymentInfo: {deviceInfo.deviceModelName || ''}
-    </div>
+    <div data-testid='device-payment-info'>DevicePaymentInfo: {deviceInfo.deviceName || ''}</div>
   ),
 }));
 
@@ -40,7 +38,7 @@ describe('SummaryInfo 컴포넌트', () => {
     };
 
     const deviceInfo: Partial<DeviceInfo> = {
-      deviceModelName: 'Galaxy S23',
+      deviceName: 'Galaxy S23',
     };
 
     const contractInfo: Partial<ContractInfo> = {
@@ -77,7 +75,7 @@ describe('SummaryInfo 컴포넌트', () => {
   it('컴포넌트가 올바른 레이아웃 구조로 렌더링되어야 한다', () => {
     // Given: 필요한 모든 정보가 주어졌을 때
     const invoiceInfo: Partial<InvoiceInfo> = { paymentMethod: '신용카드' };
-    const deviceInfo: Partial<DeviceInfo> = { deviceModelName: 'Galaxy S23' };
+    const deviceInfo: Partial<DeviceInfo> = { deviceName: 'Galaxy S23' };
     const contractInfo: Partial<ContractInfo> = { phoneNumber: '010-1234-5678' };
     const salesInfo: Partial<SalesInfo> = { salesDepartment: '온라인' };
 
