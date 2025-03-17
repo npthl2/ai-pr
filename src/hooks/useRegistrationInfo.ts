@@ -76,7 +76,6 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     isValidated: storeContractInfo?.isValidated || false,
   };
 
-
   const invoiceInfo: InvoiceInfo = {
     invoiceId: storeInvoiceInfo?.invoiceId || '',
     customerId: customerInfo.customerId || '',
@@ -96,7 +95,6 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     paymentName: customerInfo.name,
     birthDate: storeInvoiceInfo?.birthDate || '',
   };
-
 
   const deviceInfo: DeviceInfo = {
     deviceId: storeDeviceInfo?.deviceId || '',
@@ -118,7 +116,6 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     monthlyInstallmentPrice: storeDeviceInfo?.monthlyInstallmentPrice || 0,
     isValidated: storeDeviceInfo?.isValidated || false,
   };
-
 
   const salesInfo: SalesInfo = {
     salesDepartment: storeSalesInfo?.salesDepartment || '',

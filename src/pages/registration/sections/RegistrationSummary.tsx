@@ -209,7 +209,7 @@ const ContractSummary = ({
             <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.DEVICE]}</Typography>
             <SummaryItem>
               <ItemLabel>스폰서정책</ItemLabel>
-              <ItemValue>통합스폰서</ItemValue>
+              <ItemValue>{deviceInfo?.isValidated ? '통합스폰서' : ''}</ItemValue>
             </SummaryItem>
             <SummaryItem>
               <ItemLabel>스폰서 옵션</ItemLabel>

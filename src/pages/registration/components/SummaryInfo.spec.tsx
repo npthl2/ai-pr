@@ -24,9 +24,7 @@ vi.mock('./summary/SubscriptionInfo', () => ({
 
 vi.mock('./summary/DevicePaymentInfo', () => ({
   default: ({ deviceInfo }: { deviceInfo: DeviceInfo }) => (
-    <div data-testid='device-payment-info'>
-      DevicePaymentInfo: {deviceInfo.deviceName || ''}
-    </div>
+    <div data-testid='device-payment-info'>DevicePaymentInfo: {deviceInfo.deviceName || ''}</div>
   ),
 }));
 
