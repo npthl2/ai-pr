@@ -104,7 +104,9 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     deviceId: storeDeviceInfo?.deviceId || '',
     deviceName: storeDeviceInfo?.deviceName || '',
     deviceNameAlias: storeDeviceInfo?.deviceNameAlias || '',
-    deviceEngagementType: storeDeviceInfo?.deviceEngagementType as 'PUBLIC_POSTED_SUPPERT' | 'SELECTED',
+    deviceEngagementType: storeDeviceInfo?.deviceEngagementType as
+      | 'PUBLIC_POSTED_SUPPERT'
+      | 'SELECTED',
     deviceSponsorName: storeDeviceInfo?.deviceSponsorName || '',
     deviceEngagementPeriod: storeDeviceInfo?.deviceEngagementPeriod || 0,
     deviceEngagementName: storeDeviceInfo?.deviceEngagementName as '공시지원금' | '선택약정',
