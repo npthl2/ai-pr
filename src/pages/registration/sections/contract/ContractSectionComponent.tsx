@@ -202,6 +202,17 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
   };
 
   const handleDeviceModelName = async (imeiNumber: string): Promise<void> => {
+    if (!imeiNumber?.trim()) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        imeiNumber: {
+          state: 'error',
+          helperText: 'IMEI를 입력해 주세요',
+        },
+      }));
+      return;
+    }
+
     const response = await registrationContractService.getDeviceModelByIMEI(imeiNumber);
     const deviceModelName = response.deviceModelNameAlias ?? '';
     setDeviceModelName(deviceModelName);
@@ -350,6 +361,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                     handleUpdateStoreAndValidationCompleteFields(contractTabId, {
                       sim: simNumber,
                     });
+                    handleSimNumberChange(simNumber);
                   }}
                   state={validationErrors.simNumber.state}
                   absoluteHelperText={true}
