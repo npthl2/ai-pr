@@ -116,6 +116,7 @@ const useRegistrationContractStore = create<RegistrationContractStoreState>((set
         existingContract.sellType !== '' &&
         existingContract.phoneNumber !== '' &&
         existingContract.sim !== '' &&
+        existingContract.sim.length === 13 &&
         existingContract.imei !== '' &&
         existingContract.deviceModelName !== '' &&
         existingContract?.service?.serviceId
