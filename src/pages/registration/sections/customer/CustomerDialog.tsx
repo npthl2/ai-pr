@@ -114,6 +114,11 @@ const CustomerDialog = ({
       rrnoIssueDate: customer.rrnoIssueDate,
     };
 
+    const initCustomer = {
+      ...customer,
+      verificationResult: false,
+    };
+
     verifyCustomerNameMutation.mutate(customerNameVerificationParams, {
       onSuccess: (data: CommonResponse<CustomerNameVerificationResponse>) => {
         const authResponse = data.data as CustomerNameVerificationResponse;
@@ -127,27 +132,32 @@ const CustomerDialog = ({
           createCustomerMutation.mutate(createCustomerParams, {
             onSuccess: (data: CommonResponse<CreateCustomerResponse>) => {
               const createCustomerResponse = data.data as CreateCustomerResponse;
-              setCustomer({
-                ...customer,
-                customerId: createCustomerResponse.customerId,
-                customerNameVerificationHistoryId: authResponse.customerNameVerificationHistoryId,
-                verificationResult: true,
-                organization: authResponse.organization,
-              });
+              if (data.successOrNot === 'Y') {
+                setCustomer({
+                  ...initCustomer,
+                  organization: authResponse.organization,
+                  customerId: createCustomerResponse.customerId,
+                  customerNameVerificationHistoryId: authResponse.customerNameVerificationHistoryId,
+                  verificationResult: true,
+                });
+              } else {
+                setCustomer({
+                  ...initCustomer,
+                  organization: authResponse.organization,
+                });
+              }
             },
             onError: (error) => {
               console.error(error);
               setCustomer({
-                ...customer,
-                verificationResult: false,
+                ...initCustomer,
                 organization: authResponse.organization,
               });
             },
           });
         } else {
           setCustomer({
-            ...customer,
-            verificationResult: false,
+            ...initCustomer,
             organization: authResponse.organization,
           });
         }

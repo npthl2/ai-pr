@@ -1,10 +1,9 @@
-import { useMutation } from '@tanstack/react-query';
-
 import bookmarkService from '@api/services/bookmarkService';
 import { BookmarkRequestParams } from '@model/Bookmark';
+import { useReactMutation } from '@hooks/useReactQuery';
 
 export const useBookmarkMutation = () => {
-  return useMutation({
+  return useReactMutation({
     mutationFn: (data: BookmarkRequestParams) => bookmarkService.saveBookmark(data),
   });
 };
