@@ -183,7 +183,7 @@ const ContractSummary = ({ contractTabId, setIsSaveRequested, completedSections,
             <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.INVOICE]}</Typography>
             <SummaryItem>
               <ItemLabel>납부고객명</ItemLabel>
-              <ItemValue>{registrationInvoiceInfo?.recipient}</ItemValue>
+              <ItemValue>{registrationInvoiceInfo?.paymentName}</ItemValue>
             </SummaryItem>
             <SummaryItem>
               <ItemLabel>납부방법</ItemLabel>
