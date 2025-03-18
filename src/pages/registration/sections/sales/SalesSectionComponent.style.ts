@@ -5,7 +5,6 @@ import { Box } from '@mui/material';
 export const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     borderRadius: theme.shape.borderRadius,
-    borderColor: '#ffffff',
     backgroundColor: '#ffffff',
     minHeight: '28px',
   },
@@ -25,6 +24,7 @@ export const FormGroup = styled('div')(({ theme }) => ({
   flexWrap: 'nowrap',
   alignItems: 'center',
   height: '28px',
+  marginBottom: '8px',
 }));
 
 export const FormLabel = styled('div')(({ theme }) => ({

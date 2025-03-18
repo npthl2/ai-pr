@@ -2,20 +2,20 @@ import React, { useState, useEffect, useRef, Suspense } from 'react';
 import {
   Box,
   Typography,
-  Chip,
   RadioGroup,
   FormControlLabel,
   InputAdornment,
   TextField,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
 import AdditionalServiceSelectModal from './AdditionalServiceSelectModal';
 import ServiceSelectModal from './ServiceSelectModal';
 import PhoneNumberSelectModal from './PhoneNumberSelectModal';
 import useRegistrationContractStore, {
   Contract,
 } from '@stores/registration/RegistrationContractStore';
-
+import Button from '@components/Button';
 import {
   SectionContainer,
   SectionInfoContainer,
@@ -30,7 +30,7 @@ import {
   TwoColumnContainer,
   Column,
   FormRowSectionPlan,
-  FormRowSectionIEMI,
+  FormRowSectionDevice,
 } from './ContractSectionComponent.styles';
 import useCustomerStore from '@stores/CustomerStore';
 import registrationContractService from '@api/services/registrationContractService';
@@ -138,8 +138,8 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
       setValidationErrors((prev) => ({
         ...prev,
         phoneNumber: {
-          state: value.length < 4 ? 'error' : 'inactive',
-          helperText: value.length < 4 ? '4자리를 입력해주세요' : '',
+          state: replacedValue.length < 4 ? 'error' : 'inactive',
+          helperText: replacedValue.length < 4 ? '4자리를 입력해주세요' : '',
         },
       }));
     }
@@ -155,8 +155,12 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     setValidationErrors((prev) => ({
       ...prev,
       simNumber: {
-        state: !replacedValue ? 'error' : 'inactive',
-        helperText: !replacedValue ? 'SIM을 입력해 주세요' : '',
+        state: !replacedValue ? 'error' : replacedValue.length < 13 ? 'error' : 'inactive',
+        helperText: !replacedValue
+          ? 'SIM을 입력해 주세요'
+          : replacedValue.length < 13
+            ? '숫자 13자를 입력해주세요'
+            : '',
       },
     }));
   };
@@ -198,6 +202,17 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
   };
 
   const handleDeviceModelName = async (imeiNumber: string): Promise<void> => {
+    if (!imeiNumber?.trim()) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        imeiNumber: {
+          state: 'error',
+          helperText: 'IMEI를 입력해 주세요',
+        },
+      }));
+      return;
+    }
+
     const response = await registrationContractService.getDeviceModelByIMEI(imeiNumber);
     const deviceModelName = response.deviceModelNameAlias ?? '';
     setDeviceModelName(deviceModelName);
@@ -282,6 +297,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                       <Box>
                         <StyledTextField
                           placeholder='뒤 4자리*'
+                          sx={{ width: '140px' }}
                           size='small'
                           variant='outlined'
                           value={phoneNumberLastFour}
@@ -327,12 +343,11 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 <Typography variant='h5'>기기정보</Typography>
               </SectionTitle>
 
-              <FormRow>
+              <FormRowSectionDevice>
                 <FormLabel>
                   SIM<RequiredLabel>*</RequiredLabel>
                 </FormLabel>
                 <StyledTextField
-                  sx={{ width: '160px' }}
                   size='small'
                   variant='outlined'
                   inputProps={{
@@ -346,22 +361,20 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                     handleUpdateStoreAndValidationCompleteFields(contractTabId, {
                       sim: simNumber,
                     });
+                    handleSimNumberChange(simNumber);
                   }}
                   state={validationErrors.simNumber.state}
                   absoluteHelperText={true}
                   helperText={validationErrors.simNumber.helperText}
                   data-testid='SIM-input'
                 />
-              </FormRow>
+              </FormRowSectionDevice>
 
-              <FormRowSectionIEMI sx={{ mt: 1 }}>
+              <FormRowSectionDevice sx={{ mt: 1 }}>
                 <FormLabel>
                   IMEI<RequiredLabel>*</RequiredLabel>
                 </FormLabel>
                 <StyledTextField
-                  sx={{
-                    width: '160px',
-                  }}
                   size='small'
                   variant='outlined'
                   value={imeiNumber}
@@ -381,7 +394,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 <Typography variant='body1' data-testid='model-name-typo'>
                   모델명: {deviceModelName}
                 </Typography>
-              </FormRowSectionIEMI>
+              </FormRowSectionDevice>
             </SectionInfoContainer>
           </Column>
 
@@ -456,12 +469,16 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                         key={service.serviceId}
                         sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
                       >
-                        <Chip
+                        <Typography>
+                          {`${service.serviceName} - ${service.serviceValue.toLocaleString()}원`}
+                        </Typography>
+                        <Button
+                          variant='text'
                           color='primary'
-                          variant='outlined'
-                          sx={{ borderColor: 'transparent', height: '20px' }}
-                          label={`${service.serviceName} - ${service.serviceValue.toLocaleString()}원`}
-                          onDelete={() => handleRemoveAdditionalService(service.serviceId)}
+                          size='small'
+                          iconComponent={<CloseIcon />}
+                          style={{ marginRight: 8 }}
+                          onClick={() => handleRemoveAdditionalService(service.serviceId)}
                           data-testid={`selected-additional-service-chip-${index}`}
                         />
                       </Box>

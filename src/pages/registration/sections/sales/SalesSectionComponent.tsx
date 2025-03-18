@@ -11,7 +11,7 @@ import {
 } from './SalesSectionComponent.style';
 
 interface validationField {
-  state: 'error' | 'active';
+  state: 'error' | 'inactive';
   helperText: string;
 }
 
@@ -37,7 +37,7 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, on
 
   // const [showDebugInfo, setShowDebugInfo] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, validationField>>({
-    salesDepartment: { state: 'active', helperText: '' },
+    salesDepartment: { state: 'inactive', helperText: '' },
   });
 
   // const currentCustomerId = useCustomerStore((state) => state.selectedCustomerId);
@@ -50,9 +50,9 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, on
     // store 정보 생성
     // setCustomerId(currentCustomerId ?? '');
     addRegistrationSalesInfo(tabId);
-    // 가입대리점점 필드에 포커스 설정
+    // 가입대리점 필드에 포커스 설정
     if (salesDepartmentInputRef.current) {
-      salesDepartmentInputRef.current.focus();
+      salesDepartmentInputRef.current?.focus();
     }
   }, []);
 
@@ -65,17 +65,17 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, on
 
   // 가입대리점 핸들러
   const handleSalesDepartmentChange = (salesDepartment: string) => {
-    setSalesDepartment(salesDepartment);
-    handleUpdateStoreAndValidationCompleteFields(tabId, {
-      salesDepartment: '',
-    });
     setValidationErrors((prev) => ({
       ...prev,
       salesDepartment: {
-        state: !salesDepartment ? 'error' : 'active',
+        state: !salesDepartment ? 'error' : 'inactive',
         helperText: !salesDepartment ? '가입대리점을 입력해 주세요' : '',
       },
     }));
+    handleUpdateStoreAndValidationCompleteFields(tabId, {
+      salesDepartment: '',
+    });
+    setSalesDepartment(salesDepartment);
   };
 
   // 접점 핸들러
@@ -106,6 +106,7 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, on
     tabId: string,
     partialSales: Partial<Sales>,
   ) => {
+    console.log('updateStoreAndValidationCompleteFields');
     // 스토어에 변경사항 업데이트 하고 모든 필드가 채워졌는지 validation field도 업데이트
     updateRegistrationSalesInfo(tabId, partialSales);
     updateRegistrationSalesValidationFlag(tabId);
@@ -126,6 +127,13 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, on
               handleUpdateStoreAndValidationCompleteFields(tabId, {
                 salesDepartment: salesDepartment,
               });
+              setValidationErrors((prev) => ({
+                ...prev,
+                salesDepartment: {
+                  state: !salesDepartment ? 'error' : 'inactive',
+                  helperText: !salesDepartment ? '가입대리점을 입력해 주세요' : '',
+                },
+              }));
             }}
             state={validationErrors.salesDepartment.state}
             absoluteHelperText={true}

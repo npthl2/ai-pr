@@ -31,11 +31,13 @@ export const styles = {
     paddingBottom: '16px',
     paddingLeft: '24px',
     backgroundColor: '#EDEFF1',
+    gap: '24px',
   },
-
-  searchInput: {
-    width: '362px',
-    backgroundColor: '#FFFFFF',
+  searchInputContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    flexGrow: 1,
   },
   searchButton: {
     minWidth: '61px',
