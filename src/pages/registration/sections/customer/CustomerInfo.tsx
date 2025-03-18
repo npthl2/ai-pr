@@ -156,9 +156,11 @@ const CustomerInfo = ({
       <LeftSection>
         <FieldContainer readOnly={isNameVerified}>
           <NameLabel>
-            이름
-            <Typography component='span' color='error'>
-              *
+            <Typography variant='h6' color='text.secondary'>
+              이름
+              <Typography component='span' color='error'>
+                *
+              </Typography>
             </Typography>
           </NameLabel>
           {customer.verificationResult === undefined || !isNameVerified || isDialogOpen ? (
@@ -182,9 +184,11 @@ const CustomerInfo = ({
 
         <FieldContainer readOnly={isNameVerified}>
           <RrnoLabel>
-            주민번호
-            <Typography component='span' color='error'>
-              *
+            <Typography variant='h6' color='text.secondary'>
+              주민번호
+              <Typography component='span' color='error'>
+                *
+              </Typography>
             </Typography>
           </RrnoLabel>
           {customer.verificationResult === undefined || !isNameVerified || isDialogOpen ? (
@@ -209,9 +213,11 @@ const CustomerInfo = ({
 
         <FieldContainer last readOnly={isNameVerified}>
           <PersonalInfoLabel>
-            개인정보 활용
-            <Typography component='span' color='error'>
-              *
+            <Typography variant='h6' color='text.secondary'>
+              개인정보 활용
+              <Typography component='span' color='error'>
+                *
+              </Typography>
             </Typography>
           </PersonalInfoLabel>
           <StyledFormControlLabel
