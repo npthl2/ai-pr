@@ -1,7 +1,8 @@
-import { Snackbar } from '@mui/material';
+import { Snackbar, useTheme } from '@mui/material';
 import useToastStore from '@stores/ToastStore';
 export const Toast = () => {
-  const { message, open, closeToast } = useToastStore();
+  const { message, open, closeToast, status } = useToastStore();
+  const theme = useTheme();
 
   const onClose = () => {
     closeToast();
@@ -23,6 +24,7 @@ export const Toast = () => {
           justifyContent: 'center',
           alignItems: 'center',
           width: '100%',
+          backgroundColor: status === 'error' ? theme.palette.error.main : '',
         },
       }}
     />

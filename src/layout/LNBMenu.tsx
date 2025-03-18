@@ -79,7 +79,7 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
   ];
 
   useEffect(() => {
-    if (bookmarks) {
+    if (bookmarks && Array.isArray(bookmarks)) {
       setMenuItems(bookmarks);
     }
   }, [bookmarks]);

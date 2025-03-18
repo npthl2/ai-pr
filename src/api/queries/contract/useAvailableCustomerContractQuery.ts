@@ -1,8 +1,9 @@
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { UseQueryOptions } from '@tanstack/react-query';
 
 import { CommonResponse } from '@model/common/CommonResponse';
 import contractService from '@api/services/contractService';
 import { AvailableCustomerContractResponse } from '@model/Contract';
+import { useReactQuery } from '@hooks/useReactQuery';
 
 export const useAvailableCustomerContractQuery = (
   contractTabId: string,
@@ -12,7 +13,7 @@ export const useAvailableCustomerContractQuery = (
     'queryKey' | 'queryFn' | 'select'
   >,
 ) => {
-  return useQuery({
+  return useReactQuery({
     queryKey: ['availableCustomerContract', contractTabId, customerId],
     queryFn: () => contractService.getAvailableCustomerContractCount(customerId),
     select: (data: CommonResponse<AvailableCustomerContractResponse>) => {
