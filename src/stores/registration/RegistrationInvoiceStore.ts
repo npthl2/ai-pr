@@ -1,3 +1,4 @@
+import { mountStoreDevtool } from 'simple-zustand-devtools';
 import { create } from 'zustand';
 
 export interface RegistrationInvoiceInfo {
@@ -81,4 +82,8 @@ const useRegistrationInvoiceStore = create<RegistrationInvoiceState>((set, get) 
     });
   },
 }));
+
+if (import.meta.env.DEV) {
+  mountStoreDevtool('RegistrationInvoice Store', useRegistrationInvoiceStore);
+}
 export default useRegistrationInvoiceStore;

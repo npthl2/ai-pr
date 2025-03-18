@@ -13,7 +13,6 @@ import {
   InformationIcon,
   LabelWrapper,
   AddressSearchIcon,
-  InvoiceCheckIcon,
   SelectLabel,
 } from './InvoiceSection.styled';
 import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
@@ -957,12 +956,6 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
         onClose={() => setModalOpen(false)}
         onConfirm={handleSelectInvoice}
         invoiceList={invoiceList ?? []}
-        onConfirmLabel={
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.3 }}>
-            <InvoiceCheckIcon />
-            선택
-          </Box>
-        }
       />
 
       {/* 주소 검색 다이얼로그 */}
