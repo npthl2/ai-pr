@@ -361,7 +361,6 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                     handleUpdateStoreAndValidationCompleteFields(contractTabId, {
                       sim: simNumber,
                     });
-                    handleSimNumberChange(simNumber);
                   }}
                   state={validationErrors.simNumber.state}
                   absoluteHelperText={true}
