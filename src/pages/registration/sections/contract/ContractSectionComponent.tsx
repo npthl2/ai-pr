@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useRef, Suspense } from 'react';
-import {
-  Box,
-  Typography,
-  RadioGroup,
-  FormControlLabel,
-  InputAdornment,
-  TextField,
-} from '@mui/material';
+import { Box, Typography, RadioGroup, FormControlLabel, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import AdditionalServiceSelectModal from './AdditionalServiceSelectModal';
@@ -90,6 +83,9 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
 
   const phoneNumberInputRef = useRef<HTMLInputElement>(null);
 
+  const [inputServiceName, setInputServiceName] = useState<string>(''); // 요금제 텍스트필드 변환 값값
+  const [searchServiceName, setSearchServiceName] = useState<string>(''); // 요금제모달<->텍스트필드 동기화
+
   useEffect(() => {
     // store 정보 생성
     setCustomerId(currentCustomerId ?? '');
@@ -124,7 +120,10 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
   // 전화번호 - 번호 채번 핸들러
   const handlePhoneNumberModalOpen = () => setIsPhoneNumberModalOpen(true);
   const handlePhoneNumberModalClose = () => setIsPhoneNumberModalOpen(false);
-  const handlePhoneNumberSelect = (phoneNumber: PhoneNumber) => setSelectedPhoneNumber(phoneNumber);
+  const handlePhoneNumberSelect = (phoneNumber: PhoneNumber) => {
+    setSelectedPhoneNumber(phoneNumber);
+    handlePhoneNumberValidationText(phoneNumber);
+  };
 
   const handlePhoneNumberLastFourChange = (value: string) => {
     const replacedValue = value.replace(/[^0-9]/g, '');
@@ -144,14 +143,28 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
       }));
     }
   };
+  // 채번 관련 에러 텍스트 설정
+  const handlePhoneNumberValidationText = (phoneNumber: PhoneNumber | null) => {
+    setValidationErrors((prev) => ({
+      ...prev,
+      phoneNumber: {
+        state: phoneNumber === null ? 'error' : 'inactive',
+        helperText: phoneNumber === null ? '번호를 선택해 주세요' : '',
+      },
+    }));
+  };
 
-  // SIM 핸들러
+  // SIM 핸들러/
   const handleSimNumberChange = (value: string) => {
     const replacedValue = value.replace(/[^0-9]/g, '');
     setSimNumber(replacedValue);
     handleUpdateStoreAndValidationCompleteFields(contractTabId, {
       sim: '',
     });
+    handleSimValidationText(replacedValue);
+  };
+
+  const handleSimValidationText = (replacedValue: string) => {
     setValidationErrors((prev) => ({
       ...prev,
       simNumber: {
@@ -165,6 +178,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     }));
   };
 
+  // IMEI 핸들러
   const handleImeiNumberChange = (value: string) => {
     setImeiNumber(value);
     setDeviceModelName('');
@@ -178,27 +192,6 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
         helperText: !value ? 'IMEI를 입력해 주세요' : '',
       },
     }));
-  };
-
-  // 요금제 모달 핸들러
-  const handleServiceModalOpen = () => setIsServiceModalOpen(true);
-  const handleServiceModalClose = () => setIsServiceModalOpen(false);
-  const handleServiceSelect = (selectedServiceFromModal: Service) => {
-    // 기존 요금제와 새로 선택한 요금제가 다른 경우에만 부가서비스 초기화
-    if (!selectedService || selectedService.serviceId !== selectedServiceFromModal.serviceId) {
-      // 요금제가 변경되면 선택된 부가서비스를 모두 제거
-      setSelectedAdditionalServices([]);
-    }
-    setSelectedService(selectedServiceFromModal);
-  };
-
-  // 부가서비스 모달 핸들러
-  const handleAdditionalServiceModalOpen = () => setIsAdditionalServiceModalOpen(true);
-  const handleAdditionalServiceModalClose = () => setIsAdditionalServiceModalOpen(false);
-  const handleRemoveAdditionalService = (serviceId: string) => {
-    setSelectedAdditionalServices((prev) =>
-      prev.filter((service) => service.serviceId !== serviceId),
-    );
   };
 
   const handleDeviceModelName = async (imeiNumber: string): Promise<void> => {
@@ -223,6 +216,45 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
         helperText: deviceModelName === '' ? '존재하는 모델이 없습니다' : '',
       },
     }));
+  };
+
+  // 요금제 모달 핸들러
+  const handleServiceModalOpen = () => {
+    setSearchServiceName(inputServiceName);
+    setIsServiceModalOpen(true);
+  };
+  const handleServiceModalClose = () => setIsServiceModalOpen(false);
+  const handleServiceSelect = (selectedServiceFromModal: Service) => {
+    // 기존 요금제와 새로 선택한 요금제가 다른 경우에만 부가서비스 초기화
+    if (!selectedService || selectedService.serviceId !== selectedServiceFromModal.serviceId) {
+      // 요금제가 변경되면 선택된 부가서비스를 모두 제거
+      setSelectedAdditionalServices([]);
+    }
+
+    setSelectedService(selectedServiceFromModal);
+    setSearchServiceName(selectedServiceFromModal.serviceName);
+    setInputServiceName(selectedServiceFromModal.serviceName);
+
+    // 선택됐다면 validation 필드 업데이트
+    handleServiceValidationText(selectedServiceFromModal);
+  };
+
+  const handleServiceValidationText = (selectedServiceFromModal: Service | null) => {
+    setValidationErrors((prev) => ({
+      ...prev,
+      servicePlan: {
+        state: selectedServiceFromModal ? 'inactive' : 'error',
+        helperText: selectedServiceFromModal ? '' : '요금제를 선택해주세요',
+      },
+    }));
+  };
+  // 부가서비스 모달 핸들러
+  const handleAdditionalServiceModalOpen = () => setIsAdditionalServiceModalOpen(true);
+  const handleAdditionalServiceModalClose = () => setIsAdditionalServiceModalOpen(false);
+  const handleRemoveAdditionalService = (serviceId: string) => {
+    setSelectedAdditionalServices((prev) =>
+      prev.filter((service) => service.serviceId !== serviceId),
+    );
   };
 
   const handleUpdateStoreAndValidationCompleteFields = (
@@ -302,6 +334,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                           variant='outlined'
                           value={phoneNumberLastFour}
                           onChange={(value) => handlePhoneNumberLastFourChange(value)}
+                          onBlur={() => handlePhoneNumberValidationText(selectedPhoneNumber)}
                           state={validationErrors.phoneNumber.state}
                           helperText={validationErrors.phoneNumber.helperText}
                           absoluteHelperText={true}
@@ -357,10 +390,12 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                   }}
                   value={simNumber}
                   onChange={handleSimNumberChange}
-                  onBlur={() => {
+                  onBlur={(e) => {
+                    const replacedValue = e.target.value.replace(/[^0-9]/g, '');
                     handleUpdateStoreAndValidationCompleteFields(contractTabId, {
-                      sim: simNumber,
+                      sim: replacedValue,
                     });
+                    handleSimValidationText(replacedValue);
                   }}
                   state={validationErrors.simNumber.state}
                   absoluteHelperText={true}
@@ -408,24 +443,31 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                 <FormLabel>
                   요금제<RequiredLabel>*</RequiredLabel>
                 </FormLabel>
-                <TextField
+                <StyledTextField
                   size='small'
                   variant='outlined'
-                  value={selectedService ? selectedService.serviceName : ''}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position='end'>
-                        <SearchIcon
-                          onClick={handleServiceModalOpen}
-                          sx={{ cursor: 'pointer' }}
-                          data-testid='service-select-icon'
-                        />
-                      </InputAdornment>
-                    ),
-                    readOnly: true,
+                  value={inputServiceName}
+                  onChange={(value) => {
+                    setInputServiceName(value);
+                    setSelectedService(null);
+                    setSelectedAdditionalServices([]);
+                  }}
+                  suffix={
+                    <InputAdornment position='end'>
+                      <SearchIcon
+                        onClick={handleServiceModalOpen}
+                        sx={{ cursor: 'pointer' }}
+                        data-testid='service-select-icon'
+                      />
+                    </InputAdornment>
+                  }
+                  onBlur={(e) => {
+                    setSearchServiceName(e.target.value);
+                    handleServiceValidationText(selectedService);
                   }}
                   error={validationErrors.servicePlan.state === 'error'}
                   helperText={validationErrors.servicePlan.helperText}
+                  absoluteHelperText={true}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       backgroundColor: '#ffffff',
@@ -500,6 +542,8 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
 
         <ServiceSelectModal
           open={isServiceModalOpen}
+          searchServiceName={searchServiceName}
+          selectedService={selectedService}
           onClose={handleServiceModalClose}
           onSelect={handleServiceSelect}
         />
