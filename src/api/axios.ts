@@ -3,6 +3,9 @@ import axios, { InternalAxiosRequestConfig } from 'axios';
 // import useAuthStore from '../stores/AuthStore';
 
 const baseURL = import.meta.env.VITE_API_URL;
+const xAuthorizationId = import.meta.env.VITE_X_AUTHORIZATION_ID;
+const xAuthorizationRole = import.meta.env.VITE_X_AUTHORIZATION_ROLE;
+const isLocal = import.meta.env.DEV;
 
 // 토큰은 시큐어 쿠키에 저장되어있다고 가정하여 withCredentials 옵션을 추가함
 export const axiosInstance = axios.create({
@@ -33,12 +36,19 @@ axiosInstance.interceptors.response.use(
 
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // TODO : 토큰 발급 후 헤더에 추가
-    const { accessToken } = useAuthStore.getState(); // ✅ Zustand에서 토큰 가져오기
+    const { accessToken } = useAuthStore.getState();
 
-    // ✅ 토큰이 있으면 Authorization 헤더 추가
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+
+    if (isLocal) {
+      if (xAuthorizationId) {
+        config.headers['X-Authorization-Id'] = xAuthorizationId;
+      }
+      if (xAuthorizationRole) {
+        config.headers['X-Authorization-Role'] = xAuthorizationRole;
+      }
     }
 
     return config;

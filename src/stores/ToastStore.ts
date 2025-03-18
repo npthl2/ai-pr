@@ -1,18 +1,22 @@
 import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
 
+type ToastStatus = 'error' | 'default';
 interface ToastStore {
   message: string;
   open: boolean;
-  openToast: (message: string) => void;
+  status: ToastStatus;
+  openToast: (message: string, status?: ToastStatus) => void;
   closeToast: () => void;
 }
 
 const useToastStore = create<ToastStore>((set) => ({
   message: '',
   open: false,
-  openToast: (message: string) => set((state) => ({ ...state, message, open: true })),
-  closeToast: () => set((state) => ({ ...state, message: '', open: false })),
+  status: 'default',
+  openToast: (message: string, status?: ToastStatus) =>
+    set((state) => ({ ...state, message, status, open: true })),
+  closeToast: () => set((state) => ({ ...state, message: '', status: 'default', open: false })),
 }));
 
 if (import.meta.env.DEV) {

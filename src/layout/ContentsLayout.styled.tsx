@@ -1,4 +1,3 @@
-import Button from '@components/Button';
 import { Box, IconButton, Tabs, Tab } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -91,13 +90,20 @@ export const TabLabel = styled(Box)({
   justifyContent: 'space-between',
 });
 
-export const TabCloseButton = styled(IconButton)({
+export const TabCloseButton = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
   padding: 2,
   '& .MuiSvgIcon-root': {
     fontSize: 16,
     color: '#566474',
   },
-});
+  '&:hover': {
+    backgroundColor: theme.palette.grey[50],
+  },
+}));
 
 export const TabActions = styled(Box)({
   display: 'flex',
@@ -147,11 +153,15 @@ export const ContentHeader = styled(Box)(({ theme }) => ({
   height: 59,
 }));
 
-export const StarIconButton = styled(Button)(({ theme }) => ({
+export const StarIconButton = styled(Box)(({ theme }) => ({
   minWidth: 'auto',
-  padding: '1px 4px 2px 4px',
   color: theme.palette.action.active,
   '&:hover': {
     backgroundColor: 'transparent',
   },
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  padding: '4px',
 }));
