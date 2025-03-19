@@ -35,6 +35,9 @@ export const MemoEditorTextarea = styled(TextareaAutosize)(({ theme }) => ({
   resize: 'none',
   borderRadius: '4px',
   padding: '2px 12px',
+  '&:focus': {
+    outline: 'none',
+  },
 }));
 
 export const MemoHistoryTableContainer = styled(TableContainer)(({ theme }) => ({
