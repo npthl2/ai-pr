@@ -26,6 +26,7 @@ import useMenuStore from '@stores/MenuStore';
 import { MainMenu, ROLE_SEARCH_TEL_NO } from '@constants/CommonConstant';
 import { getTheme } from '@theme/theme';
 import { Draft, produce } from 'immer';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 // -- 공통 에러 메시지 --
 const errorMessages = {
@@ -68,6 +69,7 @@ const useImmerState = <T extends Record<string, any>>(initialState: T) => {
 
 const CustomerSearch = ({ authority, open, onCloseModal }: CustomerSearchProps) => {
   const [state, updateState] = useImmerState(initState);
+  const [hotkeyEnabled, setHotkeyEnabled] = useState(false);
 
   // 조회 결과 메시지 (오류 또는 알림)
   const [searchResult, setSearchResult] = useState<{ error: boolean; message: string }>({
@@ -82,6 +84,31 @@ const CustomerSearch = ({ authority, open, onCloseModal }: CustomerSearchProps) 
 
   const phoneNumberRef = useRef<HTMLTextAreaElement>(null);
   const customerNameRef = useRef<HTMLTextAreaElement>(null);
+
+  useHotkeys(
+    'enter',
+    () => {
+      if (!state.isButtonDisabled) {
+        handleSearch();
+      }
+    },
+    {
+      enabled: hotkeyEnabled,
+      enableOnFormTags: ['INPUT', 'TEXTAREA'],
+      enableOnContentEditable: true,
+    },
+  );
+
+  useEffect(() => {
+    setHotkeyEnabled(open);
+
+    // 모달이 닫히면 핫키를 비활성화
+    return () => {
+      if (!open) {
+        setHotkeyEnabled(false);
+      }
+    };
+  }, [open]);
 
   // input box포커스
   useEffect(() => {
@@ -159,8 +186,8 @@ const CustomerSearch = ({ authority, open, onCloseModal }: CustomerSearchProps) 
 
   // -- onChange 핸들러 --
   const handleNameChange = (value: string) => {
-    validateAndSetField('name', value);
-    updateSearchData('name', value);
+    validateAndSetField('name', value.trim());
+    updateSearchData('name', value.trim());
     // 필드 validation초기화
     resetFieldValidation('phoneNumber');
   };
@@ -168,16 +195,16 @@ const CustomerSearch = ({ authority, open, onCloseModal }: CustomerSearchProps) 
   const handleBirthDateChange = (value: string) => {
     // 숫자만 남김
     const validValue = value.replace(/\D/g, '');
-    validateAndSetField('birthDate', validValue);
-    updateSearchData('birthDate', validValue);
+    validateAndSetField('birthDate', validValue.trim());
+    updateSearchData('birthDate', validValue.trim());
     // 필드 validation초기화
     resetFieldValidation('phoneNumber');
   };
 
   const handlePhoneNumberChange = (value: string) => {
     const validValue = value.replace(/\D/g, '');
-    validateAndSetField('phoneNumber', validValue);
-    updateSearchData('phoneNumber', validValue);
+    validateAndSetField('phoneNumber', validValue.trim());
+    updateSearchData('phoneNumber', validValue.trim());
     // 필드 validation초기화
     resetFieldValidation('name');
     resetFieldValidation('birthDate');
@@ -194,10 +221,10 @@ const CustomerSearch = ({ authority, open, onCloseModal }: CustomerSearchProps) 
       const { searchData } = state;
       // API 호출
       const response: CommonResponse<CustomerSearchResponse> = await customerService.fetchCustomer({
-        customerName: searchData.name,
-        birthDate: searchData.birthDate,
+        customerName: searchData.name.trim(),
+        birthDate: searchData.birthDate.trim(),
         gender: searchData.gender,
-        phoneNumber: searchData.phoneNumber,
+        phoneNumber: searchData.phoneNumber.trim(),
       });
 
       // 응답 구조: successOrNot, statusCode, data
@@ -272,6 +299,7 @@ const CustomerSearch = ({ authority, open, onCloseModal }: CustomerSearchProps) 
       error: false,
       message: '',
     });
+
     onCloseModal();
   };
 
