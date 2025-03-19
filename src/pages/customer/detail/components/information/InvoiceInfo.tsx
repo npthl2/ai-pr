@@ -102,7 +102,7 @@ const InvoiceInfo: React.FC<InvoiceInfoProps> = ({
           <TableBody>
             <TableRow size='small' disableEffect={true}>
               <TableCell variant='head' width={CELL_WIDTH}>
-                청구고객
+                납부고객
               </TableCell>
               <TableCell width={SUB_CELL_WIDTH}>
                 {renderMaskingInfo(
