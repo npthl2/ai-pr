@@ -1,6 +1,8 @@
 import { Typography, Radio, RadioGroup, FormControlLabel, Box, Button } from '@mui/material';
 import { useState, useEffect } from 'react';
 import useRegistrationDeviceStore from '@stores/registration/RegistrationDeviceStore';
+import useRegistrationContractStore from '@stores/registration/RegistrationContractStore';
+import registrationContractService from '@api/services/registrationContractService';
 import {
   InfoRow,
   SectionTitle,
@@ -59,6 +61,32 @@ const DevicePaymentInstallment = ({
   const [monthlyInstallmentPrice, setMonthlyInstallmentPrice] = useState(0);
 
   const { setRegistrationDeviceInfo, getRegistrationDeviceInfo } = useRegistrationDeviceStore();
+  const { getRegistrationContractInfo } = useRegistrationContractStore();
+
+  // Get contract info to access IMEI and fetch device model
+  const contract = getRegistrationContractInfo(contractTabId);
+  const [deviceModelId, setDeviceModelId] = useState('');
+  const [deviceModelName, setDeviceModelName] = useState('');
+  const [deviceModelNameAlias, setDeviceModelNameAlias] = useState('');
+  const [deviceSalesPrice, setDeviceSalesPrice] = useState(0);
+  // Fetch device model when contract IMEI changes
+  useEffect(() => {
+    const fetchDeviceModel = async () => {
+      if (contract?.imei) {
+        try {
+          const deviceModel = await registrationContractService.getDeviceModelByIMEI(contract.imei);
+          setDeviceModelId(deviceModel.deviceModelId);
+          setDeviceModelName(deviceModel.deviceModelName);
+          setDeviceModelNameAlias(deviceModel.deviceModelNameAlias);
+          setDeviceSalesPrice(deviceModel.sellingPrice);
+        } catch (error) {
+          console.error('Failed to fetch device model:', error);
+        }
+      }
+    };
+
+    fetchDeviceModel();
+  }, [contract?.imei]);
 
   // Load existing device info when component mounts
   useEffect(() => {
@@ -128,9 +156,9 @@ const DevicePaymentInstallment = ({
 
   const handleConfirm = () => {
     setRegistrationDeviceInfo(contractTabId, {
-      deviceId: 'SM-F711NK',
-      deviceName: 'SM-F711NK',
-      deviceNameAlias: 'SM-F711NK',
+      deviceId: deviceModelId,
+      deviceName: deviceModelName,
+      deviceNameAlias: deviceModelNameAlias,
       devicePaymentType: 'installment',
       deviceSponsorName: '통합스폰서',
       deviceEngagementType:
@@ -138,7 +166,7 @@ const DevicePaymentInstallment = ({
       deviceEngagementPeriod: Number(engagementPeriod),
       deviceEngagementName:
         deviceEngagementType === 'PUBLIC_POSTED_SUPPORT' ? '공시지원금' : '선택약정',
-      deviceSalesPrice: SALES_PRICE,
+      deviceSalesPrice: deviceSalesPrice,
       deviceDiscountPrice: discountPrice,
       devicePrepaidPrice: parseInt(prepaidPrice) || 0,
       deviceInstallmentAmount: installmentTotalAmount,
@@ -163,16 +191,16 @@ const DevicePaymentInstallment = ({
           <DeviceInfoContainer>
             <InfoRow>
               <DeviceInfoLabel>단말기</DeviceInfoLabel>
-              <DeviceInfoValue>SM-F711NK</DeviceInfoValue>
+              <DeviceInfoValue>{deviceModelName}</DeviceInfoValue>
             </InfoRow>
             <InfoRow>
               <DeviceInfoLabel>요금제</DeviceInfoLabel>
-              <DeviceInfoValue>넷플릭스 초이스 스페셜</DeviceInfoValue>
+              <DeviceInfoValue>{contract?.service?.serviceName || ''} </DeviceInfoValue>
             </InfoRow>
           </DeviceInfoContainer>
 
           <SectionTitle>단말기 스폰서 정보</SectionTitle>
-          <InfoRow sx={{ mb: 0.1 }}>
+          <InfoRow sx={{ mb: 0.8 }}>
             <SponsorTypeLabel>스폰서 유형</SponsorTypeLabel>
             <SponsorTypeValue>통합스폰서</SponsorTypeValue>
           </InfoRow>
@@ -190,7 +218,9 @@ const DevicePaymentInstallment = ({
             <RadioGroupContainer>
               <RadioGroup
                 value={engagementPeriod}
-                onChange={(e) => setEngagementPeriod(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setEngagementPeriod(e.target.value)
+                }
                 row
                 sx={{ '& .MuiFormControlLabel-root': { mr: 2 } }}
               >
@@ -208,8 +238,8 @@ const DevicePaymentInstallment = ({
             </RadioGroupContainer>
           </Box>
 
-          <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-            <RequiredFieldLabel>
+          <Box sx={{ mb: 1, display: 'flex', alignItems: 'center', width: '470px' }}>
+            <RequiredFieldLabel sx={{ width: '98px' }}>
               <Box
                 component='span'
                 sx={{ color: '#272E35', display: 'inline-flex', alignItems: 'center' }}
@@ -261,7 +291,7 @@ const DevicePaymentInstallment = ({
                   단말출고가{' '}
                 </Box>
               </PriceLabel>
-              <PriceValue>1,155,000 원</PriceValue>
+              <PriceValue>{deviceSalesPrice.toLocaleString()} 원</PriceValue>
             </InfoRow>
             <InfoRow>
               <PriceLabel>- 공시지원금</PriceLabel>
@@ -313,7 +343,9 @@ const DevicePaymentInstallment = ({
               <InstallmentPeriodContainer>
                 <RadioGroup
                   value={installmentPeriod}
-                  onChange={(e) => setInstallmentPeriod(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setInstallmentPeriod(e.target.value)
+                  }
                   row
                   sx={{ gap: '8px' }}
                 >

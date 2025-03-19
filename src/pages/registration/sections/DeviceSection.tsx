@@ -1,4 +1,3 @@
-import Button from '@components/Button';
 import Radio from '@components/Radio';
 import Dialog from '@components/Dialog';
 import { FormContainer, FormWrapper } from './common/SectionCommon.styled';
@@ -10,12 +9,19 @@ import {
   RadioWrapper,
   StyledSpan,
   RequiredSpan,
+  StyledButton,
 } from './DeviceSection.styled';
 import DevicePaymentInstallment from './devicePayment/DevicePaymentInstallment';
 import DeviceImmediate from './devicePayment/DeviceImmediate';
 import useRegistrationDeviceStore from '@stores/registration/RegistrationDeviceStore';
+import useRegistrationContractStore from '@stores/registration/RegistrationContractStore';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+interface ContractDeviceInfo {
+  contractImei: string;
+  contractServiceId: string;
+}
 
 interface DeviceSectionProps {
   contractTabId: string;
@@ -25,7 +31,9 @@ interface DeviceSectionProps {
 
 const DeviceSection = ({ contractTabId, onComplete, completed }: DeviceSectionProps) => {
   const { getRegistrationDeviceInfo } = useRegistrationDeviceStore();
+  const { getRegistrationContractInfo } = useRegistrationContractStore();
   const deviceInfo = getRegistrationDeviceInfo(contractTabId);
+  const contractInfo = getRegistrationContractInfo(contractTabId);
 
   const [values, setValues] = useState<Record<string, string>>({
     paymentType: deviceInfo?.devicePaymentType || 'installment', // Use devicePaymentType from store or fallback to 'installment'
@@ -66,6 +74,19 @@ const DeviceSection = ({ contractTabId, onComplete, completed }: DeviceSectionPr
     handleConfirmDialog();
   };
 
+  useEffect(() => {
+    if (contractInfo) {
+      const contractDeviceInfo: ContractDeviceInfo = {
+        contractImei: contractInfo.imei || '',
+        contractServiceId: contractInfo.service?.serviceId || '',
+      };
+
+      if (contractDeviceInfo.contractImei || contractDeviceInfo.contractServiceId) {
+        useRegistrationDeviceStore.getState().clearRegistrationDeviceInfo();
+      }
+    }
+  }, [contractInfo?.imei, contractInfo?.service?.serviceId]);
+
   return (
     // completed 가 true 이면 outline 활성화, fales 일 경우 비활성화
     <FormContainer completed={completed}>
@@ -88,9 +109,7 @@ const DeviceSection = ({ contractTabId, onComplete, completed }: DeviceSectionPr
             </RadioWrapper>
           </FieldContainer>
           <FieldContainer>
-            <Button variant='outlined' size='small' onClick={handleOnClick}>
-              결제정보 입력
-            </Button>
+            <StyledButton onClick={handleOnClick}>결제정보 입력</StyledButton>
           </FieldContainer>
         </LeftSection>
         <FieldContainer>
