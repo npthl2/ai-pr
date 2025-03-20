@@ -66,24 +66,36 @@ class ContractSectionServiceMock {
     }).as('checkExclusiveServiceFalse');
   }
   successWhenGetDeviceModelByIMEI() {
-    cy.intercept('GET', '**/v1/device-inventories/*/device-model', {
-      statusCode: 200,
-      body: {
-        successOrNot: 'Y',
-        statusCode: 'SUCCESS',
-        data: this.successGetDeviceModelByIMEI,
+    cy.intercept(
+      {
+        method: 'GET',
+        url: '**/v1/device-inventories/1234567890/device-model',
       },
-    }).as('getDeviceModelByIMEI');
+      {
+        statusCode: 200,
+        body: {
+          successOrNot: 'Y',
+          statusCode: 'SUCCESS',
+          data: this.successGetDeviceModelByIMEI,
+        },
+      },
+    ).as('getDeviceModelByIMEI');
   }
   failWhenGetDeviceModelByIMEI() {
-    cy.intercept('PUT', '**/v1/device-inventories/*/device-model', {
-      statusCode: 200,
-      body: {
-        successOrNot: 'N',
-        statusCode: 'FAIL',
-        data: '정보를 찾을 수 없습니다',
+    cy.intercept(
+      {
+        method: 'GET',
+        url: '**/v1/device-inventories/123456/device-model',
       },
-    }).as('getDeviceModelByIMEI');
+      {
+        statusCode: 200,
+        body: {
+          successOrNot: 'N',
+          statusCode: 'FAIL',
+          data: '정보를 찾을 수 없습니다',
+        },
+      },
+    ).as('getFailedDeviceModelByIMEI');
   }
 
   successGetAvailablePhoneNumber = [

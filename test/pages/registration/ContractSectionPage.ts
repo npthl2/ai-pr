@@ -89,7 +89,7 @@ class ContractSectionPage {
   }
 
   typeIMEIInputField(value: string) {
-    cy.get('[data-testid="IMEI-input"] input').type(value);
+    cy.get('[data-testid="IMEI-input"] input').clear().type(value);
   }
 
   focusOnIMEIInput() {
@@ -103,6 +103,11 @@ class ContractSectionPage {
   assertModleNameTypoToBeVisible(value: string) {
     cy.wait(3000);
     cy.get('[data-testid="model-name-typo"]').should('contain.text', value);
+  }
+
+  assertModleNameErrorTypoToBeVisible(value: string) {
+    cy.wait(3000);
+    cy.get('[data-testid="IMEI-input"]').parent().contains(value).should('be.visible');
   }
 
   assertAdditionalServiceButtonDisabled() {
@@ -131,7 +136,7 @@ class ContractSectionPage {
     cy.get('[data-testid="service-select-search-button"]').click();
   }
 
-  assertSearchResultToBeVisible(value: string) {
+  assertSearchResultToContain(value: string) {
     cy.get('[data-testid="service-select-table-row"]').should('contain.text', value);
   }
 
@@ -166,14 +171,41 @@ class ContractSectionPage {
   }
 
   clickDeleteAdditionalServiceChip(index: number) {
-    cy.get(`[data-testid="selected-additional-service-chip-${index}"]`)
-      .find('[data-testid="CancelIcon"]')
-      .click();
+    cy.get(`[data-testid="selected-additional-service-chip-${index}"]`).click();
   }
 
   assertAdditionalServiceChipToBeInvisible() {
     cy.wait(3000);
     cy.get('[data-testid="selected-additional-service-chip-0"]').should('not.exist');
+  }
+
+  typeServiceSearchTextField(value: string) {
+    cy.get('[data-testid="service-search-text-field"] input').clear().type(value);
+  }
+
+  focusOutServiceSearchTextField() {
+    cy.get('[data-testid="service-search-text-field"] input').blur();
+  }
+
+  focusOnServiceSearchTextField() {
+    cy.get('[data-testid="service-search-text-field"] input').focus();
+  }
+
+  assertSelectServiceValueToBeInvisible() {
+    cy.get('[data-testid="selected-service-price-typo"]').should('contain.text', '0 원');
+  }
+
+  expectServiceSelectErrorMessageToBeVisible(message: string) {
+    cy.get('[data-testid="service-search-text-field"]')
+      .parent()
+      .contains(message)
+      .should('be.visible');
+  }
+
+  assertSearchResultToBeVisible(value: string) {
+    cy.get('[data-testid="service-select-table-row"]').each(($el) => {
+      cy.wrap($el).should('contain.text', value);
+    });
   }
 }
 
