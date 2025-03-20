@@ -1,6 +1,5 @@
 import useAuthStore from '@stores/AuthStore';
 import axios, { InternalAxiosRequestConfig } from 'axios';
-// import useAuthStore from '../stores/AuthStore';
 
 const baseURL = import.meta.env.VITE_API_URL;
 const xAuthorizationId = import.meta.env.VITE_X_AUTHORIZATION_ID;
@@ -36,12 +35,6 @@ axiosInstance.interceptors.response.use(
 
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const { accessToken } = useAuthStore.getState();
-
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-
     if (isLocal) {
       if (xAuthorizationId) {
         config.headers['X-Authorization-Id'] = xAuthorizationId;
