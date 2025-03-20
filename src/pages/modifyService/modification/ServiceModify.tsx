@@ -58,7 +58,7 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
 
   return (
     <Container>
-      {/* 1. 요금제 선택 영역 */}
+      {/* 1. 요금제 선택 영역 모양 확인*/}
       <Section>
         <SelectService />
       </Section>
