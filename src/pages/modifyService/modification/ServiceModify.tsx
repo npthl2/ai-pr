@@ -41,7 +41,7 @@ interface ServiceModifyProps {
 const ServiceModify: React.FC<ServiceModifyProps> = () => {
   // 스토어에서 선택된 서비스와 총액 계산 함수 가져오기
   const { selectedService, selectedAdditionalServices, getTotalPrice } = useModifyServiceStore();
-  
+
   // 부가서비스 목록 조회
   const { data: additionalServices = [] } = useAdditionalServicesQuery();
 

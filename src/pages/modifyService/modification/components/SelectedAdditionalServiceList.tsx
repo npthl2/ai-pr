@@ -1,4 +1,14 @@
-import { Box, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DeleteIcon from '@mui/icons-material/Delete';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
@@ -60,44 +70,37 @@ const DeleteButton = styled(Button)({
 const SelectedServiceList: React.FC = () => {
   // Zustand 스토어에서 선택된 부가서비스 목록과 삭제 액션 가져오기
   const { selectedAdditionalServices, removeAdditionalService } = useModifyServiceStore();
-  
+
   // 부가서비스 삭제 핸들러
   const handleRemoveService = (serviceId: string) => {
     removeAdditionalService(serviceId);
   };
-  
+
   return (
     <ListContainer>
       <StyledTableContainer>
-        <Table stickyHeader size="small">
+        <Table stickyHeader size='small'>
           <TableHead>
             <TableRow>
               <StyledTableHeaderCell>부가서비스명</StyledTableHeaderCell>
-              <StyledTableHeaderCell align="center">상태</StyledTableHeaderCell>
-              <StyledTableHeaderCell align="right">요금 (원)</StyledTableHeaderCell>
-              <StyledTableHeaderCell align="center">삭제</StyledTableHeaderCell>
+              <StyledTableHeaderCell align='center'>상태</StyledTableHeaderCell>
+              <StyledTableHeaderCell align='right'>요금 (원)</StyledTableHeaderCell>
+              <StyledTableHeaderCell align='center'>삭제</StyledTableHeaderCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {selectedAdditionalServices.map((service) => (
-              <TableRow 
-                key={service.serviceId}
-                hover
-              >
+              <TableRow key={service.serviceId} hover>
                 <TableCell>
                   <ServiceName>{service.serviceName}</ServiceName>
                 </TableCell>
-                <StatusCell align="center">
-                  가입중
-                </StatusCell>
-                <PriceCell>
-                  {service.serviceValue.toLocaleString()}
-                </PriceCell>
-                <TableCell align="center">
-                  <DeleteButton 
-                    variant="outlined"
-                    size="small"
-                    color="error"
+                <StatusCell align='center'>가입중</StatusCell>
+                <PriceCell>{service.serviceValue.toLocaleString()}</PriceCell>
+                <TableCell align='center'>
+                  <DeleteButton
+                    variant='outlined'
+                    size='small'
+                    color='error'
                     startIcon={<DeleteIcon />}
                     onClick={() => handleRemoveService(service.serviceId)}
                   >
@@ -108,10 +111,8 @@ const SelectedServiceList: React.FC = () => {
             ))}
             {selectedAdditionalServices.length === 0 && (
               <TableRow>
-                <TableCell colSpan={4} align="center" sx={{ py: 2 }}>
-                  <Typography color="text.secondary">
-                    선택된 부가서비스가 없습니다.
-                  </Typography>
+                <TableCell colSpan={4} align='center' sx={{ py: 2 }}>
+                  <Typography color='text.secondary'>선택된 부가서비스가 없습니다.</Typography>
                 </TableCell>
               </TableRow>
             )}
@@ -122,4 +123,4 @@ const SelectedServiceList: React.FC = () => {
   );
 };
 
-export default SelectedServiceList; 
+export default SelectedServiceList;
