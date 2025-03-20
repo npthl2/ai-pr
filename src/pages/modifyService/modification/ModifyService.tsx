@@ -2,6 +2,7 @@
 import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SelectService from './components/SelectService';
+import useModifyServiceStore from '@stores/ModifyServiceStore';
 
 // 스타일 컴포넌트
 const Container = styled(Box)({
@@ -42,11 +43,25 @@ interface NewServiceSelectionProps {
 }
 
 const ModifyService: React.FC<NewServiceSelectionProps> = () => {
+  // 스토어에서 선택된 서비스와 총액 계산 함수 가져오기
+  const { selectedService, selectedAdditionalServices, getTotalPrice } = useModifyServiceStore();
+
+  // 저장 버튼 클릭 시 호출되는 핸들러
+  const handleSave = () => {
+    // 여기에 실제 저장 로직 구현
+    console.log('선택된 요금제:', selectedService);
+    console.log('선택된 부가서비스:', selectedAdditionalServices);
+    console.log('총 금액:', getTotalPrice());
+
+    // TODO: API 호출하여 저장 처리
+    alert('요금제 변경이 저장되었습니다.');
+  };
+
   return (
     <Container>
       {/* 1. 요금제 선택 영역 */}
       <Section>
-        <SelectService onSelect={() => {}} />
+        <SelectService />
       </Section>
 
       {/* 2. 부가서비스 목록 영역 */}
@@ -68,19 +83,19 @@ const ModifyService: React.FC<NewServiceSelectionProps> = () => {
       <Section>
         <ServiceHeader>
           <Typography variant='subtitle1'>선택된 부가서비스</Typography>
-          <Typography>4</Typography>
+          <Typography>{selectedAdditionalServices.length}</Typography>
         </ServiceHeader>
         {/* TODO: SelectedServiceList 컴포넌트 */}
         <Box sx={{ backgroundColor: '#f5f6f8', padding: '16px', borderRadius: '4px' }}>
           <Typography variant='subtitle2'>합계</Typography>
-          <Typography variant='h6'>40,000원</Typography>
+          <Typography variant='h6'>{getTotalPrice().toLocaleString()}원</Typography>
         </Box>
       </Section>
 
       {/* 4. 버튼 영역 */}
       <ButtonGroup>
         <Button variant='outlined'>조회</Button>
-        <Button variant='contained'>저장</Button>
+        <Button variant='contained' onClick={handleSave}>저장</Button>
       </ButtonGroup>
     </Container>
   );
