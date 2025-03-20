@@ -3,12 +3,10 @@ class SalesSectionPage {
 
   // 공통
   assertComponentToBeVisible(componentName: string) {
-    cy.wait(3000);
     cy.get(`[data-testid="${componentName}"]`).should('be.visible');
   }
 
   assertComponentToBeInvisible(componentName: string) {
-    cy.wait(3000);
     cy.get(`[data-testid="${componentName}"]`).should('be.invisible');
   }
 

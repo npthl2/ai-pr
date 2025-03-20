@@ -3,12 +3,10 @@ class ContractSectionPage {
 
   // 공통
   assertComponentToBeVisible(componentName: string) {
-    cy.wait(3000);
     cy.get(`[data-testid="${componentName}"]`).should('be.visible');
   }
 
   assertComponentToBeInvisible(componentName: string) {
-    cy.wait(3000);
     cy.get(`[data-testid="${componentName}"]`).should('be.invisible');
   }
 
@@ -101,12 +99,10 @@ class ContractSectionPage {
   }
 
   assertModleNameTypoToBeVisible(value: string) {
-    cy.wait(3000);
     cy.get('[data-testid="model-name-typo"]').should('contain.text', value);
   }
 
   assertModleNameErrorTypoToBeVisible(value: string) {
-    cy.wait(3000);
     cy.get('[data-testid="IMEI-input"]').parent().contains(value).should('be.visible');
   }
 
@@ -119,12 +115,10 @@ class ContractSectionPage {
   }
 
   assertServiceSelectModalToBeVisible() {
-    cy.wait(3000);
     cy.get('[data-testid="service-select-modal"]').should('be.visible');
   }
 
   assertServiceSelectTableRowToBeVisible() {
-    cy.wait(3000);
     cy.get('[data-testid="service-select-table-row"]').should('be.visible');
   }
 
@@ -157,7 +151,6 @@ class ContractSectionPage {
   }
 
   clickAdditionalService(index: number) {
-    cy.wait(3000);
     cy.get(`[data-testid="additional-service-list-checkbox-${index}"]`).click();
   }
 
@@ -166,7 +159,6 @@ class ContractSectionPage {
   }
 
   assertAdditionalServiceChipToBeVisible() {
-    cy.wait(3000);
     cy.get('[data-testid="selected-additional-service-chip-0"]').should('exist');
   }
 
@@ -175,7 +167,6 @@ class ContractSectionPage {
   }
 
   assertAdditionalServiceChipToBeInvisible() {
-    cy.wait(3000);
     cy.get('[data-testid="selected-additional-service-chip-0"]').should('not.exist');
   }
 
