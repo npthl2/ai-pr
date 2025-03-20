@@ -36,7 +36,7 @@ export const MemoEditorTextarea = styled(TextareaAutosize)(({ theme }) => ({
   borderRadius: '4px',
   padding: '2px 12px',
   '&:focus': {
-    outlineColor: 'black',
+    outlineColor: theme.palette.primary.main,
   },
 }));
 
