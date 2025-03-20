@@ -1,6 +1,8 @@
 // src/api/queries/modifyService/useModifyServiceQuery.ts
 import { useSuspenseQuery } from '@tanstack/react-query';
-import registrationContractService, { ServiceResponse } from '@api/services/registrationContractService';
+import registrationContractService, {
+  ServiceResponse,
+} from '@api/services/registrationContractService';
 import { CommonResponse } from '@model/common/CommonResponse';
 import { Service as BaseService } from '@pages/registration/sections/contract/types';
 import { AdditionalService as BaseAdditionalService } from '@pages/registration/sections/contract/types';
