@@ -19,12 +19,12 @@ import {
   MemoHistoryTable,
 } from './MemoHistory.styled';
 import useCustomerStore from '@stores/CustomerStore';
-import useAuthStore from '@stores/AuthStore';
+import useMemberStore from '@stores/MemberStore';
 import { Memo } from '@model/Memo';
 
 const MemoHistory: React.FC = () => {
   const activeCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
-  const memberInfo = useAuthStore((state) => state.memberInfo);
+  const memberInfo = useMemberStore((state) => state.memberInfo);
   const [memoContent, setMemoContent] = useState<string>('');
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
