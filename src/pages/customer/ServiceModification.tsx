@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import ModifyService from '@pages/modifyService/modification/ModifyService';
+import ServiceModify from '@pages/modifyService/modification/ServiceModify';
 
 const ServiceModification = () => {
   return (
@@ -52,7 +52,7 @@ const ServiceModification = () => {
           </Box>
 
           {/* 2-2. 오른쪽: 변경할 요금제 정보 */}
-          <ModifyService>
+          <ServiceModify>
             {/* TODO: NewServiceSelection 컴포넌트
             - 요금제 선택 드롭다운
             - 부가서비스 목록 (검색 가능)
@@ -60,7 +60,7 @@ const ServiceModification = () => {
             - 합계 금액
             - 조회/저장 버튼
           */}
-          </ModifyService>
+          </ServiceModify>
         </Box>
       </Box>
     </Box>

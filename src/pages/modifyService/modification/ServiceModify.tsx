@@ -1,8 +1,11 @@
-// src/pages/modifyService/modification/ModifyService.tsx
+// src/pages/modifyService/modification/ServiceModify.tsx
 import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import SelectService from './components/SelectService';
+import SelectService from './components/ModifiedServiceSelect';
+import AdditionalServiceList from './components/AdditionalServiceList';
+import SelectedServiceList from './components/SelectedAdditionalServiceList';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
+import { useAdditionalServicesQuery } from '@api/queries/modifyService/useModifyServiceQuery';
 
 // 스타일 컴포넌트
 const Container = styled(Box)({
@@ -24,13 +27,6 @@ const ServiceHeader = styled(Box)({
   marginBottom: '16px',
 });
 
-const SearchBox = styled(Box)({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginBottom: '16px',
-});
-
 const ButtonGroup = styled(Box)({
   display: 'flex',
   justifyContent: 'flex-end',
@@ -38,13 +34,16 @@ const ButtonGroup = styled(Box)({
   marginTop: '16px',
 });
 
-interface NewServiceSelectionProps {
+interface ServiceModifyProps {
   // props 정의
 }
 
-const ModifyService: React.FC<NewServiceSelectionProps> = () => {
+const ServiceModify: React.FC<ServiceModifyProps> = () => {
   // 스토어에서 선택된 서비스와 총액 계산 함수 가져오기
   const { selectedService, selectedAdditionalServices, getTotalPrice } = useModifyServiceStore();
+  
+  // 부가서비스 목록 조회
+  const { data: additionalServices = [] } = useAdditionalServicesQuery();
 
   // 저장 버튼 클릭 시 호출되는 핸들러
   const handleSave = () => {
@@ -69,14 +68,10 @@ const ModifyService: React.FC<NewServiceSelectionProps> = () => {
         <ServiceHeader>
           <Typography variant='subtitle1'>부가서비스 목록</Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant='caption' sx={{ color: '#ff4d4f' }}>
-              3-6
-            </Typography>
-            <Typography>100</Typography>
+            <Typography>{additionalServices.length}</Typography>
           </Box>
         </ServiceHeader>
-        <SearchBox>{/* TODO: ServiceSearch 컴포넌트 */}</SearchBox>
-        {/* TODO: AdditionalServiceList 컴포넌트 */}
+        <AdditionalServiceList />
       </Section>
 
       {/* 3. 선택된 부가서비스 영역 */}
@@ -85,7 +80,7 @@ const ModifyService: React.FC<NewServiceSelectionProps> = () => {
           <Typography variant='subtitle1'>선택된 부가서비스</Typography>
           <Typography>{selectedAdditionalServices.length}</Typography>
         </ServiceHeader>
-        {/* TODO: SelectedServiceList 컴포넌트 */}
+        <SelectedServiceList />
         <Box sx={{ backgroundColor: '#f5f6f8', padding: '16px', borderRadius: '4px' }}>
           <Typography variant='subtitle2'>합계</Typography>
           <Typography variant='h6'>{getTotalPrice().toLocaleString()}원</Typography>
@@ -103,4 +98,4 @@ const ModifyService: React.FC<NewServiceSelectionProps> = () => {
   );
 };
 
-export default ModifyService;
+export default ServiceModify;
