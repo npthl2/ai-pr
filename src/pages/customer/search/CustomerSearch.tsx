@@ -104,9 +104,7 @@ const CustomerSearch = ({ authority, open, onCloseModal }: CustomerSearchProps) 
 
     // 모달이 닫히면 핫키를 비활성화
     return () => {
-      if (!open) {
-        setHotkeyEnabled(false);
-      }
+      setHotkeyEnabled(false);
     };
   }, [open]);
 
