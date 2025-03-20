@@ -56,9 +56,9 @@ const PriceTypography = styled(Typography)({
 // 타입 정의: 서비스 플랜(요금제) 데이터 구조
 // 선택 가능한 서비스 항목의 데이터 형식을 정의합니다.
 export interface ServicePlan {
-  id: string;        // 서비스 ID
-  name: string;      // 서비스 이름 (표시용)
-  price: number;     // 서비스 가격
+  id: string; // 서비스 ID
+  name: string; // 서비스 이름 (표시용)
+  price: number; // 서비스 가격
   releaseDate: string; // 출시일 (최신출시순 정렬을 위한 필드)
 }
 
@@ -69,7 +69,7 @@ export interface ServicePlan {
 const SelectService = () => {
   // Zustand 스토어에서 서비스 선택 관련 상태와 액션 가져오기
   const { selectedService, setSelectedService } = useModifyServiceStore();
-  
+
   // API에서 서비스 목록을 가져옵니다 (useServicesQuery 훅 사용)
   const { data: services = [] } = useServicesQuery();
 
@@ -87,10 +87,9 @@ const SelectService = () => {
   const handlePlanChange = (event: any, newValue: ServicePlan | null) => {
     if (newValue) {
       // 선택된 요금제의 ID로 원본 서비스 객체를 찾아 스토어에 저장
-      const selectedServiceData = services.find(
-        (service) => service.serviceId === newValue.id
-      ) || null;
-      
+      const selectedServiceData =
+        services.find((service) => service.serviceId === newValue.id) || null;
+
       setSelectedService(selectedServiceData);
     } else {
       setSelectedService(null);
@@ -104,8 +103,8 @@ const SelectService = () => {
   );
 
   // 선택된 서비스가 있을 경우 해당 서비스 플랜 찾기
-  const selectedPlan = selectedService 
-    ? servicePlans.find(plan => plan.id === selectedService.serviceId) || null
+  const selectedPlan = selectedService
+    ? servicePlans.find((plan) => plan.id === selectedService.serviceId) || null
     : null;
 
   return (
@@ -113,8 +112,8 @@ const SelectService = () => {
       <ServiceRowContainer>
         <LeftSectionContainer>
           {/* 제목 */}
-          <TitleTypography variant="subtitle1">변경할 요금제</TitleTypography>
-          
+          <TitleTypography variant='subtitle1'>변경할 요금제</TitleTypography>
+
           {/* Autocomplete 컴포넌트: 검색 가능한 드롭다운 선택 UI */}
           <AutocompleteContainer>
             <Autocomplete
@@ -148,7 +147,7 @@ const SelectService = () => {
             />
           </AutocompleteContainer>
         </LeftSectionContainer>
-        
+
         {/* 선택한 요금제의 요금 표시 */}
         <PriceTypography>
           {selectedService ? `${selectedService.serviceValue.toLocaleString()}원` : '0원'}

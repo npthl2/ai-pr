@@ -95,7 +95,9 @@ const ModifyService: React.FC<NewServiceSelectionProps> = () => {
       {/* 4. 버튼 영역 */}
       <ButtonGroup>
         <Button variant='outlined'>조회</Button>
-        <Button variant='contained' onClick={handleSave}>저장</Button>
+        <Button variant='contained' onClick={handleSave}>
+          저장
+        </Button>
       </ButtonGroup>
     </Container>
   );
