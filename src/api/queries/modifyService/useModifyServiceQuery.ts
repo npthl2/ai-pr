@@ -1,5 +1,5 @@
 // src/api/queries/modifyService/useModifyServiceQuery.ts
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useReactQuery } from '@hooks/useReactQuery';
 import registrationContractService, {
   ServiceResponse,
 } from '@api/services/registrationContractService';
@@ -19,8 +19,8 @@ export interface AdditionalService extends BaseAdditionalService {
 
 // 서비스 목록 조회 쿼리
 export const useServicesQuery = () => {
-  return useSuspenseQuery({
-    queryKey: ['services'],
+  return useReactQuery({
+    queryKey: ['modifyService', 'services'],
     queryFn: () => registrationContractService.getServices(),
     select: (response: CommonResponse<ServiceResponse[]>) => {
       if (typeof response.data === 'string') return [];
@@ -31,8 +31,8 @@ export const useServicesQuery = () => {
 
 // 부가 서비스 목록 조회 쿼리
 export const useAdditionalServicesQuery = () => {
-  return useSuspenseQuery({
-    queryKey: ['additionalServices'],
+  return useReactQuery({
+    queryKey: ['modifyService', 'additionalServices'],
     queryFn: () => registrationContractService.getAdditionalServices(),
     select: (response: CommonResponse<ServiceResponse[]>) => {
       if (typeof response.data === 'string') return [];
@@ -47,7 +47,7 @@ const mapServiceResponseToService = (serviceResponse: ServiceResponse): Service 
     serviceName: serviceResponse.serviceName,
     serviceValue: Number(serviceResponse.serviceValue),
     serviceValueType: serviceResponse.serviceValueType,
-    releaseDate: serviceResponse.validStartDateTime,
+    releaseDate: serviceResponse.validStartDateTime || '',
   };
 };
 
@@ -60,6 +60,6 @@ const mapServiceResponseToAdditionalService = (
     serviceValue: Number(serviceResponse.serviceValue),
     serviceValueType: serviceResponse.serviceValueType,
     exclusiveServiceIds: serviceResponse.exclusiveServiceIds,
-    releaseDate: serviceResponse.validStartDateTime,
+    releaseDate: serviceResponse.validStartDateTime || '',
   };
 };
