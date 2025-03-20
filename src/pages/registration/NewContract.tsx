@@ -22,11 +22,7 @@ interface NewContractProps {
 const NewContract = ({ contractTabId }: NewContractProps) => {
   const [isSaveRequested, setIsSaveRequested] = useState(false);
   const [expanded, setExpanded] = useState<SectionId>(SECTION_IDS.CUSTOMER);
-  const [completedSections, setCompletedSections] = useState<SectionId[]>([
-    SECTION_IDS.CUSTOMER,
-    SECTION_IDS.INVOICE,
-    SECTION_IDS.SALES,
-  ]);
+  const [completedSections, setCompletedSections] = useState<SectionId[]>([]);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const createSections = (
