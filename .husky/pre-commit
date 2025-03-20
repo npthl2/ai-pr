@@ -4,9 +4,6 @@
 # Windows의 경우 (Git Bash 사용)
 # git update-index --chmod=+x .husky/pre-commit
 
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 echo "Husky is Running!"
 echo "Code format and ESLint"
 npm run lint
