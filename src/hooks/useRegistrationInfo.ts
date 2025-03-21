@@ -2,7 +2,7 @@ import {
   RegistrationInfo,
   CustomerInfo,
   InvoiceInfo,
-  SalesInfo,
+  SalesAgentInfo,
   ContractInfo,
   DeviceInfo,
   ServiceInfo,
@@ -117,7 +117,7 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     isValidated: storeDeviceInfo?.isValidated || false,
   };
 
-  const salesInfo: SalesInfo = {
+  const salesAgentInfo: SalesAgentInfo = {
     salesDepartment: storeSalesInfo?.salesDepartment || '',
     salesContractPoint: storeSalesInfo?.salesContractPoint || '',
     finalSeller: storeSalesInfo?.finalSeller || '',
@@ -130,7 +130,7 @@ export const useRegistrationInfo = (contractTapId: string): RegistrationInfo => 
     contract: contractInfo,
     invoice: invoiceInfo,
     device: deviceInfo,
-    sales: salesInfo,
+    sales: salesAgentInfo,
     // 필수 속성 추가
     businessProcessId: '', // 기본값 설정
     status: 'PENDING' as RegistrationStatusType, // 기본 상태 설정
