@@ -47,6 +47,7 @@ export const MemoHistoryTableContainer = styled(TableContainer)(({ theme }) => (
   position: 'relative',
   borderBottom: `1px solid ${theme.palette.grey[200]}`,
   overflowX: 'hidden',
+  marginTop: '4px',
 }));
 
 export const MemoHistoryTable = styled(Table)(({ theme }) => ({

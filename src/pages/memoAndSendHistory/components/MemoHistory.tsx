@@ -120,9 +120,7 @@ const MemoHistory: React.FC = () => {
     <MemoHistoryBox>
       {/* 메모이력 섹션 */}
       <Box>
-        <Typography variant='h3' gutterBottom>
-          메모이력
-        </Typography>
+        <Typography variant='h3'>메모이력</Typography>
 
         <MemoHistoryTableContainer>
           <MemoHistoryTable>
@@ -168,7 +166,7 @@ const MemoHistory: React.FC = () => {
                 </TableRow>
               )}
               {/* 스크롤 후 데이터 로드 시 데이터 로드 완료 확인을 위한 더미 div */}
-              <div ref={loadMoreRef} style={{ height: '0px' }} />
+              <div ref={loadMoreRef} style={{ height: '0px', marginTop: '-10px' }} />
             </TableBody>
           </MemoHistoryTable>
         </MemoHistoryTableContainer>
