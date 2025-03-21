@@ -147,12 +147,12 @@ const AdditionalServiceList: React.FC = () => {
     return filteredServices.map((service) => (
       <TableRow key={service.serviceId} hover>
         <TableCell sx={{ maxWidth: '500px' }}>{service.serviceName}</TableCell>
-        <TableCell align="right">{service.serviceValue.toLocaleString()}</TableCell>
-        <TableCell align="center">
+        <TableCell align='right'>{service.serviceValue.toLocaleString()}</TableCell>
+        <TableCell align='center'>
           <AddButton
-            variant="outlined"
-            color="primary"
-            size="small"
+            variant='outlined'
+            color='primary'
+            size='small'
             startIcon={<AddIcon />}
             onClick={() => handleAddService(service)}
           >
@@ -167,7 +167,7 @@ const AdditionalServiceList: React.FC = () => {
     <RootContainer>
       <HeaderContainer>
         <TitleSection>
-          <TitleTypography variant="subtitle1">부가서비스 목록</TitleTypography>
+          <TitleTypography variant='subtitle1'>부가서비스 목록</TitleTypography>
           <CountTypography>{filteredServices.length}</CountTypography>
         </TitleSection>
 
@@ -175,11 +175,11 @@ const AdditionalServiceList: React.FC = () => {
           <TextField
             value={searchKeyword}
             onChange={handleSearchChange}
-            placeholder="서비스명 검색"
-            size="small"
+            placeholder='서비스명 검색'
+            size='small'
             InputProps={{
               startAdornment: (
-                <InputAdornment position="start">
+                <InputAdornment position='start'>
                   <SearchIcon />
                 </InputAdornment>
               ),
@@ -200,16 +200,16 @@ const AdditionalServiceList: React.FC = () => {
             <TableHead>
               <TableRow>
                 <StyledTableHeaderCell>서비스명</StyledTableHeaderCell>
-                <StyledTableHeaderCell align="right">금액 (원)</StyledTableHeaderCell>
-                <StyledTableHeaderCell align="center" width="120px"></StyledTableHeaderCell>
+                <StyledTableHeaderCell align='right'>금액 (원)</StyledTableHeaderCell>
+                <StyledTableHeaderCell align='center' width='120px'></StyledTableHeaderCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {tableRows}
               {filteredServices.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={3} align="center" sx={{ py: 4 }}>
-                    <Typography color="text.secondary">
+                  <TableCell colSpan={3} align='center' sx={{ py: 4 }}>
+                    <Typography color='text.secondary'>
                       {searchKeyword
                         ? '검색 결과가 없습니다.'
                         : '선택 가능한 부가서비스가 없습니다.'}

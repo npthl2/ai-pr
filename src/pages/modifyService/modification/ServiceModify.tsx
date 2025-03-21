@@ -31,12 +31,12 @@ interface ServiceModifyProps {
 
 const ServiceModify: React.FC<ServiceModifyProps> = () => {
   // 스토어에서 선택된 서비스와 총액 계산 함수 가져오기
-  const { 
-    selectedService, 
-    selectedAdditionalServices, 
-    getTotalPrice, 
-    isServiceModifiable, 
-    resetAll 
+  const {
+    selectedService,
+    selectedAdditionalServices,
+    getTotalPrice,
+    isServiceModifiable,
+    resetAll,
   } = useModifyServiceStore();
 
   // 저장 버튼 클릭 시 호출되는 핸들러
@@ -81,17 +81,10 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
 
       {/* 4. 버튼 영역 */}
       <ButtonGroup>
-        <Button 
-          variant='outlined' 
-          onClick={handleReset}
-        >
+        <Button variant='outlined' onClick={handleReset}>
           초기화
         </Button>
-        <Button 
-          variant='contained' 
-          onClick={handleSave} 
-          disabled={isSaveDisabled}
-        >
+        <Button variant='contained' onClick={handleSave} disabled={isSaveDisabled}>
           저장
         </Button>
       </ButtonGroup>

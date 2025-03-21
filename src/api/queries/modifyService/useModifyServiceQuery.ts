@@ -4,7 +4,9 @@ import { AdditionalService as BaseAdditionalService } from '@pages/registration/
 import { ServiceModifiableResponse } from '@model/modifyService/ModifyServiceModel';
 import { useReactQuery } from '@hooks/useReactQuery';
 import serviceModificationService from '@api/services/serviceModificationService';
-import registrationContractService, { ServiceResponse } from '@api/services/registrationContractService';
+import registrationContractService, {
+  ServiceResponse,
+} from '@api/services/registrationContractService';
 import { CommonResponse } from '@model/common/CommonResponse';
 
 // SelectService 컴포넌트에서 사용할 Service 타입 확장
@@ -49,11 +51,11 @@ const mapServiceResponseToAdditionalService = (
 
 /**
  * 요금제 변경 가능 여부 확인 쿼리 훅
- * 
+ *
  * 고객의 계약 ID를 기반으로 현재 요금제 변경이 가능한지 여부를 확인하는 API를 호출합니다.
  * ServiceModification 컴포넌트에서 화면 진입 시 자동으로 호출되며,
  * 당월 요금제 변경 이력이 있는 경우 등 변경이 불가능한 상황에 대한 정보를 반환합니다.
- * 
+ *
  * @param contractId - 계약 ID
  * @param enabled - 쿼리 자동 실행 여부 (기본값: false)
  * @returns 요금제 변경 가능 여부 확인 쿼리 결과
@@ -70,12 +72,15 @@ export const useCheckServiceModifiableQuery = (contractId: string, enabled: bool
       if (response.successOrNot === 'Y' && response.data && typeof response.data !== 'string') {
         return response.data;
       }
-      
+
       // 응답이 성공적이지 않거나 data가 문자열인 경우 기본 에러 메시지 반환
-      return { 
-        isModifiable: false, 
-        message: typeof response.data === 'string' ? response.data : '요금제 변경 가능 여부 확인 중 오류가 발생했습니다.', 
-        isChangedToday: false 
+      return {
+        isModifiable: false,
+        message:
+          typeof response.data === 'string'
+            ? response.data
+            : '요금제 변경 가능 여부 확인 중 오류가 발생했습니다.',
+        isChangedToday: false,
       };
     },
     enabled: enabled && !!contractId, // API 호출 활성화 조건: enabled가 true이고 contractId가 존재하는 경우에만
@@ -137,7 +142,7 @@ export const useCustomerCurrentServiceQuery = (contractId: string) => {
           serviceValue: 85000,
           serviceValueType: 'monthly',
           releaseDate: '2022-12-01',
-        }
+        },
       };
     },
     enabled: !!contractId,

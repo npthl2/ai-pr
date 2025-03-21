@@ -94,13 +94,18 @@ const DeleteButton = styled(Button)({
  */
 const SelectedServiceList: React.FC = () => {
   // Zustand 스토어에서 선택된 부가서비스 목록과 삭제 액션 가져오기
-  const selectedAdditionalServices = useModifyServiceStore(state => state.selectedAdditionalServices);
-  const removeAdditionalService = useModifyServiceStore(state => state.removeAdditionalService);
+  const selectedAdditionalServices = useModifyServiceStore(
+    (state) => state.selectedAdditionalServices,
+  );
+  const removeAdditionalService = useModifyServiceStore((state) => state.removeAdditionalService);
 
   // 부가서비스 삭제 핸들러
-  const handleRemoveService = useCallback((serviceId: string) => {
-    removeAdditionalService(serviceId);
-  }, [removeAdditionalService]);
+  const handleRemoveService = useCallback(
+    (serviceId: string) => {
+      removeAdditionalService(serviceId);
+    },
+    [removeAdditionalService],
+  );
 
   // 헤더 섹션 메모이제이션
   const headerSection = useMemo(
@@ -110,7 +115,7 @@ const SelectedServiceList: React.FC = () => {
         <CountTypography>{selectedAdditionalServices.length}</CountTypography>
       </ServiceHeaderContainer>
     ),
-    [selectedAdditionalServices.length]
+    [selectedAdditionalServices.length],
   );
 
   // 테이블 컨텐츠 메모이제이션
@@ -146,7 +151,7 @@ const SelectedServiceList: React.FC = () => {
         )}
       </TableBody>
     ),
-    [selectedAdditionalServices, handleRemoveService]
+    [selectedAdditionalServices, handleRemoveService],
   );
 
   return (
@@ -158,8 +163,12 @@ const SelectedServiceList: React.FC = () => {
             <TableHead>
               <TableRow>
                 <StyledTableHeaderCell>서비스명</StyledTableHeaderCell>
-                <StyledTableHeaderCell align='center' width='100px'>상태</StyledTableHeaderCell>
-                <StyledTableHeaderCell align='right' width='100px'>요금 (원)</StyledTableHeaderCell>
+                <StyledTableHeaderCell align='center' width='100px'>
+                  상태
+                </StyledTableHeaderCell>
+                <StyledTableHeaderCell align='right' width='100px'>
+                  요금 (원)
+                </StyledTableHeaderCell>
                 <StyledTableHeaderCell align='center' width='100px'></StyledTableHeaderCell>
               </TableRow>
             </TableHead>

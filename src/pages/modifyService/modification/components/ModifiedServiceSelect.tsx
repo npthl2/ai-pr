@@ -91,13 +91,13 @@ export interface ServicePlan {
  */
 const SelectService = () => {
   // Zustand 스토어에서 서비스 선택 관련 상태와 액션 가져오기
-  const { 
-    selectedService, 
-    setSelectedService, 
-    isServiceModifiable, 
+  const {
+    selectedService,
+    setSelectedService,
+    isServiceModifiable,
     previousService,
     isChangedToday,
-    revertToPreviousService
+    revertToPreviousService,
   } = useModifyServiceStore();
 
   // API에서 서비스 목록을 가져옵니다 (useServicesQuery 훅 사용)
@@ -156,7 +156,7 @@ const SelectService = () => {
           <TitleTypography variant='subtitle1'>
             변경할 요금제
             {!isServiceModifiable && (
-              <Tooltip title={disabledTooltipMessage} placement="right">
+              <Tooltip title={disabledTooltipMessage} placement='right'>
                 <InfoIcon />
               </Tooltip>
             )}
@@ -203,12 +203,12 @@ const SelectService = () => {
           <PriceTypography>
             {selectedService ? `${selectedService.serviceValue.toLocaleString()}원` : '0원'}
           </PriceTypography>
-          
+
           {showRevertButton && (
             <RevertButton
-              variant="outlined"
-              color="primary"
-              size="small"
+              variant='outlined'
+              color='primary'
+              size='small'
               startIcon={<RestoreIcon />}
               onClick={handleRevertToPreviousService}
             >

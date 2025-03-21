@@ -91,9 +91,9 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
   revertToPreviousService: () => {
     const { previousService } = get();
     if (previousService) {
-      set({ 
+      set({
         selectedService: previousService,
-        isChangedToday: false
+        isChangedToday: false,
       });
     }
   },

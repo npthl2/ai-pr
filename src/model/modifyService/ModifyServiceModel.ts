@@ -6,7 +6,7 @@
 
 /**
  * 요금제 변경 가능 여부 확인 응답 인터페이스
- * 
+ *
  * @property isModifiable - 요금제 변경 가능 여부 (true: 변경 가능, false: 변경 불가)
  * @property message - 요금제 변경 불가 시 표시할 메시지
  * @property blockReason - 요금제 변경 불가 사유 코드
@@ -23,7 +23,7 @@ export interface ServiceModifiableResponse {
 
 /**
  * 요금제 변경 요청 인터페이스
- * 
+ *
  * @property contractId - 계약 ID
  * @property newServiceId - 변경할 새 요금제 ID
  * @property additionalServiceIds - 변경할 부가서비스 ID 목록
@@ -36,7 +36,7 @@ export interface ServiceModificationRequest {
 
 /**
  * 요금제 변경 응답 인터페이스
- * 
+ *
  * @property modificationId - 요금제 변경 이력 ID
  * @property modificationDate - 요금제 변경 일자 (yyyy-MM-dd HH:mm:ss 형식)
  * @property status - 요금제 변경 상태 (COMPLETED: 완료, PENDING: 처리중, FAILED: 실패)
@@ -49,7 +49,7 @@ export interface ServiceModificationResponse {
 
 /**
  * 백엔드 공통 응답 구조
- * 
+ *
  * @property successOrNot - 성공 여부 (Y/N)
  * @property statusCode - 상태 코드
  * @property data - 응답 데이터
