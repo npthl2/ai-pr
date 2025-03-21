@@ -22,7 +22,7 @@ import { amber } from '@mui/material/colors';
 import useMenuStore from '@stores/MenuStore';
 import { SUBSCRIPTION_MENUS, TabInfo } from '@constants/CommonConstant';
 import { useBookmark } from '@hooks/useBookmark';
-import ServiceModification from '@pages/customer/ServiceModification';
+import ServiceModification from '@pages/modifyService/ServiceModification';
 import NewContract from '@pages/registration/NewContract';
 import CustomerDetailContainer from '@pages/customer/detail/CustomerDetailContainer';
 import { useRegistration } from '@hooks/useRegistration';
