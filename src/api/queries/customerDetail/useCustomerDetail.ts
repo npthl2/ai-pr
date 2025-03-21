@@ -4,6 +4,7 @@ import customerContractService from '@api/services/cusotmerDetailService'; // En
 import { CustomerContract } from '@model/CustomerContract'; // Ensure this module is correctly referenced
 import { Info } from '@pages/customer/detail/components/information/types';
 import { LobItem, PhoneItem } from '@pages/customer/detail/components/tree/types';
+import { ContractData, ContractService } from '@model/Contract';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useCustomerContractsQuery = (customerId: string) => {
@@ -94,7 +95,7 @@ export const customerContractsInfoData = (customerId: string, contractId: string
   // }, [customerId, contractId]);
 };
 
-export function mapToInfo(data: any): Info {
+export function mapToInfo(data: ContractData): Info {
   return {
     contractId: data.contractId,
     contract: {
@@ -137,7 +138,7 @@ export function mapToInfo(data: any): Info {
       simModelName: data.contractDetail.device.simModelName,
       simSerialNumber: data.contractDetail.device.simSerialNumber,
       simSerialNumberEncrypted: data.contractDetail.device.simSerialNumberEncrypted,
-      serviceList: data.contractDetail.serviceList.map((service: any) => ({
+      serviceList: data.contractDetail.serviceList.map((service: ContractService) => ({
         serviceType: service.serviceType,
         serviceName: service.serviceName,
         serviceValueType: service.serviceValueType,
