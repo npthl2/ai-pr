@@ -41,8 +41,8 @@ export const MemoEditorTextarea = styled(TextareaAutosize)(({ theme }) => ({
 }));
 
 export const MemoHistoryTableContainer = styled(TableContainer)(({ theme }) => ({
-  maxHeight: '220px',
-  minHeight: '220px',
+  maxHeight: '233px',
+  minHeight: '233px',
   overflowY: 'auto',
   position: 'relative',
   borderBottom: `1px solid ${theme.palette.grey[200]}`,
