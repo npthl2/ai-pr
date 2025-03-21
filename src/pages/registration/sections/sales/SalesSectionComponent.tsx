@@ -106,7 +106,6 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, on
     tabId: string,
     partialSales: Partial<Sales>,
   ) => {
-    console.log('updateStoreAndValidationCompleteFields');
     // 스토어에 변경사항 업데이트 하고 모든 필드가 채워졌는지 validation field도 업데이트
     updateRegistrationSalesInfo(tabId, partialSales);
     updateRegistrationSalesValidationFlag(tabId);

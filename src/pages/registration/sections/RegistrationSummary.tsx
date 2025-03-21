@@ -19,12 +19,12 @@ import {
 } from '@constants/RegistrationConstants';
 import { useState, useEffect } from 'react';
 import { useRegistrationInfo } from '@hooks/useRegistrationInfo';
-import useRegistrationStore from '@stores/registration/RegistrationStore';
 import { useRegistrationMutation } from '@api/queries/registration/useRegistrationMutation';
 import useRegistrationDeviceStore from '@stores/registration/RegistrationDeviceStore';
 import useRegistrationInvoiceStore from '@stores/registration/RegistrationInvoiceStore';
 import useRegistrationContractStore from '@stores/registration/RegistrationContractStore';
 import useRegistrationSalesStore from '@stores/registration/RegistrationSalesStore';
+import useRegistrationStore from '@stores/registration/RegistrationStore';
 
 interface ContractSummaryProps {
   contractTabId: string;
@@ -105,10 +105,6 @@ const ContractSummary = ({
       // 저장 전 RegistrationStore 상태 확인
       setRegistrationInfo(contractTabId, updatedInfo);
       updateRegistrationStatus(contractTabId, REGISTRATION_STATUS.PENDING);
-
-      // 저장된 데이터 확인
-      const savedInfo = useRegistrationStore.getState().getRegistrationInfo(contractTabId);
-      console.log('저장된 RegistrationInfo:', savedInfo);
 
       // 3. 백엔드 API 호출 (개발 단계에서는 임시 응답 사용)
       // Promise를 반환하도록 수정하여 API 응답을 기다림

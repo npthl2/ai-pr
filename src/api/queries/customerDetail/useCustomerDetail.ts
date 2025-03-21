@@ -14,7 +14,6 @@ export const useCustomerContractsQuery = (customerId: string) => {
         throw new Error('customerId is required');
       }
       const response = await customerContractService.getCustomerContracts(customerId);
-      console.debug('[useCustomerContractsQuery]response', response);
 
       // Type Guard를 사용하여 CustomerContract만 반환
       if (!response.data || typeof response.data !== 'object') {
@@ -28,9 +27,7 @@ export const useCustomerContractsQuery = (customerId: string) => {
 };
 
 export const customerContractsTreeData = (customerId: string) => {
-  console.debug('[customerContractsTreeData]customerId', customerId);
   const { data } = useCustomerContractsQuery(customerId);
-  console.debug('[customerContractsTreeData]data', data);
   return useMemo(() => {
     if (!data) return null;
     return mapToTree(data);
@@ -86,10 +83,6 @@ const getFirstPartOfEngagementDate = (str: string): string => {
 };
 
 export const customerContractsInfoData = (customerId: string, contractId: string) => {
-  // customerId와 contractId가 유효한지 확인
-  console.debug('[customerContractsInfoData]customerId', customerId);
-  console.debug('[customerContractsInfoData]contractId', contractId);
-
   const { data } = useCustomerContractsQuery(customerId);
   const selectedContract = data.contracts.find((contract) => contract.contractId === contractId);
   if (!selectedContract) return null;

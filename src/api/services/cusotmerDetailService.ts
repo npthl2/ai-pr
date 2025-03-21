@@ -11,7 +11,6 @@ const customerContractService = {
     customerId: string,
     phoneNumber: string,
   ): Promise<CommonResponse<string>> {
-    console.debug('[getContractIdsByPhonNumberQuery]customerId: ', customerId);
     return baseService.get<string>(
       `/stg-be/v1/customers/${customerId}/contractId?phoneNumber=${phoneNumber}`,
     );
