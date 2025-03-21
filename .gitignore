@@ -24,3 +24,9 @@ dist-ssr
 *.sln
 *.sw?
 test/unit/coverage
+
+# Husky
+.husky/_/*
+.cursor/reviews/
+pr_review_info.sh
+

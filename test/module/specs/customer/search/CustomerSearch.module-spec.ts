@@ -1,13 +1,13 @@
 import CustomerSearchTestPage from '../../../../pages/customer/search/CustomerSearch';
 import { CustomerSearchServiceMock } from '../../../mock/customer/search/CustomerSearchServiceMock';
-import { mockAuthStore } from '../../../../support/helpers/mockAuthStore';
+import { mockMemberStore } from '../../../../support/helpers/mockMemberStore';
 
 describe('[KAN-18-1] 고객검색 Modal - 일반유저', () => {
   const customerSearch = new CustomerSearchTestPage();
   const customerSearchServiceMock = new CustomerSearchServiceMock();
 
   before(() => {
-    mockAuthStore({
+    mockMemberStore({
       memberInfo: {
         memberId: 'user2',
         memberName: 'user2',
@@ -159,7 +159,7 @@ describe('[KAN-18-2] 고객검색 Modal - 관리자', () => {
   const customerSearchServiceMock = new CustomerSearchServiceMock();
 
   before(() => {
-    mockAuthStore({
+    mockMemberStore({
       memberInfo: {
         memberId: 'user1',
         memberName: 'user1',

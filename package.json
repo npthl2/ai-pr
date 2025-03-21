@@ -17,7 +17,7 @@
     "test:smoke": "cypress run --spec test/smoke/specs/**/*.smoke-spec.ts",
     "cypress:open": "cypress open",
     "lint-staged": "lint-staged",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
