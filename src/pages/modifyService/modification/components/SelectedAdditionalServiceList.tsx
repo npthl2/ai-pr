@@ -44,11 +44,10 @@ const ListContainer = styled(Box)({
   border: '1px solid #e0e0e0',
   borderRadius: '4px',
   overflow: 'hidden',
-  marginBottom: '16px',
 });
 
 const StyledTableContainer = styled(TableContainer)({
-  maxHeight: '200px', // 목록 그리드 높이 고정
+  maxHeight: '250px', // 목록 그리드 높이 약간 늘림 (합계 행 추가)
   '&::-webkit-scrollbar': {
     width: '8px',
   },
@@ -88,6 +87,23 @@ const DeleteButton = styled(Button)({
   whiteSpace: 'nowrap',
 });
 
+const TotalRow = styled(TableRow)({
+  backgroundColor: '#f5f6f8',
+  '& th, & td': {
+    fontWeight: 'bold',
+    padding: '16px',
+  },
+});
+
+const TotalText = styled(Typography)({
+  fontWeight: 'bold',
+});
+
+const TotalAmount = styled(Typography)({
+  fontWeight: 'bold',
+  fontSize: '1.1rem',
+});
+
 /**
  * 선택된 부가서비스 목록 컴포넌트
  * 사용자가 선택한 부가서비스 목록을 보여주고 삭제 기능을 제공합니다.
@@ -97,6 +113,7 @@ const SelectedAdditionalServiceList: React.FC = () => {
   const selectedAdditionalServices = useModifyServiceStore(
     (state) => state.selectedAdditionalServices,
   );
+  const selectedService = useModifyServiceStore((state) => state.selectedService);
   const removeAdditionalService = useModifyServiceStore((state) => state.removeAdditionalService);
 
   // 부가서비스 삭제 핸들러
@@ -106,6 +123,17 @@ const SelectedAdditionalServiceList: React.FC = () => {
     },
     [removeAdditionalService],
   );
+
+  // 부가서비스 총 요금 계산 (요금제 + 부가서비스)
+  const totalPrice = useMemo(() => {
+    const additionalServicesTotal = selectedAdditionalServices.reduce(
+      (sum, service) => sum + service.serviceValue,
+      0,
+    );
+    const servicePrice = selectedService ? selectedService.serviceValue : 0;
+
+    return additionalServicesTotal + servicePrice;
+  }, [selectedAdditionalServices, selectedService]);
 
   // 헤더 섹션 메모이제이션
   const headerSection = useMemo(
@@ -149,9 +177,20 @@ const SelectedAdditionalServiceList: React.FC = () => {
             </TableCell>
           </TableRow>
         )}
+
+        {/* 합계 행 */}
+        <TotalRow>
+          <TableCell colSpan={2}>
+            <TotalText>합계</TotalText>
+          </TableCell>
+          <PriceCell>
+            <TotalAmount>{totalPrice.toLocaleString()}</TotalAmount>
+          </PriceCell>
+          <TableCell></TableCell>
+        </TotalRow>
       </TableBody>
     ),
-    [selectedAdditionalServices, handleRemoveService],
+    [selectedAdditionalServices, handleRemoveService, totalPrice],
   );
 
   return (

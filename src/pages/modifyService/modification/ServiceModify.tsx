@@ -1,5 +1,5 @@
 // src/pages/modifyService/modification/ServiceModify.tsx
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SelectService from './components/ModifiedServiceSelect';
 import AdditionalServiceList from './components/AdditionalServiceList';
@@ -73,10 +73,6 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
       {/* 3. 선택된 부가서비스 영역 */}
       <Section>
         <SelectedAdditionalServiceList />
-        <Box sx={{ backgroundColor: '#f5f6f8', padding: '16px', borderRadius: '4px' }}>
-          <Typography variant='subtitle2'>합계</Typography>
-          <Typography variant='h6'>{getTotalPrice().toLocaleString()}원</Typography>
-        </Box>
       </Section>
 
       {/* 4. 버튼 영역 */}
