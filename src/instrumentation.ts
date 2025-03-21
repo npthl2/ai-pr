@@ -10,6 +10,8 @@ import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { registerInstrumentations } from '@opentelemetry/instrumentation';
 import { getWebAutoInstrumentations } from '@opentelemetry/auto-instrumentations-web';
 import { ZoneContextManager } from '@opentelemetry/context-zone';
+import { Span } from '@opentelemetry/api';
+import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 // import { DocumentLoadInstrumentation } from "@opentelemetry/instrumentation-document-load";
 
 const setupOTelSDK = () => {
@@ -53,8 +55,9 @@ const setupOTelSDK = () => {
         },
         '@opentelemetry/instrumentation-xml-http-request': {
           enabled: true,
-          applyCustomAttributesOnSpan(span, xhr) {
-            const method = (span as any).attributes['http.method']?.toString() || 'UNKNOWN';
+          applyCustomAttributesOnSpan(span: Span, xhr: XMLHttpRequest) {
+            const readableSpan = span as unknown as ReadableSpan;
+            const method = readableSpan.attributes?.['http.method']?.toString() || 'UNKNOWN';
             const urlObj = new URL(xhr.responseURL);
             const path = urlObj.pathname;
             span.updateName(`${method} ${path}`);

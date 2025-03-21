@@ -5,9 +5,13 @@ interface ChipProps extends Omit<MuiChipProps, 'size'> {
   size?: ChipSize;
 }
 
+interface StyledChipProps {
+  $chipSize: ChipSize;
+}
+
 const StyledChip = styled(MuiChip, {
-  shouldForwardProp: (prop) => prop !== 'size',
-})<{ chipSize: ChipSize }>(({ theme, color, variant, chipSize }) => ({
+  shouldForwardProp: (prop) => prop !== '$chipSize',
+})<StyledChipProps>(({ theme, color, variant, $chipSize }) => ({
   '& .MuiChip-label': {
     padding: '2px 8px',
   },
@@ -16,13 +20,13 @@ const StyledChip = styled(MuiChip, {
     xsmall: 20,
     small: 22,
     medium: 24,
-  }[chipSize],
+  }[$chipSize],
   '& .MuiSvgIcon-root': {
     fontSize: {
       xsmall: '13.33px',
       small: '13.33px',
       medium: '16.33px',
-    }[chipSize],
+    }[$chipSize],
   },
   ...(color === 'default' && {
     backgroundColor: theme.palette.grey[100],
@@ -53,5 +57,7 @@ const StyledChip = styled(MuiChip, {
 export const Chip = (props: ChipProps) => {
   const { size = 'small', ...restProps } = props;
 
-  return <StyledChip chipSize={size} {...restProps} />;
+  return <StyledChip $chipSize={size} {...restProps} />;
 };
+
+export default Chip;

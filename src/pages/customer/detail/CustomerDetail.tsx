@@ -35,7 +35,6 @@ const CustomerDetail = () => {
   };
 
   const handleFilteredContractId = (id: string | null) => {
-    console.debug('handleFilteredContractId', id);
     setFilteredContractId(id);
     if (id) {
       setSelectedContractId(id);

@@ -14,13 +14,21 @@ import TextField from '@components/TextField';
 
 interface ServiceSelectModalProps {
   open: boolean;
+  searchServiceName: string;
+  selectedService: Service | null;
   onClose: () => void;
   onSelect: (selectedFee: Service) => void;
 }
 
-const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, onSelect }) => {
+const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({
+  open,
+  searchServiceName,
+  selectedService,
+  onClose,
+  onSelect,
+}) => {
   // 상태관리
-  const [searchText, setSearchText] = useState<string>('');
+  const [searchText, setSearchText] = useState<string>(searchServiceName);
   const [selectedPlan, setSelectedPlan] = useState<Service | null>(null);
   const { data: planList } = useServicesQuery();
   const [filteredPlanList, setFilteredPlanList] = useState<Service[]>(planList);
@@ -29,14 +37,22 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
     setFilteredPlanList(planList);
   }, [planList]);
 
+  useEffect(() => {
+    setSelectedPlan(selectedService);
+  }, [open, selectedService]);
+
+  useEffect(() => {
+    setSearchText(searchServiceName);
+    handleSearch(searchServiceName);
+  }, [open, searchServiceName]);
+
   // 이벤트 핸들러
-  const handleSearch = () => {
-    if (searchText) {
-      setFilteredPlanList(
-        planList.filter((plan) =>
-          plan.serviceName.toLowerCase().includes(searchText.toLowerCase()),
-        ),
+  const handleSearch = (value: string) => {
+    if (value) {
+      const filteredPlanList = planList.filter((plan) =>
+        plan.serviceName.toLowerCase().includes(value.toLowerCase()),
       );
+      setFilteredPlanList(filteredPlanList);
     } else {
       setFilteredPlanList(planList);
     }
@@ -47,6 +63,11 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
       onSelect(selectedPlan);
       onClose();
     }
+  };
+
+  const handleClose = () => {
+    setSelectedPlan(null);
+    onClose();
   };
 
   return (
@@ -71,7 +92,7 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
                 sx={{ backgroundColor: '#FFFFFF' }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    handleSearch();
+                    handleSearch(searchText);
                     e.preventDefault();
                   }
                 }}
@@ -80,7 +101,9 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
             </Box>
 
             <Button
-              onClick={handleSearch}
+              onClick={() => {
+                handleSearch(searchText);
+              }}
               variant='contained'
               iconComponent={<SearchIcon />}
               iconPosition='left'
@@ -151,7 +174,7 @@ const ServiceSelectModal: React.FC<ServiceSelectModalProps> = ({ open, onClose, 
         </Box>
 
         <Box sx={styles.modalFooter}>
-          <Button onClick={onClose} variant='outlined' color='grey' sx={styles.cancelButton}>
+          <Button onClick={handleClose} variant='outlined' color='grey' sx={styles.cancelButton}>
             취소
           </Button>
           <Button

@@ -50,7 +50,6 @@ const Tree = ({
 
   // 초기 트리 확장 처리
   useEffect(() => {
-    console.debug('[Tree]initial useEffect', selectedContractId);
     const shouldInitializeExpansion =
       selectedContractId && !isInitialExpansionDone.current && expandedItems.length === 0;
 
@@ -69,7 +68,6 @@ const Tree = ({
 
   // Filter 트리 확장 처리
   useEffect(() => {
-    console.debug('[Tree]filter useEffect', filteredContractId);
     if (filteredContractId) {
       handleExpandedItemsForFilter(filteredContractId);
     }
