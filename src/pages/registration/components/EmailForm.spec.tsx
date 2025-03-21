@@ -32,7 +32,15 @@ interface ButtonProps {
 
 // TextField와 Select 컴포넌트 모킹
 vi.mock('@components/TextField', () => ({
-  default: ({ value, onChange, onBlur, placeholder, disabled, error, helperText }: TextFieldProps) => (
+  default: ({
+    value,
+    onChange,
+    onBlur,
+    placeholder,
+    disabled,
+    error,
+    helperText,
+  }: TextFieldProps) => (
     <div>
       <input
         data-testid={placeholder || 'text-field'}
