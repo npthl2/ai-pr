@@ -1,17 +1,36 @@
 import {
   AutocompleteProps as MuiAutocompleteProps,
   Autocomplete as MuiAutocomplete,
+  ChipProps,
+  AutocompleteOwnerState,
+  Chip,
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
-export type AutocompleteProps<T> = MuiAutocompleteProps<T, boolean, boolean, boolean>;
+interface TagProps extends Partial<ChipProps> {
+  key: number;
+  className: string;
+  disabled: boolean;
+  'data-tag-index': number;
+  tabIndex: -1;
+  onDelete: (event: React.MouseEvent<HTMLElement>) => void;
+}
+
+export type AutocompleteProps<T> = Omit<MuiAutocompleteProps<T, boolean, boolean, boolean>, 'renderTags'> & {
+  renderTags?: (
+    value: T[],
+    getTagProps: (tagProps: { index: number }) => TagProps,
+    ownerState: AutocompleteOwnerState<T, boolean, boolean, boolean>
+  ) => React.ReactNode;
+};
+
 export const Autocomplete = <T,>(props: AutocompleteProps<T>) => {
   const { size = 'small', renderTags, ...restProps } = props;
 
   const outlinedRenderTags = (
     value: T[],
-    getTagProps: (params: { index: number }) => any,
-    ownerState: any,
+    getTagProps: (params: { index: number }) => TagProps,
+    ownerState: AutocompleteOwnerState<T, boolean, boolean, boolean>,
   ) =>
     renderTags
       ? renderTags(
@@ -19,11 +38,19 @@ export const Autocomplete = <T,>(props: AutocompleteProps<T>) => {
           ({ index }) => ({
             ...getTagProps({ index }),
             variant: 'outlined',
-            size: 'xsmall',
+            size: 'small',
           }),
           ownerState,
         )
-      : undefined;
+      : value.map((option, index) => (
+          <Chip
+            {...getTagProps({ index })}
+            key={index}
+            variant="outlined"
+            size="small"
+            label={option as string}
+          />
+        ));
 
   return (
     <MuiAutocomplete
@@ -31,7 +58,8 @@ export const Autocomplete = <T,>(props: AutocompleteProps<T>) => {
       size={size}
       renderTags={outlinedRenderTags}
       {...restProps}
-    ></MuiAutocomplete>
+    />
   );
 };
+
 export default Autocomplete;
