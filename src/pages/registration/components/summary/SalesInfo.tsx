@@ -2,7 +2,7 @@ import { InfoSection, InfoRow, InfoLabel, InfoValue, SubSectionTitle } from '../
 import { SalesInfo as BaseSalesInfo } from '@model/RegistrationInfo';
 
 interface SalesInfo extends Partial<BaseSalesInfo> {
-  [key: string]: any;
+  [key: string]: string | boolean | undefined;
 }
 
 interface SalesInfoProps {
