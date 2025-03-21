@@ -79,7 +79,7 @@ const CustomerSearch = ({ authority, open, onCloseModal }: CustomerSearchProps) 
 
   const hasSearchTelAuthority = authority?.includes(ROLE_SEARCH_TEL_NO) ?? false;
 
-  const { addCustomer } = useCustomerStore();
+  const { addCustomer, handleMoveToTab, setMoveTab } = useCustomerStore();
   const { setSelectedMainMenu } = useMenuStore();
 
   const phoneNumberRef = useRef<HTMLTextAreaElement>(null);
@@ -264,6 +264,8 @@ const CustomerSearch = ({ authority, open, onCloseModal }: CustomerSearchProps) 
             draft.dialogOpen = true;
           });
         } else {
+          // 사용자가 추가한 탭이 있으면 추가 탭으로 이동
+          handleMoveToTab();
           setSelectedMainMenu(MainMenu.CUSTOMERS);
           onClose();
         }
@@ -297,6 +299,9 @@ const CustomerSearch = ({ authority, open, onCloseModal }: CustomerSearchProps) 
       error: false,
       message: '',
     });
+
+    // 이동할 탭 초기화
+    setMoveTab(null);
 
     onCloseModal();
   };
