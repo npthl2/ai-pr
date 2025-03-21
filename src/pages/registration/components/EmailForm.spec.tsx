@@ -2,10 +2,37 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import EmailForm from './EmailForm';
 import { REGISTRATION_STATUS } from '@constants/RegistrationConstants';
+import { ReactNode } from 'react';
+
+// Props 인터페이스 정의
+interface TextFieldProps {
+  value: string;
+  onChange: (value: string) => void;
+  onBlur?: () => void;
+  placeholder?: string;
+  disabled?: boolean;
+  error?: boolean;
+  helperText?: string;
+}
+
+interface SelectProps {
+  value: string;
+  onChange: (e: { target: { value: string } }) => void;
+  onBlur?: () => void;
+  disabled?: boolean;
+  error?: boolean;
+  children?: ReactNode;
+}
+
+interface ButtonProps {
+  onClick?: () => void;
+  disabled?: boolean;
+  children?: ReactNode;
+}
 
 // TextField와 Select 컴포넌트 모킹
 vi.mock('@components/TextField', () => ({
-  default: ({ value, onChange, onBlur, placeholder, disabled, error, helperText }: any) => (
+  default: ({ value, onChange, onBlur, placeholder, disabled, error, helperText }: TextFieldProps) => (
     <div>
       <input
         data-testid={placeholder || 'text-field'}
@@ -22,7 +49,7 @@ vi.mock('@components/TextField', () => ({
 }));
 
 vi.mock('@components/Select', () => ({
-  default: ({ value, onChange, onBlur, disabled, error, children }: any) => (
+  default: ({ value, onChange, onBlur, disabled, error, children }: SelectProps) => (
     <div>
       <select
         data-testid='domain-select'
@@ -39,7 +66,7 @@ vi.mock('@components/Select', () => ({
 }));
 
 vi.mock('@components/Button', () => ({
-  default: ({ onClick, disabled, children }: any) => (
+  default: ({ onClick, disabled, children }: ButtonProps) => (
     <button data-testid='send-button' onClick={onClick} disabled={disabled}>
       {children}
     </button>
