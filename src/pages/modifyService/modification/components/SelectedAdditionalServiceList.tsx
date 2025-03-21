@@ -92,7 +92,7 @@ const DeleteButton = styled(Button)({
  * 선택된 부가서비스 목록 컴포넌트
  * 사용자가 선택한 부가서비스 목록을 보여주고 삭제 기능을 제공합니다.
  */
-const SelectedServiceList: React.FC = () => {
+const SelectedAdditionalServiceList: React.FC = () => {
   // Zustand 스토어에서 선택된 부가서비스 목록과 삭제 액션 가져오기
   const selectedAdditionalServices = useModifyServiceStore(
     (state) => state.selectedAdditionalServices,
@@ -180,4 +180,4 @@ const SelectedServiceList: React.FC = () => {
   );
 };
 
-export default SelectedServiceList;
+export default SelectedAdditionalServiceList;

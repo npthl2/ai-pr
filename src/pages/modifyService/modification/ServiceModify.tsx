@@ -3,8 +3,8 @@ import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SelectService from './components/ModifiedServiceSelect';
 import AdditionalServiceList from './components/AdditionalServiceList';
-import SelectedServiceList from './components/SelectedAdditionalServiceList';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
+import SelectedAdditionalServiceList from './components/SelectedAdditionalServiceList';
 
 // 스타일 컴포넌트
 const Container = styled(Box)({
@@ -72,7 +72,7 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
 
       {/* 3. 선택된 부가서비스 영역 */}
       <Section>
-        <SelectedServiceList />
+        <SelectedAdditionalServiceList />
         <Box sx={{ backgroundColor: '#f5f6f8', padding: '16px', borderRadius: '4px' }}>
           <Typography variant='subtitle2'>합계</Typography>
           <Typography variant='h6'>{getTotalPrice().toLocaleString()}원</Typography>
