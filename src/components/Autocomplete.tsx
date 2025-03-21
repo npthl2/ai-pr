@@ -16,11 +16,14 @@ interface TagProps extends Partial<ChipProps> {
   onDelete: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
-export type AutocompleteProps<T> = Omit<MuiAutocompleteProps<T, boolean, boolean, boolean>, 'renderTags'> & {
+export type AutocompleteProps<T> = Omit<
+  MuiAutocompleteProps<T, boolean, boolean, boolean>,
+  'renderTags'
+> & {
   renderTags?: (
     value: T[],
     getTagProps: (tagProps: { index: number }) => TagProps,
-    ownerState: AutocompleteOwnerState<T, boolean, boolean, boolean>
+    ownerState: AutocompleteOwnerState<T, boolean, boolean, boolean>,
   ) => React.ReactNode;
 };
 
@@ -46,8 +49,8 @@ export const Autocomplete = <T,>(props: AutocompleteProps<T>) => {
           <Chip
             {...getTagProps({ index })}
             key={index}
-            variant="outlined"
-            size="small"
+            variant='outlined'
+            size='small'
             label={option as string}
           />
         ));
