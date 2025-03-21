@@ -22,11 +22,33 @@ import {
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 
 // 스타일 컴포넌트
-const SearchContainer = styled(Box)({
+const RootContainer = styled(Box)({
   width: '100%',
   display: 'flex',
-  justifyContent: 'flex-end',
+  flexDirection: 'column',
+});
+
+const HeaderContainer = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  width: '100%',
+  justifyContent: 'space-between',
   marginBottom: '16px',
+});
+
+const TitleSection = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+});
+
+const TitleTypography = styled(Typography)({
+  fontWeight: 500,
+  whiteSpace: 'nowrap',
+  marginRight: '8px',
+});
+
+const CountTypography = styled(Typography)({
+  fontWeight: 400,
 });
 
 const ListContainer = styled(Box)({
@@ -55,19 +77,6 @@ const StyledTableHeaderCell = styled(TableCell)({
   fontWeight: 500,
 });
 
-const ServiceName = styled(Typography)({
-  fontWeight: 400,
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  maxWidth: '500px',
-});
-
-const PriceCell = styled(TableCell)({
-  textAlign: 'right',
-  whiteSpace: 'nowrap',
-});
-
 const AddButton = styled(Button)({
   minWidth: '80px',
   whiteSpace: 'nowrap',
@@ -83,10 +92,7 @@ const AdditionalServiceList: React.FC = () => {
   const [debouncedSearchKeyword, setDebouncedSearchKeyword] = useState('');
 
   // Zustand 스토어에서 부가서비스 관련 상태와 액션 가져오기
-  const selectedAdditionalServices = useModifyServiceStore(
-    (state) => state.selectedAdditionalServices,
-  );
-  const addAdditionalService = useModifyServiceStore((state) => state.addAdditionalService);
+  const { selectedAdditionalServices, addAdditionalService } = useModifyServiceStore();
 
   // API에서 부가서비스 목록을 가져옵니다
   const { data: additionalServices = [] } = useAdditionalServicesQuery();
@@ -136,81 +142,86 @@ const AdditionalServiceList: React.FC = () => {
     setSearchKeyword(e.target.value);
   }, []);
 
-  // 검색 영역 메모이제이션
-  const searchField = useMemo(
-    () => (
-      <SearchContainer>
-        <TextField
-          size='small'
-          placeholder='부가서비스 검색'
-          value={searchKeyword}
-          onChange={handleSearchChange}
-          sx={{ width: '300px' }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position='start'>
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </SearchContainer>
-    ),
-    [searchKeyword, handleSearchChange],
-  );
-
-  // 테이블 컨텐츠 메모이제이션
-  const tableContent = useMemo(
-    () => (
-      <TableBody>
-        {filteredServices.map((service) => (
-          <TableRow key={service.serviceId} hover>
-            <TableCell>
-              <ServiceName>{service.serviceName}</ServiceName>
-            </TableCell>
-            <PriceCell>{service.serviceValue.toLocaleString()}</PriceCell>
-            <TableCell align='center'>
-              <AddButton
-                variant='outlined'
-                size='small'
-                startIcon={<AddIcon />}
-                onClick={() => handleAddService(service)}
-              >
-                추가
-              </AddButton>
-            </TableCell>
-          </TableRow>
-        ))}
-        {filteredServices.length === 0 && (
-          <TableRow>
-            <TableCell colSpan={3} align='center' sx={{ py: 2 }}>
-              <Typography color='text.secondary'>표시할 부가서비스가 없습니다.</Typography>
-            </TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-    ),
-    [filteredServices, handleAddService],
-  );
+  // 렌더링 최적화를 위해 테이블 행 메모이제이션
+  const tableRows = useMemo(() => {
+    return filteredServices.map((service) => (
+      <TableRow key={service.serviceId} hover>
+        <TableCell sx={{ maxWidth: '500px' }}>{service.serviceName}</TableCell>
+        <TableCell align="right">{service.serviceValue.toLocaleString()}</TableCell>
+        <TableCell align="center">
+          <AddButton
+            variant="outlined"
+            color="primary"
+            size="small"
+            startIcon={<AddIcon />}
+            onClick={() => handleAddService(service)}
+          >
+            추가
+          </AddButton>
+        </TableCell>
+      </TableRow>
+    ));
+  }, [filteredServices, handleAddService]);
 
   return (
-    <>
-      {searchField}
+    <RootContainer>
+      <HeaderContainer>
+        <TitleSection>
+          <TitleTypography variant="subtitle1">부가서비스 목록</TitleTypography>
+          <CountTypography>{filteredServices.length}</CountTypography>
+        </TitleSection>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <TextField
+            value={searchKeyword}
+            onChange={handleSearchChange}
+            placeholder="서비스명 검색"
+            size="small"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              width: '250px',
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: '#FFFFFF',
+              },
+            }}
+          />
+        </Box>
+      </HeaderContainer>
+
       <ListContainer>
         <StyledTableContainer>
-          <Table stickyHeader size='small'>
+          <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <StyledTableHeaderCell>부가서비스명</StyledTableHeaderCell>
-                <StyledTableHeaderCell align='right'>요금 (원)</StyledTableHeaderCell>
-                <StyledTableHeaderCell align='center'>추가</StyledTableHeaderCell>
+                <StyledTableHeaderCell>서비스명</StyledTableHeaderCell>
+                <StyledTableHeaderCell align="right">금액 (원)</StyledTableHeaderCell>
+                <StyledTableHeaderCell align="center" width="120px"></StyledTableHeaderCell>
               </TableRow>
             </TableHead>
-            {tableContent}
+            <TableBody>
+              {tableRows}
+              {filteredServices.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={3} align="center" sx={{ py: 4 }}>
+                    <Typography color="text.secondary">
+                      {searchKeyword
+                        ? '검색 결과가 없습니다.'
+                        : '선택 가능한 부가서비스가 없습니다.'}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
           </Table>
         </StyledTableContainer>
       </ListContainer>
-    </>
+    </RootContainer>
   );
 };
 

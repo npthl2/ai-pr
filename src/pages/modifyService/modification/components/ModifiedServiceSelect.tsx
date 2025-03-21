@@ -1,8 +1,10 @@
 // src/pages/modifyService/modification/components/ServicePlanSelect.tsx
 // 이 컴포넌트는 사용자가 변경할 서비스(요금제)를 선택할 수 있는 드롭다운 UI를 제공합니다.
 // API에서 서비스 목록을 가져와 최신 출시 순으로 정렬하여 보여주고, 선택된 서비스 정보를 상위 컴포넌트로 전달합니다.
-import { Box, Typography, Autocomplete, TextField } from '@mui/material';
+import { Box, Typography, Autocomplete, TextField, Tooltip, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import RestoreIcon from '@mui/icons-material/Restore';
 import { useServicesQuery, Service } from '@api/queries/modifyService/useModifyServiceQuery';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 
@@ -44,13 +46,34 @@ const AutocompleteContainer = styled(Box)({
   marginRight: '16px',
 });
 
+// 가격 영역 컨테이너
+const PriceContainer = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
+});
+
 // 가격 텍스트 스타일
 const PriceTypography = styled(Typography)({
   whiteSpace: 'nowrap',
   fontWeight: 500,
   minWidth: '80px',
   textAlign: 'right',
-  marginLeft: 'auto', // 오른쪽 끝에 배치
+});
+
+// 이전 요금제로 되돌리기 버튼 스타일
+const RevertButton = styled(Button)({
+  whiteSpace: 'nowrap',
+  minHeight: '32px',
+  fontSize: '12px',
+});
+
+// 툴팁 아이콘 스타일
+const InfoIcon = styled(InfoOutlinedIcon)({
+  fontSize: 16,
+  color: '#9e9e9e',
+  marginLeft: '4px',
+  cursor: 'help',
 });
 
 // 타입 정의: 서비스 플랜(요금제) 데이터 구조
@@ -68,7 +91,14 @@ export interface ServicePlan {
  */
 const SelectService = () => {
   // Zustand 스토어에서 서비스 선택 관련 상태와 액션 가져오기
-  const { selectedService, setSelectedService } = useModifyServiceStore();
+  const { 
+    selectedService, 
+    setSelectedService, 
+    isServiceModifiable, 
+    previousService,
+    isChangedToday,
+    revertToPreviousService
+  } = useModifyServiceStore();
 
   // API에서 서비스 목록을 가져옵니다 (useServicesQuery 훅 사용)
   const { data: services = [] } = useServicesQuery();
@@ -88,12 +118,17 @@ const SelectService = () => {
     if (newValue) {
       // 선택된 요금제의 ID로 원본 서비스 객체를 찾아 스토어에 저장
       const selectedServiceData =
-        services.find((service) => service.serviceId === newValue.id) || null;
+        services.find((service: Service) => service.serviceId === newValue.id) || null;
 
       setSelectedService(selectedServiceData);
     } else {
       setSelectedService(null);
     }
+  };
+
+  // 이전 요금제로 되돌리기 핸들러
+  const handleRevertToPreviousService = () => {
+    revertToPreviousService();
   };
 
   // 최신출시순으로 정렬
@@ -107,12 +142,25 @@ const SelectService = () => {
     ? servicePlans.find((plan) => plan.id === selectedService.serviceId) || null
     : null;
 
+  // 요금제 변경 불가 시 표시할 툴팁 메시지
+  const disabledTooltipMessage = '요금제 변경은 월 1회만 가능합니다. 다음 달에 다시 시도해 주세요.';
+
+  // 이전 요금제가 있고, 당일 변경되었으며, 요금제 변경이 불가능한 상태인 경우에만 되돌리기 버튼 표시
+  const showRevertButton = previousService && isChangedToday && !isServiceModifiable;
+
   return (
     <RootContainer>
       <ServiceRowContainer>
         <LeftSectionContainer>
           {/* 제목 */}
-          <TitleTypography variant='subtitle1'>변경할 요금제</TitleTypography>
+          <TitleTypography variant='subtitle1'>
+            변경할 요금제
+            {!isServiceModifiable && (
+              <Tooltip title={disabledTooltipMessage} placement="right">
+                <InfoIcon />
+              </Tooltip>
+            )}
+          </TitleTypography>
 
           {/* Autocomplete 컴포넌트: 검색 가능한 드롭다운 선택 UI */}
           <AutocompleteContainer>
@@ -121,6 +169,7 @@ const SelectService = () => {
               value={selectedPlan}
               options={sortedServicePlans} // 정렬된 서비스 목록을 옵션으로 제공
               getOptionLabel={(option) => option.name} // 표시할 레이블 지정 (서비스 이름)
+              disabled={!isServiceModifiable} // 요금제 변경 불가능한 경우 비활성화
               renderOption={(props, option) => (
                 // 각 옵션 항목의 커스텀 렌더링: 서비스 이름과 가격을 함께 표시
                 <Box component='li' {...props}>
@@ -134,11 +183,12 @@ const SelectService = () => {
                 // 입력 필드의 커스텀 렌더링: 검색 및 선택 입력창
                 <TextField
                   {...params}
-                  placeholder='요금제 선택'
+                  placeholder={isServiceModifiable ? '요금제 선택' : '요금제 변경 불가'}
                   size='small'
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       backgroundColor: '#ffffff',
+                      opacity: isServiceModifiable ? 1 : 0.7,
                     },
                   }}
                 />
@@ -148,10 +198,24 @@ const SelectService = () => {
           </AutocompleteContainer>
         </LeftSectionContainer>
 
-        {/* 선택한 요금제의 요금 표시 */}
-        <PriceTypography>
-          {selectedService ? `${selectedService.serviceValue.toLocaleString()}원` : '0원'}
-        </PriceTypography>
+        {/* 선택한 요금제의 요금 및 되돌리기 버튼 */}
+        <PriceContainer>
+          <PriceTypography>
+            {selectedService ? `${selectedService.serviceValue.toLocaleString()}원` : '0원'}
+          </PriceTypography>
+          
+          {showRevertButton && (
+            <RevertButton
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={<RestoreIcon />}
+              onClick={handleRevertToPreviousService}
+            >
+              이전 요금제로 되돌리기
+            </RevertButton>
+          )}
+        </PriceContainer>
       </ServiceRowContainer>
     </RootContainer>
   );
