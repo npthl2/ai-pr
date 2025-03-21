@@ -68,7 +68,7 @@ export const FormRowSectionPlan = styled(Box)(({ theme }) => ({
   '& .MuiFormControl-root': {
     width: '200px',
   },
-  marginBottom: '6px',
+  marginBottom: '14px',
 }));
 
 export const FormLabel = styled('div')(({ theme }) => ({

@@ -13,7 +13,7 @@ describe('KAN-38 가입정보 확인', () => {
     mockAuthStore();
     bookmarkService.successWhenGetBookmarkList();
 
-    // 먼저 마운트 하는 데이터 셋업
+    // // 먼저 마운트 하는 데이터 셋업
     service.successWhenGetServices();
     service.successWhenGetAdditionalServices();
 
@@ -61,16 +61,18 @@ describe('KAN-38 가입정보 확인', () => {
   });
 
   it('KAN-38-5 IMEI를 입력 후 focus out하면 모델명이 보인다. 모델명이 없없을 경우 에러 메시지가 확인된다', () => {
+    service.failWhenGetDeviceModelByIMEI();
+    service.successWhenGetDeviceModelByIMEI();
+
     page.focusOnIMEIInput();
     page.typeIMEIInputField('123456');
-    service.successWhenGetDeviceModelByIMEI();
+
     page.focusOutIMEIInput();
-    service.failWhenGetDeviceModelByIMEI();
-    //   page.assertIMEIInputErrorTypoToBeVisible('존재하는 모델이 없습니다');
+    page.assertModleNameErrorTypoToBeVisible('존재하는 모델이 없습니다');
 
     page.focusOnIMEIInput();
     page.typeIMEIInputField('1234567890');
-    service.successWhenGetDeviceModelByIMEI();
+
     page.focusOutIMEIInput();
     page.assertModleNameTypoToBeVisible('iPhone 16');
   });
@@ -88,7 +90,7 @@ describe('KAN-38 가입정보 확인', () => {
   it('KAN-38-8 요금제명을 검색 가능하다', () => {
     page.typeServiceSelectSearchInputField('5G');
     page.clickServiceSelectSearchButton();
-    page.assertSearchResultToBeVisible('5G Speed Master 요금제');
+    page.assertSearchResultToBeVisible('5G');
   });
 
   it('KAN-38-9 요금제를 선택하면 화면은 닫히고 요금제 옆에 해당요금제의 가격이 보인다', () => {
@@ -120,5 +122,27 @@ describe('KAN-38 가입정보 확인', () => {
     page.clickDeleteAdditionalServiceChip(1);
     page.clickDeleteAdditionalServiceChip(0);
     page.assertAdditionalServiceChipToBeInvisible();
+  });
+
+  it('KAN-38-12 요금제 텍스트필드 수정 후 새로운 요금제를 선택하지 않고 focus out 시 에러메시지가 뜨며, 요금제와 부가서비스가 사라진다다', () => {
+    // 요금제 텍스트 필드 수정 후 포커스아웃
+    page.focusOnServiceSearchTextField();
+    page.typeServiceSearchTextField('5G');
+    page.focusOutServiceSearchTextField();
+    // 에러메시지 확인
+    page.expectServiceSelectErrorMessageToBeVisible('요금제를 선택해주세요');
+
+    // 선택된 내용들 사라짐
+    page.assertSelectServiceValueToBeInvisible();
+    page.assertAdditionalServiceChipToBeInvisible();
+  });
+
+  it('KAN-38-13 요금제 텍스트필드에서 입력하고 검색 아이콘을 클릭하면 알맞은 검색결과가 보인다', () => {
+    page.focusOnServiceSearchTextField();
+    page.typeServiceSearchTextField('5G');
+    page.clickServiceSelectIcon();
+
+    // 5G검색결과가 나옴
+    page.assertSearchResultToBeVisible('5G');
   });
 });

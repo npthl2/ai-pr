@@ -1,15 +1,21 @@
 import SalesSectionPage from '../../../pages/registration/SalesSectionPage';
 import { mockAuthStore } from '../../../support/helpers/mockAuthStore';
 import BookmarkServiceMock from '../../mock/bookmark/BookmarkServiceMock';
+import ContractSectionServiceMock from '../../mock/registration/ContractSectionServiceMock';
 
 describe('KAN-38  판매정보 확인', () => {
   const page = new SalesSectionPage();
   const bookmarkService = new BookmarkServiceMock();
+  const registrationContractService = new ContractSectionServiceMock();
 
   before(() => {
     // 초기 셋업
     mockAuthStore();
     bookmarkService.successWhenGetBookmarkList();
+
+    // 먼저 마운트 하는 데이터 셋업
+    registrationContractService.successWhenGetServices();
+    registrationContractService.successWhenGetAdditionalServices();
 
     // 신규가입 아코디언 화면 진입
     page.visit();
