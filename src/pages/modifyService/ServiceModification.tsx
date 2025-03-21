@@ -129,7 +129,7 @@ const ServiceModification: React.FC = () => {
   };
 
   // 현재 요금제 데이터
-  const currentServiceDataMock  = {
+  const currentServiceDataMock = {
     name: '넷플릭스 초이스 스페셜',
     price: 110000,
     items: [
