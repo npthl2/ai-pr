@@ -20,7 +20,7 @@ import {
   RegistrationStatus,
   RegistrationInfo,
   CustomerInfo,
-  SalesInfo,
+  SalesAgentInfo,
 } from '@model/RegistrationInfo';
 import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants';
 import { useEmailSendMutation } from '@api/queries/email/useEmailSendMutation';
@@ -60,7 +60,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
   const invoiceInfo = registrationData?.invoice as InvoiceInfo;
   const deviceInfo = registrationData?.device as DeviceInfo;
   const contractInfo = registrationData?.contract as ContractInfo;
-  const salesInfo = registrationData?.sales as SalesInfo;
+  const salesAgentInfo = registrationData?.sales as SalesAgentInfo;
 
   // 등록 상태를 폴링하는 쿼리
   const { data, isError } = useQuery({
@@ -290,7 +290,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
                   invoiceInfo={invoiceInfo}
                   deviceInfo={deviceInfo}
                   contractInfo={contractInfo}
-                  salesInfo={salesInfo}
+                  salesAgentInfo={salesAgentInfo}
                 />
               )}
             </Box>
