@@ -30,6 +30,44 @@ export interface RegistrationStatusResponseData {
   status: string; // 백엔드에서 반환하는 상태 값
   contractId?: string; // 계약 ID (있는 경우)
   reason?: string; // 실패 사유 (있는 경우)
+  businessProcessId?: string; // 업무 프로세스 ID (있는 경우)
+  statusTime: string; // 상태 값 시간
+  eventType: string; // 이벤트 타입
+  requestMemberId: string; // 요청자 ID
+  customerId: string; // 고객 ID
+  customerName: string; // 고객 이름
+}
+
+export interface AllRegistrationStatusResponseData {
+  registrations: RegistrationStatusResponseData[];
+  pendingCount: number;
+}
+
+export function isRegistrationStatusResponse(
+  value: unknown,
+): value is RegistrationStatusResponseData {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'status' in value &&
+    typeof (value as RegistrationStatusResponseData).status === 'string'
+  );
+}
+
+export function isAllRegistrationStatusResponse(
+  value: unknown,
+): value is AllRegistrationStatusResponseData {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'registrations' in value &&
+    Array.isArray((value as AllRegistrationStatusResponseData).registrations) &&
+    (value as AllRegistrationStatusResponseData).registrations.every((item) =>
+      isRegistrationStatusResponse(item),
+    ) &&
+    'pendingCount' in value &&
+    typeof (value as AllRegistrationStatusResponseData).pendingCount === 'number'
+  );
 }
 
 // 프론트엔드에서 사용할 변환된 상태 응답 형식

@@ -3,6 +3,7 @@ import {
   RegistrationResponseData,
   RegistrationStatusResponseData,
   RegistrationStatus,
+  AllRegistrationStatusResponseData,
 } from '@model/RegistrationInfo';
 import {
   InvoiceCreateRequestParams,
@@ -27,6 +28,12 @@ const registrationService = {
     return baseService.post<RegistrationResponseData, RegistrationRequest>(
       '/cca-be/v1/registration-common',
       data,
+    );
+  },
+
+  getAllRegistrationStatus(): Promise<CommonResponse<AllRegistrationStatusResponseData>> {
+    return baseService.get<AllRegistrationStatusResponseData>(
+      '/cca-be/v1/registration-common/status',
     );
   },
 

@@ -1,4 +1,4 @@
-import { Box, Fab } from '@mui/material';
+import { Box, CircularProgress, Fab } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const HistoryWrapper = styled(Box)({
@@ -36,3 +36,47 @@ export const FloatingButton = styled(Fab)(({ theme }) => ({
     backgroundColor: theme.palette.primary.main,
   },
 }));
+
+export const ProgressWrapper = styled(Box)({
+  position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginRight: 8,
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    width: '19.2px',
+    height: '19.2px',
+    borderRadius: '50%',
+    border: '1.92px solid white',
+  },
+});
+
+export const StyledCircularProgress = styled(CircularProgress)({
+  position: 'absolute',
+  '& .MuiCircularProgress-svg': {
+    position: 'relative',
+    zIndex: 1,
+  },
+  '& .MuiCircularProgress-circle': {
+    strokeWidth: 4,
+  },
+});
+
+export const CountLabel = styled(Box)({
+  position: 'absolute',
+  top: -20,
+  right: -20,
+  width: '14px',
+  height: '14px',
+  backgroundColor: '#ef5350',
+  borderRadius: '50%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: 'white',
+  fontSize: '11px',
+  fontWeight: 500,
+  zIndex: 2,
+});
