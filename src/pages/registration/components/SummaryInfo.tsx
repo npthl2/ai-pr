@@ -12,7 +12,7 @@ import SubscriptionInfo from './summary/SubscriptionInfo';
 import DevicePaymentInfo from './summary/DevicePaymentInfo';
 
 interface SalesInfoType extends Partial<BaseSalesInfo> {
-  [key: string]: any;
+  [key: string]: string | boolean | undefined;
 }
 
 interface SummaryInfoProps {
