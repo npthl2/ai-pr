@@ -48,7 +48,6 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
 
   const { menuItems, displayMode, setMenuItems, setSelectedMainMenu } = useMenuStore();
   const [newCustomerId, setNewCustomerId] = useState<number>(0);
-
   const {
     customers,
     selectedCustomerId,
@@ -58,6 +57,8 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
     customerTabs,
     setCustomerTabs,
     setActiveTab,
+    setCustomerSearchModal,
+    setMoveTab,
   } = useCustomerStore();
 
   const { handleBookmarkClick } = useBookmark();
@@ -133,6 +134,24 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
       setCustomerTabs(newCustomer.id, [newTab]);
       setActiveTab(newCustomer.id, newTab.id);
       setSelectedMainMenu(MainMenu.CUSTOMERS);
+    } else if (itemId === 'SERVICE_MODIFICATION') {
+      // 요금제/부가서비스 변경
+      if (!selectedCustomerId) {
+        const newTab = {
+          id: TabInfo.SERVICE_MODIFICATION.id,
+          label: TabInfo.SERVICE_MODIFICATION.label,
+          closeable: true,
+        };
+
+        setMoveTab(newTab);
+        setCustomerSearchModal(true);
+      } else {
+        const targetMenu = SUBSCRIPTION_MENUS.find((menu) => menu.id === itemId);
+        if (!targetMenu) return;
+
+        const currentTabs = customerTabs[selectedCustomerId]?.tabs;
+        if (!currentTabs) return;
+      }
     } else {
       if (!selectedCustomerId || selectedCustomerId.includes('NEW_SUBSCRIPTION')) return;
 
