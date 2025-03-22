@@ -30,9 +30,9 @@ interface DeviceSectionProps {
 }
 
 const DeviceSection = ({ contractTabId, onComplete, completed }: DeviceSectionProps) => {
-  const { getRegistrationDeviceInfo } = useRegistrationDeviceStore();
+  const { getRegistrationDeviceInfo, initializeDeviceStore } = useRegistrationDeviceStore();
   const { getRegistrationContractInfo } = useRegistrationContractStore();
-  const deviceInfo = getRegistrationDeviceInfo(contractTabId);
+  const deviceInfo = getRegistrationDeviceInfo(contractTabId) || initializeDeviceStore(contractTabId);
   const contractInfo = getRegistrationContractInfo(contractTabId);
 
   const [values, setValues] = useState<Record<string, string>>({
