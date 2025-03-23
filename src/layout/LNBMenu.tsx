@@ -135,7 +135,6 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
       setActiveTab(newCustomer.id, newTab.id);
       setSelectedMainMenu(MainMenu.CUSTOMERS);
     } else if (itemId === 'SERVICE_MODIFICATION') {
-
       const newTab = {
         id: TabInfo.SERVICE_MODIFICATION.id,
         label: TabInfo.SERVICE_MODIFICATION.label,
