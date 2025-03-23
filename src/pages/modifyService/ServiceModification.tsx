@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
-import { Typography, MenuItem, InputAdornment, Box } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { Typography, Box, Table, TableBody, TableHead, TableContainer, Paper, TableSortLabel } from '@mui/material';
 import Button from '@components/Button';
-import Select from '@components/Select';
-import TextField from '@components/TextField';
+import TableCell from '@components/Table/TableCell';
+import TableRow from '@components/Table/TableRow';
 
 import {
   Container,
@@ -21,25 +16,12 @@ import {
   ServicePrice,
   ServiceLabel,
   ServiceItemContainer,
-  TotalContainer,
-  TotalLabel,
-  TotalPrice,
-  ButtonContainer,
-  WarningMessage,
-  ServiceSearchContainer,
 } from './ServiceModification.styled';
 
-interface ServiceItem {
-  id: number;
-  name: string;
-  price: number;
-  description?: string;
-  status?: string;
-}
 
 const ServiceModification: React.FC = () => {
-  const [selectedServices, setSelectedServices] = useState<number[]>([5]);
-  const [searchValue, setSearchValue] = useState<string>('');
+  const [orderBy, setOrderBy] = useState<'name' | 'price'>('name');
+  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
 
   // 현재 요금제 데이터
   const currentServiceData = {
@@ -47,54 +29,34 @@ const ServiceModification: React.FC = () => {
     price: 110000,
     items: [
       { id: 1, name: '부가서비스 1', price: 10000 },
-      { id: 2, name: '부가서비스 2', price: 10000 },
-      { id: 3, name: '부가서비스 3', price: 10000 },
-      { id: 4, name: '부가서비스 4', price: 10000 },
+      { id: 2, name: '부가서비스 2', price: 11000 },
+      { id: 3, name: '부가서비스 3', price: 12000 },
+      { id: 4, name: '부가서비스 4', price: 13000 },
     ],
     totalPrice: 45000,
   };
 
-  // 부가서비스 목록 데이터
-  const additionalServices: ServiceItem[] = [
-    { id: 5, name: '부가서비스 5', price: 5000, status: '가입 불가' },
-    { id: 6, name: '부가서비스 6', price: 10000 },
-    {
-      id: 7,
-      name: '부가서비스 7',
-      description: '무조건 이용해야만 합니다. 현재 요구사항에 맞춰 서비스로 이용해야 하는 서비스',
-      price: 10000,
-    },
-    { id: 8, name: '부가서비스 8', price: 10000 },
-    { id: 9, name: '부가서비스 9', price: 10000 },
-    { id: 10, name: '부가서비스 10', price: 10000 },
-  ];
-
-  // 서비스 필터링
-  const filteredServices = additionalServices.filter((service) =>
-    service.name.toLowerCase().includes(searchValue.toLowerCase()),
-  );
-
-  // 선택된 서비스 목록
-  const selectedServicesList = additionalServices.filter((service) =>
-    selectedServices.includes(service.id),
-  );
-
-  // 새 요금제 총액 계산
-  const newTotalPrice = selectedServicesList.reduce((total, service) => total + service.price, 0);
-
-  // 서비스 선택 핸들러
-  const handleServiceToggle = (serviceId: number) => {
-    if (selectedServices.includes(serviceId)) {
-      setSelectedServices(selectedServices.filter((id) => id !== serviceId));
-    } else {
-      setSelectedServices([...selectedServices, serviceId]);
-    }
+  // 정렬 핸들러
+  const handleRequestSort = (property: 'name' | 'price') => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
   };
 
-  // 검색어 변경 핸들러
-  const handleSearchChange = (value: string) => {
-    setSearchValue(value);
+  // 정렬된 아이템 가져오기
+  const getSortedItems = (items: typeof currentServiceData.items) => {
+    return [...items].sort((a, b) => {
+      if (orderBy === 'name') {
+        return order === 'asc' 
+          ? a.name.localeCompare(b.name) 
+          : b.name.localeCompare(a.name);
+      } else {
+        return order === 'asc' ? a.price - b.price : b.price - a.price;
+      }
+    });
   };
+
+  const sortedItems = getSortedItems(currentServiceData.items);
 
   return (
     <Box
@@ -114,7 +76,7 @@ const ServiceModification: React.FC = () => {
             <LineInfoDetailsContainer>
               <Box display='flex' alignItems='center' sx={{ minWidth: '200px', flexGrow: 0 }}>
                 <ServiceLabel sx={{ mr: 1 }}>전화번호</ServiceLabel>
-                <ServiceValue>010-297-*964</ServiceValue>
+                <Typography>010-297-*964</Typography>
                 <Button
                   size='small'
                   variant='outlined'
@@ -141,150 +103,71 @@ const ServiceModification: React.FC = () => {
 
           <ServicesContainer>
             <CurrentServiceContainer>
-              <Box sx={{ flexShrink: 0 }}>
-                <ServiceValue>현재 요금제</ServiceValue>
-                <ServiceItemContainer sx={{ borderBottom: 'none', marginTop: 0.5, py: 0.5 }}>
-                  <ServiceValue>{currentServiceData.name}</ServiceValue>
-                  <ServicePrice>{currentServiceData.price.toLocaleString()}원</ServicePrice>
-                </ServiceItemContainer>
-              </Box>
-
-              <Box sx={{ flex: 1, overflow: 'auto', minHeight: 0 }}>
-                <ServiceValue>현재 부가서비스 ({currentServiceData.items.length})</ServiceValue>
-                {currentServiceData.items.map((item) => (
-                  <ServiceItemContainer key={item.id} sx={{ py: 0.5 }}>
-                    <ServiceLabel>{item.name}</ServiceLabel>
-                    <ServicePrice>{item.price.toLocaleString()}원</ServicePrice>
+              <Box sx={{ margin: '20px' }}>
+                <Box>  
+                  <ServiceItemContainer sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <ServiceValue variant='h4'>현재 요금제</ServiceValue>
+                      <ServiceValue variant='h2'>{currentServiceData.name}</ServiceValue>
+                    </Box>
+                    <ServicePrice variant='h2'>{currentServiceData.price.toLocaleString()}원</ServicePrice>
                   </ServiceItemContainer>
-                ))}
-              </Box>
+                </Box>
 
-              <Box sx={{ flexShrink: 0 }}>
-                <TotalContainer>
-                  <TotalLabel>합계</TotalLabel>
-                  <TotalPrice>{currentServiceData.totalPrice.toLocaleString()}원</TotalPrice>
-                </TotalContainer>
+                <Box sx={{ marginTop: '30px' }}>
+                  <Box>
+                    <ServiceValue variant='h4'>현재 부가서비스 <Typography variant='h4' component="span" color="text.secondary" sx={{ display: 'inline' }}>{currentServiceData.items.length}</Typography></ServiceValue>
+                  </Box>
+                  <TableContainer component={Paper} sx={{ boxShadow: 'none', maxHeight: 300, overflow: 'auto' }}>
+                    <Table size="small" stickyHeader>
+                      <TableHead>
+                        <TableRow variant="head" sx={(theme) => ({ backgroundColor: theme.palette.grey[50] })}>
+                          <TableCell>
+                            <TableSortLabel
+                              active={orderBy === 'name'}
+                              direction={orderBy === 'name' ? order : 'asc'}
+                              onClick={() => handleRequestSort('name')}
+                            >
+                              부가서비스명
+                            </TableSortLabel>
+                          </TableCell>
+                          <TableCell align="right">
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                              <TableSortLabel
+                                active={orderBy === 'price'}
+                                direction={orderBy === 'price' ? order : 'asc'}
+                                onClick={() => handleRequestSort('price')}
+                              >
+                                요금(원)
+                              </TableSortLabel>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {sortedItems.map((item) => (
+                          <TableRow key={item.id}>
+                            <TableCell>{item.name}</TableCell>
+                            <TableCell align="right">{item.price.toLocaleString()}원</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                      <TableHead>
+                        <TableRow sx={{ backgroundColor: '#DEE5EE' }}>
+                          <TableCell sx={{ fontWeight: 'bold' }}>합계</TableCell>
+                          <TableCell align="right" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+                            {currentServiceData.totalPrice.toLocaleString()}원
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                    </Table>
+                  </TableContainer>
+                </Box>
               </Box>
             </CurrentServiceContainer>
 
             <NewServiceContainer>
-              <Box sx={{ flexShrink: 0 }}>
-                <ServiceValue>변경할 요금제</ServiceValue>
-                <Select
-                  fullWidth
-                  displayEmpty
-                  size='small'
-                  value=''
-                  renderValue={() => (
-                    <Typography sx={{ color: 'text.secondary' }}>요금제 선택</Typography>
-                  )}
-                >
-                  <MenuItem value=''>요금제 선택</MenuItem>
-                </Select>
-              </Box>
-
-              <Box sx={{ flex: 1, overflow: 'auto', minHeight: 0 }}>
-                <ServiceSearchContainer sx={{ mb: 1 }}>
-                  <ServiceValue>부가서비스 목록</ServiceValue>
-                  <TextField
-                    size='small'
-                    placeholder='부가서비스 검색'
-                    value={searchValue}
-                    onChange={handleSearchChange}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position='end'>
-                          <SearchIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                    sx={{ width: 200, marginLeft: 'auto' }}
-                  />
-                </ServiceSearchContainer>
-
-                {filteredServices.map((service) => (
-                  <ServiceItemContainer key={service.id} sx={{ position: 'relative', py: 0.5 }}>
-                    <Box display='flex' alignItems='center' gap={1}>
-                      <ServiceLabel>{service.name}</ServiceLabel>
-                      {service.description && <InfoOutlinedIcon fontSize='small' color='action' />}
-                    </Box>
-                    <Box display='flex' alignItems='center' gap={1}>
-                      <ServicePrice>{service.price.toLocaleString()}원</ServicePrice>
-                      <Button
-                        size='small'
-                        variant={selectedServices.includes(service.id) ? 'contained' : 'outlined'}
-                        iconComponent={
-                          selectedServices.includes(service.id) ? <RemoveIcon /> : <AddIcon />
-                        }
-                        onClick={() => handleServiceToggle(service.id)}
-                        disabled={service.status === '가입 불가'}
-                      />
-                    </Box>
-                    {service.status === '가입 불가' && (
-                      <Box
-                        sx={{
-                          position: 'absolute',
-                          right: '-5px',
-                          top: '-5px',
-                          bgcolor: 'error.main',
-                          color: 'white',
-                          padding: '0 4px',
-                          borderRadius: 1,
-                          fontSize: 10,
-                        }}
-                      >
-                        {service.status}
-                      </Box>
-                    )}
-                  </ServiceItemContainer>
-                ))}
-              </Box>
-
-              <Box sx={{ flexShrink: 0 }}>
-                <ServiceValue>선택한 부가서비스 ({selectedServicesList.length})</ServiceValue>
-                {selectedServicesList.map((service) => (
-                  <ServiceItemContainer key={service.id} sx={{ py: 0.5 }}>
-                    <Box display='flex' alignItems='center' gap={1}>
-                      <ServiceLabel>{service.name}</ServiceLabel>
-                    </Box>
-                    <Box display='flex' alignItems='center' gap={1}>
-                      <ServicePrice>{service.price.toLocaleString()}원</ServicePrice>
-                      <Button
-                        size='small'
-                        variant='text'
-                        iconComponent={<RemoveIcon />}
-                        onClick={() => handleServiceToggle(service.id)}
-                      />
-                    </Box>
-                  </ServiceItemContainer>
-                ))}
-                <TotalContainer>
-                  <TotalLabel>합계</TotalLabel>
-                  <TotalPrice>{newTotalPrice.toLocaleString()}원</TotalPrice>
-                </TotalContainer>
-              </Box>
-
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  flexShrink: 0,
-                }}
-              >
-                <WarningMessage>
-                  <ErrorOutlineIcon fontSize='small' />
-                  부가서비스를 추가하여 요금제를 변경하는 경우, 다음 청구서에 반영됩니다.
-                </WarningMessage>
-                <ButtonContainer sx={{ marginTop: 0 }}>
-                  <Button size='medium' variant='outlined' color='grey'>
-                    초기화
-                  </Button>
-                  <Button size='medium' variant='contained'>
-                    저장
-                  </Button>
-                </ButtonContainer>
-              </Box>
+              부가서비스변경
             </NewServiceContainer>
           </ServicesContainer>
         </ContentContainer>

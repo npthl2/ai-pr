@@ -135,14 +135,15 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
       setActiveTab(newCustomer.id, newTab.id);
       setSelectedMainMenu(MainMenu.CUSTOMERS);
     } else if (itemId === 'SERVICE_MODIFICATION') {
+
+      const newTab = {
+        id: TabInfo.SERVICE_MODIFICATION.id,
+        label: TabInfo.SERVICE_MODIFICATION.label,
+        closeable: true,
+      };
+
       // 요금제/부가서비스 변경
       if (!selectedCustomerId) {
-        const newTab = {
-          id: TabInfo.SERVICE_MODIFICATION.id,
-          label: TabInfo.SERVICE_MODIFICATION.label,
-          closeable: true,
-        };
-
         setMoveTab(newTab);
         setCustomerSearchModal(true);
       } else {
@@ -151,6 +152,15 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
 
         const currentTabs = customerTabs[selectedCustomerId]?.tabs;
         if (!currentTabs) return;
+
+        const existingTab = currentTabs.find((tab) => tab.label === newTab.label);
+        if (existingTab) {
+          setActiveTab(selectedCustomerId, existingTab.id);
+          return;
+        }
+
+        setCustomerTabs(selectedCustomerId, [...currentTabs, newTab]);
+        setActiveTab(selectedCustomerId, newTab.id);
       }
     } else {
       if (!selectedCustomerId || selectedCustomerId.includes('NEW_SUBSCRIPTION')) return;
