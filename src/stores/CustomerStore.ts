@@ -220,7 +220,7 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
   },
 
   handleMoveToTab: () => {
-    const { selectedCustomerId, customerTabs, moveTab, setCustomerTabs, setActiveTab, setMoveTab } =
+    const { selectedCustomerId, customerTabs, moveTab, setCustomerTabs, setActiveTab } =
       get();
     if (selectedCustomerId) {
       const currentTabs = customerTabs[selectedCustomerId]?.tabs ?? [];

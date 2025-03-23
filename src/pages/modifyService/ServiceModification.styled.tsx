@@ -47,12 +47,15 @@ export const LineInfoDetailsContainer = styled(Box)(() => ({
   flexWrap: 'wrap',
 }));
 
-export const ServicesContainer = styled(Box)(() => ({
+export const ServicesContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
   display: 'flex',
   width: '100%',
   flex: 1,
   overflow: 'hidden',
   minHeight: 0,
+  border: `1px solid ${theme.palette.grey[200]}`,
+  borderTopLeftRadius: 8,
+  borderBottomLeftRadius: 8,
 }));
 
 export const CurrentServiceContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
@@ -60,11 +63,8 @@ export const CurrentServiceContainer = styled(Box)(({ theme }: { theme: Theme })
   display: 'flex',
   flexDirection: 'column',
   gap: 12,
-  borderRight: `1px solid ${theme.palette.grey[200]}`,
-  borderTopLeftRadius: 8,
-  borderBottomLeftRadius: 8,
   padding: 16,
-  backgroundColor: theme.palette.grey[200],
+  backgroundColor: theme.palette.grey[50],
   overflow: 'hidden',
 }));
 
@@ -77,12 +77,14 @@ export const NewServiceContainer = styled(Box)(() => ({
   overflow: 'hidden',
 }));
 
-export const ServiceValue = styled(Typography)(() => ({
+export const ServiceValue = styled(Typography)(({ variant }) => ({
   fontFamily: 'Pretendard, sans-serif',
-  fontWeight: 400,
-  fontSize: 13,
-  lineHeight: '140%',
-  letterSpacing: '0px',
+  ...(variant === undefined && {
+    fontWeight: 400,
+    fontSize: 13,
+    lineHeight: '140%',
+    letterSpacing: '0px',
+  }),
 }));
 
 export const ServicePrice = styled(Typography)(({ theme }: { theme: Theme }) => ({
@@ -100,12 +102,11 @@ export const ServiceLabel = styled(Typography)(({ theme }: { theme: Theme }) => 
   color: theme.palette.text.secondary,
 }));
 
-export const ServiceItemContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
+export const ServiceItemContainer = styled(Box)(() => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
   padding: '5px 0',
-  borderBottom: `1px solid ${theme.palette.grey[100]}`,
 }));
 
 export const TotalContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
