@@ -187,11 +187,11 @@ const DevicePaymentInstallment = ({
   return (
     <>
       <ContentWrapper>
-        <Box sx={{ maxWidth: '100%' }}>
+        <Box sx={{ maxWidth: '100%' }} data-testid="device-payment-modal-installment">
           <DeviceInfoContainer>
             <InfoRow>
               <DeviceInfoLabel>단말기</DeviceInfoLabel>
-              <DeviceInfoValue>{deviceModelName}</DeviceInfoValue>
+              <DeviceInfoValue data-testid="device-payment-modal-installment-device-name">{deviceModelName}</DeviceInfoValue>
             </InfoRow>
             <InfoRow>
               <DeviceInfoLabel>요금제</DeviceInfoLabel>
@@ -291,11 +291,11 @@ const DevicePaymentInstallment = ({
                   단말출고가{' '}
                 </Box>
               </PriceLabel>
-              <PriceValue>{deviceSalesPrice.toLocaleString()} 원</PriceValue>
+              <PriceValue data-testid="device-payment-modal-installment-device-sales-price">{deviceSalesPrice.toLocaleString()} 원</PriceValue>
             </InfoRow>
             <InfoRow>
               <PriceLabel>- 공시지원금</PriceLabel>
-              <DiscountValue>{discountPrice.toLocaleString()} 원</DiscountValue>
+              <DiscountValue data-testid="device-payment-modal-installment-discount-price">{discountPrice.toLocaleString()} 원</DiscountValue>
             </InfoRow>
             <PrepaidAmountContainer>
               <PrepaidAmountLabel>
@@ -311,24 +311,25 @@ const DevicePaymentInstallment = ({
                 size='small'
                 value={prepaidPrice}
                 onChange={handlePrepaidPriceChange}
+                data-testid="device-payment-modal-installment-prepaid-price-input"
               />
               <CurrencyUnit> 원</CurrencyUnit>
             </PrepaidAmountContainer>
             <PriceDivider />
             <InfoRow>
               <PriceLabel>할부원금</PriceLabel>
-              <PriceValue>{installmentTotalAmount.toLocaleString()} 원</PriceValue>
+              <PriceValue data-testid="device-payment-modal-installment-installment-total-amount">{installmentTotalAmount.toLocaleString()} 원</PriceValue>
             </InfoRow>
             <InfoRow>
               <PriceLabel>+ 총 할부수수료 (할부원금의 5.9%)</PriceLabel>
-              <DiscountValue>{installmentFee.toLocaleString()} 원</DiscountValue>
+              <DiscountValue data-testid="device-payment-modal-installment-installment-fee">{installmentFee.toLocaleString()} 원</DiscountValue>
             </InfoRow>
             <PriceDivider />
             <InfoRow>
               <Typography variant='subtitle2' sx={{ flex: 1 }}>
                 총금액
               </Typography>
-              <PriceValue>{totalPrice.toLocaleString()} 원</PriceValue>
+              <PriceValue data-testid="device-payment-modal-installment-total-price">{totalPrice.toLocaleString()} 원</PriceValue>
             </InfoRow>
             <InfoRow>
               <InstallmentPeriodLabel>
@@ -365,7 +366,7 @@ const DevicePaymentInstallment = ({
             <FinalPriceDivider />
             <InfoRow>
               <MonthlyPaymentLabel>월/최종분납금</MonthlyPaymentLabel>
-              <MonthlyPaymentValue>
+              <MonthlyPaymentValue data-testid="device-payment-modal-installment-monthly-payment-price">
                 {monthlyInstallmentPrice.toLocaleString()} 원
               </MonthlyPaymentValue>
             </InfoRow>
@@ -373,10 +374,10 @@ const DevicePaymentInstallment = ({
         </Box>
       </ContentWrapper>
       <ButtonContainer>
-        <Button variant='outlined' onClick={onClose}>
+        <Button variant='outlined' onClick={onClose} data-testid="device-payment-modal-installment-close-button">
           취소
         </Button>
-        <Button variant='contained' onClick={handleConfirm}>
+        <Button variant='contained' onClick={handleConfirm} data-testid="device-payment-modal-installment-confirm-button">
           확인
         </Button>
       </ButtonContainer>
