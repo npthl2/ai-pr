@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { Typography, Box, Table, TableBody, TableHead, TableContainer, Paper, TableSortLabel } from '@mui/material';
+import {
+  Typography,
+  Box,
+  Table,
+  TableBody,
+  TableHead,
+  TableContainer,
+  Paper,
+  TableSortLabel,
+} from '@mui/material';
 import Button from '@components/Button';
 import TableCell from '@components/Table/TableCell';
 import TableRow from '@components/Table/TableRow';
@@ -17,7 +26,6 @@ import {
   ServiceLabel,
   ServiceItemContainer,
 } from './ServiceModification.styled';
-
 
 const ServiceModification: React.FC = () => {
   const [orderBy, setOrderBy] = useState<'name' | 'price'>('name');
@@ -47,9 +55,7 @@ const ServiceModification: React.FC = () => {
   const getSortedItems = (items: typeof currentServiceData.items) => {
     return [...items].sort((a, b) => {
       if (orderBy === 'name') {
-        return order === 'asc' 
-          ? a.name.localeCompare(b.name) 
-          : b.name.localeCompare(a.name);
+        return order === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
       } else {
         return order === 'asc' ? a.price - b.price : b.price - a.price;
       }
@@ -104,24 +110,42 @@ const ServiceModification: React.FC = () => {
           <ServicesContainer>
             <CurrentServiceContainer>
               <Box sx={{ margin: '20px' }}>
-                <Box>  
+                <Box>
                   <ServiceItemContainer sx={{ display: 'flex', alignItems: 'center' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                       <ServiceValue variant='h4'>현재 요금제</ServiceValue>
                       <ServiceValue variant='h2'>{currentServiceData.name}</ServiceValue>
                     </Box>
-                    <ServicePrice variant='h2'>{currentServiceData.price.toLocaleString()}원</ServicePrice>
+                    <ServicePrice variant='h2'>
+                      {currentServiceData.price.toLocaleString()}원
+                    </ServicePrice>
                   </ServiceItemContainer>
                 </Box>
 
                 <Box sx={{ marginTop: '30px' }}>
                   <Box>
-                    <ServiceValue variant='h4'>현재 부가서비스 <Typography variant='h4' component="span" color="text.secondary" sx={{ display: 'inline' }}>{currentServiceData.items.length}</Typography></ServiceValue>
+                    <ServiceValue variant='h4'>
+                      현재 부가서비스{' '}
+                      <Typography
+                        variant='h4'
+                        component='span'
+                        color='text.secondary'
+                        sx={{ display: 'inline' }}
+                      >
+                        {currentServiceData.items.length}
+                      </Typography>
+                    </ServiceValue>
                   </Box>
-                  <TableContainer component={Paper} sx={{ boxShadow: 'none', maxHeight: 300, overflow: 'auto' }}>
-                    <Table size="small" stickyHeader>
+                  <TableContainer
+                    component={Paper}
+                    sx={{ boxShadow: 'none', maxHeight: 300, overflow: 'auto' }}
+                  >
+                    <Table size='small' stickyHeader>
                       <TableHead>
-                        <TableRow variant="head" sx={(theme) => ({ backgroundColor: theme.palette.grey[50] })}>
+                        <TableRow
+                          variant='head'
+                          sx={(theme) => ({ backgroundColor: theme.palette.grey[50] })}
+                        >
                           <TableCell>
                             <TableSortLabel
                               active={orderBy === 'name'}
@@ -131,7 +155,7 @@ const ServiceModification: React.FC = () => {
                               부가서비스명
                             </TableSortLabel>
                           </TableCell>
-                          <TableCell align="right">
+                          <TableCell align='right'>
                             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                               <TableSortLabel
                                 active={orderBy === 'price'}
@@ -148,14 +172,17 @@ const ServiceModification: React.FC = () => {
                         {sortedItems.map((item) => (
                           <TableRow key={item.id}>
                             <TableCell>{item.name}</TableCell>
-                            <TableCell align="right">{item.price.toLocaleString()}원</TableCell>
+                            <TableCell align='right'>{item.price.toLocaleString()}원</TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
                       <TableHead>
                         <TableRow sx={{ backgroundColor: '#DEE5EE' }}>
                           <TableCell sx={{ fontWeight: 'bold' }}>합계</TableCell>
-                          <TableCell align="right" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+                          <TableCell
+                            align='right'
+                            sx={{ fontWeight: 'bold', color: 'primary.main' }}
+                          >
                             {currentServiceData.totalPrice.toLocaleString()}원
                           </TableCell>
                         </TableRow>
@@ -166,9 +193,7 @@ const ServiceModification: React.FC = () => {
               </Box>
             </CurrentServiceContainer>
 
-            <NewServiceContainer>
-              부가서비스변경
-            </NewServiceContainer>
+            <NewServiceContainer>부가서비스변경</NewServiceContainer>
           </ServicesContainer>
         </ContentContainer>
       </Container>
