@@ -39,7 +39,7 @@ const SelectedAdditionalServiceList: React.FC = () => {
   // 정렬 상태 관리
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
-  
+
   // Zustand 스토어에서 선택된 부가서비스 목록과 삭제 액션 가져오기
   const selectedAdditionalServices = useModifyServiceStore(
     (state) => state.selectedAdditionalServices,
@@ -52,19 +52,24 @@ const SelectedAdditionalServiceList: React.FC = () => {
   const currentAdditionalServices = currentService?.additionalService || [];
 
   // 정렬 핸들러
-  const handleSort = useCallback((field: SortField) => {
-    if (sortField === field) {
-      // 같은 필드를 다시 클릭하면 정렬 방향 토글
-      setSortDirection(sortDirection === 'asc' ? 'desc' : sortDirection === 'desc' ? null : 'asc');
-      if (sortDirection === 'desc') {
-        setSortField(null);
+  const handleSort = useCallback(
+    (field: SortField) => {
+      if (sortField === field) {
+        // 같은 필드를 다시 클릭하면 정렬 방향 토글
+        setSortDirection(
+          sortDirection === 'asc' ? 'desc' : sortDirection === 'desc' ? null : 'asc',
+        );
+        if (sortDirection === 'desc') {
+          setSortField(null);
+        }
+      } else {
+        // 다른 필드를 클릭하면 해당 필드 오름차순 정렬
+        setSortField(field);
+        setSortDirection('asc');
       }
-    } else {
-      // 다른 필드를 클릭하면 해당 필드 오름차순 정렬
-      setSortField(field);
-      setSortDirection('asc');
-    }
-  }, [sortField, sortDirection]);
+    },
+    [sortField, sortDirection],
+  );
 
   // 모든 부가서비스 (현재 사용중 + 선택된 새로운 서비스)
   const allServices = useMemo(() => {
@@ -80,12 +85,12 @@ const SelectedAdditionalServiceList: React.FC = () => {
     if (sortField && sortDirection) {
       services = [...services].sort((a, b) => {
         if (sortField === 'serviceName') {
-          return sortDirection === 'asc' 
-            ? a.serviceName.localeCompare(b.serviceName) 
+          return sortDirection === 'asc'
+            ? a.serviceName.localeCompare(b.serviceName)
             : b.serviceName.localeCompare(a.serviceName);
         } else if (sortField === 'serviceValue') {
-          return sortDirection === 'asc' 
-            ? a.serviceValue - b.serviceValue 
+          return sortDirection === 'asc'
+            ? a.serviceValue - b.serviceValue
             : b.serviceValue - a.serviceValue;
         }
         return 0;
@@ -100,7 +105,7 @@ const SelectedAdditionalServiceList: React.FC = () => {
     (serviceId: string) => {
       // 현재 사용중인 서비스인지 확인
       const isCurrentService = currentAdditionalServices.some(
-        (service) => service.serviceId === serviceId
+        (service) => service.serviceId === serviceId,
       );
 
       // 현재 사용중인 서비스가 아닌 경우에만 삭제 가능
@@ -160,7 +165,7 @@ const SelectedAdditionalServiceList: React.FC = () => {
                     variant='outlined'
                     size='small'
                     color='grey'
-                    iconComponent={<CloseIcon fontSize="small" />}
+                    iconComponent={<CloseIcon fontSize='small' />}
                     onClick={() => handleRemoveService(service.serviceId)}
                   />
                 )}
@@ -201,7 +206,9 @@ const SelectedAdditionalServiceList: React.FC = () => {
     if (sortField !== field) {
       return <ArrowDropDownIcon sx={{ opacity: 0.3 }} />;
     }
-    return <ArrowDropDownIcon sx={{ transform: sortDirection === 'desc' ? 'rotate(180deg)' : 'none' }} />;
+    return (
+      <ArrowDropDownIcon sx={{ transform: sortDirection === 'desc' ? 'rotate(180deg)' : 'none' }} />
+    );
   };
 
   return (
@@ -220,8 +227,12 @@ const SelectedAdditionalServiceList: React.FC = () => {
                   {renderSortIcon('serviceName')}
                 </HeaderCellContent>
               </StyledTableHeaderCell>
-              <StyledTableHeaderCell align='right' width='120px' onClick={() => handleSort('serviceValue')}>
-                <HeaderCellContent className="right-aligned">
+              <StyledTableHeaderCell
+                align='right'
+                width='120px'
+                onClick={() => handleSort('serviceValue')}
+              >
+                <HeaderCellContent className='right-aligned'>
                   요금 (원)
                   {renderSortIcon('serviceValue')}
                 </HeaderCellContent>
