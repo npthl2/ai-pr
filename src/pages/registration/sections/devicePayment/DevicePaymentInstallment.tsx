@@ -47,18 +47,21 @@ const DevicePaymentInstallment = ({
   onDevicePayment,
   contractTabId,
 }: DevicePaymentInstallmentProps) => {
-  const SALES_PRICE = 1155000;
+  
+  const ENGAGEMENT_PERIOD_12_DISCOUNT_PRICE = 300000;
+  const ENGAGEMENT_PERIOD_24_DISCOUNT_PRICE = 700000;
   const INSTALLMENT_FEE_RATE = 0.059; // 5.9%
 
   const [engagementPeriod, setEngagementPeriod] = useState('12');
   const [deviceEngagementType, setDeviceEngagementType] = useState('PUBLIC_POSTED_SUPPORT');
   const [installmentPeriod, setInstallmentPeriod] = useState('24');
   const [prepaidPrice, setPrepaidPrice] = useState('0');
-  const [discountPrice, setDiscountPrice] = useState(0);
+  const [discountPrice, setDiscountPrice] = useState(ENGAGEMENT_PERIOD_12_DISCOUNT_PRICE);
   const [installmentTotalAmount, setInstallmentTotalAmount] = useState(0);
   const [installmentFee, setInstallmentFee] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [monthlyInstallmentPrice, setMonthlyInstallmentPrice] = useState(0);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   const { setRegistrationDeviceInfo, getRegistrationDeviceInfo } = useRegistrationDeviceStore();
   const { getRegistrationContractInfo } = useRegistrationContractStore();
@@ -91,7 +94,7 @@ const DevicePaymentInstallment = ({
   // Load existing device info when component mounts
   useEffect(() => {
     const existingDeviceInfo = getRegistrationDeviceInfo(contractTabId);
-    if (existingDeviceInfo && existingDeviceInfo.deviceId) {
+    if (existingDeviceInfo && existingDeviceInfo.deviceId && existingDeviceInfo.deviceSalesPrice > 0) {
       setEngagementPeriod(existingDeviceInfo.deviceEngagementPeriod.toString());
       setDeviceEngagementType(existingDeviceInfo.deviceEngagementType);
       // Set installmentPeriod to '24' if it's 0 or invalid
@@ -102,17 +105,15 @@ const DevicePaymentInstallment = ({
       );
       setPrepaidPrice(existingDeviceInfo.devicePrepaidPrice.toString());
       setDiscountPrice(existingDeviceInfo.deviceDiscountPrice);
-      setInstallmentTotalAmount(existingDeviceInfo.deviceInstallmentAmount);
-      setInstallmentFee(existingDeviceInfo.deviceInstallmentFee);
-      setTotalPrice(existingDeviceInfo.deviceTotalPrice);
-      setMonthlyInstallmentPrice(existingDeviceInfo.monthlyInstallmentPrice);
+      // These values will be calculated by the calculation useEffect instead of loaded from store
     }
-  }, [contractTabId, getRegistrationDeviceInfo]);
+    setDataLoaded(true);
+  }, [contractTabId]);
 
   // Calculate discount price based on engagement type and period
   useEffect(() => {
     if (deviceEngagementType === 'PUBLIC_POSTED_SUPPORT') {
-      setDiscountPrice(engagementPeriod === '12' ? 300000 : 700000);
+      setDiscountPrice(engagementPeriod === '12' ? ENGAGEMENT_PERIOD_12_DISCOUNT_PRICE : ENGAGEMENT_PERIOD_24_DISCOUNT_PRICE);
     } else {
       setDiscountPrice(0);
     }
@@ -121,9 +122,9 @@ const DevicePaymentInstallment = ({
   // Calculate all dependent values when relevant inputs change
   useEffect(() => {
     const prepaidPriceNum = parseInt(prepaidPrice) || 0;
-    const installmentPeriodNum = parseInt(installmentPeriod) || 1;
+    const installmentPeriodNum = parseInt(installmentPeriod) || 12;
 
-    const safeInstallmentTotalAmount = Math.max(0, SALES_PRICE - discountPrice - prepaidPriceNum);
+    const safeInstallmentTotalAmount = Math.max(0, deviceSalesPrice - discountPrice - prepaidPriceNum);
 
     // Calculate installment fee only if there's an amount to calculate on
     const newInstallmentFee =
@@ -143,7 +144,7 @@ const DevicePaymentInstallment = ({
     setInstallmentFee(newInstallmentFee);
     setTotalPrice(newTotalPrice);
     setMonthlyInstallmentPrice(newMonthlyInstallmentPrice);
-  }, [discountPrice, prepaidPrice, installmentPeriod]);
+  }, [discountPrice, prepaidPrice, installmentPeriod, deviceSalesPrice, dataLoaded]);
 
   const handlePrepaidPriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.replace(/[^0-9]/g, '');
@@ -187,11 +188,13 @@ const DevicePaymentInstallment = ({
   return (
     <>
       <ContentWrapper>
-        <Box sx={{ maxWidth: '100%' }} data-testid="device-payment-modal-installment">
+        <Box sx={{ maxWidth: '100%' }} data-testid='device-payment-modal-installment'>
           <DeviceInfoContainer>
             <InfoRow>
               <DeviceInfoLabel>단말기</DeviceInfoLabel>
-              <DeviceInfoValue data-testid="device-payment-modal-installment-device-name">{deviceModelName}</DeviceInfoValue>
+              <DeviceInfoValue data-testid='device-payment-modal-installment-device-name'>
+                {deviceModelName}
+              </DeviceInfoValue>
             </InfoRow>
             <InfoRow>
               <DeviceInfoLabel>요금제</DeviceInfoLabel>
@@ -291,11 +294,15 @@ const DevicePaymentInstallment = ({
                   단말출고가{' '}
                 </Box>
               </PriceLabel>
-              <PriceValue data-testid="device-payment-modal-installment-device-sales-price">{deviceSalesPrice.toLocaleString()} 원</PriceValue>
+              <PriceValue data-testid='device-payment-modal-installment-device-sales-price'>
+                {deviceSalesPrice.toLocaleString()} 원
+              </PriceValue>
             </InfoRow>
             <InfoRow>
               <PriceLabel>- 공시지원금</PriceLabel>
-              <DiscountValue data-testid="device-payment-modal-installment-discount-price">{discountPrice.toLocaleString()} 원</DiscountValue>
+              <DiscountValue data-testid='device-payment-modal-installment-discount-price'>
+                {discountPrice.toLocaleString()} 원
+              </DiscountValue>
             </InfoRow>
             <PrepaidAmountContainer>
               <PrepaidAmountLabel>
@@ -311,25 +318,31 @@ const DevicePaymentInstallment = ({
                 size='small'
                 value={prepaidPrice}
                 onChange={handlePrepaidPriceChange}
-                data-testid="device-payment-modal-installment-prepaid-price-input"
+                data-testid='device-payment-modal-installment-prepaid-price-input'
               />
               <CurrencyUnit> 원</CurrencyUnit>
             </PrepaidAmountContainer>
             <PriceDivider />
             <InfoRow>
               <PriceLabel>할부원금</PriceLabel>
-              <PriceValue data-testid="device-payment-modal-installment-installment-total-amount">{installmentTotalAmount.toLocaleString()} 원</PriceValue>
+              <PriceValue data-testid='device-payment-modal-installment-installment-total-amount'>
+                {installmentTotalAmount.toLocaleString()} 원
+              </PriceValue>
             </InfoRow>
             <InfoRow>
               <PriceLabel>+ 총 할부수수료 (할부원금의 5.9%)</PriceLabel>
-              <DiscountValue data-testid="device-payment-modal-installment-installment-fee">{installmentFee.toLocaleString()} 원</DiscountValue>
+              <DiscountValue data-testid='device-payment-modal-installment-installment-fee'>
+                {installmentFee.toLocaleString()} 원
+              </DiscountValue>
             </InfoRow>
             <PriceDivider />
             <InfoRow>
               <Typography variant='subtitle2' sx={{ flex: 1 }}>
                 총금액
               </Typography>
-              <PriceValue data-testid="device-payment-modal-installment-total-price">{totalPrice.toLocaleString()} 원</PriceValue>
+              <PriceValue data-testid='device-payment-modal-installment-total-price'>
+                {totalPrice.toLocaleString()} 원
+              </PriceValue>
             </InfoRow>
             <InfoRow>
               <InstallmentPeriodLabel>
@@ -366,7 +379,7 @@ const DevicePaymentInstallment = ({
             <FinalPriceDivider />
             <InfoRow>
               <MonthlyPaymentLabel>월/최종분납금</MonthlyPaymentLabel>
-              <MonthlyPaymentValue data-testid="device-payment-modal-installment-monthly-payment-price">
+              <MonthlyPaymentValue data-testid='device-payment-modal-installment-monthly-payment-price'>
                 {monthlyInstallmentPrice.toLocaleString()} 원
               </MonthlyPaymentValue>
             </InfoRow>
@@ -374,10 +387,18 @@ const DevicePaymentInstallment = ({
         </Box>
       </ContentWrapper>
       <ButtonContainer>
-        <Button variant='outlined' onClick={onClose} data-testid="device-payment-modal-installment-close-button">
+        <Button
+          variant='outlined'
+          onClick={onClose}
+          data-testid='device-payment-modal-installment-close-button'
+        >
           취소
         </Button>
-        <Button variant='contained' onClick={handleConfirm} data-testid="device-payment-modal-installment-confirm-button">
+        <Button
+          variant='contained'
+          onClick={handleConfirm}
+          data-testid='device-payment-modal-installment-confirm-button'
+        >
           확인
         </Button>
       </ButtonContainer>

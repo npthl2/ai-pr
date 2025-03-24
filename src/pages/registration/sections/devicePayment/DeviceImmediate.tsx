@@ -35,6 +35,9 @@ interface DevicePaymentImmediateProps {
   contractTabId: string;
 }
 
+const ENGAGEMENT_PERIOD_12_DISCOUNT_PRICE = 300000;
+const ENGAGEMENT_PERIOD_24_DISCOUNT_PRICE = 700000;
+
 const DevicePaymentImmediate = ({
   onClose,
   onDevicePayment,
@@ -44,8 +47,9 @@ const DevicePaymentImmediate = ({
   const [deviceEngagementType, setDeviceEngagementType] = useState<
     'PUBLIC_POSTED_SUPPORT' | 'SELECTED'
   >('PUBLIC_POSTED_SUPPORT');
-  const [discountPrice, setDiscountPrice] = useState(0);
+  const [discountPrice, setDiscountPrice] = useState(ENGAGEMENT_PERIOD_12_DISCOUNT_PRICE);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   const { setRegistrationDeviceInfo, getRegistrationDeviceInfo } = useRegistrationDeviceStore();
   const { getRegistrationContractInfo } = useRegistrationContractStore();
@@ -83,14 +87,15 @@ const DevicePaymentImmediate = ({
       setEngagementPeriod(existingDeviceInfo.deviceEngagementPeriod.toString());
       setDeviceEngagementType(existingDeviceInfo.deviceEngagementType);
       setDiscountPrice(existingDeviceInfo.deviceDiscountPrice);
-      setTotalPrice(existingDeviceInfo.deviceTotalPrice);
+      // Total price will be calculated by the calculation useEffect
     }
+    setDataLoaded(true);
   }, [contractTabId, getRegistrationDeviceInfo]);
 
   // Calculate discount price based on engagement type and period
   useEffect(() => {
     if (deviceEngagementType === 'PUBLIC_POSTED_SUPPORT') {
-      setDiscountPrice(engagementPeriod === '12' ? 300000 : 700000);
+      setDiscountPrice(engagementPeriod === '12' ? ENGAGEMENT_PERIOD_12_DISCOUNT_PRICE : ENGAGEMENT_PERIOD_24_DISCOUNT_PRICE);
     } else {
       setDiscountPrice(0);
     }
@@ -100,7 +105,7 @@ const DevicePaymentImmediate = ({
   useEffect(() => {
     const newTotalPrice = deviceSalesPrice - discountPrice;
     setTotalPrice(newTotalPrice);
-  }, [discountPrice, deviceSalesPrice]);
+  }, [discountPrice, deviceSalesPrice, dataLoaded]);
 
   const handleEngagementTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDeviceEngagementType(event.target.value as 'PUBLIC_POSTED_SUPPORT' | 'SELECTED');
@@ -135,14 +140,17 @@ const DevicePaymentImmediate = ({
     onClose();
   };
 
+
   return (
     <>
       <ContentWrapper>
-        <Box sx={{ maxWidth: '100%' }} data-testid="device-payment-modal-immediate">
+        <Box sx={{ maxWidth: '100%' }} data-testid='device-payment-modal-immediate'>
           <DeviceInfoContainer>
             <InfoRow>
               <DeviceInfoLabel>단말기</DeviceInfoLabel>
-              <DeviceInfoValue data-testid="device-payment-modal-immediate-device-name">{deviceModelName}</DeviceInfoValue>
+              <DeviceInfoValue data-testid='device-payment-modal-immediate-device-name'>
+                {deviceModelName}
+              </DeviceInfoValue>
             </InfoRow>
             <InfoRow>
               <DeviceInfoLabel>요금제</DeviceInfoLabel>
@@ -177,13 +185,13 @@ const DevicePaymentImmediate = ({
                   value='12'
                   control={<Radio size='small' />}
                   label={<Typography variant='body2'>12개월</Typography>}
-                  data-testid="device-payment-modal-immediate-engagement-period-12"
+                  data-testid='device-payment-modal-immediate-engagement-period-12'
                 />
                 <FormControlLabel
                   value='24'
                   control={<Radio size='small' />}
                   label={<Typography variant='body2'>24개월</Typography>}
-                  data-testid="device-payment-modal-immediate-engagement-period-24"
+                  data-testid='device-payment-modal-immediate-engagement-period-24'
                 />
               </RadioGroup>
             </RadioGroupContainer>
@@ -219,7 +227,7 @@ const DevicePaymentImmediate = ({
                       공시지원금
                     </Typography>
                   }
-                  data-testid="device-payment-modal-immediate-support-type-public-posted-support"
+                  data-testid='device-payment-modal-immediate-support-type-public-posted-support'
                 />
                 <FormControlLabel
                   value='SELECTED'
@@ -229,7 +237,7 @@ const DevicePaymentImmediate = ({
                       선택약정 (요금제의 25% 할인)
                     </Typography>
                   }
-                  data-testid="device-payment-modal-immediate-support-type-selected"
+                  data-testid='device-payment-modal-immediate-support-type-selected'
                 />
               </RadioGroup>
             </RadioGroupContainer>
@@ -244,16 +252,23 @@ const DevicePaymentImmediate = ({
                   단말출고가{' '}
                 </Box>
               </PriceLabel>
-              <PriceValue  data-testid="device-payment-modal-immediate-device-sales-price">{deviceSalesPrice.toLocaleString()} 원</PriceValue>
+              <PriceValue data-testid='device-payment-modal-immediate-device-sales-price'>
+                {deviceSalesPrice.toLocaleString()} 원
+              </PriceValue>
             </InfoRow>
             <InfoRow>
               <PriceLabel>- 공시지원금</PriceLabel>
-              <DiscountValue data-testid="device-payment-modal-immediate-discount-price">{discountPrice.toLocaleString()} 원</DiscountValue>
+              <DiscountValue data-testid='device-payment-modal-immediate-discount-price'>
+                {discountPrice.toLocaleString()} 원
+              </DiscountValue>
             </InfoRow>
             <PriceDivider />
             <InfoRow>
               <TotalPriceLabel variant='subtitle2'>총금액</TotalPriceLabel>
-              <TotalPriceValue variant='subtitle2' data-testid="device-payment-modal-immediate-total-price">
+              <TotalPriceValue
+                variant='subtitle2'
+                data-testid='device-payment-modal-immediate-total-price'
+              >
                 {totalPrice.toLocaleString()} 원
               </TotalPriceValue>
             </InfoRow>
@@ -261,10 +276,18 @@ const DevicePaymentImmediate = ({
         </Box>
       </ContentWrapper>
       <ButtonContainer>
-        <Button variant='outlined' onClick={onClose} data-testid="device-payment-modal-immediate-close-button">
+        <Button
+          variant='outlined'
+          onClick={onClose}
+          data-testid='device-payment-modal-immediate-close-button'
+        >
           취소
         </Button>
-        <Button variant='contained' onClick={handleConfirm} data-testid="device-payment-modal-immediate-confirm-button">
+        <Button
+          variant='contained'
+          onClick={handleConfirm}
+          data-testid='device-payment-modal-immediate-confirm-button'
+        >
           확인
         </Button>
       </ButtonContainer>

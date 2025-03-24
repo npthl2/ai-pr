@@ -100,19 +100,21 @@ const DeviceSection = ({ contractTabId, onComplete, completed }: DeviceSectionPr
                 checked={values.paymentType === 'installment'}
                 onChange={handleRadioChange('paymentType')}
                 label='할부'
-                data-testid="device-payment-type-installment"
+                data-testid='device-payment-type-installment'
               />
               <Radio
                 value='immediate'
                 checked={values.paymentType === 'immediate'}
                 onChange={handleRadioChange('paymentType')}
                 label='즉납'
-                data-testid="device-payment-type-immediate"
+                data-testid='device-payment-type-immediate'
               />
             </RadioWrapper>
           </FieldContainer>
           <FieldContainer>
-            <StyledButton onClick={handleOnClick} data-testid="device-payment-input-button">결제정보 입력</StyledButton>
+            <StyledButton onClick={handleOnClick} data-testid='device-payment-input-button'>
+              결제정보 입력
+            </StyledButton>
           </FieldContainer>
         </LeftSection>
         <FieldContainer>
@@ -120,14 +122,14 @@ const DeviceSection = ({ contractTabId, onComplete, completed }: DeviceSectionPr
             스폰서유형
             <RequiredSpan className='required'>*</RequiredSpan>
           </FieldLabel>
-          <StyledSpan data-testid="device-payment-sponsor-type">통합스폰서</StyledSpan>
+          <StyledSpan data-testid='device-payment-sponsor-type'>통합스폰서</StyledSpan>
         </FieldContainer>
         <FieldContainer>
           <FieldLabel>
             약정기간
             <RequiredSpan className='required'>*</RequiredSpan>
           </FieldLabel>
-          <StyledSpan data-testid="device-payment-engagement-period">
+          <StyledSpan data-testid='device-payment-engagement-period'>
             {deviceInfo?.deviceEngagementPeriod ? `${deviceInfo.deviceEngagementPeriod}개월` : ''}
           </StyledSpan>
         </FieldContainer>
@@ -136,7 +138,9 @@ const DeviceSection = ({ contractTabId, onComplete, completed }: DeviceSectionPr
             지원방식
             <RequiredSpan className='required'>*</RequiredSpan>
           </FieldLabel>
-          <StyledSpan data-testid="device-payment-support-type">{deviceInfo?.isValidated ? deviceInfo?.deviceEngagementName : ''}</StyledSpan>
+          <StyledSpan data-testid='device-payment-support-type'>
+            {deviceInfo?.isValidated ? deviceInfo?.deviceEngagementName : ''}
+          </StyledSpan>
         </FieldContainer>
         <FieldContainer>
           <FieldLabel>SIM비용</FieldLabel>
