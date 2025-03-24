@@ -106,12 +106,12 @@ describe('KAN-40 신규가입 - 단말기 결제 정보 입력', () => {
 
   it('KAN-40-2 결제 타입을 할부로 선택하고 결제 정보 입력 버튼을 클릭 했을 때 단말기 결제 정보_할부 모달이 보여야 한다', () => {
     deviceSectionPage.clickDevicePaymentTypeRadio(DEVICE_PAYMENT_TYPE, 'installment');
+    deviceSectionService.successWhenGetDeviceModelByIMEI();
     deviceSectionPage.clickDevicePaymentInputButton();
     deviceSectionPage.assertDevicePaymentModalToBeVisible(DEVICE_PAYMENT_MODAL, 'installment');
   });
 
   it('KAN-40-3 단말기 결제 정보_할부 모달이 보일 때 할부원금, 총 할부수수료, 총금액, 월 최종분납금의 초기값이 보여야 한다', () => {
-    deviceSectionPage.forceDeviceInfo(DEVICE_PAYMENT_MODAL, 'installment');
     deviceSectionPage.assertDevicePaymentModalInstallmentDefaultValues();
   });
 
@@ -128,12 +128,12 @@ describe('KAN-40 신규가입 - 단말기 결제 정보 입력', () => {
 
   it('KAN-40-6 결제 타입을 즉납으로 선택하고 결제 정보 입력 버튼을 클릭 했을 때 단말기 결제 정보_즉납 모달이 보여야 한다', () => {
     deviceSectionPage.clickDevicePaymentTypeRadio(DEVICE_PAYMENT_TYPE, 'immediate');
+    deviceSectionService.successWhenGetDeviceModelByIMEI();
     deviceSectionPage.clickDevicePaymentInputButton();
     deviceSectionPage.assertDevicePaymentModalToBeVisible(DEVICE_PAYMENT_MODAL, 'immediate');
   });
 
   it('KAN-40-7 단말기 결제 정보_즉납 모달이 보일 때 공시지원금, 총금액의 초기값이 보여야 한다', () => {
-    deviceSectionPage.forceDeviceInfo(DEVICE_PAYMENT_MODAL, 'immediate');
     deviceSectionPage.assertDevicePaymentModalImmediateDefaultValues();    
   });
 

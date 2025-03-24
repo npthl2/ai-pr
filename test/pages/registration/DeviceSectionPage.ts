@@ -157,12 +157,19 @@ class DeviceSectionPage {
     assertDevicePaymentModalToBeVisible(componentName: string, type: string) {
       cy.get(`[data-testid="${componentName}-${type}"]`).should('be.visible');
     }
+    
+    assertDevicePaymentModalInstallmentDefaultValues() {
+        cy.get('[data-testid="device-payment-modal-installment-installment-total-amount"]').should('contain.text', '1,500,000');
+        cy.get('[data-testid="device-payment-modal-installment-installment-fee"]').should('contain.text', '88,500');
+        cy.get('[data-testid="device-payment-modal-installment-total-price"]').should('contain.text', '1,588,500');
+        cy.get('[data-testid="device-payment-modal-installment-monthly-payment-price"]').should('contain.text', '66,187');
+    }
 
     assertDevicePaymentModalInstallmentChangePriceByPrepaidPrice() {
-      cy.get('[data-testid="device-payment-modal-installment-installment-total-amount"]').should('contain.text', '755,000');
-      cy.get('[data-testid="device-payment-modal-installment-installment-fee"]').should('contain.text', '44,545');
-      cy.get('[data-testid="device-payment-modal-installment-total-price"]').should('contain.text', '799,545');
-      cy.get('[data-testid="device-payment-modal-installment-monthly-payment-price"]').should('contain.text', '33,314');
+      cy.get('[data-testid="device-payment-modal-installment-installment-total-amount"]').should('contain.text', '1,400,000');
+      cy.get('[data-testid="device-payment-modal-installment-installment-fee"]').should('contain.text', '82,600');
+      cy.get('[data-testid="device-payment-modal-installment-total-price"]').should('contain.text', '1,482,600');
+      cy.get('[data-testid="device-payment-modal-installment-monthly-payment-price"]').should('contain.text', '61,775');
     }
 
     assertDevicePaymentModalToBeConfirmedInstallment() {
@@ -179,25 +186,14 @@ class DeviceSectionPage {
 
     assertDevicePaymentModalSupportTypeToBeSelected() {
         cy.get('[data-testid="device-payment-modal-immediate-discount-price"]').should('have.text', '0 원');
-        cy.get('[data-testid="device-payment-modal-immediate-total-price"]').should('have.text', '0 원');
+        cy.get('[data-testid="device-payment-modal-immediate-total-price"]').should('have.text', '1,800,000 원');
     }
 
     assertDevicePaymentModalImmediateDefaultValues() {
         cy.get('[data-testid="device-payment-modal-immediate-discount-price"]').should('have.text', '300,000 원');
-        cy.get('[data-testid="device-payment-modal-immediate-total-price"]').should('have.text', '-300,000 원');
+        cy.get('[data-testid="device-payment-modal-immediate-total-price"]').should('have.text', '1,500,000 원');
     }
 
-    assertDevicePaymentModalInstallmentDefaultValues() {
-        cy.get('[data-testid="device-payment-modal-installment-installment-total-amount"]').should('contain.text', '855,000');
-        cy.get('[data-testid="device-payment-modal-installment-installment-fee"]').should('contain.text', '50,445');
-        cy.get('[data-testid="device-payment-modal-installment-total-price"]').should('contain.text', '905,445');
-        cy.get('[data-testid="device-payment-modal-installment-monthly-payment-price"]').should('contain.text', '37,726');
-    }
-    
-    forceDeviceInfo(componentName: string, type: string) {
-        cy.get(`[data-testid="${componentName}-${type}-device-name"]`).invoke('text', 'DEV-AP-1');
-        cy.get(`[data-testid="${componentName}-${type}-device-sales-price"]`).invoke('text', '1800000');
-    }
     
   }
   export default DeviceSectionPage;
