@@ -100,13 +100,13 @@ const SelectedAdditionalServiceList: React.FC = () => {
 
           return (
             <TableRow key={service.serviceId} hover>
-              <TableCell>
-                <ServiceName>{service.serviceName}</ServiceName>
-              </TableCell>
               <TableCell align='center'>
                 <StatusBadge isCurrentService={isCurrentService}>
-                  {isCurrentService ? '사용중' : '가입중'}
+                  {isCurrentService ? '가입중' : '가입'}
                 </StatusBadge>
+              </TableCell>
+              <TableCell>
+                <ServiceName>{service.serviceName}</ServiceName>
               </TableCell>
               <PriceCell>{service.serviceValue.toLocaleString()}</PriceCell>
               <TableCell align='center'>
@@ -161,10 +161,10 @@ const SelectedAdditionalServiceList: React.FC = () => {
         <StyledTable stickyHeader>
           <TableHead>
             <TableRow variant='head'>
-              <StyledTableHeaderCell>서비스명</StyledTableHeaderCell>
               <StyledTableHeaderCell align='center' width='100px'>
                 상태
               </StyledTableHeaderCell>
+              <StyledTableHeaderCell>부가서비스명</StyledTableHeaderCell>
               <StyledTableHeaderCell align='right' width='100px'>
                 요금 (원)
               </StyledTableHeaderCell>

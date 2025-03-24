@@ -155,7 +155,7 @@ const AdditionalServiceList: React.FC = () => {
         <StyledTable stickyHeader>
           <TableHead>
             <TableRow variant='head'>
-              <StyledTableHeaderCell>서비스명</StyledTableHeaderCell>
+              <StyledTableHeaderCell>부가서비스명</StyledTableHeaderCell>
               <StyledTableHeaderCell align='right'>금액 (원)</StyledTableHeaderCell>
               <StyledTableHeaderCell align='center' width='120px'></StyledTableHeaderCell>
             </TableRow>

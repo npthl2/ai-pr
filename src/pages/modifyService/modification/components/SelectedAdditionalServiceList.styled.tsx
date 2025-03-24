@@ -34,8 +34,6 @@ export const CountTypography = styled(Typography)({
 // 목록 컨테이너 - 테이블을 감싸는 영역
 export const ListContainer = styled(Box)({
   width: '100%',
-  border: '1px solid #e0e0e0',
-  borderRadius: '4px',
   overflow: 'hidden',
   display: 'flex',
   flexDirection: 'column',
