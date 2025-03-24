@@ -5,14 +5,31 @@
  */
 
 /**
+ * 이전 서비스 정보 인터페이스
+ * 
+ * @property serviceId - 서비스 ID
+ * @property serviceName - 서비스 명
+ * @property serviceValue - 서비스 가격
+ * @property serviceValueType - 서비스 가격 타입
+ */
+export interface PreviousService {
+  serviceId: string;
+  serviceName: string;
+  serviceValue: number;
+  serviceValueType: string;
+}
+
+/**
  * 요금제 변경 가능 여부 확인 응답 인터페이스
  *
  * @property isModifiable - 요금제 변경 가능 여부 (true: 변경 가능, false: 변경 불가)
- * @property isChangedToday - 당일 요금제 변경 여부
+ * @property isRollbackAvailable - 당일 요금제 변경 여부
+ * @property previousService - 이전 서비스 정보 (isRollbackAvailable이 true인 경우에만 존재)
  */
 export interface ServiceModifiableResponse {
   isModifiable: boolean;
-  isChangedToday: boolean;
+  isRollbackAvailable: boolean;
+  previousService: PreviousService | null;
 }
 
 /**

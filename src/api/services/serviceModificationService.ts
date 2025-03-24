@@ -33,7 +33,7 @@ const serviceModificationService = {
    */
   checkServiceModifiable(contractId: string): Promise<CommonResponse<ServiceModifiableResponse>> {
     return baseService.get<ServiceModifiableResponse>(
-      `/ctt-be/v1/contract/service-modify/contract/${contractId}/check`,
+      `/ctt-be/v1/contract/service-modify/${contractId}/check`,
     );
   },
 

@@ -70,3 +70,16 @@ export const InfoIcon = styled(InfoOutlinedIcon)({
   marginLeft: '4px',
   cursor: 'help',
 });
+
+// 요금제 변경 가능 여부 안내 메시지 컨테이너
+export const WarningContainer = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+});
+
+// 요금제 변경 안내 메시지 스타일
+export const WarningMessage = styled(Typography)({
+  fontSize: '12px',
+  color: '#f44336', // 빨간색 경고 메시지
+  fontWeight: 500,
+});

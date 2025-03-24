@@ -26,6 +26,8 @@ import {
   PriceTypography,
   RevertButton,
   InfoIcon,
+  WarningContainer,
+  WarningMessage,
 } from './ModifiedServiceSelect.styled';
 
 // 타입 정의: 서비스 플랜(요금제) 데이터 구조
@@ -48,7 +50,7 @@ const SelectService = () => {
     setSelectedService,
     isServiceModifiable,
     previousService,
-    isChangedToday,
+    isRollbackAvailable,
     revertToPreviousService,
   } = useModifyServiceStore();
 
@@ -211,7 +213,7 @@ const SelectService = () => {
   const disabledTooltipMessage = '요금제 변경은 월 1회만 가능합니다. 다음 달에 다시 시도해 주세요.';
 
   // 이전 요금제가 있고, 당일 변경되었으며, 요금제 변경이 불가능한 상태인 경우에만 되돌리기 버튼 표시
-  const showRevertButton = previousService && isChangedToday && !isServiceModifiable;
+  const showRevertButton = previousService && isRollbackAvailable && !isServiceModifiable;
 
   return (
     <RootContainer>
@@ -248,7 +250,9 @@ const SelectService = () => {
                 <Box component='li' {...props}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                     <Typography>{(option as ServicePlan).name}</Typography>
-                    <Typography>{(option as ServicePlan).price.toLocaleString()}원</Typography>
+                    <Typography sx={{ fontWeight: 'bold' }}>
+                      {(option as ServicePlan).price.toLocaleString()}원
+                    </Typography>
                   </Box>
                 </Box>
               )}
@@ -291,6 +295,13 @@ const SelectService = () => {
           )}
         </PriceContainer>
       </ServiceRowContainer>
+
+      {/* 금일 요금제 변경으로 인한 안내 메시지 */}
+      {isRollbackAvailable && !isServiceModifiable && (
+        <WarningContainer>
+          <WarningMessage>금일 요금제 변경으로 인해 이전 요금제로 되돌리기만 가능합니다.</WarningMessage>
+        </WarningContainer>
+      )}
 
       {/* 모달 컴포넌트 */}
       <ServiceModificationBlockModal

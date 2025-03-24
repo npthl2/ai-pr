@@ -25,7 +25,7 @@ import ServiceModificationBlockModal, {
 import useCustomerStore from '@stores/CustomerStore';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import { TabInfo } from '@constants/CommonConstant';
-import { useCheckServiceModifiableQuery } from '@api/queries/modifyService/useModifyServiceQuery';
+import { useCheckServiceModifiableQuery, Service } from '@api/queries/modifyService/useModifyServiceQuery';
 
 const ServiceModification: React.FC = () => {
   // 모달 상태 관리
@@ -38,7 +38,7 @@ const ServiceModification: React.FC = () => {
   });
 
   // 요금제 수정 상태 관리 - ModifyServiceStore에서 필요한 함수 가져오기
-  const { setServiceModifiable, setIsChangedToday } = useModifyServiceStore();
+  const { setServiceModifiable, setIsRollbackAvailable, setPreviousService } = useModifyServiceStore();
 
   // 고객 스토어에서 필요한 정보 가져오기
   const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId);
@@ -81,7 +81,22 @@ const ServiceModification: React.FC = () => {
   useEffect(() => {
     if (!isLoading && contractId && modifiableData && isServiceModificationTabActive) {
       setServiceModifiable(modifiableData.isModifiable);
-      setIsChangedToday(modifiableData.isChangedToday || false);
+      setIsRollbackAvailable(modifiableData.isRollbackAvailable || false);
+
+      // 백엔드에서 전달 받은 이전 서비스 정보가 있는 경우 저장
+      if (modifiableData.isRollbackAvailable && modifiableData.previousService) {
+        // previousService 정보를 Service 타입으로 변환하여 저장
+        const prevService: Service = {
+          serviceId: modifiableData.previousService.serviceId,
+          serviceName: modifiableData.previousService.serviceName,
+          serviceValue: Number(modifiableData.previousService.serviceValue),
+          serviceValueType: modifiableData.previousService.serviceValueType,
+          releaseDate: '', // 기본값 설정 (API에서 제공하지 않는 값이므로)
+        };
+        setPreviousService(prevService);
+      } else {
+        setPreviousService(null);
+      }
 
       if (!modifiableData.isModifiable) {
         // 모달 표시
@@ -96,7 +111,8 @@ const ServiceModification: React.FC = () => {
     modifiableData,
     contractId,
     setServiceModifiable,
-    setIsChangedToday,
+    setIsRollbackAvailable,
+    setPreviousService,
     isServiceModificationTabActive,
   ]);
 

@@ -12,7 +12,7 @@ export interface ModifyServiceState {
   // 이전 요금제 정보 (되돌리기용)
   previousService: Service | null;
   // 당일 요금제 변경 여부
-  isChangedToday: boolean;
+  isRollbackAvailable: boolean;
 
   // 액션
   setSelectedService: (service: Service | null) => void;
@@ -22,7 +22,7 @@ export interface ModifyServiceState {
   resetAll: () => void;
   setServiceModifiable: (isModifiable: boolean) => void;
   setPreviousService: (service: Service | null) => void;
-  setIsChangedToday: (isChangedToday: boolean) => void;
+  setIsRollbackAvailable: (isRollbackAvailable: boolean) => void;
   revertToPreviousService: () => void;
 
   // 계산된 값
@@ -35,8 +35,7 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
   selectedAdditionalServices: [],
   isServiceModifiable: true,
   previousService: null,
-  isChangedToday: false,
-
+  isRollbackAvailable: false,
   // 액션
   setSelectedService: (service) => {
     set({ selectedService: service });
@@ -84,8 +83,8 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
     set({ previousService: service });
   },
 
-  setIsChangedToday: (isChangedToday: boolean) => {
-    set({ isChangedToday: isChangedToday });
+  setIsRollbackAvailable: (isRollbackAvailable: boolean) => {
+    set({ isRollbackAvailable: isRollbackAvailable });
   },
 
   revertToPreviousService: () => {
@@ -93,7 +92,7 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
     if (previousService) {
       set({
         selectedService: previousService,
-        isChangedToday: false,
+        isRollbackAvailable: false,
       });
     }
   },
