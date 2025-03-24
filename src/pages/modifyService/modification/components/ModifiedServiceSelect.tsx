@@ -60,7 +60,8 @@ const SelectService = () => {
   // 현재 선택된 고객 찾기
   const selectedCustomer = customers.find((c) => c.id === selectedCustomerId);
   // 고객의 나이 정보 가져오기 (Customer 타입에서 age는 number 타입)
-  const customerAge = selectedCustomer && isCustomer(selectedCustomer) ? String(selectedCustomer.age) : '';
+  const customerAge =
+    selectedCustomer && isCustomer(selectedCustomer) ? String(selectedCustomer.age) : '';
 
   // API에서 서비스 목록을 가져옵니다 (useServicesQuery 훅 사용)
   const { data: services = [] } = useServicesQuery();
@@ -133,7 +134,7 @@ const SelectService = () => {
   const { data: ageRestrictionData } = useCheckServiceAgeRestrictionQuery(
     serviceAgeCheckParams.age,
     serviceAgeCheckParams.serviceId,
-    !!serviceAgeCheckParams.age && !!serviceAgeCheckParams.serviceId // 두 값이 모두 있을 때만 쿼리 활성화
+    !!serviceAgeCheckParams.age && !!serviceAgeCheckParams.serviceId, // 두 값이 모두 있을 때만 쿼리 활성화
   );
 
   // 사용자가 서비스를 선택했을 때 실행되는 핸들러
@@ -151,15 +152,15 @@ const SelectService = () => {
       // 선택한 요금제 정보 찾기
       const selectedServiceData =
         services.find((service: Service) => service.serviceId === newValue.id) || null;
-      
+
       if (selectedServiceData) {
         // 임시 저장
         setTempSelectedService(selectedServiceData);
-        
+
         // 나이 제한 확인 API 호출 - 파라미터 설정으로 쿼리 자동 실행
         setServiceAgeCheckParams({
           age: customerAge,
-          serviceId: selectedServiceData.serviceId
+          serviceId: selectedServiceData.serviceId,
         });
       }
     } else {
@@ -173,7 +174,7 @@ const SelectService = () => {
     if (ageRestrictionData && tempSelectedService) {
       // 타입 확인 및 안전한 처리
       const data = ageRestrictionData;
-      
+
       // 실제 ServiceAgeCheckResponse 타입으로 처리
       if ('isAvailable' in data) {
         if (data.isAvailable) {
