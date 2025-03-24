@@ -8,8 +8,9 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import { useServicesQuery, Service } from '@api/queries/modifyService/useModifyServiceQuery';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import Button from '@components/Button';
-import { Autocomplete as MuiAutocomplete } from '@mui/material';
+import Autocomplete from '@components/Autocomplete';
 import Tooltip from '@components/Tooltip';
+import { SyntheticEvent } from 'react';
 
 // 루트 컨테이너 스타일 - 전체 컴포넌트 레이아웃
 const RootContainer = styled(Box)({
@@ -106,25 +107,36 @@ const SelectService = () => {
   // API에서 서비스 목록을 가져옵니다 (useServicesQuery 훅 사용)
   const { data: services = [] } = useServicesQuery();
 
+  // API 응답 데이터 확인을 위한 콘솔 로그
+  console.log('Services API 응답:', services);
+
   // 서비스 데이터를 ServicePlan 형식으로 변환
   // API 응답 데이터를 컴포넌트에서 사용하기 적합한 형태로 매핑합니다.
   const servicePlans: ServicePlan[] = services.map((service: Service) => ({
     id: service.serviceId,
     name: service.serviceName,
     price: service.serviceValue,
-    releaseDate: service.releaseDate,
+    releaseDate: service.releaseDate || '1970-01-01', // 빈 문자열인 경우 기본값 제공
   }));
+
+  // 매핑된 서비스 데이터 확인
+  console.log('매핑된 ServicePlans:', servicePlans);
 
   // 사용자가 서비스를 선택했을 때 실행되는 핸들러
   // 선택된 서비스 정보를 Zustand 스토어에 저장합니다.
-  const handlePlanChange = (_: any, newValue: ServicePlan | null) => {
-    if (newValue) {
+  const handlePlanChange = (
+    _: SyntheticEvent,
+    newValue: NonNullable<string | ServicePlan> | (string | ServicePlan)[] | null
+  ) => {
+    // ServicePlan 객체인 경우 (단일 선택)
+    if (newValue && typeof newValue === 'object' && !Array.isArray(newValue) && 'id' in newValue) {
       // 선택된 요금제의 ID로 원본 서비스 객체를 찾아 스토어에 저장
       const selectedServiceData =
         services.find((service: Service) => service.serviceId === newValue.id) || null;
 
       setSelectedService(selectedServiceData);
     } else {
+      // 선택되지 않은 경우 또는 지원하지 않는 값 형식인 경우
       setSelectedService(null);
     }
   };
@@ -137,8 +149,16 @@ const SelectService = () => {
   // 최신출시순으로 정렬
   // 서비스 목록을 출시일 기준 내림차순으로 정렬하여 최신 서비스가 상단에 표시되도록 합니다.
   const sortedServicePlans = [...servicePlans].sort(
-    (a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime(),
+    (a, b) => {
+      // 빈 releaseDate 처리를 위한 안전한 정렬 로직
+      const dateA = a.releaseDate ? new Date(a.releaseDate).getTime() : 0;
+      const dateB = b.releaseDate ? new Date(b.releaseDate).getTime() : 0;
+      return dateB - dateA;
+    }
   );
+
+  // 정렬된 결과 확인
+  console.log('정렬된 ServicePlans:', sortedServicePlans);
 
   // 선택된 서비스가 있을 경우 해당 서비스 플랜 찾기
   const selectedPlan = selectedService
@@ -167,24 +187,30 @@ const SelectService = () => {
 
           {/* Autocomplete 컴포넌트: 검색 가능한 드롭다운 선택 UI */}
           <AutocompleteContainer>
-            <MuiAutocomplete<ServicePlan>
+            <Autocomplete
               fullWidth
               value={selectedPlan}
-              options={sortedServicePlans} // 정렬된 서비스 목록을 옵션으로 제공
-              getOptionLabel={(option) => option.name} // 표시할 레이블 지정 (서비스 이름)
-              isOptionEqualToValue={(option, value) => option.id === value.id}
-              disabled={!isServiceModifiable} // 요금제 변경 불가능한 경우 비활성화
+              options={sortedServicePlans}
+              freeSolo={false}
+              multiple={false}
+              getOptionLabel={(option) => {
+                // option은 string | ServicePlan 타입이지만
+                // freeSolo={false}로 설정하면 실제로는 항상 ServicePlan 타입입니다
+                return (option as ServicePlan).name;
+              }}
+              isOptionEqualToValue={(option, value) => {
+                return (option as ServicePlan).id === (value as ServicePlan).id;
+              }}
+              disabled={!isServiceModifiable}
               renderOption={(props, option) => (
-                // 각 옵션 항목의 커스텀 렌더링: 서비스 이름과 가격을 함께 표시
                 <Box component='li' {...props}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                    <Typography>{option.name}</Typography>
-                    <Typography>{option.price.toLocaleString()}원</Typography>
+                    <Typography>{(option as ServicePlan).name}</Typography>
+                    <Typography>{(option as ServicePlan).price.toLocaleString()}원</Typography>
                   </Box>
                 </Box>
               )}
               renderInput={(params) => (
-                // 입력 필드의 커스텀 렌더링: 검색 및 선택 입력창
                 <MuiTextField
                   {...params}
                   placeholder={isServiceModifiable ? '요금제 선택' : '요금제 변경 불가'}
@@ -197,7 +223,7 @@ const SelectService = () => {
                   }}
                 />
               )}
-              onChange={handlePlanChange} // 선택 변경 시 이벤트 핸들러
+              onChange={handlePlanChange}
               size='small'
             />
           </AutocompleteContainer>

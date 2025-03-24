@@ -34,8 +34,8 @@ export interface ServiceResponse {
   serviceValueType: string;
   serviceValue: string;
   exclusiveServiceIds: string[];
-  validStartDateTime: string;
-  validEndDateTime: string;
+  validStartDatetime: string;
+  validEndDatetime: string;
 }
 
 // Request Types

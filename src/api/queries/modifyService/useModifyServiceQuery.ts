@@ -31,7 +31,7 @@ const mapServiceResponseToService = (serviceResponse: ServiceResponse): Service 
     serviceName: serviceResponse.serviceName,
     serviceValue: Number(serviceResponse.serviceValue),
     serviceValueType: serviceResponse.serviceValueType,
-    releaseDate: serviceResponse.validStartDateTime || '',
+    releaseDate: serviceResponse.validStartDatetime,
   };
 };
 
@@ -45,7 +45,7 @@ const mapServiceResponseToAdditionalService = (
     serviceValue: Number(serviceResponse.serviceValue),
     serviceValueType: serviceResponse.serviceValueType,
     exclusiveServiceIds: serviceResponse.exclusiveServiceIds || [],
-    releaseDate: serviceResponse.validStartDateTime || '',
+    releaseDate: serviceResponse.validStartDatetime,
   };
 };
 
@@ -96,8 +96,7 @@ export const useServicesQuery = () => {
     select: (response: CommonResponse<ServiceResponse[]>) => {
       if (typeof response.data === 'string') return [];
       return response.data ? response.data.map(mapServiceResponseToService) : [];
-    },
-    staleTime: 1000 * 60 * 5, // 5분
+    }
   });
 };
 
@@ -109,8 +108,7 @@ export const useAdditionalServicesQuery = () => {
     select: (response: CommonResponse<ServiceResponse[]>) => {
       if (typeof response.data === 'string') return [];
       return response.data ? response.data.map(mapServiceResponseToAdditionalService) : [];
-    },
-    staleTime: 1000 * 60 * 5, // 5분
+    }
   });
 };
 
