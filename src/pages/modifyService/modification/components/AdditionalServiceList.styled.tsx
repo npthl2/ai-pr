@@ -15,7 +15,7 @@ export const HeaderContainer = styled(Box)({
   display: 'flex',
   alignItems: 'center',
   width: '100%',
-  justifyContent: 'space-between'
+  justifyContent: 'space-between',
 });
 
 // 제목 섹션 - 제목과 카운트를 담는 영역
