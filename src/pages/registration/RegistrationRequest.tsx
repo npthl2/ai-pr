@@ -20,7 +20,7 @@ import {
   RegistrationStatus,
   RegistrationInfo,
   CustomerInfo,
-  SalesInfo,
+  SalesAgentInfo,
 } from '@model/RegistrationInfo';
 import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants';
 import { useEmailSendMutation } from '@api/queries/email/useEmailSendMutation';
@@ -60,14 +60,12 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
   const invoiceInfo = registrationData?.invoice as InvoiceInfo;
   const deviceInfo = registrationData?.device as DeviceInfo;
   const contractInfo = registrationData?.contract as ContractInfo;
-  const salesInfo = registrationData?.sales as SalesInfo;
+  const salesAgentInfo = registrationData?.sales as SalesAgentInfo;
 
   // 등록 상태를 폴링하는 쿼리
   const { data, isError } = useQuery({
     queryKey: ['registrationStatus', contractTabId, registrationData?.businessProcessId],
     queryFn: async () => {
-      console.log('폴링 정보:', [contractTabId, registrationData?.businessProcessId]);
-
       // 필수 정보가 없는 경우 PENDING 상태 반환
       if (!contractTabId || !registrationData?.businessProcessId) {
         return { status: REGISTRATION_STATUS.PENDING } as RegistrationStatus;
@@ -110,8 +108,6 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
         : data.status === REGISTRATION_STATUS.FAILED
           ? REGISTRATION_STATUS.FAILED
           : REGISTRATION_STATUS.PENDING;
-
-    console.log('상태 업데이트:', status, '->', newStatus);
 
     // 상태가 변경되지 않은 경우 처리하지 않음
     if (status === newStatus) return;
@@ -294,7 +290,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
                   invoiceInfo={invoiceInfo}
                   deviceInfo={deviceInfo}
                   contractInfo={contractInfo}
-                  salesInfo={salesInfo}
+                  salesAgentInfo={salesAgentInfo}
                 />
               )}
             </Box>

@@ -50,14 +50,21 @@ const initValidation: Validation = {
   phoneNumber: { error: false, state: 'inactive', helperText: '' },
 };
 
-const initState = {
+interface State {
+  searchData: CustomerSearchForm;
+  validation: Validation;
+  isButtonDisabled: boolean;
+  dialogOpen: boolean;
+}
+
+const initState: State = {
   searchData: initCustomerSearchForm,
   validation: initValidation,
   isButtonDisabled: true,
   dialogOpen: false,
 };
 
-const useImmerState = <T extends Record<string, any>>(initialState: T) => {
+const useImmerState = <T extends object>(initialState: T) => {
   const [state, setState] = useState<T>(initialState);
 
   const updateState = (fn: (draft: Draft<T>) => void) => {

@@ -6,8 +6,8 @@ import { Button } from './Button';
 interface AlertProps extends Omit<MuiAlertProps, 'action'> {
   title?: string;
   buttonText?: string;
-  buttonAction?: (...args: any[]) => any;
-  closeAction?: (...args: any[]) => any;
+  buttonAction?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  closeAction?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const StyledAlert = styled(MuiAlert)`
