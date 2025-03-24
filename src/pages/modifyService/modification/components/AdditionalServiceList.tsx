@@ -1,14 +1,11 @@
 import {
   Box,
   Typography,
-  Table,
   TableBody,
-  TableContainer,
   TableHead,
   TextField,
   InputAdornment,
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState, useEffect, useCallback, useMemo } from 'react';
@@ -17,79 +14,21 @@ import {
   AdditionalService,
 } from '@api/queries/modifyService/useModifyServiceQuery';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
-import Button from '@components/Button';
+import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import TableRow from '@components/Table/TableRow';
 import TableCell from '@components/Table/TableCell';
-
-// 스타일 컴포넌트
-const RootContainer = styled(Box)({
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-});
-
-const HeaderContainer = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  width: '100%',
-  justifyContent: 'space-between',
-  marginBottom: '16px',
-});
-
-const TitleSection = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-});
-
-const TitleTypography = styled(Typography)({
-  fontWeight: 500,
-  whiteSpace: 'nowrap',
-  marginRight: '8px',
-});
-
-const CountTypography = styled(Typography)({
-  fontWeight: 400,
-});
-
-const ListContainer = styled(Box)({
-  width: '100%',
-  border: '1px solid #e0e0e0',
-  borderRadius: '4px',
-  overflow: 'hidden',
-  display: 'flex',
-  flexDirection: 'column',
-});
-
-// 테이블 스타일 수정
-const StyledTable = styled(Table)({
-  tableLayout: 'fixed',
-});
-
-// 스크롤 가능한 테이블 바디 컨테이너
-const ScrollableTableContainer = styled(TableContainer)({
-  maxHeight: '300px',
-  overflow: 'auto',
-  '&::-webkit-scrollbar': {
-    width: '8px',
-  },
-  '&::-webkit-scrollbar-track': {
-    background: '#f1f1f1',
-  },
-  '&::-webkit-scrollbar-thumb': {
-    background: '#888',
-    borderRadius: '4px',
-  },
-});
-
-const StyledTableHeaderCell = styled(TableCell)({
-  backgroundColor: '#f5f6f8',
-  fontWeight: 500,
-});
-
-const AddButton = styled(Button)({
-  minWidth: '80px',
-  whiteSpace: 'nowrap',
-});
+import {
+  RootContainer,
+  HeaderContainer,
+  TitleSection,
+  TitleTypography,
+  CountTypography,
+  ListContainer,
+  StyledTable,
+  ScrollableTableContainer,
+  StyledTableHeaderCell,
+  AddButton
+} from './AdditionalServiceList.styled';
 
 /**
  * 부가서비스 목록 컴포넌트
@@ -102,6 +41,10 @@ const AdditionalServiceList: React.FC = () => {
 
   // Zustand 스토어에서 부가서비스 관련 상태와 액션 가져오기
   const { selectedAdditionalServices, addAdditionalService } = useModifyServiceStore();
+  
+  // 현재 사용 중인 서비스 정보 가져오기
+  const currentService = useCurrentServiceStore((state) => state.currentService);
+  const currentAdditionalServices = currentService?.additionalService || [];
 
   // API에서 부가서비스 목록을 가져옵니다
   const { data: additionalServices = [] } = useAdditionalServicesQuery();
@@ -124,19 +67,25 @@ const AdditionalServiceList: React.FC = () => {
 
     // 이미 선택된 부가서비스 ID 목록
     const selectedServiceIds = selectedAdditionalServices.map((service) => service.serviceId);
+    
+    // 현재 사용 중인 부가서비스 ID 목록
+    const currentServiceIds = currentAdditionalServices.map((service) => service.serviceId);
+    
+    // 모든 제외할 서비스 ID 목록 (현재 사용 중 + 이미 선택된 것)
+    const excludedServiceIds = [...selectedServiceIds, ...currentServiceIds];
 
     // 선택되지 않은 서비스 중 검색어에 맞는 서비스만 필터링
     const filtered = additionalServices
       .filter(
         (service) =>
-          !selectedServiceIds.includes(service.serviceId) &&
+          !excludedServiceIds.includes(service.serviceId) &&
           service.serviceName.toLowerCase().includes(debouncedSearchKeyword.toLowerCase()),
       )
       // 최신출시순 정렬
       .sort((a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime());
 
     setFilteredServices(filtered);
-  }, [debouncedSearchKeyword, additionalServices, selectedAdditionalServices]);
+  }, [debouncedSearchKeyword, additionalServices, selectedAdditionalServices, currentAdditionalServices]);
 
   // 부가서비스 추가 핸들러
   const handleAddService = useCallback(

@@ -1,110 +1,27 @@
-import { Box, Typography, Table, TableBody, TableContainer, TableHead } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Typography, TableBody, TableHead } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
+import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import { useCallback, useMemo } from 'react';
-import Button from '@components/Button';
 import TableRow from '@components/Table/TableRow';
 import TableCell from '@components/Table/TableCell';
-
-// 스타일 컴포넌트
-const RootContainer = styled(Box)({
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-});
-
-const ServiceHeaderContainer = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  width: '100%',
-  justifyContent: 'space-between',
-  marginBottom: '16px',
-});
-
-const TitleTypography = styled(Typography)({
-  fontWeight: 500,
-  whiteSpace: 'nowrap',
-  marginRight: '16px',
-});
-
-const CountTypography = styled(Typography)({
-  fontWeight: 400,
-});
-
-const ListContainer = styled(Box)({
-  width: '100%',
-  border: '1px solid #e0e0e0',
-  borderRadius: '4px',
-  overflow: 'hidden',
-  display: 'flex',
-  flexDirection: 'column',
-});
-
-// 테이블 스타일 수정
-const StyledTable = styled(Table)({
-  tableLayout: 'fixed',
-});
-
-// 스크롤 가능한 테이블 바디 컨테이너
-const ScrollableTableContainer = styled(TableContainer)({
-  maxHeight: '200px',
-  overflow: 'auto',
-  '&::-webkit-scrollbar': {
-    width: '8px',
-  },
-  '&::-webkit-scrollbar-track': {
-    background: '#f1f1f1',
-  },
-  '&::-webkit-scrollbar-thumb': {
-    background: '#888',
-    borderRadius: '4px',
-  },
-});
-
-const StyledTableHeaderCell = styled(TableCell)({
-  backgroundColor: '#f5f6f8',
-  fontWeight: 500,
-});
-
-const ServiceName = styled(Typography)({
-  fontWeight: 400,
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  maxWidth: '500px',
-});
-
-const PriceCell = styled(TableCell)({
-  textAlign: 'right',
-  whiteSpace: 'nowrap',
-});
-
-const StatusCell = styled(TableCell)({
-  color: '#1976d2',
-});
-
-const DeleteButton = styled(Button)({
-  minWidth: '80px',
-  whiteSpace: 'nowrap',
-});
-
-const TotalRow = styled(TableRow)({
-  backgroundColor: '#f5f6f8',
-  '& th, & td': {
-    fontWeight: 'bold',
-    padding: '16px',
-  },
-});
-
-const TotalText = styled(Typography)({
-  fontWeight: 'bold',
-});
-
-const TotalAmount = styled(Typography)({
-  fontWeight: 'bold',
-  fontSize: '1.1rem',
-});
+import {
+  RootContainer,
+  ServiceHeaderContainer,
+  TitleTypography,
+  CountTypography,
+  ListContainer,
+  StyledTable,
+  ScrollableTableContainer,
+  StyledTableHeaderCell,
+  ServiceName,
+  PriceCell,
+  StatusBadge,
+  DeleteButton,
+  TotalRow,
+  TotalText,
+  TotalAmount
+} from './SelectedAdditionalServiceList.styled';
 
 /**
  * 선택된 부가서비스 목록 컴포넌트
@@ -117,13 +34,36 @@ const SelectedAdditionalServiceList: React.FC = () => {
   );
   const selectedService = useModifyServiceStore((state) => state.selectedService);
   const removeAdditionalService = useModifyServiceStore((state) => state.removeAdditionalService);
+  
+  // 현재 사용중인 서비스 정보 가져오기
+  const currentService = useCurrentServiceStore((state) => state.currentService);
+  const currentAdditionalServices = currentService?.additionalService || [];
+
+  // 모든 부가서비스 (현재 사용중 + 선택된 새로운 서비스)
+  const allServices = useMemo(() => {
+    // 현재 사용중 서비스는 포함하되, 선택된 서비스에는 없는 항목만 포함
+    const currentServicesOnly = currentAdditionalServices.filter(
+      service => !selectedAdditionalServices.some(s => s.serviceId === service.serviceId)
+    );
+    
+    // 모든 서비스 합치기 (현재 사용중 + 새로 선택된 서비스)
+    return [...currentServicesOnly, ...selectedAdditionalServices];
+  }, [currentAdditionalServices, selectedAdditionalServices]);
 
   // 부가서비스 삭제 핸들러
   const handleRemoveService = useCallback(
     (serviceId: string) => {
-      removeAdditionalService(serviceId);
+      // 현재 사용중인 서비스인지 확인
+      const isCurrentService = currentAdditionalServices.some(
+        service => service.serviceId === serviceId
+      );
+      
+      // 현재 사용중인 서비스가 아닌 경우에만 삭제 가능
+      if (!isCurrentService) {
+        removeAdditionalService(serviceId);
+      }
     },
-    [removeAdditionalService],
+    [removeAdditionalService, currentAdditionalServices],
   );
 
   // 부가서비스 총 요금 계산 (요금제 + 부가서비스)
@@ -142,38 +82,51 @@ const SelectedAdditionalServiceList: React.FC = () => {
     () => (
       <ServiceHeaderContainer>
         <TitleTypography variant='subtitle1'>선택된 부가서비스</TitleTypography>
-        <CountTypography>{selectedAdditionalServices.length}</CountTypography>
+        <CountTypography>{allServices.length}</CountTypography>
       </ServiceHeaderContainer>
     ),
-    [selectedAdditionalServices.length],
+    [allServices.length],
   );
 
   // 테이블 컨텐츠 메모이제이션
   const tableContent = useMemo(
     () => (
       <>
-        {selectedAdditionalServices.map((service) => (
-          <TableRow key={service.serviceId} hover>
-            <TableCell>
-              <ServiceName>{service.serviceName}</ServiceName>
-            </TableCell>
-            <StatusCell align='center'>가입중</StatusCell>
-            <PriceCell>{service.serviceValue.toLocaleString()}</PriceCell>
-            <TableCell align='center'>
-              <DeleteButton
-                variant='outlined'
-                size='small'
-                color='error'
-                iconComponent={<DeleteIcon />}
-                iconPosition='left'
-                onClick={() => handleRemoveService(service.serviceId)}
-              >
-                삭제
-              </DeleteButton>
-            </TableCell>
-          </TableRow>
-        ))}
-        {selectedAdditionalServices.length === 0 && (
+        {allServices.map((service) => {
+          // 현재 사용중인 서비스인지 확인
+          const isCurrentService = currentAdditionalServices.some(
+            currentService => currentService.serviceId === service.serviceId
+          );
+          
+          return (
+            <TableRow key={service.serviceId} hover>
+              <TableCell>
+                <ServiceName>{service.serviceName}</ServiceName>
+              </TableCell>
+              <TableCell align='center'>
+                <StatusBadge isCurrentService={isCurrentService}>
+                  {isCurrentService ? '사용중' : '가입중'}
+                </StatusBadge>
+              </TableCell>
+              <PriceCell>{service.serviceValue.toLocaleString()}</PriceCell>
+              <TableCell align='center'>
+                {!isCurrentService && (
+                  <DeleteButton
+                    variant='outlined'
+                    size='small'
+                    color='error'
+                    iconComponent={<DeleteIcon />}
+                    iconPosition='left'
+                    onClick={() => handleRemoveService(service.serviceId)}
+                  >
+                    삭제
+                  </DeleteButton>
+                )}
+              </TableCell>
+            </TableRow>
+          );
+        })}
+        {allServices.length === 0 && (
           <TableRow>
             <TableCell colSpan={4} align='center' sx={{ py: 2 }}>
               <Typography color='text.secondary'>선택된 부가서비스가 없습니다.</Typography>
@@ -182,7 +135,7 @@ const SelectedAdditionalServiceList: React.FC = () => {
         )}
       </>
     ),
-    [selectedAdditionalServices, handleRemoveService],
+    [allServices, currentAdditionalServices, handleRemoveService],
   );
 
   // 합계 행 메모이제이션

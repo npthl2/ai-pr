@@ -1,29 +1,10 @@
 // src/pages/modifyService/modification/ServiceModify.tsx
-import { Box, Button } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Button } from '@mui/material';
 import SelectService from './components/ModifiedServiceSelect';
 import AdditionalServiceList from './components/AdditionalServiceList';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import SelectedAdditionalServiceList from './components/SelectedAdditionalServiceList';
-
-// 스타일 컴포넌트
-const Container = styled(Box)({
-  padding: '20px',
-  borderTopRightRadius: '8px',
-  borderBottomRightRadius: '8px',
-  flex: 1,
-});
-
-const Section = styled(Box)({
-  marginBottom: '24px',
-});
-
-const ButtonGroup = styled(Box)({
-  display: 'flex',
-  justifyContent: 'flex-end',
-  gap: '8px',
-  marginTop: '16px',
-});
+import { Container, Section, ButtonGroup } from './ServiceModify.styled';
 
 interface ServiceModifyProps {
   // props 정의

@@ -2,83 +2,23 @@
 // 이 컴포넌트는 사용자가 변경할 서비스(요금제)를 선택할 수 있는 드롭다운 UI를 제공합니다.
 // API에서 서비스 목록을 가져와 최신 출시 순으로 정렬하여 보여주고, 선택된 서비스 정보를 상위 컴포넌트로 전달합니다.
 import { Box, Typography, TextField as MuiTextField } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import RestoreIcon from '@mui/icons-material/Restore';
 import { useServicesQuery, Service } from '@api/queries/modifyService/useModifyServiceQuery';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
-import Button from '@components/Button';
 import Autocomplete from '@components/Autocomplete';
 import Tooltip from '@components/Tooltip';
 import { SyntheticEvent } from 'react';
-
-// 루트 컨테이너 스타일 - 전체 컴포넌트 레이아웃
-const RootContainer = styled(Box)({
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-});
-
-// 한 줄에 모든 요소를 배치하는 컨테이너
-const ServiceRowContainer = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  width: '100%',
-  justifyContent: 'space-between', // 요소들 사이에 공간을 균등하게 분배
-});
-
-// 왼쪽 영역 스타일 (제목과 드롭다운을 담는 컨테이너)
-const LeftSectionContainer = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  flex: 1,
-});
-
-// 타이틀 텍스트 스타일
-const TitleTypography = styled(Typography)({
-  fontWeight: 500,
-  whiteSpace: 'nowrap',
-  marginRight: '16px',
-  minWidth: '120px',
-});
-
-// Autocomplete를 감싸는 컨테이너
-const AutocompleteContainer = styled(Box)({
-  flex: 0.5, // 크기를 줄임
-  maxWidth: '400px', // 최대 너비 설정
-  marginLeft: '8px',
-  marginRight: '16px',
-});
-
-// 가격 영역 컨테이너
-const PriceContainer = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '8px',
-});
-
-// 가격 텍스트 스타일
-const PriceTypography = styled(Typography)({
-  whiteSpace: 'nowrap',
-  fontWeight: 500,
-  minWidth: '80px',
-  textAlign: 'right',
-});
-
-// 이전 요금제로 되돌리기 버튼 스타일
-const RevertButton = styled(Button)({
-  whiteSpace: 'nowrap',
-  minHeight: '32px',
-  fontSize: '12px',
-});
-
-// 툴팁 아이콘 스타일
-const InfoIcon = styled(InfoOutlinedIcon)({
-  fontSize: 16,
-  color: '#9e9e9e',
-  marginLeft: '4px',
-  cursor: 'help',
-});
+import {
+  RootContainer,
+  ServiceRowContainer,
+  LeftSectionContainer,
+  TitleTypography,
+  AutocompleteContainer,
+  PriceContainer,
+  PriceTypography,
+  RevertButton,
+  InfoIcon
+} from './ModifiedServiceSelect.styled';
 
 // 타입 정의: 서비스 플랜(요금제) 데이터 구조
 // 선택 가능한 서비스 항목의 데이터 형식을 정의합니다.
