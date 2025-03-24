@@ -22,7 +22,7 @@ import { MainMenu, TabInfo } from '@constants/CommonConstant';
 import customerService from '@api/services/customerService';
 import { Gender } from '@model/Customer';
 import { useRegistration } from '@hooks/useRegistration';
-import { useRegistrationStatusQuery } from '@api/queries/registration/useRegistrationStatusQuery';
+import { useRegistrationStatus } from '@hooks/useRegistrationStatus';
 import { useRegistrationInfo } from '@hooks/useRegistrationInfo';
 
 interface RegistrationRequestProps {
@@ -49,11 +49,9 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
     (state) => state.registrationInfo[contractTabId]?.businessProcessId,
   );
 
-  const { data } = useRegistrationStatusQuery({
-    refetchInterval: 2000,
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
-    staleTime: 0,
+  const { data } = useRegistrationStatus({
+    isRegistrationRequestMounted: true,
+    businessProcessId,
   });
   const registrationData = data?.registrations.find(
     (registration) => registration.businessProcessId === businessProcessId,

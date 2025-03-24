@@ -11,7 +11,7 @@ import {
   ProgressWrapper,
   StyledCircularProgress,
 } from './DraggableFloatingButton.styled';
-import { useRegistrationStatusQuery } from '@api/queries/registration/useRegistrationStatusQuery';
+import { useRegistrationStatus } from '@hooks/useRegistrationStatus';
 import { enqueueSnackbar, VariantType } from 'notistack';
 import { RegistrationStatusResponseData } from '@model/RegistrationInfo';
 import { REGISTRATION_EVENT_TYPE } from '@constants/RegistrationConstants';
@@ -27,12 +27,7 @@ const DraggableFloatingButton = () => {
     RegistrationStatusResponseData[]
   >([]);
 
-  const { data: registrationStatus } = useRegistrationStatusQuery({
-    refetchInterval: 2000,
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
-    staleTime: 0,
-  });
+  const { data: registrationStatus } = useRegistrationStatus();
 
   const handleOpen = (_: React.MouseEvent) => {
     if (!isDragging) {

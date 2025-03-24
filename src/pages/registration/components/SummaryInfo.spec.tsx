@@ -5,7 +5,6 @@ import SummaryInfo from './SummaryInfo';
 import { Contract } from '@stores/registration/RegistrationContractStore';
 import { Sales } from '@stores/registration/RegistrationSalesStore';
 import { RegistrationDeviceInfo } from '@stores/registration/RegistrationDeviceStore';
-import { PaymentMethod } from '../sections/invoiceSection.model';
 import { RegistrationInvoiceInfo } from '@stores/registration/RegistrationInvoiceStore';
 
 // 모킹된 하위 컴포넌트들
@@ -39,7 +38,7 @@ describe('SummaryInfo 컴포넌트', () => {
   it('모든 정보가 제공되었을 때 모든 하위 컴포넌트를 렌더링해야 한다', () => {
     // Given: 필요한 모든 정보가 주어졌을 때
     const invoiceInfo: Partial<RegistrationInvoiceInfo> = {
-      paymentMethod: PaymentMethod.CARD,
+      paymentMethod: '신용카드',
     };
 
     const deviceInfo: Partial<RegistrationDeviceInfo> = {
@@ -79,7 +78,7 @@ describe('SummaryInfo 컴포넌트', () => {
 
   it('컴포넌트가 올바른 레이아웃 구조로 렌더링되어야 한다', () => {
     // Given: 필요한 모든 정보가 주어졌을 때
-    const invoiceInfo: Partial<RegistrationInvoiceInfo> = { paymentMethod: PaymentMethod.CARD };
+    const invoiceInfo: Partial<RegistrationInvoiceInfo> = { paymentMethod: '신용카드' };
     const deviceInfo: Partial<RegistrationDeviceInfo> = { deviceName: 'Galaxy S23' };
     const contractInfo: Partial<Contract> = { phoneNumber: '010-1234-5678' };
     const salesInfo: Partial<Sales> = { salesDepartment: '온라인' };
