@@ -17,6 +17,7 @@ export const ServiceHeaderContainer = styled(Box)({
   alignItems: 'center',
   width: '100%',
   justifyContent: 'space-between',
+  marginBottom: '12px',
 });
 
 // 제목 타이포그래피 스타일
@@ -38,19 +39,19 @@ export const ListContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
   height: 'auto', // 내부 컨텐츠에 맞춤
+  border: '1px solid #eaeaea',
+  borderRadius: '4px',
 });
 
 // 테이블 레이아웃 고정 스타일
 export const StyledTable = styled(Table)({
   tableLayout: 'fixed',
+  borderCollapse: 'collapse',
 });
 
 // 스크롤 가능한 테이블 컨테이너
 export const ScrollableTableContainer = styled(TableContainer)({
-  // 헤더와 데이터 4개가 보이도록 고정 높이 설정 (행 높이 37px × 4개 = 148px)
-  height: '148px',
-  minHeight: '148px',
-  maxHeight: '148px', // 항상 같은 높이를 유지
+  maxHeight: '320px', // 더 유연한 높이 제한
   overflow: 'auto',
   '&::-webkit-scrollbar': {
     width: '8px',
@@ -68,6 +69,23 @@ export const ScrollableTableContainer = styled(TableContainer)({
 export const StyledTableHeaderCell = styled(TableCell)({
   backgroundColor: '#f5f6f8',
   fontWeight: 500,
+  padding: '8px 16px',
+  height: '40px',
+  borderBottom: '1px solid #eaeaea',
+  '& .MuiTypography-root': {
+    fontWeight: 600,
+  },
+});
+
+// 헤더 셀 내부 컨테이너 (정렬 아이콘 포함)
+export const HeaderCellContent = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  cursor: 'pointer',
+  '&.right-aligned': {
+    justifyContent: 'flex-end',
+  },
 });
 
 // 서비스명 스타일
@@ -83,37 +101,51 @@ export const ServiceName = styled(Typography)({
 export const PriceCell = styled(TableCell)({
   textAlign: 'right',
   whiteSpace: 'nowrap',
+  padding: '8px 16px',
 });
 
-// 상태 표시 스타일
-export const StatusBadge = styled(Typography)<{ isCurrentService?: boolean }>(
-  ({ isCurrentService }) => ({
-    color: isCurrentService ? '#388e3c' : '#1976d2',
-    fontWeight: isCurrentService ? 500 : 400,
-  }),
-);
+// 상태 표시 스타일 (배지로 변경)
+export const StatusBadge = styled(Box)<{ isCurrentService?: boolean }>(({ isCurrentService }) => ({
+  display: 'inline-block',
+  padding: '2px 8px',
+  borderRadius: '4px',
+  fontSize: '12px',
+  fontWeight: isCurrentService ? 500 : 400,
+  backgroundColor: isCurrentService ? '#f0f0f0' : '#e3f2fd',
+  color: isCurrentService ? '#616161' : '#0d47a1',
+}));
 
 // 삭제 버튼 스타일
 export const DeleteButton = styled(Button)({
-  minWidth: '80px',
-  whiteSpace: 'nowrap',
+  minWidth: '32px',
+  width: '32px',
+  height: '32px',
+  padding: 0,
+  border: '1px solid #e0e0e0',
+  borderRadius: '4px',
+  '&:hover': {
+    backgroundColor: '#f5f5f5',
+    borderColor: '#bdbdbd',
+  },
 });
 
 // 합계 행 스타일
 export const TotalRow = styled(TableRow)({
   backgroundColor: '#f5f6f8',
   '& th, & td': {
-    fontWeight: 'bold',
+    padding: '12px 16px',
+    borderTop: '1px solid #eaeaea',
   },
 });
 
 // 합계 텍스트 스타일
 export const TotalText = styled(Typography)({
   fontWeight: 'bold',
+  fontSize: '14px',
 });
 
 // 합계 금액 스타일
 export const TotalAmount = styled(Typography)({
   fontWeight: 'bold',
-  fontSize: '1.1rem',
+  fontSize: '16px',
 });
