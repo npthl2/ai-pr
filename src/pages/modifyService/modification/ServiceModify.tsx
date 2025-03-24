@@ -14,8 +14,6 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
   // 스토어에서 선택된 서비스와 총액 계산 함수 가져오기
   const {
     selectedService,
-    selectedAdditionalServices,
-    getTotalPrice,
     isServiceModifiable,
     resetAll,
   } = useModifyServiceStore();
@@ -23,10 +21,6 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
   // 저장 버튼 클릭 시 호출되는 핸들러
   const handleSave = () => {
     // 여기에 실제 저장 로직 구현
-    console.log('선택된 요금제:', selectedService);
-    console.log('선택된 부가서비스:', selectedAdditionalServices);
-    console.log('총 금액:', getTotalPrice());
-
     // TODO: API 호출하여 저장 처리
     alert('요금제 변경이 저장되었습니다.');
   };
