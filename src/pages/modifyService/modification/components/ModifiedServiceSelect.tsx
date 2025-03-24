@@ -126,7 +126,7 @@ const SelectService = () => {
   // 선택된 서비스 정보를 Zustand 스토어에 저장합니다.
   const handlePlanChange = (
     _: SyntheticEvent,
-    newValue: NonNullable<string | ServicePlan> | (string | ServicePlan)[] | null
+    newValue: NonNullable<string | ServicePlan> | (string | ServicePlan)[] | null,
   ) => {
     // ServicePlan 객체인 경우 (단일 선택)
     if (newValue && typeof newValue === 'object' && !Array.isArray(newValue) && 'id' in newValue) {
@@ -148,14 +148,12 @@ const SelectService = () => {
 
   // 최신출시순으로 정렬
   // 서비스 목록을 출시일 기준 내림차순으로 정렬하여 최신 서비스가 상단에 표시되도록 합니다.
-  const sortedServicePlans = [...servicePlans].sort(
-    (a, b) => {
-      // 빈 releaseDate 처리를 위한 안전한 정렬 로직
-      const dateA = a.releaseDate ? new Date(a.releaseDate).getTime() : 0;
-      const dateB = b.releaseDate ? new Date(b.releaseDate).getTime() : 0;
-      return dateB - dateA;
-    }
-  );
+  const sortedServicePlans = [...servicePlans].sort((a, b) => {
+    // 빈 releaseDate 처리를 위한 안전한 정렬 로직
+    const dateA = a.releaseDate ? new Date(a.releaseDate).getTime() : 0;
+    const dateB = b.releaseDate ? new Date(b.releaseDate).getTime() : 0;
+    return dateB - dateA;
+  });
 
   // 정렬된 결과 확인
   console.log('정렬된 ServicePlans:', sortedServicePlans);

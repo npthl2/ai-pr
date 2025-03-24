@@ -96,7 +96,7 @@ export const useServicesQuery = () => {
     select: (response: CommonResponse<ServiceResponse[]>) => {
       if (typeof response.data === 'string') return [];
       return response.data ? response.data.map(mapServiceResponseToService) : [];
-    }
+    },
   });
 };
 
@@ -108,7 +108,7 @@ export const useAdditionalServicesQuery = () => {
     select: (response: CommonResponse<ServiceResponse[]>) => {
       if (typeof response.data === 'string') return [];
       return response.data ? response.data.map(mapServiceResponseToAdditionalService) : [];
-    }
+    },
   });
 };
 
