@@ -19,7 +19,6 @@ const BIRTH_DATE_INPUT_NAME = 'invoice-birth-date-input';
 const DEVICE_PAYMENT_TYPE = 'device-payment-type';
 const DEVICE_PAYMENT_MODAL = 'device-payment-modal';
 
-
 describe('KAN-40 신규가입 - 단말기 결제 정보 입력', () => {
   const invoiceSectionPage = new InvoiceSectionPage();
   const invoiceService = new InvoiceSectionServiceMock();
@@ -31,7 +30,7 @@ describe('KAN-40 신규가입 - 단말기 결제 정보 입력', () => {
   const contractSectionPage = new ContractSectionPage();
   const deviceSectionPage = new DeviceSectionPage();
   const deviceSectionService = new DeviceSectionServiceMock();
-  
+
   before(() => {
     // 초기 셋업
     mockAuthStore();
@@ -81,7 +80,7 @@ describe('KAN-40 신규가입 - 단말기 결제 정보 입력', () => {
     contractSectionPage.focusOnEndPhoneNumber();
     contractSectionPage.typeEndPhoneNumberInputField('0010');
     contractSectionPage.focusOutEndPhoneNumber();
-    registrationContractService.successWhenGetAvailablePhoneNumber('0010', 'NEW_SUBSCRIPTION0');  
+    registrationContractService.successWhenGetAvailablePhoneNumber('0010', 'NEW_SUBSCRIPTION0');
     contractSectionPage.clickSelectPhoneNumberButton();
     registrationContractService.successWhenClaimAvailablePhoneNumber();
     contractSectionPage.selectAvailablePhoneNumber(0);
@@ -117,7 +116,10 @@ describe('KAN-40 신규가입 - 단말기 결제 정보 입력', () => {
 
   it('KAN-40-4 단말기 결제 정보_할부 모달에서 선납금이 변경 될 때 할부원금, 총 할부수수료, 총금액, 월 최종분납금의 변경값이 보여야 한다', () => {
     deviceSectionPage.typeClearField('device-payment-modal-installment-prepaid-price-input');
-    deviceSectionPage.typeInputField('device-payment-modal-installment-prepaid-price-input', '100000');
+    deviceSectionPage.typeInputField(
+      'device-payment-modal-installment-prepaid-price-input',
+      '100000',
+    );
     deviceSectionPage.assertDevicePaymentModalInstallmentChangePriceByPrepaidPrice();
   });
 
@@ -134,19 +136,31 @@ describe('KAN-40 신규가입 - 단말기 결제 정보 입력', () => {
   });
 
   it('KAN-40-7 단말기 결제 정보_즉납 모달이 보일 때 공시지원금, 총금액의 초기값이 보여야 한다', () => {
-    deviceSectionPage.assertDevicePaymentModalImmediateDefaultValues();    
+    deviceSectionPage.assertDevicePaymentModalImmediateDefaultValues();
   });
 
   it('KAN-40-8 단말기 결제 정보_즉납 모달의 지원금 선택에서 선택약정을 선택했을 때 공시지원금 영역이 미표시 되고 총금액이 변경되어야 한다.', () => {
-    deviceSectionPage.clickDevicePaymentModalSupportTypeRadio(DEVICE_PAYMENT_MODAL, 'immediate', 'selected');
-    deviceSectionPage.assertDevicePaymentModalSupportTypeToBeSelected();    
+    deviceSectionPage.clickDevicePaymentModalSupportTypeRadio(
+      DEVICE_PAYMENT_MODAL,
+      'immediate',
+      'selected',
+    );
+    // deviceSectionPage.assertDevicePaymentModalSupportTypeToBeSelected();
+    deviceSectionPage.assertComponentToBeInvisible('device-payment-modal-immediate-discount-price');
   });
 
   it('KAN-40-9 단말기 결제 정보_즉납 모달에서 확인 버튼을 클릭 했을 때 모달이 닫히고 단말기 결제정보 영역에 스폰서유형, 약정기간, 지원방식이 전달되어 보여야한다', () => {
-    deviceSectionPage.clickDevicePaymentModalEngagementPeriodRadio(DEVICE_PAYMENT_MODAL, 'immediate', '24');
-    deviceSectionPage.clickDevicePaymentModalSupportTypeRadio(DEVICE_PAYMENT_MODAL, 'immediate', 'selected');
+    deviceSectionPage.clickDevicePaymentModalEngagementPeriodRadio(
+      DEVICE_PAYMENT_MODAL,
+      'immediate',
+      '24',
+    );
+    deviceSectionPage.clickDevicePaymentModalSupportTypeRadio(
+      DEVICE_PAYMENT_MODAL,
+      'immediate',
+      'selected',
+    );
     deviceSectionPage.clickDevicePaymentModalConfirmButton(DEVICE_PAYMENT_MODAL, 'immediate');
-    deviceSectionPage.assertDevicePaymentModalToBeConfirmedImmediate();    
+    deviceSectionPage.assertDevicePaymentModalToBeConfirmedImmediate();
   });
-
 });

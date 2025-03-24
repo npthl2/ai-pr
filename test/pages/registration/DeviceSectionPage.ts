@@ -219,10 +219,6 @@ class DeviceSectionPage {
   }
 
   assertDevicePaymentModalSupportTypeToBeSelected() {
-    cy.get('[data-testid="device-payment-modal-immediate-discount-price"]').should(
-      'have.text',
-      '0 원',
-    );
     cy.get('[data-testid="device-payment-modal-immediate-total-price"]').should(
       'have.text',
       '1,800,000 원',
