@@ -53,7 +53,7 @@ const StyledTable = styled(Table)({
   tableLayout: 'fixed',
 });
 
-// 스크롤 가능한 테이블 바디 컨테이너 
+// 스크롤 가능한 테이블 바디 컨테이너
 const ScrollableTableContainer = styled(TableContainer)({
   maxHeight: '200px',
   overflow: 'auto',
@@ -225,19 +225,15 @@ const SelectedAdditionalServiceList: React.FC = () => {
             </TableRow>
           </TableHead>
         </StyledTable>
-        
+
         <ScrollableTableContainer>
           <StyledTable>
-            <TableBody>
-              {tableContent}
-            </TableBody>
+            <TableBody>{tableContent}</TableBody>
           </StyledTable>
         </ScrollableTableContainer>
-        
+
         <StyledTable>
-          <TableBody>
-            {totalRow}
-          </TableBody>
+          <TableBody>{totalRow}</TableBody>
         </StyledTable>
       </ListContainer>
     </RootContainer>

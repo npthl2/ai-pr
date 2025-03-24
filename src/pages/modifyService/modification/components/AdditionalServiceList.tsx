@@ -155,7 +155,7 @@ const AdditionalServiceList: React.FC = () => {
   const tableRows = useMemo(() => {
     return filteredServices.map((service) => (
       <TableRow sx={{ height: '20px' }} key={service.serviceId} hover>
-        <TableCell sx={{ maxWidth: '500px', }}>{service.serviceName}</TableCell>
+        <TableCell sx={{ maxWidth: '500px' }}>{service.serviceName}</TableCell>
         <TableCell align='right'>{service.serviceValue.toLocaleString()}</TableCell>
         <TableCell align='center'>
           <AddButton
@@ -213,7 +213,7 @@ const AdditionalServiceList: React.FC = () => {
             </TableRow>
           </TableHead>
         </StyledTable>
-        
+
         <ScrollableTableContainer>
           <StyledTable>
             <TableBody>
