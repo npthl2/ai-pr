@@ -16,8 +16,7 @@ export const ServiceHeaderContainer = styled(Box)({
   display: 'flex',
   alignItems: 'center',
   width: '100%',
-  justifyContent: 'space-between',
-  marginBottom: '16px',
+  justifyContent: 'space-between'
 });
 
 // 제목 타이포그래피 스타일
@@ -40,6 +39,7 @@ export const ListContainer = styled(Box)({
   overflow: 'hidden',
   display: 'flex',
   flexDirection: 'column',
+  height: 'auto', // 내부 컨텐츠에 맞춤
 });
 
 // 테이블 레이아웃 고정 스타일
@@ -49,7 +49,10 @@ export const StyledTable = styled(Table)({
 
 // 스크롤 가능한 테이블 컨테이너
 export const ScrollableTableContainer = styled(TableContainer)({
-  maxHeight: '200px',
+  // 헤더와 데이터 4개가 보이도록 고정 높이 설정 (행 높이 37px × 4개 = 148px)
+  height: '148px',
+  minHeight: '148px', 
+  maxHeight: '148px', // 항상 같은 높이를 유지
   overflow: 'auto',
   '&::-webkit-scrollbar': {
     width: '8px',

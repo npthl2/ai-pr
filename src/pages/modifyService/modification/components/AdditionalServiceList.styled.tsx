@@ -15,8 +15,7 @@ export const HeaderContainer = styled(Box)({
   display: 'flex',
   alignItems: 'center',
   width: '100%',
-  justifyContent: 'space-between',
-  marginBottom: '16px',
+  justifyContent: 'space-between'
 });
 
 // 제목 섹션 - 제목과 카운트를 담는 영역
@@ -40,11 +39,12 @@ export const CountTypography = styled(Typography)({
 // 목록 컨테이너 - 테이블을 감싸는 영역
 export const ListContainer = styled(Box)({
   width: '100%',
-  border: '1px solid #e0e0e0',
-  borderRadius: '4px',
+  borderTop: '1px solid #e0e0e0',
+  borderBottom: '1px solid #e0e0e0',
   overflow: 'hidden',
   display: 'flex',
   flexDirection: 'column',
+  height: 'auto', // 내부 컨텐츠에 맞춤
 });
 
 // 테이블 레이아웃 고정 스타일
@@ -54,7 +54,10 @@ export const StyledTable = styled(Table)({
 
 // 스크롤 가능한 테이블 컨테이너
 export const ScrollableTableContainer = styled(TableContainer)({
-  maxHeight: '300px',
+  // 헤더와 데이터 6개가 보이도록 고정 높이 설정 (행 높이 37px × 6개 = 222px)
+  height: '222px',
+  minHeight: '222px',
+  maxHeight: '222px', // 항상 같은 높이를 유지
   overflow: 'auto',
   '&::-webkit-scrollbar': {
     width: '8px',

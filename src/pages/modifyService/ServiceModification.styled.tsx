@@ -73,7 +73,6 @@ export const NewServiceContainer = styled(Box)(() => ({
   display: 'flex',
   flexDirection: 'column',
   gap: 12,
-  padding: 16,
   overflow: 'hidden',
 }));
 

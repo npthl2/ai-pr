@@ -101,7 +101,7 @@ const AdditionalServiceList: React.FC = () => {
   // 렌더링 최적화를 위해 테이블 행 메모이제이션
   const tableRows = useMemo(() => {
     return filteredServices.map((service) => (
-      <TableRow sx={{ height: '20px' }} key={service.serviceId} hover>
+      <TableRow key={service.serviceId} hover>
         <TableCell sx={{ maxWidth: '500px' }}>{service.serviceName}</TableCell>
         <TableCell align='right'>{service.serviceValue.toLocaleString()}</TableCell>
         <TableCell align='center'>
