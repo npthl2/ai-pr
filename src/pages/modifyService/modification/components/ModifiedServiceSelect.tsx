@@ -107,9 +107,6 @@ const SelectService = () => {
   // API에서 서비스 목록을 가져옵니다 (useServicesQuery 훅 사용)
   const { data: services = [] } = useServicesQuery();
 
-  // API 응답 데이터 확인을 위한 콘솔 로그
-  console.log('Services API 응답:', services);
-
   // 서비스 데이터를 ServicePlan 형식으로 변환
   // API 응답 데이터를 컴포넌트에서 사용하기 적합한 형태로 매핑합니다.
   const servicePlans: ServicePlan[] = services.map((service: Service) => ({
@@ -118,9 +115,6 @@ const SelectService = () => {
     price: service.serviceValue,
     releaseDate: service.releaseDate || '1970-01-01', // 빈 문자열인 경우 기본값 제공
   }));
-
-  // 매핑된 서비스 데이터 확인
-  console.log('매핑된 ServicePlans:', servicePlans);
 
   // 사용자가 서비스를 선택했을 때 실행되는 핸들러
   // 선택된 서비스 정보를 Zustand 스토어에 저장합니다.
@@ -154,9 +148,6 @@ const SelectService = () => {
     const dateB = b.releaseDate ? new Date(b.releaseDate).getTime() : 0;
     return dateB - dateA;
   });
-
-  // 정렬된 결과 확인
-  console.log('정렬된 ServicePlans:', sortedServicePlans);
 
   // 선택된 서비스가 있을 경우 해당 서비스 플랜 찾기
   const selectedPlan = selectedService
