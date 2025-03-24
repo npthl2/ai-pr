@@ -90,7 +90,7 @@ const DevicePaymentImmediate = ({
       // Total price will be calculated by the calculation useEffect
     }
     setDataLoaded(true);
-  }, [contractTabId, getRegistrationDeviceInfo]);
+  }, [contractTabId]);
 
   // Calculate discount price based on engagement type and period
   useEffect(() => {
