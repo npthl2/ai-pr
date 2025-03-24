@@ -56,10 +56,19 @@ const ListContainer = styled(Box)({
   border: '1px solid #e0e0e0',
   borderRadius: '4px',
   overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
 });
 
-const StyledTableContainer = styled(TableContainer)({
-  maxHeight: '300px', // 목록 그리드 높이 고정
+// 테이블 스타일 수정
+const StyledTable = styled(Table)({
+  tableLayout: 'fixed',
+});
+
+// 스크롤 가능한 테이블 바디 컨테이너
+const ScrollableTableContainer = styled(TableContainer)({
+  maxHeight: '300px',
+  overflow: 'auto',
   '&::-webkit-scrollbar': {
     width: '8px',
   },
@@ -145,8 +154,8 @@ const AdditionalServiceList: React.FC = () => {
   // 렌더링 최적화를 위해 테이블 행 메모이제이션
   const tableRows = useMemo(() => {
     return filteredServices.map((service) => (
-      <TableRow key={service.serviceId} hover>
-        <TableCell sx={{ maxWidth: '500px' }}>{service.serviceName}</TableCell>
+      <TableRow sx={{ height: '20px' }} key={service.serviceId} hover>
+        <TableCell sx={{ maxWidth: '500px', }}>{service.serviceName}</TableCell>
         <TableCell align='right'>{service.serviceValue.toLocaleString()}</TableCell>
         <TableCell align='center'>
           <AddButton
@@ -195,15 +204,18 @@ const AdditionalServiceList: React.FC = () => {
       </HeaderContainer>
 
       <ListContainer>
-        <StyledTableContainer>
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                <StyledTableHeaderCell>서비스명</StyledTableHeaderCell>
-                <StyledTableHeaderCell align='right'>금액 (원)</StyledTableHeaderCell>
-                <StyledTableHeaderCell align='center' width='120px'></StyledTableHeaderCell>
-              </TableRow>
-            </TableHead>
+        <StyledTable stickyHeader>
+          <TableHead>
+            <TableRow>
+              <StyledTableHeaderCell>서비스명</StyledTableHeaderCell>
+              <StyledTableHeaderCell align='right'>금액 (원)</StyledTableHeaderCell>
+              <StyledTableHeaderCell align='center' width='120px'></StyledTableHeaderCell>
+            </TableRow>
+          </TableHead>
+        </StyledTable>
+        
+        <ScrollableTableContainer>
+          <StyledTable>
             <TableBody>
               {tableRows}
               {filteredServices.length === 0 && (
@@ -218,8 +230,8 @@ const AdditionalServiceList: React.FC = () => {
                 </TableRow>
               )}
             </TableBody>
-          </Table>
-        </StyledTableContainer>
+          </StyledTable>
+        </ScrollableTableContainer>
       </ListContainer>
     </RootContainer>
   );

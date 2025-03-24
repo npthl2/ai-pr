@@ -44,10 +44,19 @@ const ListContainer = styled(Box)({
   border: '1px solid #e0e0e0',
   borderRadius: '4px',
   overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
 });
 
-const StyledTableContainer = styled(TableContainer)({
-  maxHeight: '250px', // 목록 그리드 높이 약간 늘림 (합계 행 추가)
+// 테이블 스타일 수정
+const StyledTable = styled(Table)({
+  tableLayout: 'fixed',
+});
+
+// 스크롤 가능한 테이블 바디 컨테이너 
+const ScrollableTableContainer = styled(TableContainer)({
+  maxHeight: '200px',
+  overflow: 'auto',
   '&::-webkit-scrollbar': {
     width: '8px',
   },
@@ -149,7 +158,7 @@ const SelectedAdditionalServiceList: React.FC = () => {
   // 테이블 컨텐츠 메모이제이션
   const tableContent = useMemo(
     () => (
-      <TableBody>
+      <>
         {selectedAdditionalServices.map((service) => (
           <TableRow key={service.serviceId} hover>
             <TableCell>
@@ -177,43 +186,59 @@ const SelectedAdditionalServiceList: React.FC = () => {
             </TableCell>
           </TableRow>
         )}
-
-        {/* 합계 행 */}
-        <TotalRow>
-          <TableCell colSpan={2}>
-            <TotalText>합계</TotalText>
-          </TableCell>
-          <PriceCell>
-            <TotalAmount>{totalPrice.toLocaleString()}</TotalAmount>
-          </PriceCell>
-          <TableCell></TableCell>
-        </TotalRow>
-      </TableBody>
+      </>
     ),
-    [selectedAdditionalServices, handleRemoveService, totalPrice],
+    [selectedAdditionalServices, handleRemoveService],
+  );
+
+  // 합계 행 메모이제이션
+  const totalRow = useMemo(
+    () => (
+      <TotalRow>
+        <TableCell colSpan={2}>
+          <TotalText>합계</TotalText>
+        </TableCell>
+        <PriceCell>
+          <TotalAmount>{totalPrice.toLocaleString()}</TotalAmount>
+        </PriceCell>
+        <TableCell></TableCell>
+      </TotalRow>
+    ),
+    [totalPrice],
   );
 
   return (
     <RootContainer>
       {headerSection}
       <ListContainer>
-        <StyledTableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <StyledTableHeaderCell>서비스명</StyledTableHeaderCell>
-                <StyledTableHeaderCell align='center' width='100px'>
-                  상태
-                </StyledTableHeaderCell>
-                <StyledTableHeaderCell align='right' width='100px'>
-                  요금 (원)
-                </StyledTableHeaderCell>
-                <StyledTableHeaderCell align='center' width='100px'></StyledTableHeaderCell>
-              </TableRow>
-            </TableHead>
-            {tableContent}
-          </Table>
-        </StyledTableContainer>
+        <StyledTable stickyHeader>
+          <TableHead>
+            <TableRow>
+              <StyledTableHeaderCell>서비스명</StyledTableHeaderCell>
+              <StyledTableHeaderCell align='center' width='100px'>
+                상태
+              </StyledTableHeaderCell>
+              <StyledTableHeaderCell align='right' width='100px'>
+                요금 (원)
+              </StyledTableHeaderCell>
+              <StyledTableHeaderCell align='center' width='100px'></StyledTableHeaderCell>
+            </TableRow>
+          </TableHead>
+        </StyledTable>
+        
+        <ScrollableTableContainer>
+          <StyledTable>
+            <TableBody>
+              {tableContent}
+            </TableBody>
+          </StyledTable>
+        </ScrollableTableContainer>
+        
+        <StyledTable>
+          <TableBody>
+            {totalRow}
+          </TableBody>
+        </StyledTable>
       </ListContainer>
     </RootContainer>
   );
