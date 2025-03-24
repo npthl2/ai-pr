@@ -8,6 +8,7 @@ import registrationContractService, {
   ServiceResponse,
 } from '@api/services/registrationContractService';
 import { CommonResponse } from '@model/common/CommonResponse';
+import { ServiceAgeCheckResponse } from '@model/modifyService/ModifyServiceModel';
 
 // SelectService 컴포넌트에서 사용할 Service 타입 확장
 export interface Service extends BaseService {
@@ -112,71 +113,31 @@ export const useAdditionalServicesQuery = () => {
   });
 };
 
-// 현재 고객의 서비스 정보 조회 API 쿼리
-export const useCustomerCurrentServiceQuery = (contractId: string) => {
+/**
+ * 요금제 변경 나이 제한 확인 쿼리 훅
+ *
+ * 고객의 계약 ID와 변경하려는 서비스 ID를 기반으로 
+ * 나이 제한으로 인해 해당 요금제로 변경이 가능한지 여부를 확인하는 API를 호출합니다.
+ *
+ * @param age - 계약 ID
+ * @param serviceId - 변경하려는 서비스 ID
+ * @returns 요금제 변경 나이 제한 확인 쿼리 결과
+ */
+export const useCheckServiceAgeRestrictionQuery = (
+  age: string,
+  serviceId: string,
+  enabled: boolean = false
+) => {
   return useReactQuery({
-    queryKey: ['customerCurrentService', contractId],
-    queryFn: (): CustomerCurrentServiceResponse => {
-      if (!contractId) {
-        throw new Error('계약 정보가 없습니다.');
-      }
-
-      // MOCK API 응답
-      // 실제 구현 시 아래 코드를 API 호출로 대체
-      // const { data } = await axios.get(`/api/contracts/${contractId}/current-service`);
-
-      // 임시 데이터 - 현재 서비스와 이전 서비스 정보
-      return {
-        currentService: {
-          serviceId: '3',
-          serviceName: '5G 라이트 요금제',
-          serviceValue: 69000,
-          serviceValueType: 'monthly',
-          releaseDate: '2023-02-01',
-        },
-        previousService: {
-          serviceId: '5',
-          serviceName: 'LTE 무제한 요금제',
-          serviceValue: 85000,
-          serviceValueType: 'monthly',
-          releaseDate: '2022-12-01',
-        },
-      };
+    queryKey: ['checkServiceAgeRestriction', age, serviceId],
+    queryFn: () => serviceModificationService.checkServiceAgeRestriction({
+      age,
+      serviceId
+    }),
+    select: (response: CommonResponse<ServiceAgeCheckResponse>) => {
+      if (typeof response.data === 'string') return [];
+      return response.data;
     },
-    enabled: !!contractId,
-    staleTime: 1000 * 60 * 5, // 5분
+    enabled: enabled && !!age && !!serviceId,
   });
 };
-
-// 아래 함수들은 현재 사용되지 않지만, 향후 실제 API 연동 시 사용될 수 있어 주석 처리하여 보존합니다.
-// export interface ServiceResponse {
-//   serviceId: string;
-//   serviceName: string;
-//   serviceValue: string;
-//   serviceValueType: string;
-//   validStartDateTime?: string;
-//   exclusiveServiceIds?: string[];
-// }
-
-// const mapServiceResponseToService = (serviceResponse: ServiceResponse): Service => {
-//   return {
-//     serviceId: serviceResponse.serviceId,
-//     serviceName: serviceResponse.serviceName,
-//     serviceValue: Number(serviceResponse.serviceValue),
-//     serviceValueType: serviceResponse.serviceValueType,
-//     releaseDate: serviceResponse.validStartDateTime || '',
-//   };
-// };
-
-// const mapServiceResponseToAdditionalService = (
-//   serviceResponse: ServiceResponse,
-// ): AdditionalService => {
-//   return {
-//     serviceId: serviceResponse.serviceId,
-//     serviceName: serviceResponse.serviceName,
-//     serviceValue: Number(serviceResponse.serviceValue),
-//     serviceValueType: serviceResponse.serviceValueType,
-//     exclusiveServiceIds: serviceResponse.exclusiveServiceIds,
-//     releaseDate: serviceResponse.validStartDateTime || '',
-//   };
-// };

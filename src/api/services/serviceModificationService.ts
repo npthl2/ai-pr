@@ -12,8 +12,8 @@ import { CommonResponse } from '@model/common/CommonResponse';
 import baseService from './baseService';
 import {
   ServiceModifiableResponse,
-  ServiceModificationRequest,
-  ServiceModificationResponse,
+  ServiceAgeCheckRequest,
+  ServiceAgeCheckResponse,
 } from '@model/modifyService/ModifyServiceModel';
 
 /**
@@ -38,40 +38,21 @@ const serviceModificationService = {
   },
 
   /**
-   * 요금제 변경 요청 API
+   * 요금제 변경 나이 제한 확인 API
    *
-   * 선택한 신규 요금제와 부가서비스로 요금제 변경을 요청합니다.
-   * 변경 요청은 즉시 처리되거나 처리 대기 상태가 될 수 있으며,
-   * 응답으로 변경 이력 ID와 처리 상태를 반환합니다.
+   * 고객의 계약 ID와 변경하려는 서비스 ID를 기반으로
+   * 나이 제한으로 인해 해당 요금제로 변경이 가능한지 여부를 확인합니다.
    *
-   * @path POST /contracts/{contractId}/service-modification
-   * @param data - 요금제 변경 요청 정보 (계약ID, 신규 요금제ID, 부가서비스ID 목록)
-   * @returns 요금제 변경 응답 (변경 이력 ID, 변경 일자, 처리 상태)
+   * @path POST /v1/contract/service-modify/age/check
+   * @param data - 확인 요청 정보 (계약ID, 서비스ID)
+   * @returns 요금제 변경 나이 제한 확인 응답
    */
-  requestServiceModification(
-    data: ServiceModificationRequest,
-  ): Promise<CommonResponse<ServiceModificationResponse>> {
-    return baseService.post<ServiceModificationResponse, ServiceModificationRequest>(
-      `/ctt-be/v1/contracts/${data.contractId}/service-modification`,
-      data,
-    );
-  },
-
-  /**
-   * 요금제 변경 이력 조회 API
-   *
-   * 특정 계약에 대한 요금제 변경 이력을 조회합니다.
-   * 최근 변경 이력부터 시간순으로 정렬된 결과를 반환합니다.
-   *
-   * @path GET /contracts/{contractId}/service-modification-history
-   * @param contractId - 계약 ID
-   * @returns 요금제 변경 이력 응답 목록
-   */
-  getServiceModificationHistory(
-    contractId: string,
-  ): Promise<CommonResponse<ServiceModificationResponse[]>> {
-    return baseService.get<ServiceModificationResponse[]>(
-      `/ctt-be/v1/contracts/${contractId}/service-modification-history`,
+  checkServiceAgeRestriction(
+    data: ServiceAgeCheckRequest
+  ): Promise<CommonResponse<ServiceAgeCheckResponse>> {
+    return baseService.post<ServiceAgeCheckResponse, ServiceAgeCheckRequest>(
+      `/ctt-be/v1/contract/service-modify/age/check`,
+      data
     );
   },
 };

@@ -8,54 +8,29 @@
  * 요금제 변경 가능 여부 확인 응답 인터페이스
  *
  * @property isModifiable - 요금제 변경 가능 여부 (true: 변경 가능, false: 변경 불가)
- * @property message - 요금제 변경 불가 시 표시할 메시지
- * @property blockReason - 요금제 변경 불가 사유 코드
- * @property modifiedDate - 이미 변경한 경우, 변경 일자 (yyyy-MM-dd 형식)
  * @property isChangedToday - 당일 요금제 변경 여부
  */
 export interface ServiceModifiableResponse {
   isModifiable: boolean;
-  message?: string;
-  blockReason?: 'ALREADY_MODIFIED' | 'PAYMENT_OVERDUE' | 'SERVICE_BLOCKED' | 'OTHER';
-  modifiedDate?: string; // 이미 변경한 경우, 변경 일자
   isChangedToday: boolean;
 }
 
 /**
- * 요금제 변경 요청 인터페이스
+ * 요금제 변경 나이 제한 확인 요청 인터페이스
  *
- * @property contractId - 계약 ID
- * @property newServiceId - 변경할 새 요금제 ID
- * @property additionalServiceIds - 변경할 부가서비스 ID 목록
+ * @property age - 고객 나이
+ * @property serviceId - 변경하려는 서비스 ID
  */
-export interface ServiceModificationRequest {
-  contractId: string;
-  newServiceId: string;
-  additionalServiceIds: string[];
+export interface ServiceAgeCheckRequest {
+  age: string;
+  serviceId: string;
 }
 
 /**
- * 요금제 변경 응답 인터페이스
+ * 요금제 변경 나이 제한 확인 응답 인터페이스
  *
- * @property modificationId - 요금제 변경 이력 ID
- * @property modificationDate - 요금제 변경 일자 (yyyy-MM-dd HH:mm:ss 형식)
- * @property status - 요금제 변경 상태 (COMPLETED: 완료, PENDING: 처리중, FAILED: 실패)
+ * @property isAvailable - 요금제 변경 가능 여부 (true: 변경 가능, false: 변경 불가)
  */
-export interface ServiceModificationResponse {
-  modificationId: string;
-  modificationDate: string;
-  status: 'COMPLETED' | 'PENDING' | 'FAILED';
-}
-
-/**
- * 백엔드 공통 응답 구조
- *
- * @property successOrNot - 성공 여부 (Y/N)
- * @property statusCode - 상태 코드
- * @property data - 응답 데이터
- */
-export interface BackendResponse<T> {
-  successOrNot: string;
-  statusCode: string;
-  data: T;
+export interface ServiceAgeCheckResponse {
+  isAvailable: boolean;
 }

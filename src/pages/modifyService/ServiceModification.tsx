@@ -19,23 +19,26 @@ import {
   TotalPrice,
 } from './ServiceModification.styled';
 import ServiceModify from './modification/ServiceModify';
-import ServiceModificationBlockModal from './modal/ServiceModificationBlockModal';
+import ServiceModificationBlockModal, { ServiceModificationModalType } from './modal/ServiceModificationBlockModal';
 import useCustomerStore from '@stores/CustomerStore';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import { TabInfo } from '@constants/CommonConstant';
 import {
   useCheckServiceModifiableQuery,
-  useCustomerCurrentServiceQuery,
 } from '@api/queries/modifyService/useModifyServiceQuery';
 
 const ServiceModification: React.FC = () => {
   // 모달 상태 관리
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [isChangedToday, setIsModalChangedToday] = useState<boolean>(false);
+  const [modalState, setModalState] = useState<{
+    open: boolean;
+    type: ServiceModificationModalType;
+  }>({
+    open: false,
+    type: ServiceModificationModalType.MONTHLY_RESTRICTION,
+  });
 
   // 요금제 수정 상태 관리 - ModifyServiceStore에서 필요한 함수 가져오기
-  const { setServiceModifiable, setPreviousService, setIsChangedToday } = useModifyServiceStore();
+  const { setServiceModifiable, setIsChangedToday } = useModifyServiceStore();
 
   // 고객 스토어에서 필요한 정보 가져오기
   const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId);
@@ -69,10 +72,6 @@ const ServiceModification: React.FC = () => {
     !!contractId && isServiceModificationTabActive,
   );
 
-  // 현재 고객의 서비스(요금제) 정보 가져오기
-  // TODO 변경필요
-  const { data: currentServiceData } = useCustomerCurrentServiceQuery(contractId);
-
   /**
    * 컴포넌트 마운트 시 요금제 변경 가능 여부와 현재 서비스 정보 설정
    *
@@ -80,21 +79,16 @@ const ServiceModification: React.FC = () => {
    * 요금제 변경이 불가능한 경우에만 모달을 표시합니다.
    */
   useEffect(() => {
-    // 로딩이 완료되고 contractId가 있고 모달 데이터가 있고 ServiceModification 탭이 활성화된 경우에만 처리
     if (!isLoading && contractId && modifiableData && isServiceModificationTabActive) {
-      // 전역 스토어에 요금제 변경 가능 여부 저장
       setServiceModifiable(modifiableData.isModifiable);
-
-      // 요금제 변경이 당일 발생했는지 설정
       setIsChangedToday(modifiableData.isChangedToday || false);
 
-      // 요금제 변경이 불가능한 경우에만 모달 표시
-      // 이 조건으로 인해 CustomerSearch/Detail에서는 모달이 표시되지 않습니다
       if (!modifiableData.isModifiable) {
-        // 모달에 표시할 메시지와 당일 변경 여부 설정
-        setErrorMessage(modifiableData.message || '');
-        setIsModalChangedToday(modifiableData.isChangedToday || false);
-        setIsModalOpen(true);
+        // 모달 표시
+        setModalState({
+          open: true,
+          type: ServiceModificationModalType.MONTHLY_RESTRICTION,
+        });
       }
     }
   }, [
@@ -112,20 +106,10 @@ const ServiceModification: React.FC = () => {
    * API에서 받아온 서비스 정보를 ModifyServiceStore에 저장합니다.
    * 이전 요금제로 되돌리기 기능을 위해 필요합니다.
    */
-  useEffect(() => {
-    // ServiceModification 탭이 활성화된 경우에만 처리
-    if (
-      currentServiceData &&
-      currentServiceData.previousService &&
-      isServiceModificationTabActive
-    ) {
-      setPreviousService(currentServiceData.previousService);
-    }
-  }, [currentServiceData, setPreviousService, isServiceModificationTabActive]);
 
   // 모달 닫기 핸들러
   const handleCloseModal = () => {
-    setIsModalOpen(false);
+    setModalState((prev) => ({ ...prev, open: false }));
   };
 
   // 현재 요금제 데이터
@@ -216,9 +200,8 @@ const ServiceModification: React.FC = () => {
               <ServiceModify />
             </NewServiceContainer>
             <ServiceModificationBlockModal
-              open={isModalOpen}
-              message={errorMessage}
-              isChangedToday={isChangedToday}
+              open={modalState.open}
+              type={modalState.type}
               onClose={handleCloseModal}
             />
           </ServicesContainer>
