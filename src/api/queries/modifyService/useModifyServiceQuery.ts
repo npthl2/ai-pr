@@ -82,7 +82,7 @@ export const useCheckServiceModifiableQuery = (contractId: string, enabled: bool
             ? response.data
             : '요금제 변경 가능 여부 확인 중 오류가 발생했습니다.',
         isRollbackAvailable: false,
-        previousService: null
+        previousService: null,
       };
     },
     enabled: enabled && !!contractId, // API 호출 활성화 조건: enabled가 true이고 contractId가 존재하는 경우에만

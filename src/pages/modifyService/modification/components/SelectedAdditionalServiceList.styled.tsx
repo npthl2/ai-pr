@@ -106,7 +106,6 @@ export const TotalRow = styled(TableRow)({
   backgroundColor: '#f5f6f8',
   '& th, & td': {
     fontWeight: 'bold',
-    padding: '16px',
   },
 });
 

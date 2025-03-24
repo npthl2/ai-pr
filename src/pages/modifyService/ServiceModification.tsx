@@ -25,7 +25,10 @@ import ServiceModificationBlockModal, {
 import useCustomerStore from '@stores/CustomerStore';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import { TabInfo } from '@constants/CommonConstant';
-import { useCheckServiceModifiableQuery, Service } from '@api/queries/modifyService/useModifyServiceQuery';
+import {
+  useCheckServiceModifiableQuery,
+  Service,
+} from '@api/queries/modifyService/useModifyServiceQuery';
 
 const ServiceModification: React.FC = () => {
   // 모달 상태 관리
@@ -38,7 +41,8 @@ const ServiceModification: React.FC = () => {
   });
 
   // 요금제 수정 상태 관리 - ModifyServiceStore에서 필요한 함수 가져오기
-  const { setServiceModifiable, setIsRollbackAvailable, setPreviousService } = useModifyServiceStore();
+  const { setServiceModifiable, setIsRollbackAvailable, setPreviousService } =
+    useModifyServiceStore();
 
   // 고객 스토어에서 필요한 정보 가져오기
   const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId);

@@ -6,7 +6,7 @@
 
 /**
  * 이전 서비스 정보 인터페이스
- * 
+ *
  * @property serviceId - 서비스 ID
  * @property serviceName - 서비스 명
  * @property serviceValue - 서비스 가격

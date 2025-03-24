@@ -299,7 +299,9 @@ const SelectService = () => {
       {/* 금일 요금제 변경으로 인한 안내 메시지 */}
       {isRollbackAvailable && !isServiceModifiable && (
         <WarningContainer>
-          <WarningMessage>금일 요금제 변경으로 인해 이전 요금제로 되돌리기만 가능합니다.</WarningMessage>
+          <WarningMessage>
+            금일 요금제 변경으로 인해 이전 요금제로 되돌리기만 가능합니다.
+          </WarningMessage>
         </WarningContainer>
       )}
 
