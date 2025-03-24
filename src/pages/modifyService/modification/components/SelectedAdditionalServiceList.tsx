@@ -3,7 +3,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
-import { useCallback, useMemo, useState } from 'react';
+import { AdditionalService } from '@model/modifyService/ModifyServiceModel';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import TableRow from '@components/Table/TableRow';
 import TableCell from '@components/Table/TableCell';
 import {
@@ -41,15 +42,49 @@ const SelectedAdditionalServiceList: React.FC = () => {
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
 
   // Zustand 스토어에서 선택된 부가서비스 목록과 삭제 액션 가져오기
-  const selectedAdditionalServices = useModifyServiceStore(
-    (state) => state.selectedAdditionalServices,
-  );
+  const {
+    selectedAdditionalServices,
+    removeAdditionalService,
+    currentAdditionalServices,
+    removedCurrentAdditionalServices,
+    removeCurrentAdditionalService,
+    setCurrentAdditionalServices,
+  } = useModifyServiceStore();
+  
   const selectedService = useModifyServiceStore((state) => state.selectedService);
-  const removeAdditionalService = useModifyServiceStore((state) => state.removeAdditionalService);
 
   // 현재 사용중인 서비스 정보 가져오기
   const currentService = useCurrentServiceStore((state) => state.currentService);
-  const currentAdditionalServices = currentService?.additionalService || [];
+  
+  // CurrentServiceStore의 AdditionalService 배열을 ModifyServiceStore에서 사용하는 AdditionalService 배열로 변환
+  const mapToModifyAdditionalServices = (services: AdditionalService[]): AdditionalService[] => {
+    return services.map(service => ({
+      ...service,
+      serviceValueType: service.serviceValueType || service.serviceType || '요금',
+      exclusiveServiceIds: service.exclusiveServiceIds || [],
+      releaseDate: service.releaseDate || service.validStartDateTime || '',
+    }));
+  };
+  
+  // 컴포넌트 마운트 시 현재 부가서비스 목록 초기화
+  useEffect(() => {
+    if (currentService?.additionalService && currentService.additionalService.length > 0) {
+      // 아직 초기화되지 않았고, 제거된 서비스가 없는 경우에만 초기화
+      if (
+        currentAdditionalServices.length === 0 && 
+        removedCurrentAdditionalServices.length === 0
+      ) {
+        // 현재 서비스의 AdditionalService를 ModifyServiceStore에서 사용하는 형태로 변환
+        const modifyAdditionalServices = mapToModifyAdditionalServices(currentService.additionalService);
+        setCurrentAdditionalServices(modifyAdditionalServices);
+      }
+    }
+  }, [
+    currentService,
+    currentAdditionalServices.length,
+    removedCurrentAdditionalServices.length,
+    setCurrentAdditionalServices,
+  ]);
 
   // 정렬 핸들러
   const handleSort = useCallback(
@@ -73,13 +108,8 @@ const SelectedAdditionalServiceList: React.FC = () => {
 
   // 모든 부가서비스 (현재 사용중 + 선택된 새로운 서비스)
   const allServices = useMemo(() => {
-    // 현재 사용중 서비스는 포함하되, 선택된 서비스에는 없는 항목만 포함
-    const currentServicesOnly = currentAdditionalServices.filter(
-      (service) => !selectedAdditionalServices.some((s) => s.serviceId === service.serviceId),
-    );
-
-    // 모든 서비스 합치기 (현재 사용중 + 새로 선택된 서비스)
-    let services = [...currentServicesOnly, ...selectedAdditionalServices];
+    // 모든 서비스 합치기 (현재 사용중 유지 + 새로 선택된 서비스)
+    let services = [...currentAdditionalServices, ...selectedAdditionalServices];
 
     // 정렬 적용
     if (sortField && sortDirection) {
@@ -102,18 +132,16 @@ const SelectedAdditionalServiceList: React.FC = () => {
 
   // 부가서비스 삭제 핸들러
   const handleRemoveService = useCallback(
-    (serviceId: string) => {
-      // 현재 사용중인 서비스인지 확인
-      const isCurrentService = currentAdditionalServices.some(
-        (service) => service.serviceId === serviceId,
-      );
-
-      // 현재 사용중인 서비스가 아닌 경우에만 삭제 가능
-      if (!isCurrentService) {
-        removeAdditionalService(serviceId);
+    (service: AdditionalService, isCurrentService: boolean) => {
+      if (isCurrentService) {
+        // 현재 가입중인 서비스 삭제
+        removeCurrentAdditionalService(service);
+      } else {
+        // 새로 추가한 서비스 삭제
+        removeAdditionalService(service.serviceId);
       }
     },
-    [removeAdditionalService, currentAdditionalServices],
+    [removeAdditionalService, removeCurrentAdditionalService],
   );
 
   // 부가서비스 총 요금 계산 (요금제 + 부가서비스)
@@ -122,10 +150,14 @@ const SelectedAdditionalServiceList: React.FC = () => {
       (sum, service) => sum + service.serviceValue,
       0,
     );
+    const currentServicesTotal = currentAdditionalServices.reduce(
+      (sum, service) => sum + service.serviceValue,
+      0,
+    );
     const servicePrice = selectedService ? selectedService.serviceValue : 0;
 
-    return additionalServicesTotal + servicePrice;
-  }, [selectedAdditionalServices, selectedService]);
+    return additionalServicesTotal + currentServicesTotal + servicePrice;
+  }, [selectedAdditionalServices, currentAdditionalServices, selectedService]);
 
   // 헤더 섹션 메모이제이션
   const headerSection = useMemo(
@@ -160,15 +192,13 @@ const SelectedAdditionalServiceList: React.FC = () => {
               </TableCell>
               <PriceCell>{service.serviceValue.toLocaleString()}원</PriceCell>
               <TableCell align='center'>
-                {!isCurrentService && (
-                  <DeleteButton
-                    variant='outlined'
-                    size='small'
-                    color='grey'
-                    iconComponent={<CloseIcon fontSize='small' />}
-                    onClick={() => handleRemoveService(service.serviceId)}
-                  />
-                )}
+                <DeleteButton
+                  variant='outlined'
+                  size='small'
+                  color='grey'
+                  iconComponent={<CloseIcon fontSize='small' />}
+                  onClick={() => handleRemoveService(service, isCurrentService)}
+                />
               </TableCell>
             </TableRow>
           );

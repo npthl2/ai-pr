@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
+import { AdditionalService } from '@model/modifyService/ModifyServiceModel';
 
 interface ServiceCommon {
   contractId: string;
@@ -10,8 +11,6 @@ interface ServiceCommon {
   validStartDateTime: string;
   validStartEndTime: string;
 }
-
-interface AdditionalService extends ServiceCommon {}
 
 interface Service extends ServiceCommon {
   additionalService: AdditionalService[];

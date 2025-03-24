@@ -5,6 +5,33 @@
  */
 
 /**
+ * 통합된 부가서비스 타입 - CurrentServiceStore와 ModifyServiceStore에서 공통으로 사용
+ * 
+ * @property serviceId - 서비스 ID
+ * @property serviceName - 서비스 명
+ * @property serviceValue - 서비스 가격
+ * @property serviceType - 서비스 타입 (ADDITIONAL 등)
+ * @property serviceValueType - 서비스 가격 타입 (요금 등)
+ * @property contractId - 계약 ID
+ * @property validStartDateTime - 유효 시작 시간
+ * @property validStartEndTime - 유효 종료 시간
+ * @property releaseDate - 출시일
+ * @property exclusiveServiceIds - 호환되지 않는 서비스 ID 목록
+ */
+export interface AdditionalService {
+  serviceId: string;
+  serviceName: string;
+  serviceValue: number;
+  serviceType?: string;
+  serviceValueType?: string;
+  contractId?: string;
+  validStartDateTime?: string;
+  validStartEndTime?: string;
+  releaseDate?: string;
+  exclusiveServiceIds?: string[];
+}
+
+/**
  * 이전 서비스 정보 인터페이스
  *
  * @property serviceId - 서비스 ID

@@ -1,7 +1,6 @@
 // src/api/queries/modifyService/useModifyServiceQuery.ts
 import { Service as BaseService } from '@pages/registration/sections/contract/types';
-import { AdditionalService as BaseAdditionalService } from '@pages/registration/sections/contract/types';
-import { ServiceModifiableResponse } from '@model/modifyService/ModifyServiceModel';
+import { ServiceModifiableResponse, AdditionalService } from '@model/modifyService/ModifyServiceModel';
 import { useReactQuery } from '@hooks/useReactQuery';
 import serviceModificationService from '@api/services/serviceModificationService';
 import registrationContractService, {
@@ -15,11 +14,7 @@ export interface Service extends BaseService {
   releaseDate: string;
 }
 
-// SelectService 컴포넌트에서 사용할 AdditionalService 타입 확장
-export interface AdditionalService extends BaseAdditionalService {
-  releaseDate: string;
-}
-
+// CustomerCurrentServiceResponse 타입 정의
 export interface CustomerCurrentServiceResponse {
   currentService: Service;
   previousService?: Service;
@@ -43,6 +38,7 @@ const mapServiceResponseToAdditionalService = (
   return {
     serviceId: serviceResponse.serviceId,
     serviceName: serviceResponse.serviceName,
+    serviceType: 'ADDITIONAL',
     serviceValue: Number(serviceResponse.serviceValue),
     serviceValueType: serviceResponse.serviceValueType,
     exclusiveServiceIds: serviceResponse.exclusiveServiceIds || [],
