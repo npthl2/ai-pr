@@ -20,7 +20,7 @@ import {
   DeleteButton,
   TotalRow,
   TotalText,
-  TotalAmount
+  TotalAmount,
 } from './SelectedAdditionalServiceList.styled';
 
 /**
@@ -34,7 +34,7 @@ const SelectedAdditionalServiceList: React.FC = () => {
   );
   const selectedService = useModifyServiceStore((state) => state.selectedService);
   const removeAdditionalService = useModifyServiceStore((state) => state.removeAdditionalService);
-  
+
   // 현재 사용중인 서비스 정보 가져오기
   const currentService = useCurrentServiceStore((state) => state.currentService);
   const currentAdditionalServices = currentService?.additionalService || [];
@@ -43,9 +43,9 @@ const SelectedAdditionalServiceList: React.FC = () => {
   const allServices = useMemo(() => {
     // 현재 사용중 서비스는 포함하되, 선택된 서비스에는 없는 항목만 포함
     const currentServicesOnly = currentAdditionalServices.filter(
-      service => !selectedAdditionalServices.some(s => s.serviceId === service.serviceId)
+      (service) => !selectedAdditionalServices.some((s) => s.serviceId === service.serviceId),
     );
-    
+
     // 모든 서비스 합치기 (현재 사용중 + 새로 선택된 서비스)
     return [...currentServicesOnly, ...selectedAdditionalServices];
   }, [currentAdditionalServices, selectedAdditionalServices]);
@@ -55,9 +55,9 @@ const SelectedAdditionalServiceList: React.FC = () => {
     (serviceId: string) => {
       // 현재 사용중인 서비스인지 확인
       const isCurrentService = currentAdditionalServices.some(
-        service => service.serviceId === serviceId
+        (service) => service.serviceId === serviceId,
       );
-      
+
       // 현재 사용중인 서비스가 아닌 경우에만 삭제 가능
       if (!isCurrentService) {
         removeAdditionalService(serviceId);
@@ -95,9 +95,9 @@ const SelectedAdditionalServiceList: React.FC = () => {
         {allServices.map((service) => {
           // 현재 사용중인 서비스인지 확인
           const isCurrentService = currentAdditionalServices.some(
-            currentService => currentService.serviceId === service.serviceId
+            (currentService) => currentService.serviceId === service.serviceId,
           );
-          
+
           return (
             <TableRow key={service.serviceId} hover>
               <TableCell>

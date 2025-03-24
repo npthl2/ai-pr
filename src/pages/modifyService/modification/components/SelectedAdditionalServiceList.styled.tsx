@@ -85,10 +85,12 @@ export const PriceCell = styled(TableCell)({
 });
 
 // 상태 표시 스타일
-export const StatusBadge = styled(Typography)<{ isCurrentService?: boolean }>(({ isCurrentService }) => ({
-  color: isCurrentService ? '#388e3c' : '#1976d2',
-  fontWeight: isCurrentService ? 500 : 400,
-}));
+export const StatusBadge = styled(Typography)<{ isCurrentService?: boolean }>(
+  ({ isCurrentService }) => ({
+    color: isCurrentService ? '#388e3c' : '#1976d2',
+    fontWeight: isCurrentService ? 500 : 400,
+  }),
+);
 
 // 삭제 버튼 스타일
 export const DeleteButton = styled(Button)({
@@ -114,4 +116,4 @@ export const TotalText = styled(Typography)({
 export const TotalAmount = styled(Typography)({
   fontWeight: 'bold',
   fontSize: '1.1rem',
-}); 
+});

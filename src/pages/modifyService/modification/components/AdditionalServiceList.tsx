@@ -1,11 +1,4 @@
-import {
-  Box,
-  Typography,
-  TableBody,
-  TableHead,
-  TextField,
-  InputAdornment,
-} from '@mui/material';
+import { Box, Typography, TableBody, TableHead, TextField, InputAdornment } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState, useEffect, useCallback, useMemo } from 'react';
@@ -27,7 +20,7 @@ import {
   StyledTable,
   ScrollableTableContainer,
   StyledTableHeaderCell,
-  AddButton
+  AddButton,
 } from './AdditionalServiceList.styled';
 
 /**
@@ -41,7 +34,7 @@ const AdditionalServiceList: React.FC = () => {
 
   // Zustand 스토어에서 부가서비스 관련 상태와 액션 가져오기
   const { selectedAdditionalServices, addAdditionalService } = useModifyServiceStore();
-  
+
   // 현재 사용 중인 서비스 정보 가져오기
   const currentService = useCurrentServiceStore((state) => state.currentService);
   const currentAdditionalServices = currentService?.additionalService || [];
@@ -67,10 +60,10 @@ const AdditionalServiceList: React.FC = () => {
 
     // 이미 선택된 부가서비스 ID 목록
     const selectedServiceIds = selectedAdditionalServices.map((service) => service.serviceId);
-    
+
     // 현재 사용 중인 부가서비스 ID 목록
     const currentServiceIds = currentAdditionalServices.map((service) => service.serviceId);
-    
+
     // 모든 제외할 서비스 ID 목록 (현재 사용 중 + 이미 선택된 것)
     const excludedServiceIds = [...selectedServiceIds, ...currentServiceIds];
 
@@ -85,7 +78,12 @@ const AdditionalServiceList: React.FC = () => {
       .sort((a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime());
 
     setFilteredServices(filtered);
-  }, [debouncedSearchKeyword, additionalServices, selectedAdditionalServices, currentAdditionalServices]);
+  }, [
+    debouncedSearchKeyword,
+    additionalServices,
+    selectedAdditionalServices,
+    currentAdditionalServices,
+  ]);
 
   // 부가서비스 추가 핸들러
   const handleAddService = useCallback(

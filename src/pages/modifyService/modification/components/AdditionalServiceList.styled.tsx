@@ -1,9 +1,4 @@
-import {
-  Box,
-  Typography,
-  Table,
-  TableContainer,
-} from '@mui/material';
+import { Box, Typography, Table, TableContainer } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import TableCell from '@components/Table/TableCell';
 import Button from '@components/Button';
@@ -83,4 +78,4 @@ export const StyledTableHeaderCell = styled(TableCell)({
 export const AddButton = styled(Button)({
   minWidth: '80px',
   whiteSpace: 'nowrap',
-}); 
+});

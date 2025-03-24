@@ -17,7 +17,7 @@ import {
   PriceContainer,
   PriceTypography,
   RevertButton,
-  InfoIcon
+  InfoIcon,
 } from './ModifiedServiceSelect.styled';
 
 // 타입 정의: 서비스 플랜(요금제) 데이터 구조

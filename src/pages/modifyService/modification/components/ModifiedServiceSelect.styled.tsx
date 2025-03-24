@@ -69,4 +69,4 @@ export const InfoIcon = styled(InfoOutlinedIcon)({
   color: '#9e9e9e',
   marginLeft: '4px',
   cursor: 'help',
-}); 
+});
