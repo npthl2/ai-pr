@@ -56,29 +56,7 @@ const useRegistrationDeviceStore = create<RegistrationDeviceState>((set, get) =>
     // Check for contract changes before returning device info
     //get().checkForContractChanges(contractTapId);
 
-    const deviceInfo = get().registrationDevices[contractTapId];
-
-    if (!deviceInfo) {
-      return {
-        deviceId: '',
-        deviceName: '',
-        deviceNameAlias: '',
-        devicePaymentType: 'installment' as const,
-        deviceSponsorName: '통합스폰서',
-        deviceEngagementType: 'PUBLIC_POSTED_SUPPORT' as const,
-        deviceEngagementPeriod: 0,
-        deviceEngagementName: '공시지원금' as const,
-        deviceSalesPrice: 0,
-        deviceDiscountPrice: 0,
-        devicePrepaidPrice: 0,
-        deviceInstallmentAmount: 0,
-        deviceInstallmentFee: 0,
-        deviceTotalPrice: 0,
-        deviceInstallmentPeriod: 0,
-        monthlyInstallmentPrice: 0,
-        isValidated: false,
-      };
-    }
+    const deviceInfo = get().registrationDevices[contractTapId] || null;
     return deviceInfo;
   },
 

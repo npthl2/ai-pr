@@ -1,9 +1,10 @@
-import { InvoiceInfo } from '@model/RegistrationInfo';
 import { InfoSection, InfoRow, InfoLabel, InfoValue, SubSectionTitle } from '../SummaryInfo.styled';
 import { Box } from '@mui/material';
+import { PaymentMethod } from '@pages/registration/sections/invoiceSection.model';
+import { RegistrationInvoiceInfo } from '@stores/registration/RegistrationInvoiceStore';
 
 interface BillingInfoProps {
-  invoiceInfo: InvoiceInfo;
+  invoiceInfo: RegistrationInvoiceInfo;
 }
 
 const BillingInfo = ({ invoiceInfo }: BillingInfoProps) => {
@@ -18,7 +19,7 @@ const BillingInfo = ({ invoiceInfo }: BillingInfoProps) => {
         <InfoRow>
           <InfoLabel>납부방법</InfoLabel>
           <InfoValue>
-            {invoiceInfo.paymentMethod === '은행계좌 자동이체' && (
+            {invoiceInfo.paymentMethod === PaymentMethod.BANK && (
               <>
                 <Box>은행계좌 자동이체</Box>
                 <Box sx={{ mt: 1 }}>
@@ -26,7 +27,7 @@ const BillingInfo = ({ invoiceInfo }: BillingInfoProps) => {
                 </Box>
               </>
             )}
-            {invoiceInfo.paymentMethod === '카드' && (
+            {invoiceInfo.paymentMethod === PaymentMethod.CARD && (
               <>
                 <Box>카드</Box>
                 <Box sx={{ mt: 1 }}>
@@ -34,7 +35,7 @@ const BillingInfo = ({ invoiceInfo }: BillingInfoProps) => {
                 </Box>
               </>
             )}
-            {invoiceInfo.paymentMethod === '지로' && (
+            {invoiceInfo.paymentMethod === PaymentMethod.GIRO && (
               <>
                 <Box>지로</Box>
               </>

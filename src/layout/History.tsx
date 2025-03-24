@@ -65,7 +65,7 @@ const History = ({ registrationStatus }: HistoryProps) => {
         {registrationStatus?.registrations.map((registration, index) => (
           <>
             <Content key={index}>
-              <ContentStatus>
+              <ContentStatus key={index}>
                 {renderStatus(registration.status)}
                 {renderContent(registration.customerName, registration.eventType)}
               </ContentStatus>

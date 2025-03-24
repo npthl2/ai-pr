@@ -1,33 +1,23 @@
 import { Box } from '@mui/material';
-import {
-  InvoiceInfo,
-  DeviceInfo,
-  ContractInfo,
-  SalesInfo as BaseSalesInfo,
-} from '@model/RegistrationInfo';
+import { RegistrationDeviceInfo } from '@stores/registration/RegistrationDeviceStore';
+import { Contract } from '@stores/registration/RegistrationContractStore';
+import { Sales } from '@stores/registration/RegistrationSalesStore';
 import { StyledDivider, VerticalDivider } from './SummaryInfo.styled';
 import BillingInfo from './summary/BillingInfo';
 import SalesInfo from './summary/SalesInfo';
 import SubscriptionInfo from './summary/SubscriptionInfo';
 import DevicePaymentInfo from './summary/DevicePaymentInfo';
 
-interface SalesInfoType extends Partial<BaseSalesInfo> {
-  [key: string]: any;
-}
+import { RegistrationInvoiceInfo } from '@stores/registration/RegistrationInvoiceStore';
 
 interface SummaryInfoProps {
-  invoiceInfo: InvoiceInfo;
-  deviceInfo: DeviceInfo;
-  contractInfo: ContractInfo;
-  salesInfo?: SalesInfoType;
+  invoiceInfo: RegistrationInvoiceInfo;
+  deviceInfo: RegistrationDeviceInfo;
+  contractInfo: Contract;
+  salesInfo?: Sales;
 }
 
-const SummaryInfo = ({
-  invoiceInfo,
-  deviceInfo,
-  contractInfo,
-  salesInfo = {},
-}: SummaryInfoProps) => {
+const SummaryInfo = ({ invoiceInfo, deviceInfo, contractInfo, salesInfo }: SummaryInfoProps) => {
   return (
     <Box sx={{ display: 'flex', flexWrap: 'nowrap', width: '100%', gap: 3 }}>
       {/* 왼쪽 컬럼 */}
