@@ -2,9 +2,7 @@ import { Box, Typography, TableBody, TableHead, TextField, InputAdornment } from
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import {
-  useAdditionalServicesQuery,
-} from '@api/queries/modifyService/useModifyServiceQuery';
+import { useAdditionalServicesQuery } from '@api/queries/modifyService/useModifyServiceQuery';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import { AdditionalService } from '@model/modifyService/ModifyServiceModel';
 import TableRow from '@components/Table/TableRow';
@@ -37,11 +35,11 @@ const AdditionalServiceList: React.FC = () => {
   const [debouncedSearchKeyword, setDebouncedSearchKeyword] = useState('');
 
   // Zustand 스토어에서 부가서비스 관련 상태와 액션 가져오기
-  const { 
-    selectedAdditionalServices, 
+  const {
+    selectedAdditionalServices,
     currentAdditionalServices,
     removedCurrentAdditionalServices,
-    addAdditionalService 
+    addAdditionalService,
   } = useModifyServiceStore();
 
   // API에서 부가서비스 목록을 가져옵니다
@@ -73,35 +71,31 @@ const AdditionalServiceList: React.FC = () => {
     const excludedServiceIds = [...selectedServiceIds, ...currentServiceIds];
 
     // 필터링할 서비스 목록 (API 가져온 서비스 + 제거된 현재 서비스)
-    const allServices = [
-      ...additionalServices,
-      ...removedCurrentAdditionalServices
-    ];
+    const allServices = [...additionalServices, ...removedCurrentAdditionalServices];
 
     // 중복 서비스 ID 추적을 위한 Set
     const processedServiceIds = new Set<string>();
-    
+
     // 제외되지 않은 서비스 중 검색어에 맞는 서비스만 필터링
     const filtered = allServices
-      .filter(
-        (service) => {
-          // 이미 처리된 서비스는 제외 (중복 방지)
-          if (processedServiceIds.has(service.serviceId)) {
-            return false;
-          }
-          
-          // 검색어와 제외 조건 적용
-          const include = !excludedServiceIds.includes(service.serviceId) &&
-            service.serviceName.toLowerCase().includes(debouncedSearchKeyword.toLowerCase());
-          
-          // 포함된다면 ID 추적에 추가
-          if (include) {
-            processedServiceIds.add(service.serviceId);
-          }
-          
-          return include;
+      .filter((service) => {
+        // 이미 처리된 서비스는 제외 (중복 방지)
+        if (processedServiceIds.has(service.serviceId)) {
+          return false;
         }
-      )
+
+        // 검색어와 제외 조건 적용
+        const include =
+          !excludedServiceIds.includes(service.serviceId) &&
+          service.serviceName.toLowerCase().includes(debouncedSearchKeyword.toLowerCase());
+
+        // 포함된다면 ID 추적에 추가
+        if (include) {
+          processedServiceIds.add(service.serviceId);
+        }
+
+        return include;
+      })
       // 최신출시순 정렬
       .sort((a, b) => {
         // releaseDate가 없는 경우 (제거된 현재 서비스) 가장 위에 표시
@@ -137,7 +131,7 @@ const AdditionalServiceList: React.FC = () => {
     return filteredServices.map((service) => {
       // 제거된 현재 서비스인지 확인
       const isRemovedCurrentService = removedCurrentAdditionalServices.some(
-        removed => removed.serviceId === service.serviceId
+        (removed) => removed.serviceId === service.serviceId,
       );
 
       return (
@@ -145,7 +139,7 @@ const AdditionalServiceList: React.FC = () => {
           <TableCell sx={{ maxWidth: '500px' }}>
             {service.serviceName}
             {isRemovedCurrentService && (
-              <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+              <Typography variant='caption' color='text.secondary' sx={{ ml: 1 }}>
                 (가입중 해지)
               </Typography>
             )}

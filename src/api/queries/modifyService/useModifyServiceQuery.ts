@@ -1,6 +1,9 @@
 // src/api/queries/modifyService/useModifyServiceQuery.ts
 import { Service as BaseService } from '@pages/registration/sections/contract/types';
-import { ServiceModifiableResponse, AdditionalService } from '@model/modifyService/ModifyServiceModel';
+import {
+  ServiceModifiableResponse,
+  AdditionalService,
+} from '@model/modifyService/ModifyServiceModel';
 import { useReactQuery } from '@hooks/useReactQuery';
 import serviceModificationService from '@api/services/serviceModificationService';
 import registrationContractService, {

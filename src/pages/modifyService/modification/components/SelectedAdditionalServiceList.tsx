@@ -50,32 +50,31 @@ const SelectedAdditionalServiceList: React.FC = () => {
     removeCurrentAdditionalService,
     setCurrentAdditionalServices,
   } = useModifyServiceStore();
-  
+
   const selectedService = useModifyServiceStore((state) => state.selectedService);
 
   // 현재 사용중인 서비스 정보 가져오기
   const currentService = useCurrentServiceStore((state) => state.currentService);
-  
+
   // CurrentServiceStore의 AdditionalService 배열을 ModifyServiceStore에서 사용하는 AdditionalService 배열로 변환
   const mapToModifyAdditionalServices = (services: AdditionalService[]): AdditionalService[] => {
-    return services.map(service => ({
+    return services.map((service) => ({
       ...service,
       serviceValueType: service.serviceValueType || service.serviceType || '요금',
       exclusiveServiceIds: service.exclusiveServiceIds || [],
       releaseDate: service.releaseDate || service.validStartDateTime || '',
     }));
   };
-  
+
   // 컴포넌트 마운트 시 현재 부가서비스 목록 초기화
   useEffect(() => {
     if (currentService?.additionalService && currentService.additionalService.length > 0) {
       // 아직 초기화되지 않았고, 제거된 서비스가 없는 경우에만 초기화
-      if (
-        currentAdditionalServices.length === 0 && 
-        removedCurrentAdditionalServices.length === 0
-      ) {
+      if (currentAdditionalServices.length === 0 && removedCurrentAdditionalServices.length === 0) {
         // 현재 서비스의 AdditionalService를 ModifyServiceStore에서 사용하는 형태로 변환
-        const modifyAdditionalServices = mapToModifyAdditionalServices(currentService.additionalService);
+        const modifyAdditionalServices = mapToModifyAdditionalServices(
+          currentService.additionalService,
+        );
         setCurrentAdditionalServices(modifyAdditionalServices);
       }
     }

@@ -54,7 +54,7 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
   addAdditionalService: (service) => {
     // 제거된 현재 부가서비스인지 확인
     const isRemovedCurrentService = get().removedCurrentAdditionalServices.some(
-      item => item.serviceId === service.serviceId
+      (item) => item.serviceId === service.serviceId,
     );
 
     if (isRemovedCurrentService) {
@@ -102,14 +102,14 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
   },
 
   setCurrentAdditionalServices: (services) => {
-    set({ 
+    set({
       currentAdditionalServices: services,
-      removedCurrentAdditionalServices: [] 
+      removedCurrentAdditionalServices: [],
     });
   },
 
   clearAdditionalServices: () => {
-    set({ 
+    set({
       selectedAdditionalServices: [],
       removedCurrentAdditionalServices: [],
     });

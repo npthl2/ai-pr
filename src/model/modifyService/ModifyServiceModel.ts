@@ -6,7 +6,7 @@
 
 /**
  * 통합된 부가서비스 타입 - CurrentServiceStore와 ModifyServiceStore에서 공통으로 사용
- * 
+ *
  * @property serviceId - 서비스 ID
  * @property serviceName - 서비스 명
  * @property serviceValue - 서비스 가격
