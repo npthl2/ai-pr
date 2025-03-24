@@ -1,8 +1,9 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv, ConfigEnv, ProxyOptions } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig as defineVitestConfig } from 'vitest/config';
 
+// Vitest 설정
 const vitestConfig = defineVitestConfig({
   test: {
     globals: true,
@@ -25,76 +26,72 @@ const vitestConfig = defineVitestConfig({
   },
 });
 
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [react()],
-  ...vitestConfig,
-  resolve: {
-    alias: {
-      '@api': path.resolve(__dirname, './src/api'),
-      '@components': path.resolve(__dirname, './src/components'),
-      '@pages': path.resolve(__dirname, './src/pages'),
-      '@hooks': path.resolve(__dirname, './src/hooks'),
-      '@stores': path.resolve(__dirname, './src/stores'),
-      '@model': path.resolve(__dirname, './src/model'),
-      '@utils': path.resolve(__dirname, './src/utils'),
-      '@assets': path.resolve(__dirname, './src/assets'),
-      '@router': path.resolve(__dirname, './src/router'),
-      '@layout': path.resolve(__dirname, './src/layout'),
-      '@providers': path.resolve(__dirname, './src/providers'),
-      '@constants': path.resolve(__dirname, './src/constants'),
-      '@theme': path.resolve(__dirname, './src/theme'),
+// 경로 별칭 설정
+const aliasConfig = {
+  '@api': './src/api',
+  '@components': './src/components',
+  '@pages': './src/pages',
+  '@hooks': './src/hooks',
+  '@stores': './src/stores',
+  '@model': './src/model',
+  '@utils': './src/utils',
+  '@assets': './src/assets',
+  '@router': './src/router',
+  '@layout': './src/layout',
+  '@providers': './src/providers',
+  '@constants': './src/constants',
+  '@theme': './src/theme',
+};
+
+// 백엔드 서비스 설정
+const backendServices = [
+  { path: '/cca-be', port: 8081 },
+  { path: '/mpn-be', port: 8082 },
+  { path: '/cbg-be', port: 8083 },
+  { path: '/ctt-be', port: 8084 },
+  { path: '/nwk-be', port: 8085 },
+  { path: '/adm-be', port: 8086 },
+  { path: '/stg-be', port: 8087 },
+];
+
+export default defineConfig(({ mode }: ConfigEnv) => {
+  // 환경 변수 로드
+  const env = loadEnv(mode, process.cwd(), '');
+  const useGateway = env.VITE_GW === 'true';
+  // 프록시 설정 생성
+  const proxySettings: Record<string, ProxyOptions> = {};
+
+  // 백엔드 서비스 프록시 설정 추가
+  backendServices.forEach(({ path, port }) => {
+    proxySettings[path] = useGateway
+      ? {
+          target: 'http://localhost:8080',
+          changeOrigin: true,
+          secure: false,
+        }
+      : {
+          target: `http://localhost:${port}`,
+          changeOrigin: true,
+          secure: false,
+          rewrite: (urlPath: string) => urlPath.replace(new RegExp(`^${path}`), ''),
+        };
+  });
+
+  // 최종 설정 반환
+  return {
+    plugins: [react()],
+    ...vitestConfig,
+    resolve: {
+      alias: Object.entries(aliasConfig).reduce(
+        (acc, [key, value]) => {
+          acc[key] = path.resolve(__dirname, value);
+          return acc;
+        },
+        {} as Record<string, string>,
+      ),
     },
-  },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/cca-be': {
-        target: 'http://localhost:8081',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/cca-be/, ''),
-      },
-      '/mpn-be': {
-        target: 'http://localhost:8082',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/mpn-be/, ''),
-      },
-      '/cbg-be': {
-        target: 'http://localhost:8083',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/cbg-be/, ''),
-      },
-      '/ctt-be': {
-        target: 'http://localhost:8084',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/ctt-be/, ''),
-      },
-      '/nwk-be': {
-        target: 'http://localhost:8085',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/nwk-be/, ''),
-      },
-      '/adm-be': {
-        target: 'http://localhost:8086',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/adm-be/, ''),
-      },
-      '/stg-be': {
-        target: 'http://localhost:8087',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/stg-be/, ''),
-      },
+    server: {
+      proxy: proxySettings,
     },
-  },
+  };
 });

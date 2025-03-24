@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MenuItem, Typography } from '@mui/material';
+import { MenuItem, Typography, SelectChangeEvent } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { Person } from '@mui/icons-material';
 import Select from '@components/Select';
@@ -27,10 +27,10 @@ const SelectExample = () => {
     disabledMediumIcon: '',
   });
 
-  const handleChange = (id: string) => (e: any) => {
+  const handleChange = (id: string) => (e: SelectChangeEvent<unknown>) => {
     setValues((prev) => ({
       ...prev,
-      [id]: e.target.value,
+      [id]: e.target.value as string,
     }));
   };
 

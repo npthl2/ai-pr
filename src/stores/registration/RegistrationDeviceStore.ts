@@ -46,7 +46,6 @@ const useRegistrationDeviceStore = create<RegistrationDeviceState>((set, get) =>
   previousContractValues: {},
 
   setDisplayMode: (displayMode: string) => {
-    console.log('[RegistrationDeviceStore] setDisplayMode:', displayMode);
     set(() => ({
       displayMode,
     }));

@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import SummaryInfo from './SummaryInfo';
 
 import { Contract } from '@stores/registration/RegistrationContractStore';
-
 import { Sales } from '@stores/registration/RegistrationSalesStore';
 import { RegistrationDeviceInfo } from '@stores/registration/RegistrationDeviceStore';
 import { PaymentMethod } from '../sections/invoiceSection.model';

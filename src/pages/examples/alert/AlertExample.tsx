@@ -5,11 +5,11 @@ import { ComponentTitle, AlertExampleContainer, AlertWrapper } from './AlertExam
 
 const AlertExample = () => {
   const handleAction = () => {
-    console.log('Action clicked');
+    // console.log('Action clicked');
   };
 
   const handleClose = () => {
-    console.log('Close clicked');
+    // console.log('Close clicked');
   };
 
   return (
