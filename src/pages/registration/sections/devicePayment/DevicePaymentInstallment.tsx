@@ -47,7 +47,6 @@ const DevicePaymentInstallment = ({
   onDevicePayment,
   contractTabId,
 }: DevicePaymentInstallmentProps) => {
-  
   const ENGAGEMENT_PERIOD_12_DISCOUNT_PRICE = 300000;
   const ENGAGEMENT_PERIOD_24_DISCOUNT_PRICE = 700000;
   const INSTALLMENT_FEE_RATE = 0.059; // 5.9%
@@ -94,7 +93,11 @@ const DevicePaymentInstallment = ({
   // Load existing device info when component mounts
   useEffect(() => {
     const existingDeviceInfo = getRegistrationDeviceInfo(contractTabId);
-    if (existingDeviceInfo && existingDeviceInfo.deviceId && existingDeviceInfo.deviceSalesPrice > 0) {
+    if (
+      existingDeviceInfo &&
+      existingDeviceInfo.deviceId &&
+      existingDeviceInfo.deviceSalesPrice > 0
+    ) {
       setEngagementPeriod(existingDeviceInfo.deviceEngagementPeriod.toString());
       setDeviceEngagementType(existingDeviceInfo.deviceEngagementType);
       // Set installmentPeriod to '24' if it's 0 or invalid
@@ -113,7 +116,11 @@ const DevicePaymentInstallment = ({
   // Calculate discount price based on engagement type and period
   useEffect(() => {
     if (deviceEngagementType === 'PUBLIC_POSTED_SUPPORT') {
-      setDiscountPrice(engagementPeriod === '12' ? ENGAGEMENT_PERIOD_12_DISCOUNT_PRICE : ENGAGEMENT_PERIOD_24_DISCOUNT_PRICE);
+      setDiscountPrice(
+        engagementPeriod === '12'
+          ? ENGAGEMENT_PERIOD_12_DISCOUNT_PRICE
+          : ENGAGEMENT_PERIOD_24_DISCOUNT_PRICE,
+      );
     } else {
       setDiscountPrice(0);
     }
@@ -124,7 +131,10 @@ const DevicePaymentInstallment = ({
     const prepaidPriceNum = parseInt(prepaidPrice) || 0;
     const installmentPeriodNum = parseInt(installmentPeriod) || 12;
 
-    const safeInstallmentTotalAmount = Math.max(0, deviceSalesPrice - discountPrice - prepaidPriceNum);
+    const safeInstallmentTotalAmount = Math.max(
+      0,
+      deviceSalesPrice - discountPrice - prepaidPriceNum,
+    );
 
     // Calculate installment fee only if there's an amount to calculate on
     const newInstallmentFee =

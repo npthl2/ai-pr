@@ -78,9 +78,7 @@ const useRegistrationDeviceStore = create<RegistrationDeviceState>((set, get) =>
   },
 
   getRegistrationDeviceInfo: (contractTapId: string) => {
-    
     return get().registrationDevices[contractTapId] || null;
-
   },
 
   setRegistrationDeviceInfo: (contractTapId: string, info: RegistrationDeviceInfo) => {

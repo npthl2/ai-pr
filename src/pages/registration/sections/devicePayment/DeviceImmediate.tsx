@@ -95,7 +95,11 @@ const DevicePaymentImmediate = ({
   // Calculate discount price based on engagement type and period
   useEffect(() => {
     if (deviceEngagementType === 'PUBLIC_POSTED_SUPPORT') {
-      setDiscountPrice(engagementPeriod === '12' ? ENGAGEMENT_PERIOD_12_DISCOUNT_PRICE : ENGAGEMENT_PERIOD_24_DISCOUNT_PRICE);
+      setDiscountPrice(
+        engagementPeriod === '12'
+          ? ENGAGEMENT_PERIOD_12_DISCOUNT_PRICE
+          : ENGAGEMENT_PERIOD_24_DISCOUNT_PRICE,
+      );
     } else {
       setDiscountPrice(0);
     }
@@ -139,7 +143,6 @@ const DevicePaymentImmediate = ({
     );
     onClose();
   };
-
 
   return (
     <>
