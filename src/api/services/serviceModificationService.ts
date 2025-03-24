@@ -48,11 +48,11 @@ const serviceModificationService = {
    * @returns 요금제 변경 나이 제한 확인 응답
    */
   checkServiceAgeRestriction(
-    data: ServiceAgeCheckRequest
+    data: ServiceAgeCheckRequest,
   ): Promise<CommonResponse<ServiceAgeCheckResponse>> {
     return baseService.post<ServiceAgeCheckResponse, ServiceAgeCheckRequest>(
       `/ctt-be/v1/contract/service-modify/age/check`,
-      data
+      data,
     );
   },
 };

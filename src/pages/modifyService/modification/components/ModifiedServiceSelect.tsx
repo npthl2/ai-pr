@@ -4,12 +4,18 @@
 import { Box, Typography, TextField as MuiTextField } from '@mui/material';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import RestoreIcon from '@mui/icons-material/Restore';
-import { useServicesQuery, Service, useCheckServiceAgeRestrictionQuery } from '@api/queries/modifyService/useModifyServiceQuery';
+import {
+  useServicesQuery,
+  Service,
+  useCheckServiceAgeRestrictionQuery,
+} from '@api/queries/modifyService/useModifyServiceQuery';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import useCustomerStore from '@stores/CustomerStore';
 import Autocomplete from '@components/Autocomplete';
 import Tooltip from '@components/Tooltip';
-import ServiceModificationBlockModal, { ServiceModificationModalType } from '../../modal/ServiceModificationBlockModal';
+import ServiceModificationBlockModal, {
+  ServiceModificationModalType,
+} from '../../modal/ServiceModificationBlockModal';
 import {
   RootContainer,
   ServiceRowContainer,
@@ -50,10 +56,11 @@ const SelectService = () => {
   const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId);
   const customers = useCustomerStore((state) => state.customers);
   const isCustomer = useCustomerStore((state) => state.isCustomer);
-  
-  // 현재 선택된 고객의 계약 ID 가져오기
+
+  // 현재 선택된 고객 찾기
   const selectedCustomer = customers.find((c) => c.id === selectedCustomerId);
-  const contractId = selectedCustomer && isCustomer(selectedCustomer) ? selectedCustomer.contractId : '';
+  // 고객의 나이 정보 가져오기 (Customer 타입에서 age는 number 타입)
+  const customerAge = selectedCustomer && isCustomer(selectedCustomer) ? String(selectedCustomer.age) : '';
 
   // API에서 서비스 목록을 가져옵니다 (useServicesQuery 훅 사용)
   const { data: services = [] } = useServicesQuery();
@@ -79,6 +86,15 @@ const SelectService = () => {
     open: false,
     type: ServiceModificationModalType.CONFIRM_CHANGE,
     serviceName: '',
+  });
+
+  // 나이 제한을 위한 상태 관리
+  const [serviceAgeCheckParams, setServiceAgeCheckParams] = useState<{
+    age: string;
+    serviceId: string;
+  }>({
+    age: customerAge,
+    serviceId: '',
   });
 
   // 모달 열기 함수들
@@ -108,27 +124,27 @@ const SelectService = () => {
     if (tempSelectedService) {
       setSelectedService(tempSelectedService);
     }
-    
+
     // 모달 닫기
     closeModal();
   };
 
   // 나이 제한 확인 쿼리
-  const { data: ageRestrictionData, refetch: checkAgeRestriction } = useCheckServiceAgeRestrictionQuery(
-    '', // 초기 age - API 실제 필드와 일치하게 수정
-    '', // 초기 serviceId
-    false // enabled: false로 설정하여 자동 실행 방지
+  const { data: ageRestrictionData } = useCheckServiceAgeRestrictionQuery(
+    serviceAgeCheckParams.age,
+    serviceAgeCheckParams.serviceId,
+    !!serviceAgeCheckParams.age && !!serviceAgeCheckParams.serviceId // 두 값이 모두 있을 때만 쿼리 활성화
   );
 
-  // 사용자가 서비스를 선택했을 때 실행되는 핸들러 수정
+  // 사용자가 서비스를 선택했을 때 실행되는 핸들러
   const handlePlanChange = (
     _: SyntheticEvent,
     newValue: NonNullable<string | ServicePlan> | (string | ServicePlan)[] | null,
   ) => {
     // ServicePlan 객체인 경우 (단일 선택)
     if (newValue && typeof newValue === 'object' && !Array.isArray(newValue) && 'id' in newValue) {
-      if (!contractId || !isServiceModifiable) {
-        // 계약 ID가 없거나 서비스 변경 불가능한 경우 처리
+      if (!customerAge || !isServiceModifiable) {
+        // 고객 나이 정보가 없거나 서비스 변경 불가능한 경우 처리
         return;
       }
 
@@ -140,19 +156,11 @@ const SelectService = () => {
         // 임시 저장
         setTempSelectedService(selectedServiceData);
         
-        // 나이 제한 확인 API 호출
-        // checkAgeRestriction 함수는 리패치 옵션을 받기 때문에 타입 문제 발생
-        // 실제 API 요청에 맞게 수정
-        checkAgeRestriction({
-          cancelRefetch: false, // RefetchOptions 타입의 속성
-          throwOnError: false
+        // 나이 제한 확인 API 호출 - 파라미터 설정으로 쿼리 자동 실행
+        setServiceAgeCheckParams({
+          age: customerAge,
+          serviceId: selectedServiceData.serviceId
         });
-
-        // 참고: 실제 API 호출은 다음과 같이 구현되어야 함:
-        // serviceModificationService.checkServiceAgeRestriction({
-        //   age: contractId, // 실제로는 age 대신 contractId를 사용
-        //   serviceId: selectedServiceData.serviceId
-        // })
       }
     } else {
       // 선택되지 않은 경우 또는 지원하지 않는 값 형식인 경우
@@ -163,14 +171,8 @@ const SelectService = () => {
   // 나이 제한 확인 결과 처리
   useEffect(() => {
     if (ageRestrictionData && tempSelectedService) {
-      // ageRestrictionData 타입을 확인하고 isAvailable 속성에 접근
+      // 타입 확인 및 안전한 처리
       const data = ageRestrictionData;
-      
-      if (Array.isArray(data)) {
-        // 배열인 경우 (API 응답이 배열인 경우)
-        console.error('예상치 못한 응답 형식:', data);
-        return;
-      }
       
       // 실제 ServiceAgeCheckResponse 타입으로 처리
       if ('isAvailable' in data) {

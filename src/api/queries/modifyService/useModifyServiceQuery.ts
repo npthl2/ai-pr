@@ -116,7 +116,7 @@ export const useAdditionalServicesQuery = () => {
 /**
  * 요금제 변경 나이 제한 확인 쿼리 훅
  *
- * 고객의 계약 ID와 변경하려는 서비스 ID를 기반으로 
+ * 고객의 계약 ID와 변경하려는 서비스 ID를 기반으로
  * 나이 제한으로 인해 해당 요금제로 변경이 가능한지 여부를 확인하는 API를 호출합니다.
  *
  * @param age - 계약 ID
@@ -126,14 +126,15 @@ export const useAdditionalServicesQuery = () => {
 export const useCheckServiceAgeRestrictionQuery = (
   age: string,
   serviceId: string,
-  enabled: boolean = false
+  enabled: boolean = false,
 ) => {
   return useReactQuery({
     queryKey: ['checkServiceAgeRestriction', age, serviceId],
-    queryFn: () => serviceModificationService.checkServiceAgeRestriction({
-      age,
-      serviceId
-    }),
+    queryFn: () =>
+      serviceModificationService.checkServiceAgeRestriction({
+        age,
+        serviceId,
+      }),
     select: (response: CommonResponse<ServiceAgeCheckResponse>) => {
       if (typeof response.data === 'string') return [];
       return response.data;

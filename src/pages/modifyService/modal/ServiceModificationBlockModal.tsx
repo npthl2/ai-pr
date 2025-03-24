@@ -6,18 +6,18 @@ import { styles } from './ServiceModificationBlockModal.styles';
 
 // 모달 타입을 추가하여 다양한 경우를 처리
 export enum ServiceModificationModalType {
-  CONFIRM_CHANGE = 'CONFIRM_CHANGE',      // 요금제 변경 확인 (첫 번째 이미지)
-  AGE_RESTRICTION = 'AGE_RESTRICTION',    // 나이 제한으로 인한 불가 (두 번째 이미지)
-  MONTHLY_RESTRICTION = 'MONTHLY_RESTRICTION' // 월 1회 제한으로 인한 불가 (세 번째 이미지)
+  CONFIRM_CHANGE = 'CONFIRM_CHANGE', // 요금제 변경 확인 (첫 번째 이미지)
+  AGE_RESTRICTION = 'AGE_RESTRICTION', // 나이 제한으로 인한 불가 (두 번째 이미지)
+  MONTHLY_RESTRICTION = 'MONTHLY_RESTRICTION', // 월 1회 제한으로 인한 불가 (세 번째 이미지)
 }
 
 interface ServiceModificationModalProps {
   open: boolean;
   type: ServiceModificationModalType;
-  serviceName?: string;        // 요금제 이름 (CONFIRM_CHANGE 타입에서 사용)
-  message?: string;            // 커스텀 메시지 (필요한 경우)
+  serviceName?: string; // 요금제 이름 (CONFIRM_CHANGE 타입에서 사용)
+  message?: string; // 커스텀 메시지 (필요한 경우)
   onClose: () => void;
-  onConfirm?: () => void;      // 확인 버튼 클릭 핸들러 (CONFIRM_CHANGE 타입에서 사용)
+  onConfirm?: () => void; // 확인 버튼 클릭 핸들러 (CONFIRM_CHANGE 타입에서 사용)
 }
 
 /**
@@ -54,9 +54,15 @@ const ServiceModificationModal: React.FC<ServiceModificationModalProps> = ({
       case ServiceModificationModalType.CONFIRM_CHANGE:
         return `[${serviceName}]로 요금제 변경 처리하시겠습니까?`;
       case ServiceModificationModalType.AGE_RESTRICTION:
-        return message || '해당 요금제는 연령 제한으로 가입이용 불가능합니다.\n다른 요금제를 선택해 주세요.';
+        return (
+          message ||
+          '해당 요금제는 연령 제한으로 가입이용 불가능합니다.\n다른 요금제를 선택해 주세요.'
+        );
       case ServiceModificationModalType.MONTHLY_RESTRICTION:
-        return message || '요금제 변경은 월 1회만 가능합니다.\n현재 당월에는 변경이 불가하니, 다음 달에 다시 시도해 주세요.';
+        return (
+          message ||
+          '요금제 변경은 월 1회만 가능합니다.\n현재 당월에는 변경이 불가하니, 다음 달에 다시 시도해 주세요.'
+        );
       default:
         return message || '';
     }
@@ -91,10 +97,12 @@ const ServiceModificationModal: React.FC<ServiceModificationModalProps> = ({
         </Box>
 
         {/* 모달 푸터 */}
-        <Box sx={{ 
-          ...styles.modalFooter, 
-          justifyContent: showCancelButton ? 'space-between' : 'flex-end' 
-        }}>
+        <Box
+          sx={{
+            ...styles.modalFooter,
+            justifyContent: showCancelButton ? 'space-between' : 'flex-end',
+          }}
+        >
           {showCancelButton && (
             <Button
               variant='outlined'

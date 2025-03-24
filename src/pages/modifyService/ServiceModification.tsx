@@ -19,13 +19,13 @@ import {
   TotalPrice,
 } from './ServiceModification.styled';
 import ServiceModify from './modification/ServiceModify';
-import ServiceModificationBlockModal, { ServiceModificationModalType } from './modal/ServiceModificationBlockModal';
+import ServiceModificationBlockModal, {
+  ServiceModificationModalType,
+} from './modal/ServiceModificationBlockModal';
 import useCustomerStore from '@stores/CustomerStore';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import { TabInfo } from '@constants/CommonConstant';
-import {
-  useCheckServiceModifiableQuery,
-} from '@api/queries/modifyService/useModifyServiceQuery';
+import { useCheckServiceModifiableQuery } from '@api/queries/modifyService/useModifyServiceQuery';
 
 const ServiceModification: React.FC = () => {
   // 모달 상태 관리
