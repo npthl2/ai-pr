@@ -12,11 +12,7 @@ interface ServiceModifyProps {
 
 const ServiceModify: React.FC<ServiceModifyProps> = () => {
   // 스토어에서 선택된 서비스와 총액 계산 함수 가져오기
-  const {
-    selectedService,
-    isServiceModifiable,
-    resetAll,
-  } = useModifyServiceStore();
+  const { selectedService, isServiceModifiable, resetAll } = useModifyServiceStore();
 
   // 저장 버튼 클릭 시 호출되는 핸들러
   const handleSave = () => {
