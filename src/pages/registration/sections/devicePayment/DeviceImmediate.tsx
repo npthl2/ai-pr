@@ -259,12 +259,14 @@ const DevicePaymentImmediate = ({
                 {deviceSalesPrice.toLocaleString()} 원
               </PriceValue>
             </InfoRow>
-            <InfoRow>
-              <PriceLabel>- 공시지원금</PriceLabel>
-              <DiscountValue data-testid='device-payment-modal-immediate-discount-price'>
-                {discountPrice.toLocaleString()} 원
-              </DiscountValue>
-            </InfoRow>
+            {deviceEngagementType === 'PUBLIC_POSTED_SUPPORT' && (
+              <InfoRow>
+                <PriceLabel>- 공시지원금</PriceLabel>
+                <DiscountValue data-testid='device-payment-modal-immediate-discount-price'>
+                  {discountPrice.toLocaleString()} 원
+                </DiscountValue>
+              </InfoRow>
+            )}
             <PriceDivider />
             <InfoRow>
               <TotalPriceLabel variant='subtitle2'>총금액</TotalPriceLabel>
