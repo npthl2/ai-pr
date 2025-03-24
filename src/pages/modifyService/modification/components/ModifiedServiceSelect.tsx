@@ -188,7 +188,7 @@ const SelectService = () => {
                 <MuiTextField
                   {...params}
                   placeholder={isServiceModifiable ? '요금제 선택' : '요금제 변경 불가'}
-                  size="small"
+                  size='small'
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       backgroundColor: '#ffffff',
@@ -198,7 +198,7 @@ const SelectService = () => {
                 />
               )}
               onChange={handlePlanChange} // 선택 변경 시 이벤트 핸들러
-              size="small"
+              size='small'
             />
           </AutocompleteContainer>
         </LeftSectionContainer>
