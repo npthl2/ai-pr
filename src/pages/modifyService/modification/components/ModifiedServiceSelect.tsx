@@ -1,12 +1,15 @@
 // src/pages/modifyService/modification/components/ServicePlanSelect.tsx
 // 이 컴포넌트는 사용자가 변경할 서비스(요금제)를 선택할 수 있는 드롭다운 UI를 제공합니다.
 // API에서 서비스 목록을 가져와 최신 출시 순으로 정렬하여 보여주고, 선택된 서비스 정보를 상위 컴포넌트로 전달합니다.
-import { Box, Typography, Autocomplete, TextField, Tooltip, Button } from '@mui/material';
+import { Box, Typography, TextField as MuiTextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import RestoreIcon from '@mui/icons-material/Restore';
 import { useServicesQuery, Service } from '@api/queries/modifyService/useModifyServiceQuery';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
+import Button from '@components/Button';
+import { Autocomplete as MuiAutocomplete } from '@mui/material';
+import Tooltip from '@components/Tooltip';
 
 // 루트 컨테이너 스타일 - 전체 컴포넌트 레이아웃
 const RootContainer = styled(Box)({
@@ -114,7 +117,7 @@ const SelectService = () => {
 
   // 사용자가 서비스를 선택했을 때 실행되는 핸들러
   // 선택된 서비스 정보를 Zustand 스토어에 저장합니다.
-  const handlePlanChange = (event: any, newValue: ServicePlan | null) => {
+  const handlePlanChange = (_: any, newValue: ServicePlan | null) => {
     if (newValue) {
       // 선택된 요금제의 ID로 원본 서비스 객체를 찾아 스토어에 저장
       const selectedServiceData =
@@ -164,11 +167,12 @@ const SelectService = () => {
 
           {/* Autocomplete 컴포넌트: 검색 가능한 드롭다운 선택 UI */}
           <AutocompleteContainer>
-            <Autocomplete
+            <MuiAutocomplete<ServicePlan>
               fullWidth
               value={selectedPlan}
               options={sortedServicePlans} // 정렬된 서비스 목록을 옵션으로 제공
               getOptionLabel={(option) => option.name} // 표시할 레이블 지정 (서비스 이름)
+              isOptionEqualToValue={(option, value) => option.id === value.id}
               disabled={!isServiceModifiable} // 요금제 변경 불가능한 경우 비활성화
               renderOption={(props, option) => (
                 // 각 옵션 항목의 커스텀 렌더링: 서비스 이름과 가격을 함께 표시
@@ -181,10 +185,10 @@ const SelectService = () => {
               )}
               renderInput={(params) => (
                 // 입력 필드의 커스텀 렌더링: 검색 및 선택 입력창
-                <TextField
+                <MuiTextField
                   {...params}
                   placeholder={isServiceModifiable ? '요금제 선택' : '요금제 변경 불가'}
-                  size='small'
+                  size="small"
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       backgroundColor: '#ffffff',
@@ -194,6 +198,7 @@ const SelectService = () => {
                 />
               )}
               onChange={handlePlanChange} // 선택 변경 시 이벤트 핸들러
+              size="small"
             />
           </AutocompleteContainer>
         </LeftSectionContainer>
@@ -209,7 +214,8 @@ const SelectService = () => {
               variant='outlined'
               color='primary'
               size='small'
-              startIcon={<RestoreIcon />}
+              iconComponent={<RestoreIcon />}
+              iconPosition='left'
               onClick={handleRevertToPreviousService}
             >
               이전 요금제로 되돌리기

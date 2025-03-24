@@ -1,18 +1,18 @@
 import {
   Box,
   Typography,
-  Button,
   Table,
   TableBody,
-  TableCell,
   TableContainer,
   TableHead,
-  TableRow,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DeleteIcon from '@mui/icons-material/Delete';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import { useCallback, useMemo } from 'react';
+import Button from '@components/Button';
+import TableRow from '@components/Table/TableRow';
+import TableCell from '@components/Table/TableCell';
 
 // 스타일 컴포넌트
 const RootContainer = styled(Box)({
@@ -171,7 +171,8 @@ const SelectedAdditionalServiceList: React.FC = () => {
                 variant='outlined'
                 size='small'
                 color='error'
-                startIcon={<DeleteIcon />}
+                iconComponent={<DeleteIcon />}
+                iconPosition='left'
                 onClick={() => handleRemoveService(service.serviceId)}
               >
                 삭제
@@ -213,7 +214,7 @@ const SelectedAdditionalServiceList: React.FC = () => {
       <ListContainer>
         <StyledTable stickyHeader>
           <TableHead>
-            <TableRow>
+            <TableRow variant='head'>
               <StyledTableHeaderCell>서비스명</StyledTableHeaderCell>
               <StyledTableHeaderCell align='center' width='100px'>
                 상태

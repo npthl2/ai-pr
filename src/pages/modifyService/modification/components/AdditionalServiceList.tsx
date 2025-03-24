@@ -1,13 +1,10 @@
 import {
   Box,
   Typography,
-  Button,
   Table,
   TableBody,
-  TableCell,
   TableContainer,
   TableHead,
-  TableRow,
   TextField,
   InputAdornment,
 } from '@mui/material';
@@ -20,6 +17,9 @@ import {
   AdditionalService,
 } from '@api/queries/modifyService/useModifyServiceQuery';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
+import Button from '@components/Button';
+import TableRow from '@components/Table/TableRow';
+import TableCell from '@components/Table/TableCell';
 
 // 스타일 컴포넌트
 const RootContainer = styled(Box)({
@@ -162,7 +162,8 @@ const AdditionalServiceList: React.FC = () => {
             variant='outlined'
             color='primary'
             size='small'
-            startIcon={<AddIcon />}
+            iconComponent={<AddIcon />}
+            iconPosition='left'
             onClick={() => handleAddService(service)}
           >
             추가
@@ -206,7 +207,7 @@ const AdditionalServiceList: React.FC = () => {
       <ListContainer>
         <StyledTable stickyHeader>
           <TableHead>
-            <TableRow>
+            <TableRow variant='head'>
               <StyledTableHeaderCell>서비스명</StyledTableHeaderCell>
               <StyledTableHeaderCell align='right'>금액 (원)</StyledTableHeaderCell>
               <StyledTableHeaderCell align='center' width='120px'></StyledTableHeaderCell>
