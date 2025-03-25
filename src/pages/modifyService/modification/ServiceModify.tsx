@@ -72,11 +72,10 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
   const hasChanges = useMemo(() => {
     // 요금제 변경 확인
     const hasServiceChange = selectedService !== null;
-    
+
     // 부가서비스 변경 확인
-    const hasAdditionalServicesChange = 
-      selectedAdditionalServices.length > 0 || 
-      removedCurrentAdditionalServices.length > 0;
+    const hasAdditionalServicesChange =
+      selectedAdditionalServices.length > 0 || removedCurrentAdditionalServices.length > 0;
 
     return hasServiceChange || hasAdditionalServicesChange;
   }, [selectedService, selectedAdditionalServices, removedCurrentAdditionalServices]);
@@ -97,47 +96,47 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
     console.log('현재 고객 나이:', customerAge);
 
     // 해지 필요 서비스 확인 (나이 제한 또는 베타 관계)
-    const hasTerminationRequiredServices = allAdditionalServices.some(
-      (service) => {
-        // 나이 제한 체크를 위한 값들 확인
-        const minAge = service.availableAgeMin ? Number(service.availableAgeMin) : null;
-        const maxAge = service.availableAgeMax ? Number(service.availableAgeMax) : null;
-        
-        // 나이 제한 체크
-        const isUnderMinAge = minAge !== null && customerAge !== null && customerAge < minAge;
-        const isOverMaxAge = maxAge !== null && customerAge !== null && customerAge > maxAge;
-        const hasAgeRestriction = isUnderMinAge || isOverMaxAge;
+    const hasTerminationRequiredServices = allAdditionalServices.some((service) => {
+      // 나이 제한 체크를 위한 값들 확인
+      const minAge = service.availableAgeMin ? Number(service.availableAgeMin) : null;
+      const maxAge = service.availableAgeMax ? Number(service.availableAgeMax) : null;
 
-        console.log(`서비스 [${service.serviceName}] 나이 제한 체크:`, {
-          minAge,
-          maxAge,
-          customerAge,
-          isUnderMinAge,
-          isOverMaxAge,
-          hasAgeRestriction
-        });
+      // 나이 제한 체크
+      const isUnderMinAge = minAge !== null && customerAge !== null && customerAge < minAge;
+      const isOverMaxAge = maxAge !== null && customerAge !== null && customerAge > maxAge;
+      const hasAgeRestriction = isUnderMinAge || isOverMaxAge;
 
-        // exclusive(베타) 관계 체크 - 현재 또는 선택된 요금제와 베타 관계인지 확인
-        const isExclusiveWithService = effectiveService && 
-          service.exclusiveServiceIds?.includes(effectiveService.serviceId);
+      console.log(`서비스 [${service.serviceName}] 나이 제한 체크:`, {
+        minAge,
+        maxAge,
+        customerAge,
+        isUnderMinAge,
+        isOverMaxAge,
+        hasAgeRestriction,
+      });
 
-        console.log(`서비스 [${service.serviceName}] 베타 관계 체크:`, {
-          isExclusiveWithService,
-          exclusiveServiceIds: service.exclusiveServiceIds,
-          effectiveServiceId: effectiveService?.serviceId
-        });
+      // exclusive(베타) 관계 체크 - 현재 또는 선택된 요금제와 베타 관계인지 확인
+      const isExclusiveWithService =
+        effectiveService && service.exclusiveServiceIds?.includes(effectiveService.serviceId);
 
-        const needsTermination = hasAgeRestriction || isExclusiveWithService;
-        console.log(`서비스 [${service.serviceName}] 최종 결과:`, {
-          needsTermination,
-          reason: needsTermination ? 
-            (hasAgeRestriction ? '나이 제한' : '베타 관계') : 
-            '해지 필요 없음'
-        });
+      console.log(`서비스 [${service.serviceName}] 베타 관계 체크:`, {
+        isExclusiveWithService,
+        exclusiveServiceIds: service.exclusiveServiceIds,
+        effectiveServiceId: effectiveService?.serviceId,
+      });
 
-        return needsTermination;
-      }
-    );
+      const needsTermination = hasAgeRestriction || isExclusiveWithService;
+      console.log(`서비스 [${service.serviceName}] 최종 결과:`, {
+        needsTermination,
+        reason: needsTermination
+          ? hasAgeRestriction
+            ? '나이 제한'
+            : '베타 관계'
+          : '해지 필요 없음',
+      });
+
+      return needsTermination;
+    });
 
     console.log('해지 필요 서비스 있음:', hasTerminationRequiredServices);
     console.log('=== 해지 필요 서비스 체크 종료 ===');
@@ -154,10 +153,10 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
     // 이전 요금제로 되돌리기 만료 여부 확인
     const isRollbackExpired = (() => {
       if (!revertButtonClickedDate) return false;
-      
+
       const today = new Date();
       const revertDate = new Date(revertButtonClickedDate);
-      
+
       // 년/월/일 전체를 비교
       return today.toDateString() !== revertDate.toDateString();
     })();
