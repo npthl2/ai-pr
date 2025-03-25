@@ -113,16 +113,8 @@ export const StatusBadge = styled(Box)<{ $isCurrentService?: boolean; $isAgeRest
     borderRadius: '4px',
     fontSize: '12px',
     fontWeight: $isCurrentService ? 500 : 400,
-    backgroundColor: $isAgeRestricted 
-      ? '#ff5252' 
-      : $isCurrentService 
-        ? '#f0f0f0' 
-        : '#e3f2fd',
-    color: $isAgeRestricted 
-      ? '#ffffff' 
-      : $isCurrentService 
-        ? '#616161' 
-        : '#0d47a1',
+    backgroundColor: $isAgeRestricted ? '#ff5252' : $isCurrentService ? '#f0f0f0' : '#e3f2fd',
+    color: $isAgeRestricted ? '#ffffff' : $isCurrentService ? '#616161' : '#0d47a1',
   }),
 );
 

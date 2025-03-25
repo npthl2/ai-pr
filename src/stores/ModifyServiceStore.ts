@@ -152,7 +152,8 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
     }
   },
 
-  setHasAgeRestrictedServices: (hasRestricted: boolean) => set({ hasAgeRestrictedServices: hasRestricted }),
+  setHasAgeRestrictedServices: (hasRestricted: boolean) =>
+    set({ hasAgeRestrictedServices: hasRestricted }),
 
   // 계산된 값
   getTotalPrice: () => {

@@ -61,12 +61,12 @@ const SelectedAdditionalServiceList: React.FC = () => {
 
   // CustomerStore에서 현재 선택된 고객 정보 가져오기
   const { customers, selectedCustomerId } = useCustomerStore();
-  
+
   // 현재 선택된 고객 찾기
   const selectedCustomer = useMemo(() => {
-    return customers.find(customer => customer.id === selectedCustomerId);
+    return customers.find((customer) => customer.id === selectedCustomerId);
   }, [customers, selectedCustomerId]);
-  
+
   // 현재 고객의 나이
   const customerAge = useMemo(() => {
     if (!selectedCustomer) return null;
@@ -76,16 +76,15 @@ const SelectedAdditionalServiceList: React.FC = () => {
   // 나이 제한으로 인해 제거해야 하는 서비스가 있는지 확인
   const hasAgeRestrictedServices = useMemo(() => {
     if (!customerAge) return false;
-    
-    return currentAdditionalServices.some(service => {
+
+    return currentAdditionalServices.some((service) => {
       const ageMin = service.availableAgeMin ? parseInt(service.availableAgeMin) : null;
       const ageMax = service.availableAgeMax ? parseInt(service.availableAgeMax) : null;
-      
-      return (ageMin !== null && customerAge < ageMin) || 
-             (ageMax !== null && customerAge > ageMax);
+
+      return (ageMin !== null && customerAge < ageMin) || (ageMax !== null && customerAge > ageMax);
     });
   }, [currentAdditionalServices, customerAge]);
-  
+
   // 나이 제한 상태가 변경될 때마다 스토어 업데이트
   useEffect(() => {
     setHasAgeRestrictedServices(hasAgeRestrictedServices);
@@ -168,7 +167,7 @@ const SelectedAdditionalServiceList: React.FC = () => {
   const getAgeRestrictionMessage = useCallback((service: AdditionalService) => {
     const ageMin = service.availableAgeMin ? parseInt(service.availableAgeMin) : null;
     const ageMax = service.availableAgeMax ? parseInt(service.availableAgeMax) : null;
-    
+
     if (ageMin !== null && ageMax !== null) {
       return `이 서비스는 ${ageMin}세~${ageMax}세 고객만 이용 가능합니다.`;
     } else if (ageMin !== null) {
@@ -176,7 +175,7 @@ const SelectedAdditionalServiceList: React.FC = () => {
     } else if (ageMax !== null) {
       return `이 서비스는 ${ageMax}세 이하 고객만 이용 가능합니다.`;
     }
-    
+
     return '';
   }, []);
 
@@ -195,15 +194,17 @@ const SelectedAdditionalServiceList: React.FC = () => {
   );
 
   // 서비스의 나이 제한 여부 확인 함수
-  const isServiceAgeRestricted = useCallback((service: AdditionalService) => {
-    if (!customerAge) return false;
-    
-    const ageMin = service.availableAgeMin ? parseInt(service.availableAgeMin) : null;
-    const ageMax = service.availableAgeMax ? parseInt(service.availableAgeMax) : null;
-    
-    return (ageMin !== null && customerAge < ageMin) || 
-           (ageMax !== null && customerAge > ageMax);
-  }, [customerAge]);
+  const isServiceAgeRestricted = useCallback(
+    (service: AdditionalService) => {
+      if (!customerAge) return false;
+
+      const ageMin = service.availableAgeMin ? parseInt(service.availableAgeMin) : null;
+      const ageMax = service.availableAgeMax ? parseInt(service.availableAgeMax) : null;
+
+      return (ageMin !== null && customerAge < ageMin) || (ageMax !== null && customerAge > ageMax);
+    },
+    [customerAge],
+  );
 
   // 부가서비스 총 요금 계산 (요금제 + 부가서비스)
   const totalPrice = useMemo(() => {
@@ -245,17 +246,21 @@ const SelectedAdditionalServiceList: React.FC = () => {
           const isAgeRestricted = isServiceAgeRestricted(service);
 
           return (
-            <TableRow 
-              key={service.serviceId} 
+            <TableRow
+              key={service.serviceId}
               hover
               sx={isCurrentService && isAgeRestricted ? { backgroundColor: '#ffebee' } : {}}
             >
               <TableCell align='center'>
-                <StatusBadge 
-                  $isCurrentService={isCurrentService} 
+                <StatusBadge
+                  $isCurrentService={isCurrentService}
                   $isAgeRestricted={isCurrentService && isAgeRestricted}
                 >
-                  {isCurrentService && isAgeRestricted ? '해지필요' : isCurrentService ? '가입중' : '가입'}
+                  {isCurrentService && isAgeRestricted
+                    ? '해지필요'
+                    : isCurrentService
+                      ? '가입중'
+                      : '가입'}
                 </StatusBadge>
               </TableCell>
               <TableCell>
@@ -263,9 +268,9 @@ const SelectedAdditionalServiceList: React.FC = () => {
                   {service.serviceName}
                   {isCurrentService && isAgeRestricted && (
                     <Tooltip title={getAgeRestrictionMessage(service)} arrow>
-                      <WarningIcon 
-                        color="error" 
-                        fontSize="small" 
+                      <WarningIcon
+                        color='error'
+                        fontSize='small'
                         sx={{ ml: 1, verticalAlign: 'middle' }}
                       />
                     </Tooltip>
@@ -294,7 +299,13 @@ const SelectedAdditionalServiceList: React.FC = () => {
         )}
       </>
     ),
-    [allServices, currentAdditionalServices, handleRemoveService, isServiceAgeRestricted, getAgeRestrictionMessage],
+    [
+      allServices,
+      currentAdditionalServices,
+      handleRemoveService,
+      isServiceAgeRestricted,
+      getAgeRestrictionMessage,
+    ],
   );
 
   // 합계 행 메모이제이션

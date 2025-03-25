@@ -84,7 +84,7 @@ export const AddButton = styled(Button)(({ color }) => ({
   ...(color === 'error' && {
     '&.Mui-disabled': {
       opacity: 1,
-      fontWeight: 500
-    }
-  })
+      fontWeight: 500,
+    },
+  }),
 }));
