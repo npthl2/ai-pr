@@ -1,10 +1,12 @@
 import CustomerSearchTestPage from '../../../../pages/customer/search/CustomerSearch';
 import { CustomerSearchServiceMock } from '../../../mock/customer/search/CustomerSearchServiceMock';
 import { mockMemberStore } from '../../../../support/helpers/mockMemberStore';
+import CustomerDetailServiceMock from '../../../mock/customer/detail/CustomerDetailServiceMock';
 
 describe('[KAN-18-1] 고객검색 Modal - 일반유저', () => {
   const customerSearch = new CustomerSearchTestPage();
   const customerSearchServiceMock = new CustomerSearchServiceMock();
+  const customerDetailServiceMock = new CustomerDetailServiceMock();
 
   before(() => {
     mockMemberStore({
@@ -68,8 +70,8 @@ describe('[KAN-18-1] 고객검색 Modal - 일반유저', () => {
     customerSearch.typeName('김철수');
     customerSearch.typeBirthDate('781012');
     customerSearchServiceMock.successFindCustomer01();
+    customerDetailServiceMock.successWhenGetCustomerContracts();
     customerSearch.clickSearch();
-
     customerSearch.getGNBCustomerArea().should('be.visible');
     customerSearch.getLNBCustomer('100000000001').should('have.attr', 'aria-selected', 'true');
   });
@@ -84,6 +86,7 @@ describe('[KAN-18-1] 고객검색 Modal - 일반유저', () => {
     customerSearch.typeName('이영희');
     customerSearch.typeBirthDate('781012');
     customerSearchServiceMock.successFindCustomer02();
+    customerDetailServiceMock.successWhenGetCustomerContracts();
     customerSearch.clickSearch();
     customerSearch.getLNBCustomer('100000000002').click();
     customerSearch.getGNBCustomerName().should('have.text', '이영희');
@@ -94,60 +97,70 @@ describe('[KAN-18-1] 고객검색 Modal - 일반유저', () => {
     customerSearch.typeName('이영희');
     customerSearch.typeBirthDate('781012');
     customerSearchServiceMock.successFindCustomer02();
+    customerDetailServiceMock.successWhenGetCustomerContracts();
     customerSearch.clickSearch();
 
     customerSearch.getOpenModalButton().click();
     customerSearch.typeName('박지훈');
     customerSearch.typeBirthDate('891203');
     customerSearchServiceMock.successFindCustomer03();
+    customerDetailServiceMock.successWhenGetCustomerContracts();
     customerSearch.clickSearch();
 
     customerSearch.getOpenModalButton().click();
     customerSearch.typeName('최민서');
     customerSearch.typeBirthDate('991105');
     customerSearchServiceMock.successFindCustomer04();
+    customerDetailServiceMock.successWhenGetCustomerContracts();
     customerSearch.clickSearch();
 
     customerSearch.getOpenModalButton().click();
     customerSearch.typeName('한동욱');
     customerSearch.typeBirthDate('851230');
     customerSearchServiceMock.successFindCustomer05();
+    customerDetailServiceMock.successWhenGetCustomerContracts();
     customerSearch.clickSearch();
 
     customerSearch.getOpenModalButton().click();
     customerSearch.typeName('정다은');
     customerSearch.typeBirthDate('950315');
     customerSearchServiceMock.successFindCustomer06();
+    customerDetailServiceMock.successWhenGetCustomerContracts();
     customerSearch.clickSearch();
 
     customerSearch.getOpenModalButton().click();
     customerSearch.typeName('오지훈');
     customerSearch.typeBirthDate('701122');
     customerSearchServiceMock.successFindCustomer07();
+    customerDetailServiceMock.successWhenGetCustomerContracts();
     customerSearch.clickSearch();
 
     customerSearch.getOpenModalButton().click();
     customerSearch.typeName('서준혁');
     customerSearch.typeBirthDate('001001');
     customerSearchServiceMock.successFindCustomer08();
+    customerDetailServiceMock.successWhenGetCustomerContracts();
     customerSearch.clickSearch();
 
     customerSearch.getOpenModalButton().click();
     customerSearch.typeName('강예진');
     customerSearch.typeBirthDate('891105');
     customerSearchServiceMock.successFindCustomer09();
+    customerDetailServiceMock.successWhenGetCustomerContracts();
     customerSearch.clickSearch();
 
     customerSearch.getOpenModalButton().click();
     customerSearch.typeName('조윤성');
     customerSearch.typeBirthDate('001225');
     customerSearchServiceMock.successFindCustomer10();
+    customerDetailServiceMock.successWhenGetCustomerContracts();
     customerSearch.clickSearch();
 
     customerSearch.getOpenModalButton().click();
     customerSearch.typeName('배수진');
     customerSearch.typeBirthDate('951013');
     customerSearchServiceMock.successFindCustomer11();
+    customerDetailServiceMock.successWhenGetCustomerContracts();
     customerSearch.clickSearch();
 
     customerSearch.getAlertDialogTitle().should('be.visible');
@@ -157,7 +170,7 @@ describe('[KAN-18-1] 고객검색 Modal - 일반유저', () => {
 describe('[KAN-18-2] 고객검색 Modal - 관리자', () => {
   const customerSearch = new CustomerSearchTestPage();
   const customerSearchServiceMock = new CustomerSearchServiceMock();
-
+  const customerDetailServiceMock = new CustomerDetailServiceMock();
   before(() => {
     mockMemberStore({
       memberInfo: {
@@ -183,6 +196,7 @@ describe('[KAN-18-2] 고객검색 Modal - 관리자', () => {
   it('[KAN-18-2-3] 권한자일 경우 마스킹 해제 버튼이 보이고 클릭 시 마스킹 해제 창이 보여야 한다', () => {
     customerSearch.typePhoneNumber('01012345678');
     customerSearchServiceMock.successFindCustomer01();
+    customerDetailServiceMock.successWhenGetCustomerContracts();
     customerSearch.clickSearch();
     customerSearch.getGNBUnmaskingButton().should('be.visible');
     customerSearch.getGNBUnmaskingButton().click();
