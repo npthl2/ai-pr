@@ -95,7 +95,7 @@ const AdditionalServiceList: React.FC = () => {
     // 모든 제외할 서비스 ID 목록 (현재 사용중이면서 제거되지 않은 것 + 이미 선택된 것)
     const excludedServiceIds = [...selectedServiceIds, ...currentServiceIds];
 
-    // 필터링할 서비스 목록 (API 가져온 서비스 + 제거된 현재 서비스)
+    // 필터링할 서비스 목록 (API에서 가져온 서비스 + 제거된 현재 서비스)
     const allServices = [...additionalServices, ...removedCurrentAdditionalServices];
 
     // 중복 서비스 ID 추적을 위한 Set
@@ -123,7 +123,7 @@ const AdditionalServiceList: React.FC = () => {
       })
       // 최신출시순 정렬
       .sort((a, b) => {
-        // releaseDate가 없는 경우 (제거된 현재 서비스) 가장 위에 표시
+        // releaseDate가 없는 경우 가장 위에 표시
         if (!a.releaseDate) return -1;
         if (!b.releaseDate) return 1;
         return new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime();
@@ -205,11 +205,6 @@ const AdditionalServiceList: React.FC = () => {
         >
           <TableCell sx={{ maxWidth: '500px' }}>
             {service.serviceName}
-            {service.isRemovedCurrentService && (
-              <Typography variant='caption' color='text.secondary' sx={{ ml: 1 }}>
-                (가입중 해지)
-              </Typography>
-            )}
             {service.isAgeRestricted && (
               <Tooltip title={getAgeRestrictionMessage(service)} arrow>
                 <WarningIcon
@@ -245,11 +240,7 @@ const AdditionalServiceList: React.FC = () => {
                   : {}
               }
             >
-              {service.isRemovedCurrentService
-                ? '복구'
-                : service.isAgeRestricted
-                  ? '나이제한'
-                  : '추가'}
+              {service.isAgeRestricted ? '나이제한' : '추가'}
             </AddButton>
           </TableCell>
         </TableRow>
