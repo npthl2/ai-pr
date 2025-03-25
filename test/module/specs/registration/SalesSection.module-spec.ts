@@ -2,11 +2,19 @@ import SalesSectionPage from '../../../pages/registration/SalesSectionPage';
 import { mockAuthStore } from '../../../support/helpers/mockAuthStore';
 import BookmarkServiceMock from '../../mock/bookmark/BookmarkServiceMock';
 import ContractSectionServiceMock from '../../mock/registration/ContractSectionServiceMock';
+import CustomerSectionPage from '../../../pages/registration/CustomerSectionPage';
+import CustomerSectionServiceMock from '../../mock/registration/CustomerSectionServiceMock';
+import InvoiceSectionPage from '../../../pages/registration/InvoiceSectionPage';
+import InvoiceSectionServiceMock from '../../mock/registration/InvoiceSectionServiceMock';
 
 describe('KAN-38  판매정보 확인', () => {
   const page = new SalesSectionPage();
   const bookmarkService = new BookmarkServiceMock();
   const registrationContractService = new ContractSectionServiceMock();
+  const customerSectionPage = new CustomerSectionPage();
+  const customerSectionService = new CustomerSectionServiceMock();
+  const invoiceSectionPage = new InvoiceSectionPage();
+  const invoiceSectionService = new InvoiceSectionServiceMock();
 
   before(() => {
     // 초기 셋업
@@ -21,6 +29,36 @@ describe('KAN-38  판매정보 확인', () => {
     page.visit();
     page.clickMenuButton();
     page.clickCustomerSectionButton('신규가입');
+    customerSectionPage.typeNameField('홍길동');
+    customerSectionPage.typeRrnoField('9001011234567');
+    customerSectionPage.checkPersonalInfoConsent();
+    customerSectionPage.clickVerificationButton();
+    customerSectionService.successWhenCustomerNameVerification('Y');
+    customerSectionService.successWhenCreateCustomer();
+    customerSectionPage.typeRrnoIssueDateField('20230101');
+    customerSectionPage.checkIdentityVerificationConsent();
+    customerSectionPage.clickVerificationAuthButton();
+    customerSectionPage.clickVerificationConfirmButton();
+    customerSectionService.successWhenGetAvailableCustomerContract(2);
+
+    // 실명인증
+    invoiceSectionService.successWhenGetInvoiceList();
+    customerSectionPage.clickVerificationCheckButton();
+
+    // 청구정보 입력
+    invoiceSectionPage.assertComponentToBeInvisible('address-search-modal');
+    invoiceSectionPage.typeInputField('invoice-recipient-input', '홍길동');
+    invoiceSectionPage.typeInputField('invoice-postal-code-input', '11111');
+    invoiceSectionPage.typeInvoiceAddressInput('서울특별시 강남구 테헤란로 14길 6 남도빌딩 2층');
+    invoiceSectionPage.typeInputField('invoice-address-detail-input', '101호');
+    invoiceSectionPage.typeInputField('invoice-payment-name-input', '홍길동');
+    invoiceSectionPage.typeInputField('invoice-birth-date-input', '111111');
+    invoiceSectionPage.clickBankCompanySelectField();
+    invoiceSectionPage.clickBankCompanyMenuItem('KB');
+    invoiceSectionPage.typeInputField('invoice-bank-account-input', '1234567890');
+    invoiceSectionService.successWhenSaveInvoice();
+    invoiceSectionService.successWhenGetInvoiceList();
+    invoiceSectionPage.clickInvoiceCreateButton();    
 
     // 가입정보 섹션 확인 - 초기값
     page.assertComponentToBeVisible('sales-section');
