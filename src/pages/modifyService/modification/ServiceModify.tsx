@@ -97,41 +97,27 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
 
     // 해지 필요 서비스 확인 (나이 제한 또는 베타 관계)
     const hasTerminationRequiredServices = allAdditionalServices.some((service) => {
-      // 나이 제한 체크를 위한 값들 확인
-      const minAge = service.availableAgeMin ? Number(service.availableAgeMin) : null;
-      const maxAge = service.availableAgeMax ? Number(service.availableAgeMax) : null;
+      // API에서 받아온 부가서비스 목록에서 해당 서비스 찾기
+      const apiService = additionalServices.find(
+        (apiService) => apiService.serviceId === service.serviceId,
+      );
 
-      // 나이 제한 체크
-      const isUnderMinAge = minAge !== null && customerAge !== null && customerAge < minAge;
-      const isOverMaxAge = maxAge !== null && customerAge !== null && customerAge > maxAge;
-      const hasAgeRestriction = isUnderMinAge || isOverMaxAge;
+      // API에서 받아온 hasAgeRestriction과 exclusive 값 사용
+      const hasAgeRestriction = apiService?.hasAgeRestriction || false;
+      const isExclusive = apiService?.exclusive || false;
 
-      console.log(`서비스 [${service.serviceName}] 나이 제한 체크:`, {
-        minAge,
-        maxAge,
-        customerAge,
-        isUnderMinAge,
-        isOverMaxAge,
+      console.log(`서비스 [${service.serviceName}] 제한 체크:`, {
         hasAgeRestriction,
+        isExclusive,
       });
 
-      // exclusive(베타) 관계 체크 - 현재 또는 선택된 요금제와 베타 관계인지 확인
-      const isExclusiveWithService =
-        effectiveService && service.exclusiveServiceIds?.includes(effectiveService.serviceId);
-
-      console.log(`서비스 [${service.serviceName}] 베타 관계 체크:`, {
-        isExclusiveWithService,
-        exclusiveServiceIds: service.exclusiveServiceIds,
-        effectiveServiceId: effectiveService?.serviceId,
-      });
-
-      const needsTermination = hasAgeRestriction || isExclusiveWithService;
+      const needsTermination = hasAgeRestriction || isExclusive;
       console.log(`서비스 [${service.serviceName}] 최종 결과:`, {
         needsTermination,
         reason: needsTermination
           ? hasAgeRestriction
             ? '나이 제한'
-            : '베타 관계'
+            : '베타 서비스'
           : '해지 필요 없음',
       });
 
