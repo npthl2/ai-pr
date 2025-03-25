@@ -105,7 +105,7 @@ const SelectService = () => {
   const openConfirmModal = (serviceName: string) => {
     setModalState({
       open: true,
-      type: ServiceModificationModalType.CONFIRM_CHANGE,
+      type: ServiceModificationModalType.SERVICE_CHANGE,
       serviceName,
     });
   };

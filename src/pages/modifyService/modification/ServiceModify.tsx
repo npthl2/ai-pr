@@ -85,15 +85,6 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
     // 모든 부가서비스 (현재 부가서비스 + 새로 선택된 부가서비스)
     const allAdditionalServices = [...currentAdditionalServices, ...selectedAdditionalServices];
 
-    // 현재 요금제 또는 선택된 요금제
-    const effectiveService = selectedService || currentService;
-
-    console.log('=== 해지 필요 서비스 체크 시작 ===');
-    console.log('선택된/변경된 요금제:', selectedService);
-    console.log('현재 요금제:', currentService);
-    console.log('실제 사용할 요금제:', effectiveService);
-    console.log('전체 부가서비스:', allAdditionalServices);
-    console.log('현재 고객 나이:', customerAge);
 
     // 해지 필요 서비스 확인 (나이 제한 또는 베타 관계)
     const hasTerminationRequiredServices = allAdditionalServices.some((service) => {
@@ -106,26 +97,12 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
       const hasAgeRestriction = apiService?.hasAgeRestriction || false;
       const isExclusive = apiService?.exclusive || false;
 
-      console.log(`서비스 [${service.serviceName}] 제한 체크:`, {
-        hasAgeRestriction,
-        isExclusive,
-      });
-
       const needsTermination = hasAgeRestriction || isExclusive;
-      console.log(`서비스 [${service.serviceName}] 최종 결과:`, {
-        needsTermination,
-        reason: needsTermination
-          ? hasAgeRestriction
-            ? '나이 제한'
-            : '베타 서비스'
-          : '해지 필요 없음',
-      });
+
 
       return needsTermination;
     });
 
-    console.log('해지 필요 서비스 있음:', hasTerminationRequiredServices);
-    console.log('=== 해지 필요 서비스 체크 종료 ===');
 
     if (hasTerminationRequiredServices) {
       // 해지 필요 서비스가 있는 경우 -> 상품 변경 불가 알림

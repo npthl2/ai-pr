@@ -21,7 +21,7 @@ export interface ModifyServiceState {
   // 당일 요금제 변경 여부
   isRollbackAvailable: boolean;
   // 나이 제한으로 인해 제거해야 하는 서비스가 있는지 여부
-  hasAgeRestrictedServices: boolean;
+  hasRestrictedServices: boolean;
   // ServiceModification 컴포넌트가 마운트되었는지 여부
   serviceModificationMounted: boolean;
   // 변경 사항이 있는지 여부
@@ -44,7 +44,7 @@ export interface ModifyServiceState {
   setPreviousService: (service: Service | null) => void;
   setIsRollbackAvailable: (isRollbackAvailable: boolean) => void;
   revertToPreviousService: () => void;
-  setHasAgeRestrictedServices: (hasRestricted: boolean) => void;
+  setHasRestrictedServices: (hasRestricted: boolean) => void;
   setServiceModificationMounted: (isMounted: boolean) => void;
   updateHasChanges: () => void;
   setInitialStates: (
@@ -65,7 +65,7 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
   isServiceModifiable: true,
   previousService: null,
   isRollbackAvailable: false,
-  hasAgeRestrictedServices: false,
+  hasRestrictedServices: false,
   serviceModificationMounted: false,
   hasChanges: false,
   initialIsRollbackAvailable: false,
@@ -157,7 +157,7 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
       // 현재 부가서비스 목록을 초기 상태로 복원
       currentAdditionalServices: [...initialCurrentAdditionalServices],
       removedCurrentAdditionalServices: [],
-      hasAgeRestrictedServices: false,
+      hasRestrictedServices: false,
       hasChanges: false,
       // 초기 상태로 복원
       isRollbackAvailable: initialIsRollbackAvailable,
@@ -192,8 +192,8 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
     }
   },
 
-  setHasAgeRestrictedServices: (hasRestricted: boolean) =>
-    set({ hasAgeRestrictedServices: hasRestricted }),
+  setHasRestrictedServices: (hasRestricted: boolean) =>
+    set({ hasRestrictedServices: hasRestricted }),
 
   setServiceModificationMounted: (isMounted: boolean) =>
     set({ serviceModificationMounted: isMounted }),

@@ -13,6 +13,7 @@ export enum ServiceModificationModalType {
   ROLLBACK_EXPIRED = 'ROLLBACK_EXPIRED', // 이전 요금제로 되돌리기 만료
   MONTHLY_RESTRICTION = 'MONTHLY_RESTRICTION', // 월 1회 제한으로 인한 불가
   AGE_RESTRICTION = 'AGE_RESTRICTION', // 나이 제한으로 인한 불가
+  SERVICE_CHANGE = 'SERVICE_CHANGE', // 요금제 변경 (ModifiedServiceSelect에서 사용)
 }
 
 interface ServiceModificationModalProps {
@@ -67,6 +68,8 @@ const ServiceModificationModal: React.FC<ServiceModificationModalProps> = ({
         return `[${serviceName}]요금제로 변경하시겠습니까?`;
       case ServiceModificationModalType.CONFIRM_ADDITIONAL_SERVICES_CHANGE:
         return `부가서비스 ${additionalServicesCount}개로 변경하시겠습니까?`;
+      case ServiceModificationModalType.SERVICE_CHANGE:
+        return `[${serviceName}] 요금제로 변경하시겠습니까?`;
       case ServiceModificationModalType.TERMINATION_REQUIRED:
         return '상품 변경이 불가능합니다. 해지 필요한 부가서비스를 삭제한 후 다시 시도해 주세요.';
       case ServiceModificationModalType.ROLLBACK_EXPIRED:
@@ -85,6 +88,7 @@ const ServiceModificationModal: React.FC<ServiceModificationModalProps> = ({
     ServiceModificationModalType.CONFIRM_CHANGE,
     ServiceModificationModalType.CONFIRM_SERVICE_CHANGE,
     ServiceModificationModalType.CONFIRM_ADDITIONAL_SERVICES_CHANGE,
+    ServiceModificationModalType.SERVICE_CHANGE,
   ].includes(type);
 
   return (
@@ -131,7 +135,13 @@ const ServiceModificationModal: React.FC<ServiceModificationModalProps> = ({
           )}
           <Button
             variant='contained'
-            onClick={type === ServiceModificationModalType.CONFIRM_CHANGE ? onConfirm : onClose}
+            onClick={
+              type === ServiceModificationModalType.CONFIRM_CHANGE ||
+              type === ServiceModificationModalType.CONFIRM_SERVICE_CHANGE ||
+              type === ServiceModificationModalType.SERVICE_CHANGE
+                ? onConfirm
+                : onClose
+            }
             size='medium'
             data-testid='service-modification-confirm-button'
           >
