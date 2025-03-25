@@ -1,4 +1,3 @@
-import Button from '@components/Button';
 import Radio from '@components/Radio';
 import Dialog from '@components/Dialog';
 import { FormContainer, FormWrapper } from './common/SectionCommon.styled';
@@ -10,12 +9,19 @@ import {
   RadioWrapper,
   StyledSpan,
   RequiredSpan,
+  StyledButton,
 } from './DeviceSection.styled';
 import DevicePaymentInstallment from './devicePayment/DevicePaymentInstallment';
 import DeviceImmediate from './devicePayment/DeviceImmediate';
 import useRegistrationDeviceStore from '@stores/registration/RegistrationDeviceStore';
+import useRegistrationContractStore from '@stores/registration/RegistrationContractStore';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+interface ContractDeviceInfo {
+  contractImei: string;
+  contractServiceId: string;
+}
 
 interface DeviceSectionProps {
   contractTabId: string;
@@ -24,8 +30,11 @@ interface DeviceSectionProps {
 }
 
 const DeviceSection = ({ contractTabId, onComplete, completed }: DeviceSectionProps) => {
-  const { getRegistrationDeviceInfo } = useRegistrationDeviceStore();
-  const deviceInfo = getRegistrationDeviceInfo(contractTabId);
+  const { getRegistrationDeviceInfo, initializeDeviceStore } = useRegistrationDeviceStore();
+  const { getRegistrationContractInfo } = useRegistrationContractStore();
+  const deviceInfo =
+    getRegistrationDeviceInfo(contractTabId) || initializeDeviceStore(contractTabId);
+  const contractInfo = getRegistrationContractInfo(contractTabId);
 
   const [values, setValues] = useState<Record<string, string>>({
     paymentType: deviceInfo?.devicePaymentType || 'installment', // Use devicePaymentType from store or fallback to 'installment'
@@ -66,6 +75,19 @@ const DeviceSection = ({ contractTabId, onComplete, completed }: DeviceSectionPr
     handleConfirmDialog();
   };
 
+  useEffect(() => {
+    if (contractInfo) {
+      const contractDeviceInfo: ContractDeviceInfo = {
+        contractImei: contractInfo.imei || '',
+        contractServiceId: contractInfo.service?.serviceId || '',
+      };
+
+      if (contractDeviceInfo.contractImei || contractDeviceInfo.contractServiceId) {
+        useRegistrationDeviceStore.getState().clearRegistrationDeviceInfo();
+      }
+    }
+  }, [contractInfo?.imei, contractInfo?.service?.serviceId]);
+
   return (
     // completed 가 true 이면 outline 활성화, fales 일 경우 비활성화
     <FormContainer completed={completed}>
@@ -78,19 +100,21 @@ const DeviceSection = ({ contractTabId, onComplete, completed }: DeviceSectionPr
                 checked={values.paymentType === 'installment'}
                 onChange={handleRadioChange('paymentType')}
                 label='할부'
+                data-testid='device-payment-type-installment'
               />
               <Radio
                 value='immediate'
                 checked={values.paymentType === 'immediate'}
                 onChange={handleRadioChange('paymentType')}
                 label='즉납'
+                data-testid='device-payment-type-immediate'
               />
             </RadioWrapper>
           </FieldContainer>
           <FieldContainer>
-            <Button variant='outlined' size='small' onClick={handleOnClick}>
+            <StyledButton onClick={handleOnClick} data-testid='device-payment-input-button'>
               결제정보 입력
-            </Button>
+            </StyledButton>
           </FieldContainer>
         </LeftSection>
         <FieldContainer>
@@ -98,14 +122,14 @@ const DeviceSection = ({ contractTabId, onComplete, completed }: DeviceSectionPr
             스폰서유형
             <RequiredSpan className='required'>*</RequiredSpan>
           </FieldLabel>
-          <StyledSpan>통합스폰서</StyledSpan>
+          <StyledSpan data-testid='device-payment-sponsor-type'>통합스폰서</StyledSpan>
         </FieldContainer>
         <FieldContainer>
           <FieldLabel>
             약정기간
             <RequiredSpan className='required'>*</RequiredSpan>
           </FieldLabel>
-          <StyledSpan>
+          <StyledSpan data-testid='device-payment-engagement-period'>
             {deviceInfo?.deviceEngagementPeriod ? `${deviceInfo.deviceEngagementPeriod}개월` : ''}
           </StyledSpan>
         </FieldContainer>
@@ -114,7 +138,9 @@ const DeviceSection = ({ contractTabId, onComplete, completed }: DeviceSectionPr
             지원방식
             <RequiredSpan className='required'>*</RequiredSpan>
           </FieldLabel>
-          <StyledSpan>{deviceInfo?.isValidated ? deviceInfo?.deviceEngagementName : ''}</StyledSpan>
+          <StyledSpan data-testid='device-payment-support-type'>
+            {deviceInfo?.isValidated ? deviceInfo?.deviceEngagementName : ''}
+          </StyledSpan>
         </FieldContainer>
         <FieldContainer>
           <FieldLabel>SIM비용</FieldLabel>
