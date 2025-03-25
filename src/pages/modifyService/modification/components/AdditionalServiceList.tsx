@@ -44,7 +44,7 @@ interface AdditionalServiceListProps {
 /**
  * 부가서비스 목록 컴포넌트
  * 최신출시순으로 정렬된 부가서비스 목록을 보여주고 추가 기능을 제공합니다.
- * 
+ *
  * @param props - 컴포넌트 props
  * @param props.additionalServices - 부가서비스 목록 배열
  */
@@ -173,7 +173,7 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
   const tableRows = useMemo(() => {
     return filteredServices.map((service) => {
       const isRestricted = service.isAgeRestricted || service.isExclusive || false;
-      
+
       return (
         <TableRow
           key={service.serviceId}

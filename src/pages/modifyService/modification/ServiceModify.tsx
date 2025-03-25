@@ -16,12 +16,12 @@ interface ServiceModifyProps {
 
 const ServiceModify: React.FC<ServiceModifyProps> = () => {
   // 스토어에서 필요한 정보 가져오기
-  const { 
-    isServiceModifiable, 
-    hasAgeRestrictedServices, 
+  const {
+    isServiceModifiable,
+    hasAgeRestrictedServices,
     resetAll,
     selectedService,
-    serviceModificationMounted
+    serviceModificationMounted,
   } = useModifyServiceStore();
 
   // CustomerStore에서 현재 선택된 고객 정보 가져오기
@@ -50,7 +50,7 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
   const { data: additionalServices = [] } = useAdditionalServicesQuery(
     customerAge || 0,
     currentServiceId,
-    serviceModificationMounted
+    serviceModificationMounted,
   );
 
   // 저장 버튼 클릭 시 호출되는 핸들러

@@ -148,7 +148,7 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
     }
   },
 
-  setHasAgeRestrictedServices: (hasRestricted: boolean) => 
+  setHasAgeRestrictedServices: (hasRestricted: boolean) =>
     set({ hasAgeRestrictedServices: hasRestricted }),
 
   setServiceModificationMounted: (isMounted: boolean) =>

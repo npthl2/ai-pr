@@ -173,12 +173,12 @@ const SelectedAdditionalServiceList: React.FC = () => {
       // 나이 제한 확인
       const ageMin = service.availableAgeMin ? parseInt(service.availableAgeMin) : null;
       const ageMax = service.availableAgeMax ? parseInt(service.availableAgeMax) : null;
-      const isAgeRestricted = (ageMin !== null && customerAge < ageMin) || 
-                              (ageMax !== null && customerAge > ageMax);
-      
+      const isAgeRestricted =
+        (ageMin !== null && customerAge < ageMin) || (ageMax !== null && customerAge > ageMax);
+
       // 베타 서비스 확인
       const isExclusive = service.exclusive || false;
-      
+
       return isAgeRestricted || isExclusive;
     },
     [customerAge],
@@ -188,14 +188,13 @@ const SelectedAdditionalServiceList: React.FC = () => {
   const getRestrictionMessage = useCallback((service: AdditionalService) => {
     const ageMin = service.availableAgeMin ? parseInt(service.availableAgeMin) : null;
     const ageMax = service.availableAgeMax ? parseInt(service.availableAgeMax) : null;
-    const isAgeRestricted = (ageMin !== null && ageMax !== null) || 
-                            (ageMin !== null) || 
-                            (ageMax !== null);
+    const isAgeRestricted =
+      (ageMin !== null && ageMax !== null) || ageMin !== null || ageMax !== null;
 
     if (service.exclusive) {
       return '이 서비스는 베타 서비스입니다.';
     }
-    
+
     if (isAgeRestricted) {
       if (ageMin !== null && ageMax !== null) {
         return `이 서비스는 ${ageMin}세~${ageMax}세 고객만 이용 가능합니다.`;
@@ -354,17 +353,17 @@ const SelectedAdditionalServiceList: React.FC = () => {
   return (
     <RootContainer>
       {headerSection}
-      
+
       {/* 제한된 서비스가 있을 경우 경고 메시지 표시 */}
       {hasAgeRestrictedServices && (
         <WarningContainer>
           <WarningMessage>
-            <WarningIcon fontSize="small" sx={{ mr: 1 }} />
+            <WarningIcon fontSize='small' sx={{ mr: 1 }} />
             나이 제한 또는 베타 서비스로 인해 해지가 필요한 서비스가 있습니다.
           </WarningMessage>
         </WarningContainer>
       )}
-      
+
       <ListContainer>
         <StyledTable stickyHeader>
           <TableHead>
