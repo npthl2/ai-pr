@@ -1,8 +1,12 @@
 // src/pages/modifyService/modification/ServiceModify.tsx
 import { Button } from '@mui/material';
+import { useMemo } from 'react';
 import SelectService from './components/ModifiedServiceSelect';
 import AdditionalServiceList from './components/AdditionalServiceList';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
+import useCustomerStore from '@stores/CustomerStore';
+import useCurrentServiceStore from '@stores/CurrentServiceStore';
+import { useAdditionalServicesQuery } from '@api/queries/modifyService/useModifyServiceQuery';
 import SelectedAdditionalServiceList from './components/SelectedAdditionalServiceList';
 import { Container, Section, ButtonGroup } from './ServiceModify.styled';
 
@@ -11,8 +15,43 @@ interface ServiceModifyProps {
 }
 
 const ServiceModify: React.FC<ServiceModifyProps> = () => {
-  // 스토어에서 선택된 서비스와 총액 계산 함수 가져오기
-  const { isServiceModifiable, hasAgeRestrictedServices, resetAll } = useModifyServiceStore();
+  // 스토어에서 필요한 정보 가져오기
+  const { 
+    isServiceModifiable, 
+    hasAgeRestrictedServices, 
+    resetAll,
+    selectedService,
+    serviceModificationMounted
+  } = useModifyServiceStore();
+
+  // CustomerStore에서 현재 선택된 고객 정보 가져오기
+  const { customers, selectedCustomerId } = useCustomerStore();
+
+  // CurrentServiceStore에서 초기 서비스 정보 가져오기
+  const currentService = useCurrentServiceStore((state) => state.currentService);
+
+  // 현재 선택된 고객 찾기
+  const selectedCustomer = useMemo(() => {
+    return customers.find((customer) => customer.id === selectedCustomerId);
+  }, [customers, selectedCustomerId]);
+
+  // 현재 고객의 나이
+  const customerAge = useMemo(() => {
+    if (!selectedCustomer) return null;
+    return 'age' in selectedCustomer ? Number(selectedCustomer.age) : null;
+  }, [selectedCustomer]);
+
+  // 현재 사용할 서비스 ID (선택된 서비스 또는 현재 서비스)
+  const currentServiceId = useMemo(() => {
+    return selectedService?.serviceId || currentService?.serviceId || '';
+  }, [selectedService, currentService]);
+
+  // 부가서비스 목록 조회 API 호출
+  const { data: additionalServices = [] } = useAdditionalServicesQuery(
+    customerAge || 0,
+    currentServiceId,
+    serviceModificationMounted
+  );
 
   // 저장 버튼 클릭 시 호출되는 핸들러
   const handleSave = () => {
@@ -38,7 +77,7 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
 
       {/* 2. 부가서비스 목록 영역 */}
       <Section>
-        <AdditionalServiceList />
+        <AdditionalServiceList additionalServices={additionalServices} />
       </Section>
 
       {/* 3. 선택된 부가서비스 영역 */}

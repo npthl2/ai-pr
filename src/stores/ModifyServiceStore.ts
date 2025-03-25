@@ -30,7 +30,6 @@ export interface ModifyServiceState {
   removeCurrentAdditionalService: (service: AdditionalService) => void;
   restoreCurrentAdditionalService: (service: AdditionalService) => void;
   setCurrentAdditionalServices: (services: AdditionalService[]) => void;
-  clearAdditionalServices: () => void;
   resetAll: () => void;
   setServiceModifiable: (isModifiable: boolean) => void;
   setPreviousService: (service: Service | null) => void;
@@ -38,9 +37,6 @@ export interface ModifyServiceState {
   revertToPreviousService: () => void;
   setHasAgeRestrictedServices: (hasRestricted: boolean) => void;
   setServiceModificationMounted: (isMounted: boolean) => void;
-
-  // 계산된 값
-  getTotalPrice: () => number;
 }
 
 const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
@@ -117,20 +113,11 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
     });
   },
 
-  clearAdditionalServices: () => {
-    set({
-      selectedAdditionalServices: [],
-      removedCurrentAdditionalServices: [],
-    });
-  },
-
   resetAll: () => {
     set({
       selectedService: null,
       selectedAdditionalServices: [],
-      currentAdditionalServices: [],
       removedCurrentAdditionalServices: [],
-      isServiceModifiable: true,
       hasAgeRestrictedServices: false,
     });
   },
@@ -153,30 +140,19 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
       set({
         selectedService: previousService,
         isRollbackAvailable: false,
+        // 요금제 변경은 여전히 불가능하도록 isServiceModifiable 유지 (false)
+        // isServiceModifiable: true,
+        // 선택한 부가서비스 초기화 (새로운 요금제에 맞게 부가서비스를 다시 선택할 수 있도록)
+        selectedAdditionalServices: [],
       });
     }
   },
 
-  setHasAgeRestrictedServices: (hasRestricted: boolean) =>
+  setHasAgeRestrictedServices: (hasRestricted: boolean) => 
     set({ hasAgeRestrictedServices: hasRestricted }),
 
   setServiceModificationMounted: (isMounted: boolean) =>
     set({ serviceModificationMounted: isMounted }),
-
-  // 계산된 값
-  getTotalPrice: () => {
-    const mainServicePrice = get().selectedService?.serviceValue || 0;
-    const additionalServicesPrice = get().selectedAdditionalServices.reduce(
-      (total, service) => total + service.serviceValue,
-      0,
-    );
-    const currentServicesPrice = get().currentAdditionalServices.reduce(
-      (total, service) => total + service.serviceValue,
-      0,
-    );
-
-    return mainServicePrice + additionalServicesPrice + currentServicesPrice;
-  },
 }));
 
 // 개발 환경에서만 디버깅 도구 연결

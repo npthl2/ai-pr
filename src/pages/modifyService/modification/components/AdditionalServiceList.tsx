@@ -11,10 +11,8 @@ import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import WarningIcon from '@mui/icons-material/Warning';
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useAdditionalServicesQuery } from '@api/queries/modifyService/useModifyServiceQuery';
+import PropTypes from 'prop-types';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
-import useCustomerStore from '@stores/CustomerStore';
-import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import { AdditionalService } from '@model/modifyService/ModifyServiceModel';
 import TableRow from '@components/Table/TableRow';
 import TableCell from '@components/Table/TableCell';
@@ -35,13 +33,22 @@ import {
 interface FilteredServiceItem extends AdditionalService {
   isRemovedCurrentService?: boolean;
   isAgeRestricted?: boolean;
+  isExclusive?: boolean;
+}
+
+// 컴포넌트 props 타입 정의
+interface AdditionalServiceListProps {
+  additionalServices: AdditionalService[];
 }
 
 /**
  * 부가서비스 목록 컴포넌트
  * 최신출시순으로 정렬된 부가서비스 목록을 보여주고 추가 기능을 제공합니다.
+ * 
+ * @param props - 컴포넌트 props
+ * @param props.additionalServices - 부가서비스 목록 배열
  */
-const AdditionalServiceList: React.FC = () => {
+const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProps) => {
   // 검색어 상태
   const [searchKeyword, setSearchKeyword] = useState('');
   const [debouncedSearchKeyword, setDebouncedSearchKeyword] = useState('');
@@ -53,36 +60,6 @@ const AdditionalServiceList: React.FC = () => {
     removedCurrentAdditionalServices,
     addAdditionalService,
   } = useModifyServiceStore();
-
-  // CustomerStore에서 현재 선택된 고객 정보 가져오기
-  const { customers, selectedCustomerId } = useCustomerStore();
-
-  // CurrentServiceStore에서 초기 서비스 정보 가져오기
-  const currentService = useCurrentServiceStore((state) => state.currentService);
-
-  // ModifyServiceStore에서 필요한 정보 가져오기
-  const selectedServiceId = useModifyServiceStore((state) => state.selectedService?.serviceId);
-  const serviceModificationMounted = useModifyServiceStore(
-    (state) => state.serviceModificationMounted,
-  );
-
-  // 현재 선택된 고객 찾기
-  const selectedCustomer = useMemo(() => {
-    return customers.find((customer) => customer.id === selectedCustomerId);
-  }, [customers, selectedCustomerId]);
-
-  // 현재 고객의 나이
-  const customerAge = useMemo(() => {
-    if (!selectedCustomer) return null;
-    return 'age' in selectedCustomer ? Number(selectedCustomer.age) : null;
-  }, [selectedCustomer]);
-
-  // API에서 부가서비스 목록을 가져옵니다
-  const { data: additionalServices = [] } = useAdditionalServicesQuery(
-    customerAge || 0,
-    selectedServiceId || currentService?.serviceId || '', // 요금제 선택 후에는 selectedServiceId, 선택 전에는 currentService.serviceId 사용
-    serviceModificationMounted, // ServiceModification 컴포넌트가 마운트된 후에만 API 호출
-  );
 
   // 검색어로 필터링된 부가서비스 목록 상태
   const [filteredServices, setFilteredServices] = useState<FilteredServiceItem[]>([]);
@@ -142,26 +119,16 @@ const AdditionalServiceList: React.FC = () => {
         if (!b.releaseDate) return 1;
         return new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime();
       })
-      // 나이 제한 체크 추가
+      // 추가 정보 매핑
       .map((service) => {
-        const ageMin = service.availableAgeMin ? parseInt(service.availableAgeMin) : null;
-        const ageMax = service.availableAgeMax ? parseInt(service.availableAgeMax) : null;
-
-        // 나이 제한 여부 확인
-        let isAgeRestricted = false;
-        if (
-          customerAge !== null &&
-          ((ageMin !== null && customerAge < ageMin) || (ageMax !== null && customerAge > ageMax))
-        ) {
-          isAgeRestricted = true;
-        }
-
         return {
           ...service,
-          isAgeRestricted,
           isRemovedCurrentService: removedCurrentAdditionalServices.some(
             (removed) => removed.serviceId === service.serviceId,
           ),
+          // 백엔드에서 받은 값 사용
+          isAgeRestricted: service.hasAgeRestriction || false,
+          isExclusive: service.exclusive || false,
         };
       });
 
@@ -172,7 +139,6 @@ const AdditionalServiceList: React.FC = () => {
     selectedAdditionalServices,
     currentAdditionalServices,
     removedCurrentAdditionalServices,
-    customerAge,
   ]);
 
   // 부가서비스 추가 핸들러
@@ -193,34 +159,31 @@ const AdditionalServiceList: React.FC = () => {
   }, []);
 
   // 나이 제한 메시지 생성 함수
-  const getAgeRestrictionMessage = useCallback((service: FilteredServiceItem) => {
-    const ageMin = service.availableAgeMin ? parseInt(service.availableAgeMin) : null;
-    const ageMax = service.availableAgeMax ? parseInt(service.availableAgeMax) : null;
-
-    if (ageMin !== null && ageMax !== null) {
-      return `이 서비스는 ${ageMin}세~${ageMax}세 고객만 이용 가능합니다.`;
-    } else if (ageMin !== null) {
-      return `이 서비스는 ${ageMin}세 이상 고객만 이용 가능합니다.`;
-    } else if (ageMax !== null) {
-      return `이 서비스는 ${ageMax}세 이하 고객만 이용 가능합니다.`;
+  const getRestrictionMessage = useCallback((_service: FilteredServiceItem) => {
+    if (_service.isAgeRestricted) {
+      return '이 서비스는 나이 제한으로 인해 추가할 수 없습니다.';
     }
-
+    if (_service.isExclusive) {
+      return '이 서비스는 베타 서비스로 인해 추가할 수 없습니다.';
+    }
     return '';
   }, []);
 
   // 렌더링 최적화를 위해 테이블 행 메모이제이션
   const tableRows = useMemo(() => {
     return filteredServices.map((service) => {
+      const isRestricted = service.isAgeRestricted || service.isExclusive || false;
+      
       return (
         <TableRow
           key={service.serviceId}
           hover
-          sx={service.isAgeRestricted ? { backgroundColor: '#ffebee' } : {}}
+          sx={isRestricted ? { backgroundColor: '#ffebee' } : {}}
         >
           <TableCell sx={{ maxWidth: '500px' }}>
             {service.serviceName}
-            {service.isAgeRestricted && (
-              <Tooltip title={getAgeRestrictionMessage(service)} arrow>
+            {isRestricted && (
+              <Tooltip title={getRestrictionMessage(service)} arrow>
                 <WarningIcon
                   color='error'
                   fontSize='small'
@@ -233,14 +196,14 @@ const AdditionalServiceList: React.FC = () => {
           <TableCell align='center'>
             <AddButton
               variant='outlined'
-              color={service.isAgeRestricted ? 'error' : 'primary'}
+              color={isRestricted ? 'error' : 'primary'}
               size='small'
-              iconComponent={service.isAgeRestricted ? <WarningIcon /> : <AddIcon />}
+              iconComponent={isRestricted ? <WarningIcon /> : <AddIcon />}
               iconPosition='left'
-              onClick={() => handleAddService(service, service.isAgeRestricted || false)}
-              disabled={service.isAgeRestricted}
+              onClick={() => handleAddService(service, isRestricted)}
+              disabled={isRestricted}
               sx={
-                service.isAgeRestricted
+                isRestricted
                   ? {
                       color: '#ffffff',
                       backgroundColor: '#ff5252',
@@ -254,13 +217,13 @@ const AdditionalServiceList: React.FC = () => {
                   : {}
               }
             >
-              {service.isAgeRestricted ? '나이제한' : '추가'}
+              {service.isAgeRestricted ? '나이제한' : service.isExclusive ? '베타서비스' : '추가'}
             </AddButton>
           </TableCell>
         </TableRow>
       );
     });
-  }, [filteredServices, handleAddService, getAgeRestrictionMessage]);
+  }, [filteredServices, handleAddService, getRestrictionMessage]);
 
   return (
     <RootContainer>
@@ -325,6 +288,11 @@ const AdditionalServiceList: React.FC = () => {
       </ListContainer>
     </RootContainer>
   );
+};
+
+// PropTypes 정의
+AdditionalServiceList.propTypes = {
+  additionalServices: PropTypes.array.isRequired,
 };
 
 export default AdditionalServiceList;

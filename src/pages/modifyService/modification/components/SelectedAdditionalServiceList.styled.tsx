@@ -43,6 +43,28 @@ export const ListContainer = styled(Box)({
   borderRadius: '4px',
 });
 
+// 경고 메시지 컨테이너
+export const WarningContainer = styled(Box)({
+  backgroundColor: '#ffebee',
+  padding: '8px 16px',
+  borderRadius: '4px',
+  margin: '0 0 12px 0',
+  display: 'flex',
+  alignItems: 'center',
+});
+
+// 경고 메시지 텍스트
+export const WarningMessage = styled(Typography)({
+  color: '#d32f2f',
+  fontSize: '14px',
+  fontWeight: 500,
+  display: 'flex',
+  alignItems: 'center',
+  '& svg': {
+    marginRight: '8px',
+  },
+});
+
 // 테이블 레이아웃 고정 스타일
 export const StyledTable = styled(Table)({
   tableLayout: 'fixed',

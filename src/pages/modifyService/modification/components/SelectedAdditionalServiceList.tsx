@@ -26,6 +26,8 @@ import {
   TotalRow,
   TotalText,
   TotalAmount,
+  WarningContainer,
+  WarningMessage,
 } from './SelectedAdditionalServiceList.styled';
 
 // 정렬 방향 타입
@@ -163,17 +165,45 @@ const SelectedAdditionalServiceList: React.FC = () => {
     return services;
   }, [currentAdditionalServices, selectedAdditionalServices, sortField, sortDirection]);
 
-  // 나이 제한 메시지 생성 함수
-  const getAgeRestrictionMessage = useCallback((service: AdditionalService) => {
+  // 서비스의 나이 제한 여부 확인 함수
+  const isServiceRestricted = useCallback(
+    (service: AdditionalService) => {
+      if (!customerAge) return false;
+
+      // 나이 제한 확인
+      const ageMin = service.availableAgeMin ? parseInt(service.availableAgeMin) : null;
+      const ageMax = service.availableAgeMax ? parseInt(service.availableAgeMax) : null;
+      const isAgeRestricted = (ageMin !== null && customerAge < ageMin) || 
+                              (ageMax !== null && customerAge > ageMax);
+      
+      // 베타 서비스 확인
+      const isExclusive = service.exclusive || false;
+      
+      return isAgeRestricted || isExclusive;
+    },
+    [customerAge],
+  );
+
+  // 제한 메시지 생성 함수
+  const getRestrictionMessage = useCallback((service: AdditionalService) => {
     const ageMin = service.availableAgeMin ? parseInt(service.availableAgeMin) : null;
     const ageMax = service.availableAgeMax ? parseInt(service.availableAgeMax) : null;
+    const isAgeRestricted = (ageMin !== null && ageMax !== null) || 
+                            (ageMin !== null) || 
+                            (ageMax !== null);
 
-    if (ageMin !== null && ageMax !== null) {
-      return `이 서비스는 ${ageMin}세~${ageMax}세 고객만 이용 가능합니다.`;
-    } else if (ageMin !== null) {
-      return `이 서비스는 ${ageMin}세 이상 고객만 이용 가능합니다.`;
-    } else if (ageMax !== null) {
-      return `이 서비스는 ${ageMax}세 이하 고객만 이용 가능합니다.`;
+    if (service.exclusive) {
+      return '이 서비스는 베타 서비스입니다.';
+    }
+    
+    if (isAgeRestricted) {
+      if (ageMin !== null && ageMax !== null) {
+        return `이 서비스는 ${ageMin}세~${ageMax}세 고객만 이용 가능합니다.`;
+      } else if (ageMin !== null) {
+        return `이 서비스는 ${ageMin}세 이상 고객만 이용 가능합니다.`;
+      } else if (ageMax !== null) {
+        return `이 서비스는 ${ageMax}세 이하 고객만 이용 가능합니다.`;
+      }
     }
 
     return '';
@@ -191,19 +221,6 @@ const SelectedAdditionalServiceList: React.FC = () => {
       }
     },
     [removeAdditionalService, removeCurrentAdditionalService],
-  );
-
-  // 서비스의 나이 제한 여부 확인 함수
-  const isServiceAgeRestricted = useCallback(
-    (service: AdditionalService) => {
-      if (!customerAge) return false;
-
-      const ageMin = service.availableAgeMin ? parseInt(service.availableAgeMin) : null;
-      const ageMax = service.availableAgeMax ? parseInt(service.availableAgeMax) : null;
-
-      return (ageMin !== null && customerAge < ageMin) || (ageMax !== null && customerAge > ageMax);
-    },
-    [customerAge],
   );
 
   // 부가서비스 총 요금 계산 (요금제 + 부가서비스)
@@ -242,21 +259,21 @@ const SelectedAdditionalServiceList: React.FC = () => {
             (currentService) => currentService.serviceId === service.serviceId,
           );
 
-          // 나이 제한으로 인해 제한되는 서비스인지 확인
-          const isAgeRestricted = isServiceAgeRestricted(service);
+          // 제한 여부 확인 (나이 제한 또는 베타 서비스)
+          const isRestricted = isServiceRestricted(service);
 
           return (
             <TableRow
               key={service.serviceId}
               hover
-              sx={isCurrentService && isAgeRestricted ? { backgroundColor: '#ffebee' } : {}}
+              sx={isCurrentService && isRestricted ? { backgroundColor: '#ffebee' } : {}}
             >
               <TableCell align='center'>
                 <StatusBadge
                   $isCurrentService={isCurrentService}
-                  $isAgeRestricted={isCurrentService && isAgeRestricted}
+                  $isAgeRestricted={isCurrentService && isRestricted}
                 >
-                  {isCurrentService && isAgeRestricted
+                  {isCurrentService && isRestricted
                     ? '해지필요'
                     : isCurrentService
                       ? '가입중'
@@ -266,8 +283,8 @@ const SelectedAdditionalServiceList: React.FC = () => {
               <TableCell>
                 <ServiceName>
                   {service.serviceName}
-                  {isCurrentService && isAgeRestricted && (
-                    <Tooltip title={getAgeRestrictionMessage(service)} arrow>
+                  {isCurrentService && isRestricted && (
+                    <Tooltip title={getRestrictionMessage(service)} arrow>
                       <WarningIcon
                         color='error'
                         fontSize='small'
@@ -303,8 +320,8 @@ const SelectedAdditionalServiceList: React.FC = () => {
       allServices,
       currentAdditionalServices,
       handleRemoveService,
-      isServiceAgeRestricted,
-      getAgeRestrictionMessage,
+      isServiceRestricted,
+      getRestrictionMessage,
     ],
   );
 
@@ -337,6 +354,17 @@ const SelectedAdditionalServiceList: React.FC = () => {
   return (
     <RootContainer>
       {headerSection}
+      
+      {/* 제한된 서비스가 있을 경우 경고 메시지 표시 */}
+      {hasAgeRestrictedServices && (
+        <WarningContainer>
+          <WarningMessage>
+            <WarningIcon fontSize="small" sx={{ mr: 1 }} />
+            나이 제한 또는 베타 서비스로 인해 해지가 필요한 서비스가 있습니다.
+          </WarningMessage>
+        </WarningContainer>
+      )}
+      
       <ListContainer>
         <StyledTable stickyHeader>
           <TableHead>
