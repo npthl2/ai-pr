@@ -40,7 +40,11 @@ type SortField = 'serviceName' | 'serviceValue' | null;
  * 선택된 부가서비스 목록 컴포넌트
  * 사용자가 선택한 부가서비스 목록을 보여주고 삭제 기능을 제공합니다.
  */
-const SelectedAdditionalServiceList = ({ additionalServices }: { additionalServices: AdditionalService[] }) => {
+const SelectedAdditionalServiceList = ({
+  additionalServices,
+}: {
+  additionalServices: AdditionalService[];
+}) => {
   // 정렬 상태 관리
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
@@ -301,11 +305,7 @@ const SelectedAdditionalServiceList = ({ additionalServices }: { additionalServi
         )}
       </>
     ),
-    [
-      allServices,
-      currentAdditionalServices,
-      handleRemoveService,
-    ],
+    [allServices, currentAdditionalServices, handleRemoveService],
   );
 
   // 합계 행 메모이제이션
