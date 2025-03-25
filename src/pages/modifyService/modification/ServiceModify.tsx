@@ -22,6 +22,10 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
     resetAll,
     selectedService,
     serviceModificationMounted,
+    hasChanges,
+    selectedAdditionalServices,
+    currentAdditionalServices,
+    removedCurrentAdditionalServices
   } = useModifyServiceStore();
 
   // CustomerStore에서 현재 선택된 고객 정보 가져오기
@@ -50,12 +54,27 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
   const { data: additionalServices = [] } = useAdditionalServicesQuery(
     customerAge || 0,
     currentServiceId,
-    serviceModificationMounted,
+    serviceModificationMounted
   );
 
   // 저장 버튼 클릭 시 호출되는 핸들러
   const handleSave = () => {
-    // 여기에 실제 저장 로직 구현
+    // 저장할 데이터 준비 (요금제 및 부가서비스)
+    const dataToSave = {
+      // 선택된 요금제 정보
+      service: selectedService,
+      // 새로 선택한 부가서비스 목록
+      selectedAdditionalServices,
+      // 유지할 기존 부가서비스 목록
+      currentAdditionalServices,
+      // 제거할 기존 부가서비스 목록
+      removedAdditionalServices: removedCurrentAdditionalServices,
+    };
+
+    // 데이터 로깅 (개발용)
+    console.log('저장할 데이터:', dataToSave);
+
+    // 실제 저장 로직 구현
     // TODO: API 호출하여 저장 처리
     alert('요금제 변경이 저장되었습니다.');
   };
@@ -67,6 +86,9 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
 
   // 선택한 요금제가 없거나 변경 불가능한 경우 또는 나이 제한으로 인해 해지가 필요한 서비스가 있는 경우 저장 버튼 비활성화
   const isSaveDisabled = !isServiceModifiable || hasAgeRestrictedServices;
+  
+  // 변경사항이 없는 경우 초기화 버튼 비활성화
+  const isResetDisabled = !hasChanges;
 
   return (
     <Container>
@@ -87,7 +109,11 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
 
       {/* 4. 버튼 영역 */}
       <ButtonGroup>
-        <Button variant='outlined' onClick={handleReset}>
+        <Button 
+          variant='outlined' 
+          onClick={handleReset} 
+          disabled={isResetDisabled}
+        >
           초기화
         </Button>
         <Button variant='contained' onClick={handleSave} disabled={isSaveDisabled}>

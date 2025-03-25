@@ -46,6 +46,7 @@ const ServiceModification: React.FC = () => {
     setIsRollbackAvailable,
     setPreviousService,
     setServiceModificationMounted,
+    setInitialStates,
   } = useModifyServiceStore();
 
   // 고객 스토어에서 필요한 정보 가져오기
@@ -110,8 +111,12 @@ const ServiceModification: React.FC = () => {
           releaseDate: '', // 기본값 설정 (API에서 제공하지 않는 값이므로)
         };
         setPreviousService(prevService);
+        // 초기 상태 저장
+        setInitialStates(modifiableData.isRollbackAvailable || false, modifiableData.isModifiable, prevService);
       } else {
         setPreviousService(null);
+        // 초기 상태 저장
+        setInitialStates(false, modifiableData.isModifiable, null);
       }
 
       if (!modifiableData.isModifiable) {
@@ -129,6 +134,7 @@ const ServiceModification: React.FC = () => {
     setServiceModifiable,
     setIsRollbackAvailable,
     setPreviousService,
+    setInitialStates,
     isServiceModificationTabActive,
   ]);
 
