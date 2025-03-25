@@ -21,19 +21,31 @@ const History = ({ registrationStatus }: HistoryProps) => {
     switch (status) {
       case REGISTRATION_STATUS.COMPLETED:
         return (
-          <StatusTypography status='success' data-testid={`history-area-content-status-${index}`}>
+          <StatusTypography
+            status='success'
+            key={`status-${index}`}
+            data-testid={`history-area-content-status-${index}`}
+          >
             처리완료
           </StatusTypography>
         );
       case REGISTRATION_STATUS.FAILED:
         return (
-          <StatusTypography status='error' data-testid={`history-area-content-status-${index}`}>
+          <StatusTypography
+            status='error'
+            key={`status-${index}`}
+            data-testid={`history-area-content-status-${index}`}
+          >
             처리실패
           </StatusTypography>
         );
       case REGISTRATION_STATUS.PENDING:
         return (
-          <StatusTypography status='info' data-testid={`history-area-content-status-${index}`}>
+          <StatusTypography
+            status='info'
+            key={`status-${index}`}
+            data-testid={`history-area-content-status-${index}`}
+          >
             진행중
           </StatusTypography>
         );
@@ -44,13 +56,21 @@ const History = ({ registrationStatus }: HistoryProps) => {
     switch (eventType) {
       case REGISTRATION_EVENT_TYPE.REGISTRATION_SAVE_REQUEST:
         return (
-          <Typography variant='body2' data-testid={`history-area-content-${index}`}>
+          <Typography
+            variant='body2'
+            key={`content-${index}`}
+            data-testid={`history-area-content-${index}`}
+          >
             {name}님 가입
           </Typography>
         );
       case REGISTRATION_EVENT_TYPE.PLAN_ADDITIONAL_SERVICE_CHANGE:
         return (
-          <Typography variant='body2' data-testid={`history-area-content-${index}`}>
+          <Typography
+            variant='body2'
+            key={`content-${index}`}
+            data-testid={`history-area-content-${index}`}
+          >
             {name}님 요금제/부가서비스 변경
           </Typography>
         );
@@ -63,6 +83,7 @@ const History = ({ registrationStatus }: HistoryProps) => {
         <Typography
           variant='caption'
           color='text.secondary'
+          key={`status-time-${index}`}
           data-testid={`history-area-content-status-time-${index}`}
         >
           {dayjs(statusTime).format('HH:mm')}
@@ -89,15 +110,13 @@ const History = ({ registrationStatus }: HistoryProps) => {
         ))}
       <ContentWrapper>
         {registrationStatus?.registrations.map((registration, index) => (
-          <>
-            <Content key={index}>
-              <ContentStatus>
-                {renderStatus(registration.status, index)}
-                {renderContent(registration.customerName, registration.eventType, index)}
-              </ContentStatus>
-              {renderStatusTime(registration.status, registration.statusTime, index)}
-            </Content>
-          </>
+          <Content key={`content-${index}`}>
+            <ContentStatus key={`content-status-${index}`}>
+              {renderStatus(registration.status, index)}
+              {renderContent(registration.customerName, registration.eventType, index)}
+            </ContentStatus>
+            {renderStatusTime(registration.status, registration.statusTime, index)}
+          </Content>
         ))}
       </ContentWrapper>
     </HistoryContainer>

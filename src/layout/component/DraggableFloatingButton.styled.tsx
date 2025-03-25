@@ -64,7 +64,7 @@ export const StyledCircularProgress = styled(CircularProgress)({
   },
 });
 
-export const CountLabel = styled(Box)({
+export const CountLabel = styled('span')({
   position: 'absolute',
   top: -20,
   right: -20,
