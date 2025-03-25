@@ -65,7 +65,7 @@ describe('KAN-43 메인화면 Floating 버튼 처리현황 퀵뷰', () => {
       page.checkHistoryContentStatus(1, '처리실패');
       page.checkHistoryContent(1, '이철*님 가입');
 
-      page.checkHistoryContentStatus(2, '진행중');
+      page.checkHistoryContentStatus(2, '처리중');
       page.checkHistoryContent(2, '삼철*님 요금제/부가서비스 변경');
     });
 
@@ -96,7 +96,7 @@ describe('KAN-43 메인화면 Floating 버튼 처리현황 퀵뷰', () => {
       page.checkHistoryContentStatus(1, '처리실패');
       page.checkHistoryContent(1, '이철*님 가입');
 
-      page.checkHistoryContentStatus(2, '진행중');
+      page.checkHistoryContentStatus(2, '처리중');
       page.checkHistoryContent(2, '삼철*님 요금제/부가서비스 변경');
 
       page.endGetRegistrationStatus();

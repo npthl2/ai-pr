@@ -46,7 +46,7 @@ const History = ({ registrationStatus }: HistoryProps) => {
             key={`status-${index}`}
             data-testid={`history-area-content-status-${index}`}
           >
-            진행중
+            처리중
           </StatusTypography>
         );
     }
