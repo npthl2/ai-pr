@@ -4,6 +4,7 @@ import CustomerSearchTestPage from '../../../pages/customer/search/CustomerSearc
 import { CustomerSearchServiceMock } from '../../mock/customer/search/CustomerSearchServiceMock';
 import { mockMemberStore } from '../../../support/helpers/mockMemberStore';
 import CustomerDetailServiceMock from '../../mock/customer/detail/CustomerDetailServiceMock';
+import { mockAuthStore } from '../../../support/helpers/mockAuthStore';
 
 describe('KAN-201 메모 및 작성이력 화면 진입', () => {
   const page = new MemoHistoryPage();
@@ -13,6 +14,7 @@ describe('KAN-201 메모 및 작성이력 화면 진입', () => {
   const customerDetailServiceMock = new CustomerDetailServiceMock();
 
   before(() => {
+    mockAuthStore();
     mockMemberStore({
       memberInfo: {
         memberId: 'user2',
