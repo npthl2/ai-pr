@@ -139,8 +139,13 @@ const registrationContractService = {
    * @param serviceId - 서비스 ID
    * @returns 부가 서비스 목록
    */
-  getAdditionalServicesWithAge(age: number, serviceId: string): Promise<CommonResponse<ServiceResponseWithAge[]>> {
-    return baseService.get<ServiceResponseWithAge[]>(`/ctt-be/v1/additional-services/age-exclusive?age=${age}&serviceId=${serviceId}`);
+  getAdditionalServicesWithAge(
+    age: number,
+    serviceId: string,
+  ): Promise<CommonResponse<ServiceResponseWithAge[]>> {
+    return baseService.get<ServiceResponseWithAge[]>(
+      `/ctt-be/v1/additional-services/age-exclusive?age=${age}&serviceId=${serviceId}`,
+    );
   },
 
   /**

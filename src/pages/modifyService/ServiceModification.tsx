@@ -41,8 +41,12 @@ const ServiceModification: React.FC = () => {
   });
 
   // 요금제 수정 상태 관리 - ModifyServiceStore에서 필요한 함수 가져오기
-  const { setServiceModifiable, setIsRollbackAvailable, setPreviousService, setServiceModificationMounted } =
-    useModifyServiceStore();
+  const {
+    setServiceModifiable,
+    setIsRollbackAvailable,
+    setPreviousService,
+    setServiceModificationMounted,
+  } = useModifyServiceStore();
 
   // 고객 스토어에서 필요한 정보 가져오기
   const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId);

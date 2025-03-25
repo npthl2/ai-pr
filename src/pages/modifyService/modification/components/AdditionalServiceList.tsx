@@ -62,7 +62,9 @@ const AdditionalServiceList: React.FC = () => {
 
   // ModifyServiceStore에서 필요한 정보 가져오기
   const selectedServiceId = useModifyServiceStore((state) => state.selectedService?.serviceId);
-  const serviceModificationMounted = useModifyServiceStore((state) => state.serviceModificationMounted);
+  const serviceModificationMounted = useModifyServiceStore(
+    (state) => state.serviceModificationMounted,
+  );
 
   // 현재 선택된 고객 찾기
   const selectedCustomer = useMemo(() => {
@@ -78,8 +80,8 @@ const AdditionalServiceList: React.FC = () => {
   // API에서 부가서비스 목록을 가져옵니다
   const { data: additionalServices = [] } = useAdditionalServicesQuery(
     customerAge || 0,
-    selectedServiceId || currentService?.serviceId || '',  // 요금제 선택 후에는 selectedServiceId, 선택 전에는 currentService.serviceId 사용
-    serviceModificationMounted // ServiceModification 컴포넌트가 마운트된 후에만 API 호출
+    selectedServiceId || currentService?.serviceId || '', // 요금제 선택 후에는 selectedServiceId, 선택 전에는 currentService.serviceId 사용
+    serviceModificationMounted, // ServiceModification 컴포넌트가 마운트된 후에만 API 호출
   );
 
   // 검색어로 필터링된 부가서비스 목록 상태
