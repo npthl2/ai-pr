@@ -12,7 +12,7 @@ interface ServiceModifyProps {
 
 const ServiceModify: React.FC<ServiceModifyProps> = () => {
   // 스토어에서 선택된 서비스와 총액 계산 함수 가져오기
-  const { selectedService, isServiceModifiable, resetAll } = useModifyServiceStore();
+  const { isServiceModifiable, hasAgeRestrictedServices, resetAll } = useModifyServiceStore();
 
   // 저장 버튼 클릭 시 호출되는 핸들러
   const handleSave = () => {
@@ -26,8 +26,8 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
     resetAll();
   };
 
-  // 선택한 요금제가 없거나 변경 불가능한 경우 저장 버튼 비활성화
-  const isSaveDisabled = !selectedService || !isServiceModifiable;
+  // 선택한 요금제가 없거나 변경 불가능한 경우 또는 나이 제한으로 인해 해지가 필요한 서비스가 있는 경우 저장 버튼 비활성화
+  const isSaveDisabled = !isServiceModifiable || hasAgeRestrictedServices;
 
   return (
     <Container>

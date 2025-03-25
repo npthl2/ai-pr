@@ -29,8 +29,8 @@ export interface AdditionalService {
   validStartEndTime?: string;
   releaseDate?: string;
   exclusiveServiceIds?: string[];
-  available_age_min?: string;
-  available_age_max?: string;
+  availableAgeMin?: string;
+  availableAgeMax?: string;
 }
 
 /**

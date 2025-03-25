@@ -8,8 +8,6 @@ interface ServiceCommon {
   serviceName: string;
   serviceType: string;
   serviceValue: number;
-  validStartDateTime: string;
-  validStartEndTime: string;
 }
 
 interface Service extends ServiceCommon {
@@ -23,8 +21,6 @@ const initialService: Service = {
   serviceName: '5G Ultra Plus 요금제',
   serviceType: 'PLAN',
   serviceValue: 130000,
-  validStartDateTime: '2025-01-01T00:00:00',
-  validStartEndTime: '2025-12-31T23:59:59',
   additionalService: [
     {
       contractId: 's100000000',
@@ -32,8 +28,8 @@ const initialService: Service = {
       serviceName: '5G 1 Giga 충전 부가서비스',
       serviceType: 'ADDITIONAL',
       serviceValue: 21000,
-      validStartDateTime: '2025-01-01T00:00:00',
-      validStartEndTime: '2025-03-31T23:59:59',
+      availableAgeMin: undefined,
+      availableAgeMax: undefined,
     },
     {
       contractId: 's100000000',
@@ -41,8 +37,8 @@ const initialService: Service = {
       serviceName: '5G 2 Giga 충전 부가서비스',
       serviceType: 'ADDITIONAL',
       serviceValue: 26000,
-      validStartDateTime: '2025-01-01T00:00:00',
-      validStartEndTime: '2025-03-31T23:59:59',
+      availableAgeMin: '13',
+      availableAgeMax: '18',
     },
   ],
 };

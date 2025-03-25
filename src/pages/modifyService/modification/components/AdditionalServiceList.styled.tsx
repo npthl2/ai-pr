@@ -78,7 +78,13 @@ export const StyledTableHeaderCell = styled(TableCell)({
 });
 
 // 추가 버튼 스타일
-export const AddButton = styled(Button)({
+export const AddButton = styled(Button)(({ color }) => ({
   minWidth: '80px',
   whiteSpace: 'nowrap',
-});
+  ...(color === 'error' && {
+    '&.Mui-disabled': {
+      opacity: 1,
+      fontWeight: 500
+    }
+  })
+}));

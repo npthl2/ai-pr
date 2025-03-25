@@ -47,8 +47,8 @@ const mapServiceResponseToAdditionalService = (
     serviceValueType: serviceResponse.serviceValueType,
     exclusiveServiceIds: serviceResponse.exclusiveServiceIds || [],
     releaseDate: serviceResponse.validStartDatetime,
-    available_age_min: serviceResponse.availableAgeMin?.toString(),
-    available_age_max: serviceResponse.availableAgeMax?.toString(),
+    availableAgeMin: serviceResponse.availableAgeMin?.toString(),
+    availableAgeMax: serviceResponse.availableAgeMax?.toString(),
   };
 };
 

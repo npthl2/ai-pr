@@ -1,9 +1,11 @@
-import { Box, Typography, TableBody, TableHead, TextField, InputAdornment } from '@mui/material';
+import { Box, Typography, TableBody, TableHead, TextField, InputAdornment, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
+import WarningIcon from '@mui/icons-material/Warning';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAdditionalServicesQuery } from '@api/queries/modifyService/useModifyServiceQuery';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
+import useCustomerStore from '@stores/CustomerStore';
 import { AdditionalService } from '@model/modifyService/ModifyServiceModel';
 import TableRow from '@components/Table/TableRow';
 import TableCell from '@components/Table/TableCell';
@@ -23,6 +25,7 @@ import {
 // 필터링된 부가서비스 목록 아이템 타입
 interface FilteredServiceItem extends AdditionalService {
   isRemovedCurrentService?: boolean;
+  isAgeRestricted?: boolean;
 }
 
 /**
@@ -41,6 +44,20 @@ const AdditionalServiceList: React.FC = () => {
     removedCurrentAdditionalServices,
     addAdditionalService,
   } = useModifyServiceStore();
+
+  // CustomerStore에서 현재 선택된 고객 정보 가져오기
+  const { customers, selectedCustomerId } = useCustomerStore();
+  
+  // 현재 선택된 고객 찾기
+  const selectedCustomer = useMemo(() => {
+    return customers.find(customer => customer.id === selectedCustomerId);
+  }, [customers, selectedCustomerId]);
+  
+  // 현재 고객의 나이
+  const customerAge = useMemo(() => {
+    if (!selectedCustomer) return null;
+    return 'age' in selectedCustomer ? Number(selectedCustomer.age) : null;
+  }, [selectedCustomer]);
 
   // API에서 부가서비스 목록을 가져옵니다
   const { data: additionalServices = [] } = useAdditionalServicesQuery();
@@ -102,6 +119,27 @@ const AdditionalServiceList: React.FC = () => {
         if (!a.releaseDate) return -1;
         if (!b.releaseDate) return 1;
         return new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime();
+      })
+      // 나이 제한 체크 추가
+      .map(service => {
+        const ageMin = service.availableAgeMin ? parseInt(service.availableAgeMin) : null;
+        const ageMax = service.availableAgeMax ? parseInt(service.availableAgeMax) : null;
+        
+        // 나이 제한 여부 확인
+        let isAgeRestricted = false;
+        if (customerAge !== null && 
+            ((ageMin !== null && customerAge < ageMin) || 
+             (ageMax !== null && customerAge > ageMax))) {
+          isAgeRestricted = true;
+        }
+
+        return {
+          ...service,
+          isAgeRestricted,
+          isRemovedCurrentService: removedCurrentAdditionalServices.some(
+            (removed) => removed.serviceId === service.serviceId
+          )
+        };
       });
 
     setFilteredServices(filtered);
@@ -111,11 +149,16 @@ const AdditionalServiceList: React.FC = () => {
     selectedAdditionalServices,
     currentAdditionalServices,
     removedCurrentAdditionalServices,
+    customerAge,
   ]);
 
   // 부가서비스 추가 핸들러
   const handleAddService = useCallback(
-    (service: AdditionalService) => {
+    (service: AdditionalService, isAgeRestricted: boolean) => {
+      if (isAgeRestricted) {
+        // 나이 제한으로 추가할 수 없는 경우 처리
+        return;
+      }
       addAdditionalService(service);
     },
     [addAdditionalService],
@@ -126,41 +169,76 @@ const AdditionalServiceList: React.FC = () => {
     setSearchKeyword(e.target.value);
   }, []);
 
+  // 나이 제한 메시지 생성 함수
+  const getAgeRestrictionMessage = useCallback((service: FilteredServiceItem) => {
+    const ageMin = service.availableAgeMin ? parseInt(service.availableAgeMin) : null;
+    const ageMax = service.availableAgeMax ? parseInt(service.availableAgeMax) : null;
+    
+    if (ageMin !== null && ageMax !== null) {
+      return `이 서비스는 ${ageMin}세~${ageMax}세 고객만 이용 가능합니다.`;
+    } else if (ageMin !== null) {
+      return `이 서비스는 ${ageMin}세 이상 고객만 이용 가능합니다.`;
+    } else if (ageMax !== null) {
+      return `이 서비스는 ${ageMax}세 이하 고객만 이용 가능합니다.`;
+    }
+    
+    return '';
+  }, []);
+
   // 렌더링 최적화를 위해 테이블 행 메모이제이션
   const tableRows = useMemo(() => {
     return filteredServices.map((service) => {
-      // 제거된 현재 서비스인지 확인
-      const isRemovedCurrentService = removedCurrentAdditionalServices.some(
-        (removed) => removed.serviceId === service.serviceId,
-      );
-
       return (
-        <TableRow key={service.serviceId} hover>
+        <TableRow 
+          key={service.serviceId} 
+          hover
+          sx={service.isAgeRestricted ? { backgroundColor: '#ffebee' } : {}}
+        >
           <TableCell sx={{ maxWidth: '500px' }}>
             {service.serviceName}
-            {isRemovedCurrentService && (
+            {service.isRemovedCurrentService && (
               <Typography variant='caption' color='text.secondary' sx={{ ml: 1 }}>
                 (가입중 해지)
               </Typography>
+            )}
+            {service.isAgeRestricted && (
+              <Tooltip title={getAgeRestrictionMessage(service)} arrow>
+                <WarningIcon 
+                  color="error" 
+                  fontSize="small" 
+                  sx={{ ml: 1, verticalAlign: 'middle' }}
+                />
+              </Tooltip>
             )}
           </TableCell>
           <TableCell align='right'>{service.serviceValue.toLocaleString()}원</TableCell>
           <TableCell align='center'>
             <AddButton
               variant='outlined'
-              color='primary'
+              color={service.isAgeRestricted ? 'error' : 'primary'}
               size='small'
-              iconComponent={<AddIcon />}
+              iconComponent={service.isAgeRestricted ? <WarningIcon /> : <AddIcon />}
               iconPosition='left'
-              onClick={() => handleAddService(service)}
+              onClick={() => handleAddService(service, service.isAgeRestricted || false)}
+              disabled={service.isAgeRestricted}
+              sx={service.isAgeRestricted ? {
+                color: '#ffffff',
+                backgroundColor: '#ff5252',
+                borderColor: '#ff5252',
+                '&.Mui-disabled': {
+                  color: '#ffffff',
+                  backgroundColor: '#ff5252',
+                  borderColor: '#ff5252',
+                }
+              } : {}}
             >
-              {isRemovedCurrentService ? '복구' : '추가'}
+              {service.isRemovedCurrentService ? '복구' : service.isAgeRestricted ? '나이제한' : '추가'}
             </AddButton>
           </TableCell>
         </TableRow>
       );
     });
-  }, [filteredServices, handleAddService, removedCurrentAdditionalServices]);
+  }, [filteredServices, handleAddService, getAgeRestrictionMessage]);
 
   return (
     <RootContainer>

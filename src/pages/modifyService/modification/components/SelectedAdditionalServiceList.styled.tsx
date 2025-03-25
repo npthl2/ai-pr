@@ -106,15 +106,23 @@ export const PriceCell = styled(TableCell)({
 
 // 상태 표시 스타일 (배지로 변경)
 // $ 접두사를 사용하여 DOM으로 전달되지 않도록 함
-export const StatusBadge = styled(Box)<{ $isCurrentService?: boolean }>(
-  ({ $isCurrentService }) => ({
+export const StatusBadge = styled(Box)<{ $isCurrentService?: boolean; $isAgeRestricted?: boolean }>(
+  ({ $isCurrentService, $isAgeRestricted }) => ({
     display: 'inline-block',
     padding: '2px 8px',
     borderRadius: '4px',
     fontSize: '12px',
     fontWeight: $isCurrentService ? 500 : 400,
-    backgroundColor: $isCurrentService ? '#f0f0f0' : '#e3f2fd',
-    color: $isCurrentService ? '#616161' : '#0d47a1',
+    backgroundColor: $isAgeRestricted 
+      ? '#ff5252' 
+      : $isCurrentService 
+        ? '#f0f0f0' 
+        : '#e3f2fd',
+    color: $isAgeRestricted 
+      ? '#ffffff' 
+      : $isCurrentService 
+        ? '#616161' 
+        : '#0d47a1',
   }),
 );
 
