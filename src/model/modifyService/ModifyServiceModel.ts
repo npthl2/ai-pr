@@ -31,6 +31,8 @@ export interface AdditionalService {
   exclusiveServiceIds?: string[];
   availableAgeMin?: string;
   availableAgeMax?: string;
+  hasAgeRestriction?: boolean;
+  exclusive?: boolean;
 }
 
 /**

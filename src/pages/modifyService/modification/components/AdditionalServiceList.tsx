@@ -14,6 +14,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAdditionalServicesQuery } from '@api/queries/modifyService/useModifyServiceQuery';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import useCustomerStore from '@stores/CustomerStore';
+import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import { AdditionalService } from '@model/modifyService/ModifyServiceModel';
 import TableRow from '@components/Table/TableRow';
 import TableCell from '@components/Table/TableCell';
@@ -56,6 +57,13 @@ const AdditionalServiceList: React.FC = () => {
   // CustomerStore에서 현재 선택된 고객 정보 가져오기
   const { customers, selectedCustomerId } = useCustomerStore();
 
+  // CurrentServiceStore에서 초기 서비스 정보 가져오기
+  const currentService = useCurrentServiceStore((state) => state.currentService);
+
+  // ModifyServiceStore에서 필요한 정보 가져오기
+  const selectedServiceId = useModifyServiceStore((state) => state.selectedService?.serviceId);
+  const serviceModificationMounted = useModifyServiceStore((state) => state.serviceModificationMounted);
+
   // 현재 선택된 고객 찾기
   const selectedCustomer = useMemo(() => {
     return customers.find((customer) => customer.id === selectedCustomerId);
@@ -68,7 +76,11 @@ const AdditionalServiceList: React.FC = () => {
   }, [selectedCustomer]);
 
   // API에서 부가서비스 목록을 가져옵니다
-  const { data: additionalServices = [] } = useAdditionalServicesQuery();
+  const { data: additionalServices = [] } = useAdditionalServicesQuery(
+    customerAge || 0,
+    selectedServiceId || currentService?.serviceId || '',  // 요금제 선택 후에는 selectedServiceId, 선택 전에는 currentService.serviceId 사용
+    serviceModificationMounted // ServiceModification 컴포넌트가 마운트된 후에만 API 호출
+  );
 
   // 검색어로 필터링된 부가서비스 목록 상태
   const [filteredServices, setFilteredServices] = useState<FilteredServiceItem[]>([]);

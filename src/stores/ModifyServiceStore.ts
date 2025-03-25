@@ -20,6 +20,8 @@ export interface ModifyServiceState {
   isRollbackAvailable: boolean;
   // 나이 제한으로 인해 제거해야 하는 서비스가 있는지 여부
   hasAgeRestrictedServices: boolean;
+  // ServiceModification 컴포넌트가 마운트되었는지 여부
+  serviceModificationMounted: boolean;
 
   // 액션
   setSelectedService: (service: Service | null) => void;
@@ -35,6 +37,7 @@ export interface ModifyServiceState {
   setIsRollbackAvailable: (isRollbackAvailable: boolean) => void;
   revertToPreviousService: () => void;
   setHasAgeRestrictedServices: (hasRestricted: boolean) => void;
+  setServiceModificationMounted: (isMounted: boolean) => void;
 
   // 계산된 값
   getTotalPrice: () => number;
@@ -50,6 +53,8 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
   previousService: null,
   isRollbackAvailable: false,
   hasAgeRestrictedServices: false,
+  serviceModificationMounted: false,
+
   // 액션
   setSelectedService: (service) => {
     set({ selectedService: service });
@@ -154,6 +159,9 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
 
   setHasAgeRestrictedServices: (hasRestricted: boolean) =>
     set({ hasAgeRestrictedServices: hasRestricted }),
+
+  setServiceModificationMounted: (isMounted: boolean) =>
+    set({ serviceModificationMounted: isMounted }),
 
   // 계산된 값
   getTotalPrice: () => {

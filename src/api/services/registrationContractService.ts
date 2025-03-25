@@ -49,6 +49,8 @@ export interface ServiceResponseWithAge {
   validEndDatetime: string;
   availableAgeMin?: number;
   availableAgeMax?: number;
+  hasAgeRestriction: boolean;
+  exclusive: boolean;
 }
 // Request Types
 export interface ClaimPhoneNumberRequest {
@@ -132,11 +134,13 @@ const registrationContractService = {
 
   /**
    * 부가 서비스 목록 조회(나이 정보 추가)
-   * @path GET /additional-services-with-age
+   * @path GET /additional-services/age-exclusive
+   * @param age - 고객 나이
+   * @param serviceId - 서비스 ID
    * @returns 부가 서비스 목록
    */
-  getAdditionalServicesWithAge(): Promise<CommonResponse<ServiceResponseWithAge[]>> {
-    return baseService.get<ServiceResponseWithAge[]>('/ctt-be/v1/additional-services-with-age');
+  getAdditionalServicesWithAge(age: number, serviceId: string): Promise<CommonResponse<ServiceResponseWithAge[]>> {
+    return baseService.get<ServiceResponseWithAge[]>(`/ctt-be/v1/additional-services/age-exclusive?age=${age}&serviceId=${serviceId}`);
   },
 
   /**

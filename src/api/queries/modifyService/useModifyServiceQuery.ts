@@ -49,6 +49,8 @@ const mapServiceResponseToAdditionalService = (
     releaseDate: serviceResponse.validStartDatetime,
     availableAgeMin: serviceResponse.availableAgeMin?.toString(),
     availableAgeMax: serviceResponse.availableAgeMax?.toString(),
+    hasAgeRestriction: serviceResponse.hasAgeRestriction,
+    exclusive: serviceResponse.exclusive,
   };
 };
 
@@ -105,14 +107,19 @@ export const useServicesQuery = () => {
 };
 
 // 부가 서비스 목록 조회 쿼리
-export const useAdditionalServicesQuery = () => {
+export const useAdditionalServicesQuery = (
+  age: number,
+  serviceId: string,
+  enabled: boolean = false,
+) => {
   return useReactQuery({
-    queryKey: ['additionalServices'],
-    queryFn: () => registrationContractService.getAdditionalServicesWithAge(),
+    queryKey: ['additionalServices', age, serviceId],
+    queryFn: () => registrationContractService.getAdditionalServicesWithAge(age, serviceId),
     select: (response: CommonResponse<ServiceResponseWithAge[]>) => {
       if (typeof response.data === 'string') return [];
       return response.data ? response.data.map(mapServiceResponseToAdditionalService) : [];
     },
+    enabled: enabled && !!age && !!serviceId,
   });
 };
 
