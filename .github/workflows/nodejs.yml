@@ -90,7 +90,7 @@ jobs:
     steps:
 
       - name: Run CD actions
-        uses: kt-bybc-rnr/rnr-apps-cicd/.github/actions/cd@develop
+        uses: kt-bybc-rnr/rnr-argocd-apps/.github/actions/cd@develop
         with:
           gitops_token: ${{ secrets.PAT_GITHUB_TOKEN }}
           #gitops_repo_name: ${{ vars.ARGOCD_APPS_GIT_REPO }}
