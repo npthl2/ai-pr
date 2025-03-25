@@ -182,7 +182,7 @@ const SelectedAdditionalServiceList: React.FC = () => {
           return (
             <TableRow key={service.serviceId} hover>
               <TableCell align='center'>
-                <StatusBadge isCurrentService={isCurrentService}>
+                <StatusBadge $isCurrentService={isCurrentService}>
                   {isCurrentService ? '가입중' : '가입'}
                 </StatusBadge>
               </TableCell>

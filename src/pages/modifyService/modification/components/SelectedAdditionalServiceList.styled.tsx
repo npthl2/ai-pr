@@ -105,14 +105,15 @@ export const PriceCell = styled(TableCell)({
 });
 
 // 상태 표시 스타일 (배지로 변경)
-export const StatusBadge = styled(Box)<{ isCurrentService?: boolean }>(({ isCurrentService }) => ({
+// $ 접두사를 사용하여 DOM으로 전달되지 않도록 함
+export const StatusBadge = styled(Box)<{ $isCurrentService?: boolean }>(({ $isCurrentService }) => ({
   display: 'inline-block',
   padding: '2px 8px',
   borderRadius: '4px',
   fontSize: '12px',
-  fontWeight: isCurrentService ? 500 : 400,
-  backgroundColor: isCurrentService ? '#f0f0f0' : '#e3f2fd',
-  color: isCurrentService ? '#616161' : '#0d47a1',
+  fontWeight: $isCurrentService ? 500 : 400,
+  backgroundColor: $isCurrentService ? '#f0f0f0' : '#e3f2fd',
+  color: $isCurrentService ? '#616161' : '#0d47a1',
 }));
 
 // 삭제 버튼 스타일
