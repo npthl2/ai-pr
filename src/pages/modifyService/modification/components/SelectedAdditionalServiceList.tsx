@@ -156,22 +156,25 @@ const SelectedAdditionalServiceList = ({
   }, [currentAdditionalServices, selectedAdditionalServices, sortField, sortDirection]);
 
   // 제한 메시지 생성 함수
-  const getRestrictionMessage = useCallback((service: AdditionalService) => {
-    // API에서 받아온 부가서비스 목록에서 해당 서비스 찾기
-    const apiService = additionalServices.find(
-      (apiService) => apiService.serviceId === service.serviceId,
-    );
+  const getRestrictionMessage = useCallback(
+    (service: AdditionalService) => {
+      // API에서 받아온 부가서비스 목록에서 해당 서비스 찾기
+      const apiService = additionalServices.find(
+        (apiService) => apiService.serviceId === service.serviceId,
+      );
 
-    if (apiService?.exclusive) {
-      return '이 서비스는 베타 서비스입니다.';
-    }
+      if (apiService?.exclusive) {
+        return '이 서비스는 베타 서비스입니다.';
+      }
 
-    if (apiService?.hasAgeRestriction) {
-      return '이 서비스는 나이 제한이 있습니다.';
-    }
+      if (apiService?.hasAgeRestriction) {
+        return '이 서비스는 나이 제한이 있습니다.';
+      }
 
-    return '';
-  }, [additionalServices]);
+      return '';
+    },
+    [additionalServices],
+  );
 
   // 부가서비스 삭제 핸들러
   const handleRemoveService = useCallback(
@@ -285,7 +288,13 @@ const SelectedAdditionalServiceList = ({
         )}
       </>
     ),
-    [allServices, currentAdditionalServices, handleRemoveService, additionalServices, getRestrictionMessage],
+    [
+      allServices,
+      currentAdditionalServices,
+      handleRemoveService,
+      additionalServices,
+      getRestrictionMessage,
+    ],
   );
 
   // 합계 행 메모이제이션

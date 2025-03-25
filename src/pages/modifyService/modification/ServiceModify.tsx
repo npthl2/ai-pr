@@ -85,7 +85,6 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
     // 모든 부가서비스 (현재 부가서비스 + 새로 선택된 부가서비스)
     const allAdditionalServices = [...currentAdditionalServices, ...selectedAdditionalServices];
 
-
     // 해지 필요 서비스 확인 (나이 제한 또는 베타 관계)
     const hasTerminationRequiredServices = allAdditionalServices.some((service) => {
       // API에서 받아온 부가서비스 목록에서 해당 서비스 찾기
@@ -99,10 +98,8 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
 
       const needsTermination = hasAgeRestriction || isExclusive;
 
-
       return needsTermination;
     });
-
 
     if (hasTerminationRequiredServices) {
       // 해지 필요 서비스가 있는 경우 -> 상품 변경 불가 알림
