@@ -27,11 +27,14 @@ const DraggableFloatingButton = () => {
     RegistrationStatusResponseData[]
   >([]);
 
-  const { data: registrationStatus } = useRegistrationStatus();
+  const { data: registrationStatus, refetch } = useRegistrationStatus();
 
   const handleOpen = (_: React.MouseEvent) => {
     if (!isDragging) {
       setShowHistory((prev) => !prev);
+      if (!showHistory) {
+        refetch();
+      }
     }
   };
 
@@ -125,7 +128,9 @@ const DraggableFloatingButton = () => {
             ) : registrationStatus && registrationStatus.pendingCount > 0 ? (
               <ProgressWrapper>
                 <StyledCircularProgress color='error' size='19.2px' />
-                <CountLabel>{registrationStatus?.pendingCount}</CountLabel>
+                <CountLabel data-testid='draggable-floating-button-history-count-label'>
+                  {registrationStatus?.pendingCount}
+                </CountLabel>
               </ProgressWrapper>
             ) : (
               <HistoryIcon />

@@ -46,8 +46,8 @@ export const ProgressWrapper = styled(Box)({
   '&::before': {
     content: '""',
     position: 'absolute',
-    width: '19.2px',
-    height: '19.2px',
+    width: '18.2px',
+    height: '18.2px',
     borderRadius: '50%',
     border: '1.92px solid white',
   },
