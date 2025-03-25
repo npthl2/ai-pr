@@ -160,6 +160,7 @@ const MaskingInfo: React.FC<MaskingInfoProps> = ({ originalInfo, encryptedInfo, 
       >
         <MenuItem
           onClick={handleMaskingOpen}
+          data-testid="unmasking-menu-item"
           sx={{
             width: '206px',
             height: '33px',
