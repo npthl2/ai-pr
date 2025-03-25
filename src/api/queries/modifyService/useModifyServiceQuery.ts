@@ -8,6 +8,7 @@ import { useReactQuery } from '@hooks/useReactQuery';
 import serviceModificationService from '@api/services/serviceModificationService';
 import registrationContractService, {
   ServiceResponse,
+  ServiceResponseWithAge,
 } from '@api/services/registrationContractService';
 import { CommonResponse } from '@model/common/CommonResponse';
 import { ServiceAgeCheckResponse } from '@model/modifyService/ModifyServiceModel';
@@ -36,7 +37,7 @@ const mapServiceResponseToService = (serviceResponse: ServiceResponse): Service 
 
 // ServiceResponse를 AdditionalService로 변환하는 매핑 함수
 const mapServiceResponseToAdditionalService = (
-  serviceResponse: ServiceResponse,
+  serviceResponse: ServiceResponseWithAge,
 ): AdditionalService => {
   return {
     serviceId: serviceResponse.serviceId,
@@ -46,6 +47,8 @@ const mapServiceResponseToAdditionalService = (
     serviceValueType: serviceResponse.serviceValueType,
     exclusiveServiceIds: serviceResponse.exclusiveServiceIds || [],
     releaseDate: serviceResponse.validStartDatetime,
+    available_age_min: serviceResponse.availableAgeMin?.toString(),
+    available_age_max: serviceResponse.availableAgeMax?.toString(),
   };
 };
 
@@ -105,8 +108,8 @@ export const useServicesQuery = () => {
 export const useAdditionalServicesQuery = () => {
   return useReactQuery({
     queryKey: ['additionalServices'],
-    queryFn: () => registrationContractService.getAdditionalServices(),
-    select: (response: CommonResponse<ServiceResponse[]>) => {
+    queryFn: () => registrationContractService.getAdditionalServicesWithAge(),
+    select: (response: CommonResponse<ServiceResponseWithAge[]>) => {
       if (typeof response.data === 'string') return [];
       return response.data ? response.data.map(mapServiceResponseToAdditionalService) : [];
     },
