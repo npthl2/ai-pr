@@ -52,6 +52,7 @@ const SelectService = () => {
     previousService,
     isRollbackAvailable,
     revertToPreviousService,
+    setRevertButtonClickedDate,
   } = useModifyServiceStore();
 
   // 고객 정보
@@ -193,6 +194,8 @@ const SelectService = () => {
   // 이전 요금제로 되돌리기 핸들러
   const handleRevertToPreviousService = () => {
     revertToPreviousService();
+    // 되돌리기 버튼 클릭 시점의 날짜 저장
+    setRevertButtonClickedDate(new Date().toISOString());
   };
 
   // 최신출시순으로 정렬

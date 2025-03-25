@@ -1,6 +1,6 @@
 // src/pages/modifyService/modification/ServiceModify.tsx
 import { Button } from '@mui/material';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import SelectService from './components/ModifiedServiceSelect';
 import AdditionalServiceList from './components/AdditionalServiceList';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
@@ -9,6 +9,8 @@ import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import { useAdditionalServicesQuery } from '@api/queries/modifyService/useModifyServiceQuery';
 import SelectedAdditionalServiceList from './components/SelectedAdditionalServiceList';
 import { Container, Section, ButtonGroup } from './ServiceModify.styled';
+import ServiceModificationBlockModal from '../modal/ServiceModificationBlockModal';
+import { ServiceModificationModalType } from '../modal/ServiceModificationBlockModal';
 
 interface ServiceModifyProps {
   // props 정의
@@ -17,14 +19,12 @@ interface ServiceModifyProps {
 const ServiceModify: React.FC<ServiceModifyProps> = () => {
   // 스토어에서 필요한 정보 가져오기
   const {
-    isServiceModifiable,
-    hasAgeRestrictedServices,
     resetAll,
     selectedService,
     serviceModificationMounted,
-    hasChanges,
     selectedAdditionalServices,
     currentAdditionalServices,
+    revertButtonClickedDate,
     removedCurrentAdditionalServices,
   } = useModifyServiceStore();
 
@@ -57,35 +57,166 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
     serviceModificationMounted,
   );
 
+  // 모달 상태 관리
+  const [modalState, setModalState] = useState<{
+    open: boolean;
+    type: ServiceModificationModalType;
+    serviceName?: string;
+    additionalServicesCount?: number;
+  }>({
+    open: false,
+    type: ServiceModificationModalType.CONFIRM_CHANGE,
+  });
+
+  // 변경사항이 있는지 확인 (요금제 변경 또는 부가서비스 변경)
+  const hasChanges = useMemo(() => {
+    // 요금제 변경 확인
+    const hasServiceChange = selectedService !== null;
+    
+    // 부가서비스 변경 확인
+    const hasAdditionalServicesChange = 
+      selectedAdditionalServices.length > 0 || 
+      removedCurrentAdditionalServices.length > 0;
+
+    return hasServiceChange || hasAdditionalServicesChange;
+  }, [selectedService, selectedAdditionalServices, removedCurrentAdditionalServices]);
+
   // 저장 버튼 클릭 시 호출되는 핸들러
   const handleSave = () => {
-    // 저장할 데이터 준비 (요금제 및 부가서비스)
-    const dataToSave = {
-      // 선택된 요금제 정보
-      service: selectedService,
-      // 새로 선택한 부가서비스 목록
-      selectedAdditionalServices,
-      // 유지할 기존 부가서비스 목록
-      currentAdditionalServices,
-      // 제거할 기존 부가서비스 목록
-      removedAdditionalServices: removedCurrentAdditionalServices,
-    };
+    // 모든 부가서비스 (현재 부가서비스 + 새로 선택된 부가서비스)
+    const allAdditionalServices = [...currentAdditionalServices, ...selectedAdditionalServices];
 
-    // 데이터 로깅 (개발용)
-    console.log('저장할 데이터:', dataToSave);
+    // 현재 요금제 또는 선택된 요금제
+    const effectiveService = selectedService || currentService;
 
-    // 실제 저장 로직 구현
-    // TODO: API 호출하여 저장 처리
-    alert('요금제 변경이 저장되었습니다.');
+    console.log('=== 해지 필요 서비스 체크 시작 ===');
+    console.log('선택된/변경된 요금제:', selectedService);
+    console.log('현재 요금제:', currentService);
+    console.log('실제 사용할 요금제:', effectiveService);
+    console.log('전체 부가서비스:', allAdditionalServices);
+    console.log('현재 고객 나이:', customerAge);
+
+    // 해지 필요 서비스 확인 (나이 제한 또는 베타 관계)
+    const hasTerminationRequiredServices = allAdditionalServices.some(
+      (service) => {
+        // 나이 제한 체크를 위한 값들 확인
+        const minAge = service.availableAgeMin ? Number(service.availableAgeMin) : null;
+        const maxAge = service.availableAgeMax ? Number(service.availableAgeMax) : null;
+        
+        // 나이 제한 체크
+        const isUnderMinAge = minAge !== null && customerAge !== null && customerAge < minAge;
+        const isOverMaxAge = maxAge !== null && customerAge !== null && customerAge > maxAge;
+        const hasAgeRestriction = isUnderMinAge || isOverMaxAge;
+
+        console.log(`서비스 [${service.serviceName}] 나이 제한 체크:`, {
+          minAge,
+          maxAge,
+          customerAge,
+          isUnderMinAge,
+          isOverMaxAge,
+          hasAgeRestriction
+        });
+
+        // exclusive(베타) 관계 체크 - 현재 또는 선택된 요금제와 베타 관계인지 확인
+        const isExclusiveWithService = effectiveService && 
+          service.exclusiveServiceIds?.includes(effectiveService.serviceId);
+
+        console.log(`서비스 [${service.serviceName}] 베타 관계 체크:`, {
+          isExclusiveWithService,
+          exclusiveServiceIds: service.exclusiveServiceIds,
+          effectiveServiceId: effectiveService?.serviceId
+        });
+
+        const needsTermination = hasAgeRestriction || isExclusiveWithService;
+        console.log(`서비스 [${service.serviceName}] 최종 결과:`, {
+          needsTermination,
+          reason: needsTermination ? 
+            (hasAgeRestriction ? '나이 제한' : '베타 관계') : 
+            '해지 필요 없음'
+        });
+
+        return needsTermination;
+      }
+    );
+
+    console.log('해지 필요 서비스 있음:', hasTerminationRequiredServices);
+    console.log('=== 해지 필요 서비스 체크 종료 ===');
+
+    if (hasTerminationRequiredServices) {
+      // 해지 필요 서비스가 있는 경우 -> 상품 변경 불가 알림
+      setModalState({
+        open: true,
+        type: ServiceModificationModalType.TERMINATION_REQUIRED,
+      });
+      return;
+    }
+
+    // 이전 요금제로 되돌리기 만료 여부 확인
+    const isRollbackExpired = (() => {
+      if (!revertButtonClickedDate) return false;
+      
+      const today = new Date();
+      const revertDate = new Date(revertButtonClickedDate);
+      
+      // 년/월/일 전체를 비교
+      return today.toDateString() !== revertDate.toDateString();
+    })();
+
+    if (isRollbackExpired) {
+      setModalState({
+        open: true,
+        type: ServiceModificationModalType.ROLLBACK_EXPIRED,
+      });
+      return;
+    }
+
+    // 변경사항 유형에 따른 모달 표시
+    const hasServiceChange = selectedService !== null;
+    const hasAdditionalServicesChange = allAdditionalServices.length > 0;
+
+    if (hasServiceChange && hasAdditionalServicesChange) {
+      // 요금제와 부가서비스 모두 변경
+      setModalState({
+        open: true,
+        type: ServiceModificationModalType.CONFIRM_CHANGE,
+        serviceName: selectedService?.serviceName,
+        additionalServicesCount: allAdditionalServices.length,
+      });
+    } else if (hasServiceChange) {
+      // 요금제만 변경
+      setModalState({
+        open: true,
+        type: ServiceModificationModalType.CONFIRM_SERVICE_CHANGE,
+        serviceName: selectedService?.serviceName,
+      });
+    } else if (hasAdditionalServicesChange) {
+      // 부가서비스만 변경
+      setModalState({
+        open: true,
+        type: ServiceModificationModalType.CONFIRM_ADDITIONAL_SERVICES_CHANGE,
+        additionalServicesCount: allAdditionalServices.length,
+      });
+    }
   };
+
+  // 모달 닫기 핸들러
+  const handleCloseModal = () => {
+    setModalState((prev) => ({ ...prev, open: false }));
+  };
+
+  // 모달 확인 핸들러
+  const handleConfirmModal = () => {
+    // TODO: 실제 저장 API 호출 및 완료 화면으로 전환
+    handleCloseModal();
+  };
+
+  // 저장 버튼 비활성화 조건
+  const isSaveDisabled = !hasChanges;
 
   // 초기화 버튼 클릭 시 호출되는 핸들러
   const handleReset = () => {
     resetAll();
   };
-
-  // 선택한 요금제가 없거나 변경 불가능한 경우 또는 나이 제한으로 인해 해지가 필요한 서비스가 있는 경우 저장 버튼 비활성화
-  const isSaveDisabled = !isServiceModifiable || hasAgeRestrictedServices;
 
   // 변경사항이 없는 경우 초기화 버튼 비활성화
   const isResetDisabled = !hasChanges;
@@ -107,7 +238,17 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
         <SelectedAdditionalServiceList />
       </Section>
 
-      {/* 4. 버튼 영역 */}
+      {/* 모달 컴포넌트 */}
+      <ServiceModificationBlockModal
+        open={modalState.open}
+        type={modalState.type}
+        serviceName={modalState.serviceName}
+        additionalServicesCount={modalState.additionalServicesCount}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirmModal}
+      />
+
+      {/* 버튼 영역 */}
       <ButtonGroup>
         <Button variant='outlined' onClick={handleReset} disabled={isResetDisabled}>
           초기화

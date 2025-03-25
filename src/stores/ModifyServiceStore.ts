@@ -30,6 +30,7 @@ export interface ModifyServiceState {
   initialIsRollbackAvailable: boolean;
   initialIsServiceModifiable: boolean;
   initialPreviousService: Service | null;
+  revertButtonClickedDate: string | null;
 
   // 액션
   setSelectedService: (service: Service | null) => void;
@@ -51,6 +52,7 @@ export interface ModifyServiceState {
     isServiceModifiable: boolean,
     previousService: Service | null,
   ) => void;
+  setRevertButtonClickedDate: (date: string | null) => void;
 }
 
 const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
@@ -69,6 +71,7 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
   initialIsRollbackAvailable: false,
   initialIsServiceModifiable: true,
   initialPreviousService: null,
+  revertButtonClickedDate: null,
 
   // 액션
   setSelectedService: (service) => {
@@ -234,6 +237,8 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
       initialPreviousService: previousService,
     });
   },
+
+  setRevertButtonClickedDate: (date) => set({ revertButtonClickedDate: date }),
 }));
 
 // 개발 환경에서만 디버깅 도구 연결
