@@ -25,7 +25,7 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
     hasChanges,
     selectedAdditionalServices,
     currentAdditionalServices,
-    removedCurrentAdditionalServices
+    removedCurrentAdditionalServices,
   } = useModifyServiceStore();
 
   // CustomerStore에서 현재 선택된 고객 정보 가져오기
@@ -54,7 +54,7 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
   const { data: additionalServices = [] } = useAdditionalServicesQuery(
     customerAge || 0,
     currentServiceId,
-    serviceModificationMounted
+    serviceModificationMounted,
   );
 
   // 저장 버튼 클릭 시 호출되는 핸들러
@@ -86,7 +86,7 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
 
   // 선택한 요금제가 없거나 변경 불가능한 경우 또는 나이 제한으로 인해 해지가 필요한 서비스가 있는 경우 저장 버튼 비활성화
   const isSaveDisabled = !isServiceModifiable || hasAgeRestrictedServices;
-  
+
   // 변경사항이 없는 경우 초기화 버튼 비활성화
   const isResetDisabled = !hasChanges;
 
@@ -109,11 +109,7 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
 
       {/* 4. 버튼 영역 */}
       <ButtonGroup>
-        <Button 
-          variant='outlined' 
-          onClick={handleReset} 
-          disabled={isResetDisabled}
-        >
+        <Button variant='outlined' onClick={handleReset} disabled={isResetDisabled}>
           초기화
         </Button>
         <Button variant='contained' onClick={handleSave} disabled={isSaveDisabled}>

@@ -112,7 +112,11 @@ const ServiceModification: React.FC = () => {
         };
         setPreviousService(prevService);
         // 초기 상태 저장
-        setInitialStates(modifiableData.isRollbackAvailable || false, modifiableData.isModifiable, prevService);
+        setInitialStates(
+          modifiableData.isRollbackAvailable || false,
+          modifiableData.isModifiable,
+          prevService,
+        );
       } else {
         setPreviousService(null);
         // 초기 상태 저장

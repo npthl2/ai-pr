@@ -46,7 +46,11 @@ export interface ModifyServiceState {
   setHasAgeRestrictedServices: (hasRestricted: boolean) => void;
   setServiceModificationMounted: (isMounted: boolean) => void;
   updateHasChanges: () => void;
-  setInitialStates: (isRollbackAvailable: boolean, isServiceModifiable: boolean, previousService: Service | null) => void;
+  setInitialStates: (
+    isRollbackAvailable: boolean,
+    isServiceModifiable: boolean,
+    previousService: Service | null,
+  ) => void;
 }
 
 const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
@@ -137,13 +141,13 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
   },
 
   resetAll: () => {
-    const { 
+    const {
       initialCurrentAdditionalServices,
       initialIsRollbackAvailable,
       initialIsServiceModifiable,
-      initialPreviousService
+      initialPreviousService,
     } = get();
-    
+
     set({
       selectedService: null,
       selectedAdditionalServices: [],
@@ -190,34 +194,36 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
 
   setServiceModificationMounted: (isMounted: boolean) =>
     set({ serviceModificationMounted: isMounted }),
-    
+
   updateHasChanges: () => {
-    const { 
-      selectedService, 
-      selectedAdditionalServices, 
+    const {
+      selectedService,
+      selectedAdditionalServices,
       initialCurrentAdditionalServices,
-      currentAdditionalServices, 
-      removedCurrentAdditionalServices 
+      currentAdditionalServices,
+      removedCurrentAdditionalServices,
     } = get();
-    
+
     // 변경 사항이 있는지 확인
     const hasServiceChange = selectedService !== null;
     const hasSelectedServicesChange = selectedAdditionalServices.length > 0;
     const hasRemovedServicesChange = removedCurrentAdditionalServices.length > 0;
-    
+
     // 현재 부가서비스와 초기 부가서비스 비교
-    const hasCurrentServicesChange = initialCurrentAdditionalServices.length !== currentAdditionalServices.length ||
-      !initialCurrentAdditionalServices.every(initialService => 
-        currentAdditionalServices.some(currentService => 
-          currentService.serviceId === initialService.serviceId
-        )
+    const hasCurrentServicesChange =
+      initialCurrentAdditionalServices.length !== currentAdditionalServices.length ||
+      !initialCurrentAdditionalServices.every((initialService) =>
+        currentAdditionalServices.some(
+          (currentService) => currentService.serviceId === initialService.serviceId,
+        ),
       );
-    
-    const hasAnyChanges = hasServiceChange || 
-      hasSelectedServicesChange || 
-      hasRemovedServicesChange || 
+
+    const hasAnyChanges =
+      hasServiceChange ||
+      hasSelectedServicesChange ||
+      hasRemovedServicesChange ||
       hasCurrentServicesChange;
-    
+
     set({ hasChanges: hasAnyChanges });
   },
 
