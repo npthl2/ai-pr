@@ -161,10 +161,10 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
   // 나이 제한 메시지 생성 함수
   const getRestrictionMessage = useCallback((_service: FilteredServiceItem) => {
     if (_service.isAgeRestricted) {
-      return '이 서비스는 나이 제한으로 인해 추가할 수 없습니다.';
+      return '나이 제한으로 인해 가입이 불가능합니다.';
     }
     if (_service.isExclusive) {
-      return '이 서비스는 베타 서비스로 인해 추가할 수 없습니다.';
+      return '요금제 제한으로 인해 가입이 불가능합니다.';
     }
     return '';
   }, []);

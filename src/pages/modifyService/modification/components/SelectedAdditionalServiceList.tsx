@@ -40,7 +40,7 @@ type SortField = 'serviceName' | 'serviceValue' | null;
  * 선택된 부가서비스 목록 컴포넌트
  * 사용자가 선택한 부가서비스 목록을 보여주고 삭제 기능을 제공합니다.
  */
-const SelectedAdditionalServiceList: React.FC = () => {
+const SelectedAdditionalServiceList = ({ additionalServices }: { additionalServices: AdditionalService[] }) => {
   // 정렬 상태 관리
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
@@ -165,25 +165,6 @@ const SelectedAdditionalServiceList: React.FC = () => {
     return services;
   }, [currentAdditionalServices, selectedAdditionalServices, sortField, sortDirection]);
 
-  // 서비스의 나이 제한 여부 확인 함수
-  const isServiceRestricted = useCallback(
-    (service: AdditionalService) => {
-      if (!customerAge) return false;
-
-      // 나이 제한 확인
-      const ageMin = service.availableAgeMin ? parseInt(service.availableAgeMin) : null;
-      const ageMax = service.availableAgeMax ? parseInt(service.availableAgeMax) : null;
-      const isAgeRestricted =
-        (ageMin !== null && customerAge < ageMin) || (ageMax !== null && customerAge > ageMax);
-
-      // 베타 서비스 확인
-      const isExclusive = service.exclusive || false;
-
-      return isAgeRestricted || isExclusive;
-    },
-    [customerAge],
-  );
-
   // 제한 메시지 생성 함수
   const getRestrictionMessage = useCallback((service: AdditionalService) => {
     const ageMin = service.availableAgeMin ? parseInt(service.availableAgeMin) : null;
@@ -258,8 +239,13 @@ const SelectedAdditionalServiceList: React.FC = () => {
             (currentService) => currentService.serviceId === service.serviceId,
           );
 
+          // API에서 받아온 부가서비스 목록에서 해당 서비스 찾기
+          const apiService = additionalServices.find(
+            (apiService) => apiService.serviceId === service.serviceId,
+          );
+
           // 제한 여부 확인 (나이 제한 또는 베타 서비스)
-          const isRestricted = isServiceRestricted(service);
+          const isRestricted = apiService?.hasAgeRestriction || apiService?.exclusive || false;
 
           return (
             <TableRow
@@ -319,8 +305,6 @@ const SelectedAdditionalServiceList: React.FC = () => {
       allServices,
       currentAdditionalServices,
       handleRemoveService,
-      isServiceRestricted,
-      getRestrictionMessage,
     ],
   );
 

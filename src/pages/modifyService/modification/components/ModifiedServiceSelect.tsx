@@ -172,6 +172,13 @@ const SelectService = () => {
     }
   };
 
+  // 이전 요금제로 되돌리기 핸들러
+  const handleRevertToPreviousService = () => {
+    revertToPreviousService();
+    // 되돌리기 버튼 클릭 시점의 날짜 저장
+    setRevertButtonClickedDate(new Date().toISOString());
+  };
+
   // 나이 제한 확인 결과 처리
   useEffect(() => {
     if (ageRestrictionData && tempSelectedService) {
@@ -181,8 +188,13 @@ const SelectService = () => {
       // 실제 ServiceAgeCheckResponse 타입으로 처리
       if ('isAvailable' in data) {
         if (data.isAvailable) {
-          // 나이 제한 없음 - 요금제 변경 확인 모달 표시
-          openConfirmModal(tempSelectedService.serviceName);
+          if (tempSelectedService === previousService) {
+            // 이전 요금제로 되돌리기인 경우 바로 적용
+            revertToPreviousService();
+          } else {
+            // 일반 요금제 변경인 경우 확인 모달 표시
+            openConfirmModal(tempSelectedService.serviceName);
+          }
         } else {
           // 나이 제한 있음 - 나이 제한 알림 모달 표시
           openAgeRestrictionModal();
@@ -190,13 +202,6 @@ const SelectService = () => {
       }
     }
   }, [ageRestrictionData, tempSelectedService]);
-
-  // 이전 요금제로 되돌리기 핸들러
-  const handleRevertToPreviousService = () => {
-    revertToPreviousService();
-    // 되돌리기 버튼 클릭 시점의 날짜 저장
-    setRevertButtonClickedDate(new Date().toISOString());
-  };
 
   // 최신출시순으로 정렬
   // 서비스 목록을 출시일 기준 내림차순으로 정렬하여 최신 서비스가 상단에 표시되도록 합니다.
