@@ -18,7 +18,7 @@ export const Section = styled(Box)({
 // 버튼 그룹 - 하단 버튼 영역 레이아웃
 export const ButtonGroup = styled(Box)({
   display: 'flex',
-  gap: '8px'
+  gap: '8px',
 });
 
 // 경고 메시지 텍스트
@@ -37,4 +37,3 @@ export const WarningMessage = styled(Typography)({
 export const InfoIcon = styled(InfoOutlinedIcon)({
   fontSize: 16,
 });
-

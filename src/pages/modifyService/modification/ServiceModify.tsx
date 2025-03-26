@@ -219,7 +219,14 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
 
       {/* 버튼 영역 */}
       <ButtonGroup>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '100%',
+          }}
+        >
           {hasRestrictedServices && (
             <WarningMessage>
               <InfoIcon fontSize='small' sx={{ mr: 1 }} />
