@@ -233,8 +233,8 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
     );
   };
 
-  // 렌더링 최적화를 위해 테이블 행 메모이제이션
-  const tableRows = useMemo(() => {
+  // 렌더링 테이블 컨텐츠 메모이제이션
+  const tableContent = useMemo(() => {
     return filteredServices.map((service) => {
       const isRestricted = service.isAgeRestricted || service.isExclusive || false;
 
@@ -247,7 +247,7 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
           <StyledTableBlankCell width='10px'>
             {isRestricted && <InfoIcon color='error' sx={{ verticalAlign: 'middle' }} />}
           </StyledTableBlankCell>
-          <TableCell sx={{ maxWidth: '300px' }}>
+          <TableCell>
             {isRestricted && (
               <Tooltip title={getRestrictionMessage(service)}>
                 <Typography>{service.serviceName}</Typography>
@@ -306,7 +306,6 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
               <StyledTableBlankCell width='10px'></StyledTableBlankCell>
               <StyledTableHeaderCell
                 onClick={() => handleSort('serviceName')}
-                sx={{ cursor: 'pointer' }}
               >
                 <Typography>
                   부가서비스명
@@ -316,7 +315,7 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
               <StyledTableHeaderCell
                 align='right'
                 onClick={() => handleSort('serviceValue')}
-                sx={{ width: '150px', cursor: 'pointer' }}
+                sx={{ width: '150px' }}
               >
                 <Typography>
                   요금 (원)
@@ -331,15 +330,18 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
         <ScrollableTableContainer>
           <StyledTable>
             <TableBody>
-              {tableRows}
+              {tableContent}
               {filteredServices.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={4} align='center' sx={{ py: 4 }}>
-                    <Typography color='text.secondary'>
-                      {searchKeyword
-                        ? '검색 결과가 없습니다.'
-                        : '선택 가능한 부가서비스가 없습니다.'}
-                    </Typography>
+                <TableRow sx={{ border: 'none' }}>
+                  <TableCell colSpan={4} align='center' sx={{ py: 0, height: '148px', border: 'none' }}>
+                    <Box sx={{ 
+                      display: 'flex', 
+                      justifyContent: 'center', 
+                      alignItems: 'center', 
+                      height: '100%' 
+                    }}>
+                      <Typography color='text.secondary'>표시할 데이터가 없습니다.</Typography>
+                    </Box>
                   </TableCell>
                 </TableRow>
               )}

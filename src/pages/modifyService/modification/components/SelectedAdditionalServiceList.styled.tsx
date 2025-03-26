@@ -35,12 +35,12 @@ export const CountTypography = styled(Typography)({
 // 목록 컨테이너 - 테이블을 감싸는 영역
 export const ListContainer = styled(Box)({
   width: '100%',
+  borderTop: '1px solid #e0e0e0',
+  borderBottom: '1px solid #e0e0e0',
   overflow: 'hidden',
   display: 'flex',
   flexDirection: 'column',
   height: 'auto', // 내부 컨텐츠에 맞춤
-  border: '1px solid #eaeaea',
-  borderRadius: '4px',
 });
 
 // 경고 메시지 컨테이너
@@ -73,30 +73,31 @@ export const StyledTable = styled(Table)({
 
 // 스크롤 가능한 테이블 컨테이너
 export const ScrollableTableContainer = styled(TableContainer)({
-  maxHeight: '320px', // 더 유연한 높이 제한
+  // 헤더와 데이터 6개가 보이도록 고정 높이 설정 (행 높이 37px × 4개 = 148px)
+  height: '148px',
+  minHeight: '148px',
+  maxHeight: '148px', // 항상 같은 높이를 유지
   overflow: 'auto',
   '&::-webkit-scrollbar': {
-    width: '8px',
+    width: '5px',
   },
   '&::-webkit-scrollbar-track': {
     background: '#f1f1f1',
   },
   '&::-webkit-scrollbar-thumb': {
     background: '#888',
-    borderRadius: '4px',
+    borderRadius: '2px',
   },
 });
 
 // 테이블 헤더 셀 스타일
 export const StyledTableHeaderCell = styled(TableCell)({
-  backgroundColor: '#f5f6f8',
   fontWeight: 500,
-  padding: '8px 16px',
-  height: '40px',
-  borderBottom: '1px solid #eaeaea',
-  '& .MuiTypography-root': {
-    fontWeight: 600,
-  },
+});
+
+// 테이블 빈공간 셀 스타일
+export const StyledTableBlankCell = styled(TableCell)({
+  textAlign: 'center',
 });
 
 // 헤더 셀 내부 컨테이너 (정렬 아이콘 포함)
@@ -157,16 +158,8 @@ export const RestrictedStatusBadge = styled(BadgeBase)({
 
 // 삭제 버튼 스타일
 export const DeleteButton = styled(Button)({
-  minWidth: '32px',
-  width: '32px',
-  height: '32px',
-  padding: 0,
-  border: '1px solid #e0e0e0',
-  borderRadius: '4px',
-  '&:hover': {
-    backgroundColor: '#f5f5f5',
-    borderColor: '#bdbdbd',
-  },
+  minWidth: '50px',
+  whiteSpace: 'nowrap',
 });
 
 // 합계 행 스타일
@@ -188,4 +181,19 @@ export const TotalText = styled(Typography)({
 export const TotalAmount = styled(Typography)({
   fontWeight: 'bold',
   fontSize: '16px',
+});
+
+// 헤더 컨테이너 - 제목과 검색 영역을 포함하는 상단 영역
+export const HeaderContainer = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  width: '100%',
+  justifyContent: 'space-between',
+});
+
+// 제목 섹션 - 제목과 카운트를 담는 영역
+export const TitleSection = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  marginBottom: '2px',
 });

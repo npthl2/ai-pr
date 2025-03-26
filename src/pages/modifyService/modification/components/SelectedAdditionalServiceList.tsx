@@ -1,7 +1,6 @@
-import { Typography, TableBody, TableHead, Tooltip } from '@mui/material';
+import { Typography, TableBody, TableHead, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import WarningIcon from '@mui/icons-material/Warning';
+import ArrowDownward from '@mui/icons-material/ArrowDownward';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import { AdditionalService } from '@model/modifyService/ModifyServiceModel';
@@ -10,15 +9,12 @@ import TableRow from '@components/Table/TableRow';
 import TableCell from '@components/Table/TableCell';
 import {
   RootContainer,
-  ServiceHeaderContainer,
   TitleTypography,
   CountTypography,
   ListContainer,
   StyledTable,
   ScrollableTableContainer,
   StyledTableHeaderCell,
-  HeaderCellContent,
-  ServiceName,
   PriceCell,
   SubscribeStatusBadge,
   CurrentStatusBadge,
@@ -27,15 +23,16 @@ import {
   TotalRow,
   TotalText,
   TotalAmount,
-  WarningContainer,
-  WarningMessage,
+  HeaderContainer,
+  TitleSection,
+  StyledTableBlankCell,
 } from './SelectedAdditionalServiceList.styled';
 
 // 정렬 방향 타입
 type SortDirection = 'asc' | 'desc' | null;
 
 // 정렬 필드 타입
-type SortField = 'serviceName' | 'serviceValue' | null;
+type SortField = 'serviceName' | 'serviceValue' | 'serviceStatus' | null;
 
 /**
  * 선택된 부가서비스 목록 컴포넌트
@@ -49,6 +46,9 @@ const SelectedAdditionalServiceList = ({
   // 정렬 상태 관리
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+  
+  // 전체 서비스 목록 상태
+  const [allServices, setAllServices] = useState<AdditionalService[]>([]);
 
   // Zustand 스토어에서 선택된 부가서비스 목록과 삭제 액션 가져오기
   const {
@@ -67,17 +67,15 @@ const SelectedAdditionalServiceList = ({
   const currentService = useCurrentServiceStore((state) => state.currentService);
 
   // 나이 제한으로 인해 제거해야 하는 서비스가 있는지 확인
-  const hasRestrictedServices = useMemo(() => {
-    return currentAdditionalServices.some((service) => {
-      // API에서 받아온 부가서비스 목록에서 해당 서비스 찾기
-      const apiService = additionalServices.find(
-        (apiService) => apiService.serviceId === service.serviceId,
-      );
+  const hasRestrictedServices = currentAdditionalServices.some((service) => {
+    // API에서 받아온 부가서비스 목록에서 해당 서비스 찾기
+    const apiService = additionalServices.find(
+      (apiService) => apiService.serviceId === service.serviceId,
+    );
 
-      // API에서 받아온 hasAgeRestriction과 exclusive 값 사용
-      return apiService?.hasAgeRestriction || apiService?.exclusive || false;
-    });
-  }, [currentAdditionalServices, additionalServices]);
+    // API에서 받아온 hasAgeRestriction과 exclusive 값 사용
+    return apiService?.hasAgeRestriction || apiService?.exclusive || false;
+  });
 
   // 나이 제한 상태가 변경될 때마다 스토어 업데이트
   useEffect(() => {
@@ -133,50 +131,57 @@ const SelectedAdditionalServiceList = ({
     [sortField, sortDirection],
   );
 
-  // 모든 부가서비스 (현재 사용중 + 선택된 새로운 서비스)
-  const allServices = useMemo(() => {
+  // 상태 변경시 서비스 목록 업데이트 (정렬 포함)
+  useEffect(() => {
     // 모든 서비스 합치기 (현재 사용중 유지 + 새로 선택된 서비스)
     let services = [...currentAdditionalServices, ...selectedAdditionalServices];
-
+    
     // 정렬 적용
     if (sortField && sortDirection) {
-      services = [...services].sort((a, b) => {
-        if (sortField === 'serviceName') {
+      if (sortField === 'serviceName') {
+        services.sort((a, b) => {
+          const nameA = a.serviceName.toLowerCase();
+          const nameB = b.serviceName.toLowerCase();
           return sortDirection === 'asc'
-            ? a.serviceName.localeCompare(b.serviceName)
-            : b.serviceName.localeCompare(a.serviceName);
-        } else if (sortField === 'serviceValue') {
-          return sortDirection === 'asc'
+            ? nameA.localeCompare(nameB)
+            : nameB.localeCompare(nameA);
+        });
+      } else if (sortField === 'serviceValue') {
+        services.sort((a, b) => 
+          sortDirection === 'asc'
             ? a.serviceValue - b.serviceValue
-            : b.serviceValue - a.serviceValue;
-        }
-        return 0;
-      });
+            : b.serviceValue - a.serviceValue
+        );
+      } else if (sortField === 'serviceStatus') {
+        // 서비스 상태를 기준으로 정렬하는 로직
+        services.sort((a, b) => {
+          const statusA = getServiceStatusPriority(a, currentAdditionalServices, additionalServices);
+          const statusB = getServiceStatusPriority(b, currentAdditionalServices, additionalServices);
+          return sortDirection === 'asc'
+            ? statusA - statusB
+            : statusB - statusA;
+        });
+      }
     }
 
-    return services;
-  }, [currentAdditionalServices, selectedAdditionalServices, sortField, sortDirection]);
+    setAllServices(services);
+  }, [currentAdditionalServices, selectedAdditionalServices, sortField, sortDirection, additionalServices]);
 
-  // 제한 메시지 생성 함수
-  const getRestrictionMessage = useCallback(
-    (service: AdditionalService) => {
-      // API에서 받아온 부가서비스 목록에서 해당 서비스 찾기
-      const apiService = additionalServices.find(
-        (apiService) => apiService.serviceId === service.serviceId,
-      );
+  // 서비스 상태에 따른 우선 순위 반환 함수 (정렬에 사용)
+  const getServiceStatusPriority = (
+    service: AdditionalService, 
+    currentServices: AdditionalService[],
+    apiServices: AdditionalService[]
+  ): number => {
+    const isCurrentService = currentServices.some(current => current.serviceId === service.serviceId);
+    const apiService = apiServices.find(api => api.serviceId === service.serviceId);
+    const isRestricted = apiService?.hasAgeRestriction || apiService?.exclusive || false;
+    
+    if (isCurrentService && isRestricted) return 0; // 해지필요
+    if (isCurrentService) return 1; // 가입중
+    return 2; // 가입
+  };
 
-      if (apiService?.exclusive) {
-        return '이 서비스는 베타 서비스입니다.';
-      }
-
-      if (apiService?.hasAgeRestriction) {
-        return '이 서비스는 나이 제한이 있습니다.';
-      }
-
-      return '';
-    },
-    [additionalServices],
-  );
 
   // 부가서비스 삭제 핸들러
   const handleRemoveService = useCallback(
@@ -193,30 +198,34 @@ const SelectedAdditionalServiceList = ({
   );
 
   // 부가서비스 총 요금 계산 (요금제 + 부가서비스)
-  const totalPrice = useMemo(() => {
-    const additionalServicesTotal = selectedAdditionalServices.reduce(
-      (sum, service) => sum + service.serviceValue,
-      0,
-    );
-    const currentServicesTotal = currentAdditionalServices.reduce(
-      (sum, service) => sum + service.serviceValue,
-      0,
-    );
-    const servicePrice = selectedService ? selectedService.serviceValue : 0;
+  const totalPrice = selectedAdditionalServices.reduce(
+    (sum, service) => sum + service.serviceValue,
+    0
+  ) + currentAdditionalServices.reduce(
+    (sum, service) => sum + service.serviceValue,
+    0
+  ) + (selectedService ? selectedService.serviceValue : 0);
 
-    return additionalServicesTotal + currentServicesTotal + servicePrice;
-  }, [selectedAdditionalServices, currentAdditionalServices, selectedService]);
-
-  // 헤더 섹션 메모이제이션
-  const headerSection = useMemo(
-    () => (
-      <ServiceHeaderContainer>
-        <TitleTypography variant='subtitle1'>선택된 부가서비스</TitleTypography>
-        <CountTypography>{allServices.length}</CountTypography>
-      </ServiceHeaderContainer>
-    ),
-    [allServices.length],
-  );
+  // 정렬 아이콘 렌더링 함수
+  const renderSortIcon = (field: SortField) => {
+    if (sortField !== field) {
+      return (
+        <ArrowDownward
+          sx={{ verticalAlign: 'middle', marginLeft: '4px', fontSize: '16px', opacity: 0.3 }}
+        />
+      );
+    }
+    return (
+      <ArrowDownward
+        sx={{
+          verticalAlign: 'middle',
+          marginLeft: '4px',
+          fontSize: '16px',
+          transform: sortDirection === 'desc' ? 'rotate(180deg)' : 'none',
+        }}
+      />
+    );
+  };
 
   // 테이블 컨텐츠 메모이제이션
   const tableContent = useMemo(
@@ -228,13 +237,13 @@ const SelectedAdditionalServiceList = ({
             (currentService) => currentService.serviceId === service.serviceId,
           );
 
-          // API에서 받아온 부가서비스 목록에서 해당 서비스 찾기
-          const apiService = additionalServices.find(
-            (apiService) => apiService.serviceId === service.serviceId,
-          );
+        // API에서 받아온 부가서비스 목록에서 해당 서비스 찾기
+        const apiService = additionalServices.find(
+          (apiService) => apiService.serviceId === service.serviceId,
+        );
 
-          // 제한 여부 확인 (나이 제한 또는 베타 서비스)
-          const isRestricted = apiService?.hasAgeRestriction || apiService?.exclusive || false;
+        // 제한 여부 확인 (나이 제한 또는 베타 서비스)
+        const isRestricted = apiService?.hasAgeRestriction || apiService?.exclusive || false;
 
           return (
             <TableRow
@@ -242,7 +251,7 @@ const SelectedAdditionalServiceList = ({
               hover
               sx={isCurrentService && isRestricted ? { backgroundColor: '#ffebee' } : {}}
             >
-              <TableCell align='center'>
+              <TableCell align='center' width='100px'>
                 {isCurrentService && isRestricted ? (
                   <RestrictedStatusBadge>해지필요</RestrictedStatusBadge>
                 ) : isCurrentService ? (
@@ -252,126 +261,123 @@ const SelectedAdditionalServiceList = ({
                 )}
               </TableCell>
               <TableCell>
-                <ServiceName>
-                  {service.serviceName}
-                  {isCurrentService && isRestricted && (
-                    <Tooltip title={getRestrictionMessage(service)} arrow>
-                      <WarningIcon
-                        color='error'
-                        fontSize='small'
-                        sx={{ ml: 1, verticalAlign: 'middle' }}
-                      />
-                    </Tooltip>
-                  )}
-                </ServiceName>
+                <Typography>{service.serviceName}</Typography>
               </TableCell>
-              <PriceCell>{service.serviceValue.toLocaleString()}원</PriceCell>
-              <TableCell align='center'>
+              <TableCell align='right' sx={{ width: '150px' }}>
+                <Typography>{service.serviceValue.toLocaleString()}</Typography>
+              </TableCell>
+              <StyledTableBlankCell width='95px'>
                 <DeleteButton
                   variant='outlined'
                   size='small'
-                  color='grey'
-                  iconComponent={<CloseIcon fontSize='small' />}
+                  iconComponent={<CloseIcon />}
+                  iconPosition='right'
                   onClick={() => handleRemoveService(service, isCurrentService)}
-                />
-              </TableCell>
+                >
+                  삭제
+                </DeleteButton>
+              </StyledTableBlankCell>
             </TableRow>
           );
         })}
-        {allServices.length === 0 && (
-          <TableRow>
-            <TableCell colSpan={4} align='center' sx={{ py: 2 }}>
-              <Typography color='text.secondary'>선택된 부가서비스가 없습니다.</Typography>
-            </TableCell>
-          </TableRow>
-        )}
       </>
     ),
     [
       allServices,
       currentAdditionalServices,
       handleRemoveService,
-      additionalServices,
-      getRestrictionMessage,
+      additionalServices
     ],
   );
 
-  // 합계 행 메모이제이션
-  const totalRow = useMemo(
-    () => (
-      <TotalRow>
-        <TableCell colSpan={2}>
-          <TotalText>합계</TotalText>
-        </TableCell>
-        <PriceCell>
-          <TotalAmount>{totalPrice.toLocaleString()}원</TotalAmount>
-        </PriceCell>
-        <TableCell></TableCell>
-      </TotalRow>
-    ),
-    [totalPrice],
-  );
-
-  // 정렬 아이콘 렌더링 함수
-  const renderSortIcon = (field: SortField) => {
-    if (sortField !== field) {
-      return <ArrowDropDownIcon sx={{ opacity: 0.3 }} />;
-    }
-    return (
-      <ArrowDropDownIcon sx={{ transform: sortDirection === 'desc' ? 'rotate(180deg)' : 'none' }} />
-    );
-  };
-
   return (
     <RootContainer>
-      {headerSection}
+      <HeaderContainer>
+        <TitleSection>
+          <TitleTypography variant='subtitle1'>선택된 부가서비스</TitleTypography>
+          <CountTypography>{allServices.length}</CountTypography>
+        </TitleSection>
+      </HeaderContainer>
 
-      {/* 제한된 서비스가 있을 경우 경고 메시지 표시 */}
-      {hasRestrictedServices && (
+      {/* TODO: 버튼 영역으로 이동해야함*/}
+      {/* {hasRestrictedServices && (
         <WarningContainer>
           <WarningMessage>
             <WarningIcon fontSize='small' sx={{ mr: 1 }} />
             나이 제한 또는 베타 서비스로 인해 해지가 필요한 서비스가 있습니다.
           </WarningMessage>
         </WarningContainer>
-      )}
+      )} */}
 
       <ListContainer>
         <StyledTable stickyHeader>
           <TableHead>
             <TableRow variant='head'>
-              <StyledTableHeaderCell align='center' width='100px'>
-                상태
+              <StyledTableHeaderCell onClick={() => handleSort('serviceStatus')} align='center' width='100px'>
+                <Typography>
+                  상태
+                  {renderSortIcon('serviceStatus')}
+                </Typography>
               </StyledTableHeaderCell>
               <StyledTableHeaderCell onClick={() => handleSort('serviceName')}>
-                <HeaderCellContent>
+                <Typography>
                   부가서비스명
                   {renderSortIcon('serviceName')}
-                </HeaderCellContent>
+                </Typography>
               </StyledTableHeaderCell>
               <StyledTableHeaderCell
                 align='right'
                 width='120px'
                 onClick={() => handleSort('serviceValue')}
               >
-                <HeaderCellContent className='right-aligned'>
+                <Typography>
                   요금 (원)
                   {renderSortIcon('serviceValue')}
-                </HeaderCellContent>
+                </Typography>
               </StyledTableHeaderCell>
-              <StyledTableHeaderCell align='center' width='60px'></StyledTableHeaderCell>
+              <StyledTableBlankCell width='100px'></StyledTableBlankCell>
             </TableRow>
           </TableHead>
         </StyledTable>
 
         <ScrollableTableContainer>
           <StyledTable>
-            <TableBody>{tableContent}</TableBody>
+            <TableBody>
+              {tableContent}
+              {allServices.length === 0 && (
+                <TableRow sx={{ border: 'none' }}>
+                  <TableCell
+                    colSpan={4}
+                    align='center'
+                    sx={{ py: 0, height: '148px', border: 'none' }}
+                  >
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '100%',
+                      }}
+                    >
+                      <Typography color='text.secondary'>표시할 데이터가 없습니다.</Typography>
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
           </StyledTable>
         </ScrollableTableContainer>
 
         <StyledTable>
-          <TableBody>{totalRow}</TableBody>
+          <TotalRow>
+            <TableCell colSpan={2}>
+              <TotalText>합계</TotalText>
+            </TableCell>
+            <PriceCell>
+              <TotalAmount>{totalPrice.toLocaleString()}원</TotalAmount>
+            </PriceCell>
+            <TableCell></TableCell>
+          </TotalRow>
         </StyledTable>
       </ListContainer>
     </RootContainer>
