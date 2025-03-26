@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import MemoHistory from './components/MemoHistory';
+import SendHistory from './components/sendHistory';
 import DoubleArrow from '@mui/icons-material/DoubleArrow';
 import {
   PanelCloseButton,
@@ -29,7 +30,7 @@ const MemoAndHistoryPanel: React.FC = () => {
         <PanelBox>
           <Typography variant='h2'>메모 및 발송이력</Typography>
           <MemoHistory />
-          {/* <SendHistory /> */}
+          <SendHistory />
         </PanelBox>
       </PanelContainer>
     </PanelDrawer>
