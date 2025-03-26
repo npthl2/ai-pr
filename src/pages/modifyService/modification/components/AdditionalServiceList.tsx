@@ -304,9 +304,7 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
           <TableHead>
             <TableRow variant='head'>
               <StyledTableBlankCell width='10px'></StyledTableBlankCell>
-              <StyledTableHeaderCell
-                onClick={() => handleSort('serviceName')}
-              >
+              <StyledTableHeaderCell onClick={() => handleSort('serviceName')}>
                 <Typography>
                   부가서비스명
                   {renderSortIcon('serviceName')}
@@ -333,13 +331,19 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
               {tableContent}
               {filteredServices.length === 0 && (
                 <TableRow sx={{ border: 'none' }}>
-                  <TableCell colSpan={4} align='center' sx={{ py: 0, height: '148px', border: 'none' }}>
-                    <Box sx={{ 
-                      display: 'flex', 
-                      justifyContent: 'center', 
-                      alignItems: 'center', 
-                      height: '100%' 
-                    }}>
+                  <TableCell
+                    colSpan={4}
+                    align='center'
+                    sx={{ py: 0, height: '148px', border: 'none' }}
+                  >
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '100%',
+                      }}
+                    >
                       <Typography color='text.secondary'>표시할 데이터가 없습니다.</Typography>
                     </Box>
                   </TableCell>
