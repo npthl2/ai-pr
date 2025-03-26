@@ -51,8 +51,7 @@ const Information = ({ customerId, contractId }: InformationProps) => {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '6px' }}>
           <InfoOutlinedIcon sx={{ fontSize: '13.33px', color: `${theme.palette.grey[500]}` }} />
           <Typography variant='caption' color='text.secondary'>
-            &apos;*&apos;와 &apos;고객정보보호&apos; 는 [마우스 우클릭→ &apos;마스킹 해제&apos;
-            클릭] 하여 데이터를 조회할 수 있습니다.
+            {`'*'와 '고객정보보호'는 [마우스 우클릭→ '마스킹 해제'클릭]하여 데이터를 조회할 수 있습니다.`}
           </Typography>
         </Box>
       )}

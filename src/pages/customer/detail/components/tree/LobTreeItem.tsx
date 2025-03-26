@@ -23,6 +23,7 @@ export const LobTreeItem = ({ item, onPhoneSelect, onLobSelect }: LobTreeItemPro
     display: 'flex',
     fontSize: '14px',
     color: isDisabled ? '#666' : 'inherit',
+    gap: '4px',
   };
 
   return (
@@ -36,7 +37,7 @@ export const LobTreeItem = ({ item, onPhoneSelect, onLobSelect }: LobTreeItemPro
         <Box sx={labelStyles}>
           <Typography sx={textStyles}>
             {item.lobType}
-            <Typography color='text.secondary'>&nbsp;- {item.children.length}</Typography>
+            <Typography color='text.secondary'>{`- ${item.children.length}`}</Typography>
           </Typography>
         </Box>
       }
