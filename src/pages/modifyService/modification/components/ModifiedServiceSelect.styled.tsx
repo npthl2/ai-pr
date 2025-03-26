@@ -30,7 +30,6 @@ export const TitleTypography = styled(Typography)({
   fontWeight: 800,
   whiteSpace: 'nowrap',
   minWidth: '100px',
-
 });
 
 // Autocomplete를 감싸는 컨테이너

@@ -257,33 +257,37 @@ const SelectService = () => {
               disabled={!isServiceModifiable}
               slotProps={{
                 listbox: {
-                  style: { 
+                  style: {
                     maxHeight: '190px',
-                    scrollbarWidth: 'thin'
-                  }
-                }
+                    scrollbarWidth: 'thin',
+                  },
+                },
               }}
               renderOption={(props, option) => (
-                <Box 
-                  component='li' 
+                <Box
+                  component='li'
                   {...props}
                   sx={{
                     padding: '0 !important',
                     '&:hover, &.Mui-focused': {
                       backgroundColor: '#EBF0F5',
-                    }
+                    },
                   }}
                 >
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    width: '100%', 
-                    padding: '12px 16px',
-                  }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                      padding: '12px 16px',
+                    }}
+                  >
                     <Typography>{(option as ServicePlan).name}</Typography>
-                    <Typography sx={{
-                      color: '#6E7782'
-                    }}>
+                    <Typography
+                      sx={{
+                        color: '#6E7782',
+                      }}
+                    >
                       {(option as ServicePlan).price.toLocaleString()}
                     </Typography>
                   </Box>
