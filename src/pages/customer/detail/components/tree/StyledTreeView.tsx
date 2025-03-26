@@ -3,8 +3,6 @@ import { SimpleTreeView } from '@mui/x-tree-view';
 
 const StyledTreeView = styled(SimpleTreeView)(({}) => ({
   width: 499,
-  height: 682,
-  paddingBottom: '8px',
   borderRadius: '4px',
 
   '& .Mui-focused': {
@@ -20,6 +18,7 @@ const StyledTreeView = styled(SimpleTreeView)(({}) => ({
     backgroundColor: '#F5F6F8 !important',
   },
   '& .MuiTreeItem-content.Mui-selected': {
+    width: '99%',
     backgroundColor: '#F5F6F8 !important',
   },
 }));
