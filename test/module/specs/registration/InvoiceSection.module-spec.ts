@@ -6,7 +6,6 @@ import CustomerDetailServiceMock from '../../mock/customer/detail/CustomerDetail
 import CustomerSectionPage from '../../../pages/registration/CustomerSectionPage';
 import CustomerSectionServiceMock from '../../mock/registration/CustomerSectionServiceMock';
 import ContractSectionServiceMock from '../../mock/registration/ContractSectionServiceMock';
-const CUSTOMER_SECTION_NAME = 'NEW_SUBSCRIPTION0-section-customer';
 const INVOICE_SEARCH_MODAL_NAME = 'invoice-search-modal';
 const ADDRESS_SEARCH_MODAL_NAME = 'address-search-modal';
 const INVOICE_ADDRESS_NAME = 'invoice-address';

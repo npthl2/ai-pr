@@ -51,12 +51,12 @@ export const DeviceInfoLabel = styled(Typography)({
   fontSize: '14px',
   lineHeight: '21px',
   letterSpacing: '0px',
-  width: '37px',
+  width: '45px',
   height: '21px',
 });
 
 export const DeviceInfoValue = styled(Typography)({
-  width: '128px',
+  width: '350px',
   height: '21px',
   fontFamily: 'Pretendard',
   fontWeight: '700',
@@ -107,6 +107,7 @@ export const RequiredMark = styled(Box)({
 export const RadioGroupContainer = styled(Box)({
   '& .MuiFormControlLabel-root': {
     marginRight: '8px',
+    height: '28px',
   },
 });
 
