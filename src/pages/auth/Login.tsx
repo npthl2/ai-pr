@@ -1,17 +1,11 @@
 import { useState } from 'react';
 import { useLoginMutation } from '@api/queries/auth/useLoginMutation';
 import { LoginRequestParams } from '@model/Auth';
-import {
-  LoginContainer,
-  LogoText,
-  FormContainer,
-  TitleContainer,
-  Title,
-  Subtitle,
-} from './Login.styled';
+import { LoginContainer, LogoText, FormContainer, TitleContainer } from './Login.styled';
 import LoginForm from './components/LoginForm';
 import { LoginError } from './Login.model';
 import { getTheme } from '@theme/theme';
+import { Typography } from '@mui/material';
 
 const Login = () => {
   // 로그인 폼 데이터 상태
@@ -75,10 +69,10 @@ const Login = () => {
   return (
     <LoginContainer>
       <LogoText theme={getTheme('light')}>R&R</LogoText>
-      <FormContainer>
+      <FormContainer theme={getTheme('light')}>
         <TitleContainer>
-          <Title theme={getTheme('light')}>Welcome to R&R!</Title>
-          <Subtitle theme={getTheme('light')}>Log in</Subtitle>
+          <Typography variant='body1'>Welcome to R&R!</Typography>
+          <Typography variant='h1'>Log in</Typography>
         </TitleContainer>
         <LoginForm
           formData={formData}

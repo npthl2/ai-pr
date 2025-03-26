@@ -1,10 +1,8 @@
 import { Box, styled, SxProps, Typography } from '@mui/material';
 
 export const boxStyles: SxProps = {
-  mb: 2,
   width: 499,
   height: 32,
-  marginBottom: '4px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
@@ -23,6 +21,9 @@ export const typographyStyles: SxProps = {
 };
 
 export const formControlLabelStyles: SxProps = {
+  '& .MuiCheckbox-root': {
+    padding: '0 2px 0 0 ',
+  },
   height: 32,
 };
 
@@ -54,7 +55,6 @@ export const StyledBox = styled(Box)(({}) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
-  gap: '14px',
 }));
 
 export const StyledTypography = styled(Typography)(({}) => ({

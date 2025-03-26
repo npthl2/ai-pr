@@ -64,6 +64,7 @@ const StyledTextField = styled(MuiTextField, {
       margin: '0 !important',
     },
   },
+
   '& .MuiOutlinedInput-notchedOutline': {
     borderColor: getBorderColor(theme, state),
   },
@@ -75,6 +76,9 @@ const StyledTextField = styled(MuiTextField, {
   },
   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
     borderColor: getBorderColor(theme, state),
+  },
+  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+    borderWidth: '1px !important',
   },
   '& .MuiInputBase-input::placeholder': {
     color: theme.palette.text.secondary,
