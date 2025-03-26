@@ -2,7 +2,7 @@ import { Box, Typography, Table, TableContainer } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import TableCell from '@components/Table/TableCell';
 import Button from '@components/Button';
-
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 // 루트 컨테이너 - 전체 컴포넌트 레이아웃
 export const RootContainer = styled(Box)({
   width: '100%',
@@ -22,18 +22,21 @@ export const HeaderContainer = styled(Box)({
 export const TitleSection = styled(Box)({
   display: 'flex',
   alignItems: 'center',
+  marginBottom: '2px',
 });
 
 // 제목 타이포그래피 스타일
 export const TitleTypography = styled(Typography)({
-  fontWeight: 500,
+  fontWeight: 800,
   whiteSpace: 'nowrap',
-  marginRight: '8px',
+  minWidth: '100px',
 });
 
 // 카운트 타이포그래피 스타일
 export const CountTypography = styled(Typography)({
-  fontWeight: 400,
+  marginLeft: '8px',
+  fontWeight: 600,
+  color: '#6E7782',
 });
 
 // 목록 컨테이너 - 테이블을 감싸는 영역
@@ -60,26 +63,30 @@ export const ScrollableTableContainer = styled(TableContainer)({
   maxHeight: '222px', // 항상 같은 높이를 유지
   overflow: 'auto',
   '&::-webkit-scrollbar': {
-    width: '8px',
+    width: '5px',
   },
   '&::-webkit-scrollbar-track': {
     background: '#f1f1f1',
   },
   '&::-webkit-scrollbar-thumb': {
     background: '#888',
-    borderRadius: '4px',
+    borderRadius: '2px',
   },
 });
 
 // 테이블 헤더 셀 스타일
 export const StyledTableHeaderCell = styled(TableCell)({
-  backgroundColor: '#f5f6f8',
   fontWeight: 500,
+});
+
+// 테이블 빈공간 셀 스타일
+export const StyledTableBlankCell = styled(TableCell)({
+  textAlign: 'center'
 });
 
 // 추가 버튼 스타일
 export const AddButton = styled(Button)(({ color }) => ({
-  minWidth: '80px',
+  minWidth: '50px',
   whiteSpace: 'nowrap',
   ...(color === 'error' && {
     '&.Mui-disabled': {
@@ -88,3 +95,8 @@ export const AddButton = styled(Button)(({ color }) => ({
     },
   }),
 }));
+
+// 툴팁 아이콘 스타일
+export const InfoIcon = styled(InfoOutlinedIcon)({
+  fontSize: 16,
+});

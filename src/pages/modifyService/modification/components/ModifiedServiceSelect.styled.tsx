@@ -65,7 +65,6 @@ export const RevertButton = styled(Button)({
 // 툴팁 아이콘 스타일
 export const InfoIcon = styled(InfoOutlinedIcon)({
   fontSize: 16,
-  color: '#9e9e9e',
   marginLeft: '4px',
   cursor: 'help',
 });
