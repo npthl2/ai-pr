@@ -62,3 +62,38 @@ export const ServiceModificationModalConfig: Record<ServiceModificationModalType
     content: (props) => `[${props.serviceName}] 요금제로 변경하시겠습니까?`,
   },
 } as const;
+
+// 모달 우선순위 정의
+export const MODAL_PRIORITY = [
+  ServiceModificationModalType.TERMINATION_REQUIRED,
+  ServiceModificationModalType.ROLLBACK_EXPIRED,
+  ServiceModificationModalType.MONTHLY_RESTRICTION,
+  ServiceModificationModalType.AGE_RESTRICTION,
+  ServiceModificationModalType.CONFIRM_CHANGE,
+  ServiceModificationModalType.CONFIRM_SERVICE_CHANGE,
+  ServiceModificationModalType.CONFIRM_ADDITIONAL_SERVICES_CHANGE,
+  ServiceModificationModalType.SERVICE_CHANGE,
+];
+
+// 모달 표시 조건 정의
+export interface ModalConditionInputs {
+  hasTerminationRequiredServices: boolean;
+  isRollbackExpired: boolean;
+  hasServiceChange: boolean;
+  hasAdditionalServicesChange: boolean;
+}
+
+// 모달 타입별 표시 조건 함수
+export const MODAL_CONDITIONS: Record<ServiceModificationModalType, (inputs: ModalConditionInputs) => boolean> = {
+  [ServiceModificationModalType.TERMINATION_REQUIRED]: (inputs) => inputs.hasTerminationRequiredServices,
+  [ServiceModificationModalType.ROLLBACK_EXPIRED]: (inputs) => inputs.isRollbackExpired,
+  [ServiceModificationModalType.CONFIRM_CHANGE]: (inputs) => 
+    inputs.hasServiceChange && inputs.hasAdditionalServicesChange,
+  [ServiceModificationModalType.CONFIRM_SERVICE_CHANGE]: (inputs) => 
+    inputs.hasServiceChange && !inputs.hasAdditionalServicesChange,
+  [ServiceModificationModalType.CONFIRM_ADDITIONAL_SERVICES_CHANGE]: (inputs) => 
+    !inputs.hasServiceChange && inputs.hasAdditionalServicesChange,
+  [ServiceModificationModalType.MONTHLY_RESTRICTION]: () => false, // 현재 ServiceModify.tsx에서 사용되지 않음
+  [ServiceModificationModalType.AGE_RESTRICTION]: () => false, // 현재 ServiceModify.tsx에서 사용되지 않음
+  [ServiceModificationModalType.SERVICE_CHANGE]: () => false, // 다른 컴포넌트에서 사용됨
+};
