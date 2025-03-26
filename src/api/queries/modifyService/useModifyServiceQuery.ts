@@ -5,7 +5,9 @@ import {
   AdditionalService,
 } from '@model/modifyService/ModifyServiceModel';
 import { useReactQuery } from '@hooks/useReactQuery';
-import serviceModificationService, { ServiceResponseWithExclusiveQuery } from '@api/services/serviceModificationService';
+import serviceModificationService, {
+  ServiceResponseWithExclusiveQuery,
+} from '@api/services/serviceModificationService';
 import registrationContractService, {
   ServiceResponse,
 } from '@api/services/registrationContractService';
@@ -113,7 +115,8 @@ export const useAdditionalServicesWithExclusiveQuery = (
 ) => {
   return useReactQuery({
     queryKey: ['additionalServicesWithExclusive', age, serviceId],
-    queryFn: () => serviceModificationService.getAdditionalServicesWithExclusiveQuery(age, serviceId),
+    queryFn: () =>
+      serviceModificationService.getAdditionalServicesWithExclusiveQuery(age, serviceId),
     select: (response: CommonResponse<ServiceResponseWithExclusiveQuery[]>) => {
       if (typeof response.data === 'string') return [];
       return response.data ? response.data.map(mapServiceResponseToAdditionalService) : [];

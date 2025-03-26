@@ -71,7 +71,7 @@ const serviceModificationService = {
     );
   },
 
-    /**
+  /**
    * 부가 서비스 목록 조회(나이 정보 추가)
    * @path GET /additional-services/age-exclusive
    * @param age - 고객 나이
