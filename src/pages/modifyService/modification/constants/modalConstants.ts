@@ -55,7 +55,8 @@ export const ServiceModificationModalConfig: Record<ServiceModificationModalType
   [ServiceModificationModalType.AGE_RESTRICTION]: {
     title: '요금제 변경 불가 알림',
     showCancel: false,
-    content: () => '해당 요금제는 연령 제한으로 가입이용 불가능 합니다. \n다른 요금제를 선택해주세요.',
+    content: () =>
+      '해당 요금제는 연령 제한으로 가입이용 불가능 합니다. \n다른 요금제를 선택해주세요.',
   },
   [ServiceModificationModalType.SERVICE_CHANGE]: {
     title: '요금제 변경',

@@ -26,12 +26,12 @@ export const useServiceModificationMutation = () => {
         customerId: data.customerId,
         contractId: data.contractId,
         service: data.service,
-        additionalServices: data.additionalServices.map(service => ({
-          serviceId: service.serviceId
-        }))
+        additionalServices: data.additionalServices.map((service) => ({
+          serviceId: service.serviceId,
+        })),
       };
 
       return serviceModificationService.saveServiceModification(request);
-    }
+    },
   });
-}; 
+};

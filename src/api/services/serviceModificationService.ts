@@ -88,23 +88,23 @@ const serviceModificationService = {
       `/ctt-be/v1/additional-services/age-exclusive?age=${age}&serviceId=${serviceId}`,
     );
   },
-  
+
   /**
    * 요금제/부가서비스 변경 요청 API
    * 선택된 요금제와 부가서비스를 저장하여 변경 요청을 처리합니다.
-   * 
+   *
    * @path PUT /v1/registration-service
    * @param data - 서비스 변경 요청 정보
    * @returns 서비스 변경 요청 결과
    */
   saveServiceModification(
-    data: ServiceModificationRequest
+    data: ServiceModificationRequest,
   ): Promise<CommonResponse<ServiceModificationResponseData>> {
     return baseService.put<ServiceModificationResponseData, ServiceModificationRequest>(
       '/cca-be/v1/registration-service',
-      data
+      data,
     );
-  }
+  },
 };
 
 export default serviceModificationService;
