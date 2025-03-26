@@ -15,14 +15,11 @@ import {
   StyledTable,
   ScrollableTableContainer,
   StyledTableHeaderCell,
-  PriceCell,
   SubscribeStatusBadge,
   CurrentStatusBadge,
   RestrictedStatusBadge,
   DeleteButton,
-  TotalRow,
   TotalText,
-  TotalAmount,
   HeaderContainer,
   TitleSection,
   StyledTableBlankCell,
@@ -60,8 +57,6 @@ const SelectedAdditionalServiceList = ({
     setCurrentAdditionalServices,
     setHasRestrictedServices,
   } = useModifyServiceStore();
-
-  const selectedService = useModifyServiceStore((state) => state.selectedService);
 
   // 현재 사용중인 서비스 정보 가져오기
   const currentService = useCurrentServiceStore((state) => state.currentService);
@@ -211,8 +206,7 @@ const SelectedAdditionalServiceList = ({
   // 부가서비스 총 요금 계산 (요금제 + 부가서비스)
   const totalPrice =
     selectedAdditionalServices.reduce((sum, service) => sum + service.serviceValue, 0) +
-    currentAdditionalServices.reduce((sum, service) => sum + service.serviceValue, 0) +
-    (selectedService ? selectedService.serviceValue : 0);
+    currentAdditionalServices.reduce((sum, service) => sum + service.serviceValue, 0);
 
   // 정렬 아이콘 렌더링 함수
   const renderSortIcon = (field: SortField) => {
@@ -259,7 +253,7 @@ const SelectedAdditionalServiceList = ({
               hover
               sx={isCurrentService && isRestricted ? { backgroundColor: '#ffebee' } : {}}
             >
-              <TableCell align='center' width='100px'>
+              <TableCell align='left' width='100px'>
                 {isCurrentService && isRestricted ? (
                   <RestrictedStatusBadge>해지필요</RestrictedStatusBadge>
                 ) : isCurrentService ? (
@@ -302,23 +296,13 @@ const SelectedAdditionalServiceList = ({
         </TitleSection>
       </HeaderContainer>
 
-      {/* TODO: 버튼 영역으로 이동해야함*/}
-      {/* {hasRestrictedServices && (
-        <WarningContainer>
-          <WarningMessage>
-            <WarningIcon fontSize='small' sx={{ mr: 1 }} />
-            나이 제한 또는 베타 서비스로 인해 해지가 필요한 서비스가 있습니다.
-          </WarningMessage>
-        </WarningContainer>
-      )} */}
-
       <ListContainer>
         <StyledTable stickyHeader>
           <TableHead>
             <TableRow variant='head'>
               <StyledTableHeaderCell
                 onClick={() => handleSort('serviceStatus')}
-                align='center'
+                align='left'
                 width='100px'
               >
                 <Typography>
@@ -376,15 +360,15 @@ const SelectedAdditionalServiceList = ({
         </ScrollableTableContainer>
 
         <StyledTable>
-          <TotalRow>
+          <TableRow variant='head'>
             <TableCell colSpan={2}>
               <TotalText>합계</TotalText>
             </TableCell>
-            <PriceCell>
-              <TotalAmount>{totalPrice.toLocaleString()}원</TotalAmount>
-            </PriceCell>
-            <TableCell></TableCell>
-          </TotalRow>
+            <StyledTableHeaderCell align='right' width='120px'>
+              <Typography variant='subtitle1'>{totalPrice.toLocaleString()}원</Typography>
+            </StyledTableHeaderCell>
+            <StyledTableBlankCell width='100px'></StyledTableBlankCell>
+          </TableRow>
         </StyledTable>
       </ListContainer>
     </RootContainer>

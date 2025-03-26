@@ -22,14 +22,16 @@ export const ServiceHeaderContainer = styled(Box)({
 
 // 제목 타이포그래피 스타일
 export const TitleTypography = styled(Typography)({
-  fontWeight: 500,
+  fontWeight: 800,
   whiteSpace: 'nowrap',
-  marginRight: '16px',
+  minWidth: '100px',
 });
 
 // 카운트 타이포그래피 스타일
 export const CountTypography = styled(Typography)({
-  fontWeight: 400,
+  marginLeft: '8px',
+  fontWeight: 600,
+  color: '#6E7782',
 });
 
 // 목록 컨테이너 - 테이블을 감싸는 영역
@@ -125,6 +127,11 @@ export const PriceCell = styled(TableCell)({
   textAlign: 'right',
   whiteSpace: 'nowrap',
   padding: '8px 16px',
+});
+
+export const PriceTypography = styled(Typography)({
+  fontWeight: 800,
+  whiteSpace: 'nowrap',
 });
 
 // 상태 표시 스타일 - 기본 베이스 스타일

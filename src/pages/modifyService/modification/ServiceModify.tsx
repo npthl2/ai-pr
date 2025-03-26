@@ -1,5 +1,5 @@
 // src/pages/modifyService/modification/ServiceModify.tsx
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { useMemo, useState } from 'react';
 import SelectService from './components/ModifiedServiceSelect';
 import AdditionalServiceList from './components/AdditionalServiceList';
@@ -8,7 +8,7 @@ import useCustomerStore from '@stores/CustomerStore';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import { useAdditionalServicesWithExclusiveQuery } from '@api/queries/modifyService/useModifyServiceQuery';
 import SelectedAdditionalServiceList from './components/SelectedAdditionalServiceList';
-import { Container, Section, ButtonGroup } from './ServiceModify.styled';
+import { Container, Section, ButtonGroup, WarningMessage, InfoIcon } from './ServiceModify.styled';
 import ServiceModificationBlockModal from '../modal/ServiceModificationBlockModal';
 import { ServiceModificationModalType } from '../modal/ServiceModificationBlockModal';
 interface ServiceModifyProps {
@@ -55,6 +55,17 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
     currentServiceId,
     serviceModificationMounted,
   );
+
+  // 나이 제한으로 인해 제거해야 하는 서비스가 있는지 확인
+  const hasRestrictedServices = currentAdditionalServices.some((service) => {
+    // API에서 받아온 부가서비스 목록에서 해당 서비스 찾기
+    const apiService = additionalServices.find(
+      (apiService) => apiService.serviceId === service.serviceId,
+    );
+
+    // API에서 받아온 hasAgeRestriction과 exclusive 값 사용
+    return apiService?.hasAgeRestriction || apiService?.exclusive || false;
+  });
 
   // 모달 상태 관리
   const [modalState, setModalState] = useState<{
@@ -208,12 +219,22 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
 
       {/* 버튼 영역 */}
       <ButtonGroup>
-        <Button variant='outlined' onClick={handleReset} disabled={isResetDisabled}>
-          초기화
-        </Button>
-        <Button variant='contained' onClick={handleSave} disabled={isSaveDisabled}>
-          저장
-        </Button>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+          {hasRestrictedServices && (
+            <WarningMessage>
+              <InfoIcon fontSize='small' sx={{ mr: 1 }} />
+              나이 제한 또는 베타 서비스로 인해 해지가 필요한 서비스가 있습니다.
+            </WarningMessage>
+          )}
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button variant='outlined' onClick={handleReset} disabled={isResetDisabled}>
+              초기화
+            </Button>
+            <Button variant='contained' onClick={handleSave} disabled={isSaveDisabled}>
+              저장
+            </Button>
+          </Box>
+        </Box>
       </ButtonGroup>
     </Container>
   );
