@@ -3,7 +3,6 @@
 // API에서 서비스 목록을 가져와 최신 출시 순으로 정렬하여 보여주고, 선택된 서비스 정보를 상위 컴포넌트로 전달합니다.
 import { Box, Typography, TextField as MuiTextField } from '@mui/material';
 import { SyntheticEvent, useEffect, useState } from 'react';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 import {
   useServicesQuery,
@@ -29,6 +28,10 @@ import {
   // InfoIcon,
   WarningContainer,
   WarningMessage,
+  ErrorIcon,
+  ServicePrice,
+  serviceTextFieldStyle,
+  disabledTextFieldStyle
 } from './ModifiedServiceSelect.styled';
 
 // 타입 정의: 서비스 플랜(요금제) 데이터 구조
@@ -283,27 +286,18 @@ const SelectService = () => {
                     }}
                   >
                     <Typography>{(option as ServicePlan).name}</Typography>
-                    <Typography
-                      sx={{
-                        color: '#6E7782',
-                      }}
-                    >
+                    <ServicePrice>
                       {(option as ServicePlan).price.toLocaleString()}
-                    </Typography>
+                    </ServicePrice>
                   </Box>
                 </Box>
               )}
               renderInput={(params) => (
                 <MuiTextField
                   {...params}
-                  placeholder={isServiceModifiable ? '요금제 선택' : '요금제 변경 불가'}
+                  placeholder={isServiceModifiable ? '요금제 선택' : '요금제 검색'}
                   size='small'
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      backgroundColor: '#ffffff',
-                      opacity: isServiceModifiable ? 1 : 0.7,
-                    },
-                  }}
+                  sx={isServiceModifiable ? serviceTextFieldStyle : disabledTextFieldStyle}
                 />
               )}
               onChange={handlePlanChange}
@@ -336,7 +330,7 @@ const SelectService = () => {
       {/* 금일 요금제 변경으로 인한 안내 메시지 */}
       {isRollbackAvailable && !isServiceModifiable && (
         <WarningContainer>
-          <ErrorOutlineIcon sx={{ color: '#f44336', fontSize: '12px', marginRight: '4px' }} />
+          <ErrorIcon />
           <WarningMessage>
             금일 요금제 변경으로 인해 이전 요금제로 되돌리기만 가능합니다.
           </WarningMessage>
