@@ -21,7 +21,8 @@ export const ServiceModificationModalConfig: Record<ServiceModificationModalType
   [ServiceModificationModalType.CONFIRM_CHANGE]: {
     title: '상품 변경 확인',
     showCancel: true,
-    content: (props) => `[${props.serviceName}]요금제, 부가서비스 ${props.additionalServicesCount}개로 변경하시겠습니까?`,
+    content: (props) =>
+      `[${props.serviceName}]요금제, 부가서비스 ${props.additionalServicesCount}개로 변경하시겠습니까?`,
   },
   [ServiceModificationModalType.CONFIRM_SERVICE_CHANGE]: {
     title: '상품 변경 확인',
@@ -36,12 +37,14 @@ export const ServiceModificationModalConfig: Record<ServiceModificationModalType
   [ServiceModificationModalType.TERMINATION_REQUIRED]: {
     title: '상품 변경 불가 알림',
     showCancel: false,
-    content: () => '상품 변경이 불가능합니다. 해지 필요한 부가서비스를 삭제한 후 다시 시도해 주세요.',
+    content: () =>
+      '상품 변경이 불가능합니다. 해지 필요한 부가서비스를 삭제한 후 다시 시도해 주세요.',
   },
   [ServiceModificationModalType.ROLLBACK_EXPIRED]: {
     title: '이전 요금제로 되돌리기 불가 알림',
     showCancel: false,
-    content: () => '이전 요금제로 되돌릴 수 없습니다. 요금제를 다시 선택한 후 저장해 주시기 바랍니다.',
+    content: () =>
+      '이전 요금제로 되돌릴 수 없습니다. 요금제를 다시 선택한 후 저장해 주시기 바랍니다.',
   },
   [ServiceModificationModalType.MONTHLY_RESTRICTION]: {
     title: '월 1회 제한으로 인한 불가 알림',
@@ -58,4 +61,4 @@ export const ServiceModificationModalConfig: Record<ServiceModificationModalType
     showCancel: true,
     content: (props) => `[${props.serviceName}] 요금제로 변경하시겠습니까?`,
   },
-} as const; 
+} as const;

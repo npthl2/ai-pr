@@ -3,7 +3,10 @@ import { Modal, Box, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Button from '@components/Button';
 import { styles } from './ServiceModificationBlockModal.styles';
-import { ServiceModificationModalType, ServiceModificationModalConfig } from '../constants/modalConstants';
+import {
+  ServiceModificationModalType,
+  ServiceModificationModalConfig,
+} from '../constants/modalConstants';
 
 // 모달 타입을 추가하여 다양한 경우를 처리
 export interface ServiceModificationModalProps {
@@ -91,16 +94,19 @@ const ServiceModificationModal: React.FC<ServiceModificationModalProps> = ({
         {/* 모달 컨텐츠 */}
         <Box sx={styles.contentContainerWithStart}>
           <Typography sx={styles.messageTextWithPreLine}>
-            {modalConfig.content({ open, type, serviceName, additionalServicesCount, onClose, onConfirm })}
+            {modalConfig.content({
+              open,
+              type,
+              serviceName,
+              additionalServicesCount,
+              onClose,
+              onConfirm,
+            })}
           </Typography>
         </Box>
 
         {/* 모달 푸터 */}
-        <ModalFooter
-          showCancel={modalConfig.showCancel}
-          onClose={onClose}
-          onConfirm={onConfirm}
-        />
+        <ModalFooter showCancel={modalConfig.showCancel} onClose={onClose} onConfirm={onConfirm} />
       </Box>
     </Modal>
   );
