@@ -143,7 +143,8 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
       hasTerminationRequiredServices: checkServiceRestrictions(allAdditionalServices),
       isRollbackExpired: checkRollbackExpiration(),
       hasServiceChange: selectedService !== null,
-      hasAdditionalServicesChange: allAdditionalServices.length > 0 || removedCurrentAdditionalServices.length > 0,
+      hasAdditionalServicesChange:
+        allAdditionalServices.length > 0 || removedCurrentAdditionalServices.length > 0,
     };
 
     // 우선순위에 따라 모달 타입 결정
@@ -159,11 +160,13 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
         };
 
         // 부가서비스만 제거된 경우 (allAdditionalServices.length가 0이고 removedCurrentAdditionalServices.length > 0)
-        if (modalType === ServiceModificationModalType.CONFIRM_ADDITIONAL_SERVICES_CHANGE &&
-            allAdditionalServices.length === 0 && 
-            removedCurrentAdditionalServices.length > 0) {
+        if (
+          modalType === ServiceModificationModalType.CONFIRM_ADDITIONAL_SERVICES_CHANGE &&
+          allAdditionalServices.length === 0 &&
+          removedCurrentAdditionalServices.length > 0
+        ) {
           showModal(modalType, {
-            additionalServicesCount: 0 // 모든 부가서비스 제거
+            additionalServicesCount: 0, // 모든 부가서비스 제거
           });
           return;
         }
@@ -176,7 +179,8 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
     // 어떤 모달 조건에도 해당하지 않지만 변경사항이 있는 경우 (부가서비스 제거만 있는 경우)
     if (removedCurrentAdditionalServices.length > 0) {
       showModal(ServiceModificationModalType.CONFIRM_ADDITIONAL_SERVICES_CHANGE, {
-        additionalServicesCount: currentAdditionalServices.length - removedCurrentAdditionalServices.length
+        additionalServicesCount:
+          currentAdditionalServices.length - removedCurrentAdditionalServices.length,
       });
     }
   };
@@ -188,52 +192,58 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
 
   // 모달 확인 핸들러
   const handleConfirmModal = async () => {
+    // ModifyServiceStore에서 선택된 서비스 정보 가져오기
+    const modifyServiceInfo = useModifyServiceStore.getState().getModifyServiceInfo(contractTabId);
+    if (!modifyServiceInfo) {
+      return;
+    }
 
-      // ModifyServiceStore에서 선택된 서비스 정보 가져오기
-      const modifyServiceInfo = useModifyServiceStore.getState().getModifyServiceInfo(contractTabId);
-      if (!modifyServiceInfo) {
-        return;
-      }
+    // CurrentServiceStore에서 현재 계약 ID 가져오기
+    const currentService = useCurrentServiceStore.getState().currentService;
+    const contractId = currentService?.contractId;
 
-      // CurrentServiceStore에서 현재 계약 ID 가져오기
-      const currentService = useCurrentServiceStore.getState().currentService;
-      const contractId = currentService?.contractId;
+    // CustomerStore에서 고객 ID 가져오기
+    const selectedCustomerId = useCustomerStore.getState().selectedCustomerId;
 
-      // CustomerStore에서 고객 ID 가져오기
-      const selectedCustomerId = useCustomerStore.getState().selectedCustomerId;
+    // 선택된 서비스 및 부가서비스 정보 추출
+    const {
+      selectedService,
+      selectedAdditionalServices,
+      currentAdditionalServices,
+      removedCurrentAdditionalServices,
+    } = modifyServiceInfo;
 
-      // 선택된 서비스 및 부가서비스 정보 추출
-      const { selectedService, selectedAdditionalServices, currentAdditionalServices, removedCurrentAdditionalServices } = modifyServiceInfo;
+    // 부가서비스 배열 생성 (선택된 부가서비스와 유지할 현재 부가서비스)
+    // 제거된 현재 부가서비스는 제외해야 함
+    const currentServicesToKeep = currentAdditionalServices.filter(
+      (currentService) =>
+        !removedCurrentAdditionalServices.some(
+          (removed) => removed.serviceId === currentService.serviceId,
+        ),
+    );
 
-      // 부가서비스 배열 생성 (선택된 부가서비스와 유지할 현재 부가서비스)
-      // 제거된 현재 부가서비스는 제외해야 함
-      const currentServicesToKeep = currentAdditionalServices.filter(currentService => 
-        !removedCurrentAdditionalServices.some(removed => removed.serviceId === currentService.serviceId)
-      );
-      
-      const allAdditionalServices = [...currentServicesToKeep, ...(selectedAdditionalServices || [])];
-      
-      // additionalServices는 빈 배열이라도 정의되어야 함 (모든 부가서비스 제거를 명시적으로 전달하기 위함)
-      const additionalServicesRequest = allAdditionalServices.map(service => ({
-        serviceId: service.serviceId
-      }));
+    const allAdditionalServices = [...currentServicesToKeep, ...(selectedAdditionalServices || [])];
 
-      // 요청 데이터 구성 및 API 호출
-      await serviceModificationMutation.mutateAsync({
-        customerId: selectedCustomerId || '',
-        contractId: contractId || '',
-        // selectedService가 없을 경우 null 전달 (요금제 변경 없음)
-        service: selectedService ? { serviceId: selectedService.serviceId } : null,
-        // 빈 배열이라도 그대로 전달 (모든 부가서비스 제거를 의미)
-        additionalServices: additionalServicesRequest
-      });
-      
-      // 요청 성공 시 저장 요청 상태를 true로 설정하여 부모 컴포넌트에 알림
-      if (setIsSaveRequested) {
-        setIsSaveRequested(true);
-      }
-      handleCloseModal();
-    
+    // additionalServices는 빈 배열이라도 정의되어야 함 (모든 부가서비스 제거를 명시적으로 전달하기 위함)
+    const additionalServicesRequest = allAdditionalServices.map((service) => ({
+      serviceId: service.serviceId,
+    }));
+
+    // 요청 데이터 구성 및 API 호출
+    await serviceModificationMutation.mutateAsync({
+      customerId: selectedCustomerId || '',
+      contractId: contractId || '',
+      // selectedService가 없을 경우 null 전달 (요금제 변경 없음)
+      service: selectedService ? { serviceId: selectedService.serviceId } : null,
+      // 빈 배열이라도 그대로 전달 (모든 부가서비스 제거를 의미)
+      additionalServices: additionalServicesRequest,
+    });
+
+    // 요청 성공 시 저장 요청 상태를 true로 설정하여 부모 컴포넌트에 알림
+    if (setIsSaveRequested) {
+      setIsSaveRequested(true);
+    }
+    handleCloseModal();
   };
 
   // 저장 버튼 비활성화 조건

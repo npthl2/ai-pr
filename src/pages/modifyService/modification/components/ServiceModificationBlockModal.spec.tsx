@@ -53,7 +53,9 @@ describe('ServiceModificationModal 컴포넌트', () => {
     );
 
     expect(
-      screen.getByText('상품 변경이 불가능합니다. 해지 필요한 부가서비스를 삭제한 후 다시 시도해 주세요.'),
+      screen.getByText(
+        '상품 변경이 불가능합니다. 해지 필요한 부가서비스를 삭제한 후 다시 시도해 주세요.',
+      ),
     ).toBeInTheDocument();
 
     // 취소 버튼 없어야 함
