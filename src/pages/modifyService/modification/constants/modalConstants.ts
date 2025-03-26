@@ -84,14 +84,18 @@ export interface ModalConditionInputs {
 }
 
 // 모달 타입별 표시 조건 함수
-export const MODAL_CONDITIONS: Record<ServiceModificationModalType, (inputs: ModalConditionInputs) => boolean> = {
-  [ServiceModificationModalType.TERMINATION_REQUIRED]: (inputs) => inputs.hasTerminationRequiredServices,
+export const MODAL_CONDITIONS: Record<
+  ServiceModificationModalType,
+  (inputs: ModalConditionInputs) => boolean
+> = {
+  [ServiceModificationModalType.TERMINATION_REQUIRED]: (inputs) =>
+    inputs.hasTerminationRequiredServices,
   [ServiceModificationModalType.ROLLBACK_EXPIRED]: (inputs) => inputs.isRollbackExpired,
-  [ServiceModificationModalType.CONFIRM_CHANGE]: (inputs) => 
+  [ServiceModificationModalType.CONFIRM_CHANGE]: (inputs) =>
     inputs.hasServiceChange && inputs.hasAdditionalServicesChange,
-  [ServiceModificationModalType.CONFIRM_SERVICE_CHANGE]: (inputs) => 
+  [ServiceModificationModalType.CONFIRM_SERVICE_CHANGE]: (inputs) =>
     inputs.hasServiceChange && !inputs.hasAdditionalServicesChange,
-  [ServiceModificationModalType.CONFIRM_ADDITIONAL_SERVICES_CHANGE]: (inputs) => 
+  [ServiceModificationModalType.CONFIRM_ADDITIONAL_SERVICES_CHANGE]: (inputs) =>
     !inputs.hasServiceChange && inputs.hasAdditionalServicesChange,
   [ServiceModificationModalType.MONTHLY_RESTRICTION]: () => false, // 현재 ServiceModify.tsx에서 사용되지 않음
   [ServiceModificationModalType.AGE_RESTRICTION]: () => false, // 현재 ServiceModify.tsx에서 사용되지 않음

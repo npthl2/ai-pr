@@ -10,11 +10,11 @@ import { useAdditionalServicesWithExclusiveQuery } from '@api/queries/modifyServ
 import SelectedAdditionalServiceList from './sections/SelectedAdditionalServiceList';
 import { Container, Section, ButtonGroup, WarningMessage, InfoIcon } from './ServiceModify.styled';
 import ServiceModificationBlockModal from './components/ServiceModificationBlockModal';
-import { 
-  ServiceModificationModalType, 
-  MODAL_PRIORITY, 
+import {
+  ServiceModificationModalType,
+  MODAL_PRIORITY,
   MODAL_CONDITIONS,
-  ModalConditionInputs
+  ModalConditionInputs,
 } from './constants/modalConstants';
 
 interface ServiceModifyProps {
@@ -43,8 +43,10 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
   const selectedCustomer = customers.find((customer) => customer.id === selectedCustomerId);
 
   // 현재 고객의 나이 - 단순 계산으로 변경
-  const customerAge = selectedCustomer ? 
-    ('age' in selectedCustomer ? Number(selectedCustomer.age) : null) 
+  const customerAge = selectedCustomer
+    ? 'age' in selectedCustomer
+      ? Number(selectedCustomer.age)
+      : null
     : null;
 
   // 현재 사용할 서비스 ID (선택된 서비스 또는 현재 서비스) - 단순 계산으로 변경
@@ -80,9 +82,9 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
   });
 
   // 변경사항이 있는지 확인 (요금제 변경 또는 부가서비스 변경) - 단순 계산으로 변경
-  const hasChanges = 
-    selectedService !== null || 
-    selectedAdditionalServices.length > 0 || 
+  const hasChanges =
+    selectedService !== null ||
+    selectedAdditionalServices.length > 0 ||
     removedCurrentAdditionalServices.length > 0;
 
   // 서비스 제한 상태 확인 함수
@@ -108,14 +110,17 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
   };
 
   // 모달 표시 함수
-  const showModal = (type: ServiceModificationModalType, data: {
-    serviceName?: string;
-    additionalServicesCount?: number;
-  } = {}) => {
+  const showModal = (
+    type: ServiceModificationModalType,
+    data: {
+      serviceName?: string;
+      additionalServicesCount?: number;
+    } = {},
+  ) => {
     setModalState({
       open: true,
       type,
-      ...data
+      ...data,
     });
   };
 
@@ -139,9 +144,11 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
         // 모달 데이터 준비
         const modalData = {
           serviceName: conditionInputs.hasServiceChange ? selectedService?.serviceName : undefined,
-          additionalServicesCount: conditionInputs.hasAdditionalServicesChange ? allAdditionalServices.length : undefined,
+          additionalServicesCount: conditionInputs.hasAdditionalServicesChange
+            ? allAdditionalServices.length
+            : undefined,
         };
-        
+
         showModal(modalType, modalData);
         return;
       }
