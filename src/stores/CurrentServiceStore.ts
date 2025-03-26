@@ -7,57 +7,97 @@ interface ServiceCommon {
   serviceName: string;
   serviceType: string;
   serviceValue: number;
-  validStartDateTime: string;
-  validStartEndTime: string;
+}
+
+interface CustomerContract {
+  contractId: string;
+  statusCode: string;
+  customerId: string;
+  serviceId: string;
+  serviceName: string;
+  serviceType: string;
+  maskingPhoneNumber: string;
+  encryptedPhoneNumber: string;
+  maskingImei: string;
+  encryptedImei: string;
 }
 
 interface AdditionalService extends ServiceCommon {}
 
-interface Service extends ServiceCommon {
+export interface Service extends ServiceCommon {
   additionalService: AdditionalService[];
 }
 
-// 초기 서비스 정의
-const initialService: Service = {
-  contractId: 's100000000',
-  serviceId: 'svc_1',
-  serviceName: '5G Ultra Plus 요금제',
-  serviceType: 'PLAN',
-  serviceValue: 130000,
-  validStartDateTime: '2025-01-01T00:00:00',
-  validStartEndTime: '2025-12-31T23:59:59',
-  additionalService: [
-    {
-      contractId: 's100000000',
-      serviceId: 'a_5g_1',
-      serviceName: '5G 1 Giga 충전 부가서비스',
-      serviceType: 'ADDITIONAL',
-      serviceValue: 21000,
-      validStartDateTime: '2025-01-01T00:00:00',
-      validStartEndTime: '2025-03-31T23:59:59',
-    },
-    {
-      contractId: 's100000000',
-      serviceId: 'a_5g_2',
-      serviceName: '5G 2 Giga 충전 부가서비스',
-      serviceType: 'ADDITIONAL',
-      serviceValue: 26000,
-      validStartDateTime: '2025-01-01T00:00:00',
-      validStartEndTime: '2025-03-31T23:59:59',
-    },
-  ],
-};
-
 interface ServiceState {
-  currentService: Service | null;
-  setCurrentService: (service: Service) => void;
-  clearCurrentService: () => void;
+  service: {
+    [customerId: string]: Service;
+  };
+  customerContracts: {
+    [customerId: string]: CustomerContract[];
+  };
+  selectedContractIds: {
+    [customerId: string]: string;
+  };
+  setCurrentService: (customerId: string, service: Service) => void;
+  getCurrentService: (customerId: string) => Service | null;
+  deleteCurrentService: (customerId: string) => void;
+  deleteAllServices: () => void;
+  setCustomerContracts: (customerId: string, contracts: CustomerContract[]) => void;
+  getCustomerContracts: (customerId: string) => CustomerContract[];
+  deleteCustomerContracts: (customerId: string) => void;
+  deleteAllCustomerContracts: () => void;
+  setSelectedContractId: (customerId: string, contractId: string) => void;
+  getSelectedContractId: (customerId: string) => string;
+  getSelectedCustomerContract: (customerId: string) => CustomerContract | null;
 }
 
-const useCurrentServiceStore = create<ServiceState>((set) => ({
-  currentService: initialService,
-  setCurrentService: (service: Service) => set({ currentService: service }),
-  clearCurrentService: () => set({ currentService: null }),
+const useCurrentServiceStore = create<ServiceState>((set, get) => ({
+  service: {},
+  customerContracts: {},
+  selectedContractIds: {},
+  setCurrentService: (customerId: string, service: Service) =>
+    set((state) => ({
+      service: {
+        ...state.service,
+        [customerId]: service,
+      },
+    })),
+  getCurrentService: (customerId: string) => get().service[customerId] || null,
+  deleteCurrentService: (customerId: string) =>
+    set((state) => {
+      const newServices = { ...state.service };
+      delete newServices[customerId];
+      return { service: newServices };
+    }),
+  deleteAllServices: () => set({ service: {} }),
+  setCustomerContracts: (customerId: string, contracts: CustomerContract[]) =>
+    set((state) => ({
+      customerContracts: {
+        ...state.customerContracts,
+        [customerId]: contracts,
+      },
+    })),
+  getCustomerContracts: (customerId: string) => get().customerContracts[customerId] || [],
+  deleteCustomerContracts: (customerId: string) =>
+    set((state) => {
+      const contracts = { ...state.customerContracts };
+      delete contracts[customerId];
+      return { customerContracts: contracts };
+    }),
+  deleteAllCustomerContracts: () => set({ customerContracts: {} }),
+  setSelectedContractId: (customerId: string, contractId: string) =>
+    set((state) => ({
+      selectedContractIds: {
+        ...state.selectedContractIds,
+        [customerId]: contractId,
+      },
+    })),
+  getSelectedContractId: (customerId: string) => get().selectedContractIds[customerId] || '',
+  getSelectedCustomerContract: (customerId: string) => {
+    const contracts = get().customerContracts[customerId] || [];
+    const selectedId = get().selectedContractIds[customerId];
+    return contracts.find((contract) => contract.contractId === selectedId) || null;
+  },
 }));
 
 if (import.meta.env.DEV) {

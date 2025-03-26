@@ -38,15 +38,6 @@ export const LineInfoContainer = styled(Box)(() => ({
   flexShrink: 0,
 }));
 
-export const LineInfoDetailsContainer = styled(Box)(() => ({
-  width: 'calc(100% - 120px)',
-  maxWidth: 1200,
-  display: 'flex',
-  alignItems: 'center',
-  gap: 16,
-  flexWrap: 'wrap',
-}));
-
 export const ServicesContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
   display: 'flex',
   width: '100%',
