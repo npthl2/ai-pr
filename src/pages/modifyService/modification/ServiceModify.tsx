@@ -23,8 +23,7 @@ interface ServiceModifyProps {
   // contractTabId: string;
 }
 
-
-const ServiceModify  = ({ 
+const ServiceModify = ({
   setIsSaveRequested,
   // contractTabId,
 }: ServiceModifyProps) => {
@@ -170,7 +169,7 @@ const ServiceModify  = ({
   const handleConfirmModal = () => {
     // setModifiable을 true로 설정하여 모달이 다시 뜨지 않도록 함
     useModifyServiceStore.getState().setServiceModifiable(true);
-    
+
     // 저장 요청 상태를 true로 설정하여 부모 컴포넌트에 알림
     if (setIsSaveRequested) {
       setIsSaveRequested(true);
@@ -247,6 +246,5 @@ const ServiceModify  = ({
     </Container>
   );
 };
-
 
 export default ServiceModify;

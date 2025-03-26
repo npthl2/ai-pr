@@ -166,7 +166,7 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
 
   // 저장 완료 상태가 되면 모달 닫기
   useEffect(() => {
-    if (isSaveRequested) {  
+    if (isSaveRequested) {
       // isModifiable 값을 true로 설정하여 모달이 더 이상 표시되지 않도록 함
       setServiceModifiable(true);
     }
@@ -262,9 +262,10 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
             </CurrentServiceContainer>
 
             <NewServiceContainer>
-              <ServiceModify 
-              // contractTabId={contractTabId}
-              setIsSaveRequested={setIsSaveRequested} />
+              <ServiceModify
+                // contractTabId={contractTabId}
+                setIsSaveRequested={setIsSaveRequested}
+              />
             </NewServiceContainer>
             <ServiceModificationBlockModal
               open={modalState.open}

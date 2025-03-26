@@ -24,10 +24,10 @@ const ModificationRequest: React.FC<ModificationRequestProps> = ({ contractTabId
           mb: 2,
         }}
       >
-        <Typography variant="h3" sx={{ mb: 2 }}>
+        <Typography variant='h3' sx={{ mb: 2 }}>
           변경요청입니다.
         </Typography>
-        <Typography variant="body1" sx={{ mb: 2 }}>
+        <Typography variant='body1' sx={{ mb: 2 }}>
           계약 ID: {contractTabId || '정보 없음'}
         </Typography>
       </Box>
