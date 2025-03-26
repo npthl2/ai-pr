@@ -16,6 +16,21 @@ import {
   ServiceAgeCheckResponse,
 } from '@model/modifyService/ModifyServiceModel';
 
+export interface ServiceResponseWithExclusiveQuery {
+  serviceId: string;
+  serviceName: string;
+  serviceType: string;
+  serviceValueType: string;
+  serviceValue: string;
+  exclusiveServiceIds: string[];
+  validStartDatetime: string;
+  validEndDatetime: string;
+  availableAgeMin?: number;
+  availableAgeMax?: number;
+  hasAgeRestriction: boolean;
+  exclusive: boolean;
+}
+
 /**
  * 요금제 변경 관련 API 서비스 객체
  */
@@ -53,6 +68,22 @@ const serviceModificationService = {
     return baseService.post<ServiceAgeCheckResponse, ServiceAgeCheckRequest>(
       `/ctt-be/v1/contract/service-modify/age/check`,
       data,
+    );
+  },
+
+    /**
+   * 부가 서비스 목록 조회(나이 정보 추가)
+   * @path GET /additional-services/age-exclusive
+   * @param age - 고객 나이
+   * @param serviceId - 서비스 ID
+   * @returns 부가 서비스 목록
+   */
+  getAdditionalServicesWithExclusiveQuery(
+    age: number,
+    serviceId: string,
+  ): Promise<CommonResponse<ServiceResponseWithExclusiveQuery[]>> {
+    return baseService.get<ServiceResponseWithExclusiveQuery[]>(
+      `/ctt-be/v1/additional-services/age-exclusive?age=${age}&serviceId=${serviceId}`,
     );
   },
 };

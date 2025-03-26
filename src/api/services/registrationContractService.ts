@@ -38,20 +38,6 @@ export interface ServiceResponse {
   validEndDatetime: string;
 }
 
-export interface ServiceResponseWithAge {
-  serviceId: string;
-  serviceName: string;
-  serviceType: string;
-  serviceValueType: string;
-  serviceValue: string;
-  exclusiveServiceIds: string[];
-  validStartDatetime: string;
-  validEndDatetime: string;
-  availableAgeMin?: number;
-  availableAgeMax?: number;
-  hasAgeRestriction: boolean;
-  exclusive: boolean;
-}
 // Request Types
 export interface ClaimPhoneNumberRequest {
   phoneNumber: string;
@@ -130,22 +116,6 @@ const registrationContractService = {
    */
   getAdditionalServices(): Promise<CommonResponse<ServiceResponse[]>> {
     return baseService.get<ServiceResponse[]>('/ctt-be/v1/additional-services');
-  },
-
-  /**
-   * 부가 서비스 목록 조회(나이 정보 추가)
-   * @path GET /additional-services/age-exclusive
-   * @param age - 고객 나이
-   * @param serviceId - 서비스 ID
-   * @returns 부가 서비스 목록
-   */
-  getAdditionalServicesWithAge(
-    age: number,
-    serviceId: string,
-  ): Promise<CommonResponse<ServiceResponseWithAge[]>> {
-    return baseService.get<ServiceResponseWithAge[]>(
-      `/ctt-be/v1/additional-services/age-exclusive?age=${age}&serviceId=${serviceId}`,
-    );
   },
 
   /**

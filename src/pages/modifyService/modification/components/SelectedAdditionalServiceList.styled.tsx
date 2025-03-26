@@ -126,19 +126,34 @@ export const PriceCell = styled(TableCell)({
   padding: '8px 16px',
 });
 
-// 상태 표시 스타일 (배지로 변경)
-// $ 접두사를 사용하여 DOM으로 전달되지 않도록 함
-export const StatusBadge = styled(Box)<{ $isCurrentService?: boolean; $isAgeRestricted?: boolean }>(
-  ({ $isCurrentService, $isAgeRestricted }) => ({
-    display: 'inline-block',
-    padding: '2px 8px',
-    borderRadius: '4px',
-    fontSize: '12px',
-    fontWeight: $isCurrentService ? 500 : 400,
-    backgroundColor: $isAgeRestricted ? '#ff5252' : $isCurrentService ? '#f0f0f0' : '#e3f2fd',
-    color: $isAgeRestricted ? '#ffffff' : $isCurrentService ? '#616161' : '#0d47a1',
-  }),
-);
+// 상태 표시 스타일 - 기본 베이스 스타일
+const BadgeBase = styled(Box)({
+  display: 'inline-block',
+  padding: '2px 8px',
+  borderRadius: '4px',
+  fontSize: '12px',
+});
+
+// 가입 상태 배지
+export const SubscribeStatusBadge = styled(BadgeBase)({
+  fontWeight: 400,
+  backgroundColor: '#e3f2fd',
+  color: '#0d47a1',
+});
+
+// 가입중 상태 배지
+export const CurrentStatusBadge = styled(BadgeBase)({
+  fontWeight: 500,
+  backgroundColor: '#f0f0f0',
+  color: '#616161',
+});
+
+// 해지필요 상태 배지
+export const RestrictedStatusBadge = styled(BadgeBase)({
+  fontWeight: 500,
+  backgroundColor: '#ff5252',
+  color: '#ffffff',
+});
 
 // 삭제 버튼 스타일
 export const DeleteButton = styled(Button)({

@@ -5,10 +5,9 @@ import {
   AdditionalService,
 } from '@model/modifyService/ModifyServiceModel';
 import { useReactQuery } from '@hooks/useReactQuery';
-import serviceModificationService from '@api/services/serviceModificationService';
+import serviceModificationService, { ServiceResponseWithExclusiveQuery } from '@api/services/serviceModificationService';
 import registrationContractService, {
   ServiceResponse,
-  ServiceResponseWithAge,
 } from '@api/services/registrationContractService';
 import { CommonResponse } from '@model/common/CommonResponse';
 import { ServiceAgeCheckResponse } from '@model/modifyService/ModifyServiceModel';
@@ -37,7 +36,7 @@ const mapServiceResponseToService = (serviceResponse: ServiceResponse): Service 
 
 // ServiceResponse를 AdditionalService로 변환하는 매핑 함수
 const mapServiceResponseToAdditionalService = (
-  serviceResponse: ServiceResponseWithAge,
+  serviceResponse: ServiceResponseWithExclusiveQuery,
 ): AdditionalService => {
   return {
     serviceId: serviceResponse.serviceId,
@@ -107,15 +106,15 @@ export const useServicesQuery = () => {
 };
 
 // 부가 서비스 목록 조회 쿼리
-export const useAdditionalServicesQuery = (
+export const useAdditionalServicesWithExclusiveQuery = (
   age: number,
   serviceId: string,
   enabled: boolean = false,
 ) => {
   return useReactQuery({
-    queryKey: ['additionalServices', age, serviceId],
-    queryFn: () => registrationContractService.getAdditionalServicesWithAge(age, serviceId),
-    select: (response: CommonResponse<ServiceResponseWithAge[]>) => {
+    queryKey: ['additionalServicesWithExclusive', age, serviceId],
+    queryFn: () => serviceModificationService.getAdditionalServicesWithExclusiveQuery(age, serviceId),
+    select: (response: CommonResponse<ServiceResponseWithExclusiveQuery[]>) => {
       if (typeof response.data === 'string') return [];
       return response.data ? response.data.map(mapServiceResponseToAdditionalService) : [];
     },

@@ -20,7 +20,9 @@ import {
   HeaderCellContent,
   ServiceName,
   PriceCell,
-  StatusBadge,
+  SubscribeStatusBadge,
+  CurrentStatusBadge,
+  RestrictedStatusBadge,
   DeleteButton,
   TotalRow,
   TotalText,
@@ -241,16 +243,13 @@ const SelectedAdditionalServiceList = ({
               sx={isCurrentService && isRestricted ? { backgroundColor: '#ffebee' } : {}}
             >
               <TableCell align='center'>
-                <StatusBadge
-                  $isCurrentService={isCurrentService}
-                  $isAgeRestricted={isCurrentService && isRestricted}
-                >
-                  {isCurrentService && isRestricted
-                    ? '해지필요'
-                    : isCurrentService
-                      ? '가입중'
-                      : '가입'}
-                </StatusBadge>
+                {isCurrentService && isRestricted ? (
+                  <RestrictedStatusBadge>해지필요</RestrictedStatusBadge>
+                ) : isCurrentService ? (
+                  <CurrentStatusBadge>가입중</CurrentStatusBadge>
+                ) : (
+                  <SubscribeStatusBadge>가입</SubscribeStatusBadge>
+                )}
               </TableCell>
               <TableCell>
                 <ServiceName>
