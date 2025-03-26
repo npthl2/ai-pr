@@ -23,23 +23,20 @@ interface ServiceModifyProps {
   contractTabId: string;
 }
 
-const ServiceModify = ({
-  setIsSaveRequested,
-  contractTabId,
-}: ServiceModifyProps) => {
+const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps) => {
   // 스토어에서 필요한 정보 가져오기
-  const modifyServiceInfo = useModifyServiceStore((state) => state.getModifyServiceInfo(contractTabId));
-  const {
-    resetAll,
-    serviceModificationMounted,
-  } = useModifyServiceStore();
+  const modifyServiceInfo = useModifyServiceStore((state) =>
+    state.getModifyServiceInfo(contractTabId),
+  );
+  const { resetAll, serviceModificationMounted } = useModifyServiceStore();
 
   // 계약 탭에 대한 정보가 없으면 기본값 제공
   const selectedService = modifyServiceInfo?.selectedService || null;
   const selectedAdditionalServices = modifyServiceInfo?.selectedAdditionalServices || [];
   const currentAdditionalServices = modifyServiceInfo?.currentAdditionalServices || [];
   const revertButtonClickedDate = modifyServiceInfo?.revertButtonClickedDate || null;
-  const removedCurrentAdditionalServices = modifyServiceInfo?.removedCurrentAdditionalServices || [];
+  const removedCurrentAdditionalServices =
+    modifyServiceInfo?.removedCurrentAdditionalServices || [];
 
   // CustomerStore에서 현재 선택된 고객 정보 가져오기
   const { customers, selectedCustomerId } = useCustomerStore();
@@ -170,7 +167,6 @@ const ServiceModify = ({
 
   // 모달 확인 핸들러
   const handleConfirmModal = () => {
-
     // 저장 요청 상태를 true로 설정하여 부모 컴포넌트에 알림
     if (setIsSaveRequested) {
       setIsSaveRequested(true);
@@ -198,12 +194,19 @@ const ServiceModify = ({
 
       {/* 2. 부가서비스 목록 영역 */}
       <Section>
-        <AdditionalServiceList additionalServices={additionalServices} _contractTabId={contractTabId} contractTabId={contractTabId} />
+        <AdditionalServiceList
+          additionalServices={additionalServices}
+          _contractTabId={contractTabId}
+          contractTabId={contractTabId}
+        />
       </Section>
 
       {/* 3. 선택된 부가서비스 영역 */}
       <Section>
-        <SelectedAdditionalServiceList additionalServices={additionalServices} contractTabId={contractTabId} />
+        <SelectedAdditionalServiceList
+          additionalServices={additionalServices}
+          contractTabId={contractTabId}
+        />
       </Section>
 
       {/* 모달 컴포넌트 */}

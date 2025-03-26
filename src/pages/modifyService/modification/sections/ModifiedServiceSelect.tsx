@@ -52,15 +52,12 @@ interface SelectServiceProps {
  */
 const SelectService = ({ contractTabId }: SelectServiceProps) => {
   // Zustand 스토어에서 필요한 함수 가져오기
-  const {
-    setSelectedService,
-    revertToPreviousService,
-    setRevertButtonClickedDate,
-  } = useModifyServiceStore();
+  const { setSelectedService, revertToPreviousService, setRevertButtonClickedDate } =
+    useModifyServiceStore();
 
   // 해당 계약 탭 ID에 대한 정보 가져오기
-  const modifyServiceInfo = useModifyServiceStore((state) => 
-    state.getModifyServiceInfo(contractTabId)
+  const modifyServiceInfo = useModifyServiceStore((state) =>
+    state.getModifyServiceInfo(contractTabId),
   );
 
   // 계약 탭에 대한 정보가 없으면 기본값 제공

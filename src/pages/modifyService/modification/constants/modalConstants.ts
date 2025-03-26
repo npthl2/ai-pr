@@ -49,7 +49,8 @@ export const ServiceModificationModalConfig: Record<ServiceModificationModalType
   [ServiceModificationModalType.MONTHLY_RESTRICTION]: {
     title: '요금제변경 불가 알림',
     showCancel: false,
-    content: () => '요금제 변경은 월 1회만 가능합니다. 현재 당월에는 변경이 불가능하니, 다음 달에 다시 시도해 주세요.',
+    content: () =>
+      '요금제 변경은 월 1회만 가능합니다. 현재 당월에는 변경이 불가능하니, 다음 달에 다시 시도해 주세요.',
   },
   [ServiceModificationModalType.AGE_RESTRICTION]: {
     title: '요금제 변경 불가 알림',

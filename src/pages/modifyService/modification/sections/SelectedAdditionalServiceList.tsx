@@ -60,14 +60,15 @@ const SelectedAdditionalServiceList = ({
   } = useModifyServiceStore();
 
   // 해당 계약 탭 ID에 대한 모든 정보 가져오기
-  const modifyServiceInfo = useModifyServiceStore((state) => 
-    state.getModifyServiceInfo(_contractTabId)
+  const modifyServiceInfo = useModifyServiceStore((state) =>
+    state.getModifyServiceInfo(_contractTabId),
   );
 
   // 계약 탭에 대한 정보가 없으면 기본값 제공
   const selectedAdditionalServices = modifyServiceInfo?.selectedAdditionalServices || [];
   const currentAdditionalServices = modifyServiceInfo?.currentAdditionalServices || [];
-  const removedCurrentAdditionalServices = modifyServiceInfo?.removedCurrentAdditionalServices || [];
+  const removedCurrentAdditionalServices =
+    modifyServiceInfo?.removedCurrentAdditionalServices || [];
 
   // 현재 사용중인 서비스 정보 가져오기
   const currentService = useCurrentServiceStore((state) => state.currentService);

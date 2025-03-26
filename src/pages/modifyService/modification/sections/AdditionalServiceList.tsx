@@ -54,7 +54,10 @@ type SortField = 'serviceName' | 'serviceValue' | null;
  * @param props._contractTabId - 계약 탭 ID (내부에서 사용)
  * @param props.contractTabId - 계약 탭 ID (PropTypes 검증용)
  */
-const AdditionalServiceList = ({ additionalServices, _contractTabId }: AdditionalServiceListProps) => {
+const AdditionalServiceList = ({
+  additionalServices,
+  _contractTabId,
+}: AdditionalServiceListProps) => {
   // 검색어 상태
   const [searchKeyword, setSearchKeyword] = useState('');
   const [debouncedSearchKeyword, setDebouncedSearchKeyword] = useState('');
@@ -65,14 +68,15 @@ const AdditionalServiceList = ({ additionalServices, _contractTabId }: Additiona
 
   // Zustand 스토어에서 필요한 함수와 데이터 가져오기
   const { addAdditionalService } = useModifyServiceStore();
-  const modifyServiceInfo = useModifyServiceStore((state) => 
-    state.getModifyServiceInfo(_contractTabId)
+  const modifyServiceInfo = useModifyServiceStore((state) =>
+    state.getModifyServiceInfo(_contractTabId),
   );
 
   // 계약 탭에 대한 정보가 없으면 기본값 제공
   const selectedAdditionalServices = modifyServiceInfo?.selectedAdditionalServices || [];
   const currentAdditionalServices = modifyServiceInfo?.currentAdditionalServices || [];
-  const removedCurrentAdditionalServices = modifyServiceInfo?.removedCurrentAdditionalServices || [];
+  const removedCurrentAdditionalServices =
+    modifyServiceInfo?.removedCurrentAdditionalServices || [];
 
   // 검색어로 필터링된 부가서비스 목록 상태
   const [filteredServices, setFilteredServices] = useState<FilteredServiceItem[]>([]);

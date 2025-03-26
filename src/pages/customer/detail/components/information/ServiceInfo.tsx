@@ -98,7 +98,7 @@ const ServiceInfo: React.FC<ServiceInfoProps> = ({ serviceInfoParam, maskingPara
     const contractTabId = selectedCustomerId; // 고객 ID를 계약 탭 ID로 사용
 
     console.log('contractTabId', contractTabId);
-    
+
     // 계약 탭 ID에 대한 스토어 정보 생성 후 초기화
     createModifyServiceInfo(contractTabId);
 
