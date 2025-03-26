@@ -63,6 +63,10 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
     }
   };
 
+  const hasServiceModificationTab = customerTabs?.tabs?.some(
+    (tab) => tab.id === TabInfo.SERVICE_MODIFICATION.id,
+  );
+
   if (!customerTabs?.tabs?.length) return null;
 
   const currentTab = customerTabs.tabs.find((tab) => tab.id === customerTabs.activeTab);
@@ -136,14 +140,16 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
               >
                 <CustomerDetailContainer />
               </Box>
-              <Box
-                sx={{
-                  display: currentTab?.id === TabInfo.SERVICE_MODIFICATION.id ? 'block' : 'none',
-                  height: '100%',
-                }}
-              >
-                <ServiceModification />
-              </Box>
+              {hasServiceModificationTab && (
+                <Box
+                  sx={{
+                    display: currentTab?.id === TabInfo.SERVICE_MODIFICATION.id ? 'block' : 'none',
+                    height: '100%',
+                  }}
+                >
+                  <ServiceModification />
+                </Box>
+              )}
             </>
           )}
         </ContentsBG>
