@@ -1,6 +1,8 @@
 import { Typography, Radio, RadioGroup, FormControlLabel, Box, Button } from '@mui/material';
 import { useState, useEffect } from 'react';
 import useRegistrationDeviceStore from '@stores/registration/RegistrationDeviceStore';
+import useRegistrationContractStore from '@stores/registration/RegistrationContractStore';
+import registrationContractService from '@api/services/registrationContractService';
 import {
   InfoRow,
   SectionTitle,
@@ -33,21 +35,50 @@ interface DevicePaymentImmediateProps {
   contractTabId: string;
 }
 
+const ENGAGEMENT_PERIOD_12_DISCOUNT_PRICE = 300000;
+const ENGAGEMENT_PERIOD_24_DISCOUNT_PRICE = 700000;
+
 const DevicePaymentImmediate = ({
   onClose,
   onDevicePayment,
   contractTabId,
 }: DevicePaymentImmediateProps) => {
-  const SALES_PRICE = 1155000;
-
   const [engagementPeriod, setEngagementPeriod] = useState('12');
   const [deviceEngagementType, setDeviceEngagementType] = useState<
     'PUBLIC_POSTED_SUPPORT' | 'SELECTED'
   >('PUBLIC_POSTED_SUPPORT');
-  const [discountPrice, setDiscountPrice] = useState(0);
+  const [discountPrice, setDiscountPrice] = useState(ENGAGEMENT_PERIOD_12_DISCOUNT_PRICE);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   const { setRegistrationDeviceInfo, getRegistrationDeviceInfo } = useRegistrationDeviceStore();
+  const { getRegistrationContractInfo } = useRegistrationContractStore();
+
+  // Get contract info to access IMEI and fetch device model
+  const contract = getRegistrationContractInfo(contractTabId);
+  const [deviceModelId, setDeviceModelId] = useState('');
+  const [deviceModelName, setDeviceModelName] = useState('');
+  const [deviceModelNameAlias, setDeviceModelNameAlias] = useState('');
+  const [deviceSalesPrice, setDeviceSalesPrice] = useState(0);
+
+  // Fetch device model when contract IMEI changes
+  useEffect(() => {
+    const fetchDeviceModel = async () => {
+      if (contract?.imei) {
+        try {
+          const deviceModel = await registrationContractService.getDeviceModelByIMEI(contract.imei);
+          setDeviceModelId(deviceModel.deviceModelId);
+          setDeviceModelName(deviceModel.deviceModelName);
+          setDeviceModelNameAlias(deviceModel.deviceModelNameAlias);
+          setDeviceSalesPrice(deviceModel.sellingPrice);
+        } catch (error) {
+          console.error('Failed to fetch device model:', error);
+        }
+      }
+    };
+
+    fetchDeviceModel();
+  }, [contract?.imei]);
 
   // Load existing device info when component mounts
   useEffect(() => {
@@ -56,14 +87,19 @@ const DevicePaymentImmediate = ({
       setEngagementPeriod(existingDeviceInfo.deviceEngagementPeriod.toString());
       setDeviceEngagementType(existingDeviceInfo.deviceEngagementType);
       setDiscountPrice(existingDeviceInfo.deviceDiscountPrice);
-      setTotalPrice(existingDeviceInfo.deviceTotalPrice);
+      // Total price will be calculated by the calculation useEffect
     }
-  }, [contractTabId, getRegistrationDeviceInfo]);
+    setDataLoaded(true);
+  }, [contractTabId]);
 
   // Calculate discount price based on engagement type and period
   useEffect(() => {
     if (deviceEngagementType === 'PUBLIC_POSTED_SUPPORT') {
-      setDiscountPrice(engagementPeriod === '12' ? 300000 : 700000);
+      setDiscountPrice(
+        engagementPeriod === '12'
+          ? ENGAGEMENT_PERIOD_12_DISCOUNT_PRICE
+          : ENGAGEMENT_PERIOD_24_DISCOUNT_PRICE,
+      );
     } else {
       setDiscountPrice(0);
     }
@@ -71,9 +107,9 @@ const DevicePaymentImmediate = ({
 
   // Calculate total price when discount changes
   useEffect(() => {
-    const newTotalPrice = SALES_PRICE - discountPrice;
+    const newTotalPrice = deviceSalesPrice - discountPrice;
     setTotalPrice(newTotalPrice);
-  }, [discountPrice]);
+  }, [discountPrice, deviceSalesPrice, dataLoaded]);
 
   const handleEngagementTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDeviceEngagementType(event.target.value as 'PUBLIC_POSTED_SUPPORT' | 'SELECTED');
@@ -81,17 +117,17 @@ const DevicePaymentImmediate = ({
 
   const handleConfirm = () => {
     setRegistrationDeviceInfo(contractTabId, {
-      deviceId: 'SM-F711NK',
-      deviceName: 'SM-F711NK',
-      deviceNameAlias: 'SM-F711NK',
+      deviceId: deviceModelId,
+      deviceName: deviceModelName,
+      deviceNameAlias: deviceModelNameAlias,
       devicePaymentType: 'immediate',
       deviceSponsorName: '통합스폰서',
       deviceEngagementType,
       deviceEngagementPeriod: Number(engagementPeriod),
       deviceEngagementName:
         deviceEngagementType === 'PUBLIC_POSTED_SUPPORT' ? '공시지원금' : '선택약정',
-      deviceSalesPrice: SALES_PRICE,
-      deviceDiscountPrice: Number(engagementPeriod) === 12 ? 300000 : 700000,
+      deviceSalesPrice: deviceSalesPrice,
+      deviceDiscountPrice: discountPrice,
       devicePrepaidPrice: 0,
       deviceInstallmentAmount: 0,
       deviceInstallmentFee: 0,
@@ -111,65 +147,80 @@ const DevicePaymentImmediate = ({
   return (
     <>
       <ContentWrapper>
-        <Box sx={{ maxWidth: '100%' }}>
+        <Box sx={{ maxWidth: '100%' }} data-testid='device-payment-modal-immediate'>
           <DeviceInfoContainer>
             <InfoRow>
-              <DeviceInfoLabel variant='body2'>단말기</DeviceInfoLabel>
-              <DeviceInfoValue variant='body2'>SM-F711NK</DeviceInfoValue>
+              <DeviceInfoLabel>단말기</DeviceInfoLabel>
+              <DeviceInfoValue data-testid='device-payment-modal-immediate-device-name'>
+                {deviceModelName}
+              </DeviceInfoValue>
             </InfoRow>
             <InfoRow>
-              <DeviceInfoLabel variant='body2'>요금제</DeviceInfoLabel>
-              <DeviceInfoValue variant='body2'>넷플릭스 초이스 스페셜</DeviceInfoValue>
+              <DeviceInfoLabel>요금제</DeviceInfoLabel>
+              <DeviceInfoValue>{contract?.service?.serviceName || ''}</DeviceInfoValue>
             </InfoRow>
           </DeviceInfoContainer>
 
-          <SectionTitle sx={{ gap: '1px' }}>단말기 스폰서 정보</SectionTitle>
-          <InfoRow sx={{ mb: 0.1 }}>
-            <SponsorTypeLabel variant='body2' sx={{ width: '120px' }}>
-              스폰서 유형
-            </SponsorTypeLabel>
-            <SponsorTypeValue variant='body2'>통합스폰서</SponsorTypeValue>
+          <SectionTitle>단말기 스폰서 정보</SectionTitle>
+          <InfoRow sx={{ mb: 0.8 }}>
+            <SponsorTypeLabel>스폰서 유형</SponsorTypeLabel>
+            <SponsorTypeValue>통합스폰서</SponsorTypeValue>
           </InfoRow>
 
           <Box sx={{ mb: 0.1, display: 'flex', alignItems: 'center' }}>
-            <RequiredFieldLabel variant='body2'>
-              <Box component='span' sx={{ color: '#272E35' }}>
+            <RequiredFieldLabel sx={{ width: '123px' }}>
+              <Box
+                component='span'
+                sx={{ color: '#272E35', display: 'inline-flex', alignItems: 'center' }}
+              >
                 약정기간
+                <RequiredMark>*</RequiredMark>
               </Box>
-              <RequiredMark sx={{ display: 'inline' }}>*</RequiredMark>
             </RequiredFieldLabel>
-            <RadioGroup
-              value={engagementPeriod}
-              onChange={(e) => setEngagementPeriod(e.target.value)}
-              row
-              sx={{ '& .MuiFormControlLabel-root': { mr: 2 } }}
-            >
-              <FormControlLabel
-                value='12'
-                control={<Radio size='small' />}
-                label={<Typography variant='body2'>12개월</Typography>}
-              />
-              <FormControlLabel
-                value='24'
-                control={<Radio size='small' />}
-                label={<Typography variant='body2'>24개월</Typography>}
-              />
-            </RadioGroup>
+            <RadioGroupContainer>
+              <RadioGroup
+                value={engagementPeriod}
+                onChange={(e) => setEngagementPeriod(e.target.value)}
+                row
+                sx={{ '& .MuiFormControlLabel-root': { mr: 2 } }}
+              >
+                <FormControlLabel
+                  value='12'
+                  control={<Radio size='small' />}
+                  label={<Typography variant='body2'>12개월</Typography>}
+                  data-testid='device-payment-modal-immediate-engagement-period-12'
+                />
+                <FormControlLabel
+                  value='24'
+                  control={<Radio size='small' />}
+                  label={<Typography variant='body2'>24개월</Typography>}
+                  data-testid='device-payment-modal-immediate-engagement-period-24'
+                />
+              </RadioGroup>
+            </RadioGroupContainer>
           </Box>
 
-          <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-            <RequiredFieldLabel variant='body2'>
-              <Box component='span' sx={{ color: '#272E35', display: 'inline' }}>
+          <Box sx={{ mb: 1, display: 'flex', alignItems: 'center', width: '470px' }}>
+            <RequiredFieldLabel sx={{ width: '123px' }}>
+              <Box
+                component='span'
+                sx={{ color: '#272E35', display: 'inline-flex', alignItems: 'center' }}
+              >
                 지원금 선택
+                <RequiredMark>*</RequiredMark>
               </Box>
-              <RequiredMark sx={{ display: 'inline' }}>*</RequiredMark>
             </RequiredFieldLabel>
             <RadioGroupContainer>
               <RadioGroup
                 value={deviceEngagementType}
                 onChange={handleEngagementTypeChange}
                 row
-                sx={{ display: 'flex', flexWrap: 'nowrap', width: '120px' }}
+                sx={{
+                  '& .MuiFormControlLabel-root': { mr: 2 },
+                  display: 'flex',
+                  flexWrap: 'nowrap',
+                  width: '100%',
+                }}
               >
                 <FormControlLabel
                   value='PUBLIC_POSTED_SUPPORT'
@@ -179,7 +230,7 @@ const DevicePaymentImmediate = ({
                       공시지원금
                     </Typography>
                   }
-                  sx={{ minWidth: 'auto', marginRight: '8px' }}
+                  data-testid='device-payment-modal-immediate-support-type-public-posted-support'
                 />
                 <FormControlLabel
                   value='SELECTED'
@@ -189,7 +240,7 @@ const DevicePaymentImmediate = ({
                       선택약정 (요금제의 25% 할인)
                     </Typography>
                   }
-                  sx={{ minWidth: 'auto' }}
+                  data-testid='device-payment-modal-immediate-support-type-selected'
                 />
               </RadioGroup>
             </RadioGroupContainer>
@@ -197,23 +248,32 @@ const DevicePaymentImmediate = ({
 
           <SectionTitle sx={{ mt: 0.25, mb: 0.25 }}>단말기 금액 정보</SectionTitle>
           <PriceInfoContainer>
-            <InfoRow sx={{ width: '390px', height: '21px' }}>
-              <PriceLabel variant='body2'>
+            <InfoRow>
+              <PriceLabel>
                 <Box component='span' sx={{ color: '#272E35', paddingLeft: '10px', gap: '16px' }}>
                   {' '}
                   단말출고가{' '}
                 </Box>
               </PriceLabel>
-              <PriceValue variant='body2'>1,155,000 원</PriceValue>
+              <PriceValue data-testid='device-payment-modal-immediate-device-sales-price'>
+                {deviceSalesPrice.toLocaleString()} 원
+              </PriceValue>
             </InfoRow>
-            <InfoRow>
-              <PriceLabel variant='body2'>- 공시지원금</PriceLabel>
-              <DiscountValue variant='body2'>{discountPrice.toLocaleString()} 원</DiscountValue>
-            </InfoRow>
+            {deviceEngagementType === 'PUBLIC_POSTED_SUPPORT' && (
+              <InfoRow>
+                <PriceLabel>- 공시지원금</PriceLabel>
+                <DiscountValue data-testid='device-payment-modal-immediate-discount-price'>
+                  {discountPrice.toLocaleString()} 원
+                </DiscountValue>
+              </InfoRow>
+            )}
             <PriceDivider />
             <InfoRow>
               <TotalPriceLabel variant='subtitle2'>총금액</TotalPriceLabel>
-              <TotalPriceValue variant='subtitle2'>
+              <TotalPriceValue
+                variant='subtitle2'
+                data-testid='device-payment-modal-immediate-total-price'
+              >
                 {totalPrice.toLocaleString()} 원
               </TotalPriceValue>
             </InfoRow>
@@ -221,10 +281,18 @@ const DevicePaymentImmediate = ({
         </Box>
       </ContentWrapper>
       <ButtonContainer>
-        <Button variant='outlined' onClick={onClose}>
+        <Button
+          variant='outlined'
+          onClick={onClose}
+          data-testid='device-payment-modal-immediate-close-button'
+        >
           취소
         </Button>
-        <Button variant='contained' onClick={handleConfirm}>
+        <Button
+          variant='contained'
+          onClick={handleConfirm}
+          data-testid='device-payment-modal-immediate-confirm-button'
+        >
           확인
         </Button>
       </ButtonContainer>
