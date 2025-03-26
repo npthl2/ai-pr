@@ -1,13 +1,13 @@
 // src/pages/modifyService/modification/ServiceModify.tsx
 import { Box, Button } from '@mui/material';
 import { useMemo, useState } from 'react';
-import SelectService from './components/ModifiedServiceSelect';
-import AdditionalServiceList from './components/AdditionalServiceList';
+import SelectService from './sections/ModifiedServiceSelect';
+import AdditionalServiceList from './sections/AdditionalServiceList';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import useCustomerStore from '@stores/CustomerStore';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import { useAdditionalServicesWithExclusiveQuery } from '@api/queries/modifyService/useModifyServiceQuery';
-import SelectedAdditionalServiceList from './components/SelectedAdditionalServiceList';
+import SelectedAdditionalServiceList from './sections/SelectedAdditionalServiceList';
 import { Container, Section, ButtonGroup, WarningMessage, InfoIcon } from './ServiceModify.styled';
 import ServiceModificationBlockModal from '../modal/ServiceModificationBlockModal';
 import { ServiceModificationModalType } from '../modal/ServiceModificationBlockModal';
