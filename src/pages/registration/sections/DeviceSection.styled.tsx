@@ -11,12 +11,14 @@ export const RightSection = styled(Box)({
   display: 'flex',
   alignItems: 'center',
   gap: 4,
+  padding: '0px',
 });
 
 export const FieldContainer = styled(Box)({
   display: 'flex',
   alignItems: 'center',
-  gap: 8,
+  gap: 4,
+  padding: '0px',
 });
 
 export const FieldLabel = styled(Typography)(() => ({
@@ -28,13 +30,29 @@ export const FieldLabel = styled(Typography)(() => ({
   fontSize: '14px',
   lineHeight: '150%',
   letterSpacing: '0px',
-  gap: 4,
+  gap: 8,
 }));
 
 export const RadioWrapper = styled('div')`
   display: flex;
   flex-direction: row;
-  gap: 4px;
+  gap: 0px;
+
+  .MuiRadio-root {
+    padding: 1px;
+    .MuiSvgIcon-root {
+      width: 15px;
+      height: 15px;
+    }
+  }
+
+  .MuiFormControlLabel-label {
+    font-family: Pretendard;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 150%;
+    letter-spacing: 0px;
+  }
 `;
 
 export const StyledSpan = styled('span')({
@@ -53,4 +71,21 @@ export const RequiredSpan = styled('span')({
   lineHeight: '150%',
   letterSpacing: '0px',
   color: '#FE2E36',
+});
+
+export const StyledButton = styled('button')({
+  width: 85,
+  height: 28,
+  borderRadius: 2,
+  borderWidth: 1,
+  background: '#FFFFFF',
+  border: '1px solid #05151F80',
+  cursor: 'pointer',
+  fontFamily: 'Pretendard',
+  fontSize: '13px',
+  lineHeight: '150%',
+  color: '#05151F',
+  '&:hover': {
+    background: '#F5F5F5',
+  },
 });

@@ -544,7 +544,6 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
                         <TextField
                           size='small'
                           placeholder='이메일주소*'
-                          // fullWidth
                           value={invoiceFormData.invoiceEmailId}
                           onChange={handleInputChange('invoiceEmailId')}
                           maxLength={200}
