@@ -54,7 +54,7 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
   // 검색어 상태
   const [searchKeyword, setSearchKeyword] = useState('');
   const [debouncedSearchKeyword, setDebouncedSearchKeyword] = useState('');
-  
+
   // 정렬 상태
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
@@ -80,21 +80,24 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
   }, [searchKeyword]);
 
   // 정렬 핸들러
-  const handleSort = useCallback((field: SortField) => {
-    if (sortField === field) {
-      // 같은 필드를 다시 클릭하면 정렬 방향 토글
-      setSortDirection(
-        sortDirection === 'asc' ? 'desc' : sortDirection === 'desc' ? null : 'asc',
-      );
-      if (sortDirection === 'desc') {
-        setSortField(null);
+  const handleSort = useCallback(
+    (field: SortField) => {
+      if (sortField === field) {
+        // 같은 필드를 다시 클릭하면 정렬 방향 토글
+        setSortDirection(
+          sortDirection === 'asc' ? 'desc' : sortDirection === 'desc' ? null : 'asc',
+        );
+        if (sortDirection === 'desc') {
+          setSortField(null);
+        }
+      } else {
+        // 다른 필드를 클릭하면 해당 필드 오름차순 정렬
+        setSortField(field);
+        setSortDirection('asc');
       }
-    } else {
-      // 다른 필드를 클릭하면 해당 필드 오름차순 정렬
-      setSortField(field);
-      setSortDirection('asc');
-    }
-  }, [sortField, sortDirection]);
+    },
+    [sortField, sortDirection],
+  );
 
   // 검색어나 부가서비스 목록이 변경될 때마다 필터링된 목록 업데이트
   useEffect(() => {
@@ -151,7 +154,7 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
               : b.serviceValue - a.serviceValue;
           }
         }
-          
+
         // 기본 정렬 (최신출시순)
         if (!a.releaseDate) return -1;
         if (!b.releaseDate) return 1;
@@ -212,10 +215,21 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
   // 정렬 아이콘 렌더링 함수
   const renderSortIcon = (field: SortField) => {
     if (sortField !== field) {
-      return <ArrowDownward sx={{ verticalAlign: 'middle', marginLeft: '4px', fontSize: '16px', opacity: 0.3 }} />;
+      return (
+        <ArrowDownward
+          sx={{ verticalAlign: 'middle', marginLeft: '4px', fontSize: '16px', opacity: 0.3 }}
+        />
+      );
     }
     return (
-      <ArrowDownward sx={{ verticalAlign: 'middle', marginLeft: '4px', fontSize: '16px', transform: sortDirection === 'desc' ? 'rotate(180deg)' : 'none' }} />
+      <ArrowDownward
+        sx={{
+          verticalAlign: 'middle',
+          marginLeft: '4px',
+          fontSize: '16px',
+          transform: sortDirection === 'desc' ? 'rotate(180deg)' : 'none',
+        }}
+      />
     );
   };
 
@@ -261,8 +275,6 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
     });
   }, [filteredServices, handleAddService, getRestrictionMessage]);
 
-
-
   return (
     <RootContainer>
       <HeaderContainer>
@@ -292,7 +304,7 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
           <TableHead>
             <TableRow variant='head'>
               <StyledTableBlankCell width='10px'></StyledTableBlankCell>
-              <StyledTableHeaderCell 
+              <StyledTableHeaderCell
                 onClick={() => handleSort('serviceName')}
                 sx={{ cursor: 'pointer' }}
               >
@@ -301,8 +313,8 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
                   {renderSortIcon('serviceName')}
                 </Typography>
               </StyledTableHeaderCell>
-              <StyledTableHeaderCell 
-                align='right' 
+              <StyledTableHeaderCell
+                align='right'
                 onClick={() => handleSort('serviceValue')}
                 sx={{ width: '150px', cursor: 'pointer' }}
               >

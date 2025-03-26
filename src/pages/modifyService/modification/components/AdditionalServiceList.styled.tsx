@@ -81,7 +81,7 @@ export const StyledTableHeaderCell = styled(TableCell)({
 
 // 테이블 빈공간 셀 스타일
 export const StyledTableBlankCell = styled(TableCell)({
-  textAlign: 'center'
+  textAlign: 'center',
 });
 
 // 추가 버튼 스타일
