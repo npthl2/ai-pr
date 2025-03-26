@@ -6,12 +6,11 @@ import AdditionalServiceList from './components/AdditionalServiceList';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import useCustomerStore from '@stores/CustomerStore';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
-import { useAdditionalServicesQuery } from '@api/queries/modifyService/useModifyServiceQuery';
+import { useAdditionalServicesWithExclusiveQuery } from '@api/queries/modifyService/useModifyServiceQuery';
 import SelectedAdditionalServiceList from './components/SelectedAdditionalServiceList';
 import { Container, Section, ButtonGroup } from './ServiceModify.styled';
 import ServiceModificationBlockModal from '../modal/ServiceModificationBlockModal';
 import { ServiceModificationModalType } from '../modal/ServiceModificationBlockModal';
-
 interface ServiceModifyProps {
   // props 정의
 }
@@ -51,7 +50,7 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
   }, [selectedService, currentService]);
 
   // 부가서비스 목록 조회 API 호출
-  const { data: additionalServices = [] } = useAdditionalServicesQuery(
+  const { data: additionalServices = [] } = useAdditionalServicesWithExclusiveQuery(
     customerAge || 0,
     currentServiceId,
     serviceModificationMounted,

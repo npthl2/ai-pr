@@ -27,17 +27,16 @@ export const LeftSectionContainer = styled(Box)({
 
 // 타이틀 텍스트 스타일
 export const TitleTypography = styled(Typography)({
-  fontWeight: 500,
+  fontWeight: 800,
   whiteSpace: 'nowrap',
-  marginRight: '16px',
-  minWidth: '120px',
+  minWidth: '100px',
+
 });
 
 // Autocomplete를 감싸는 컨테이너
 export const AutocompleteContainer = styled(Box)({
-  flex: 0.5, // 크기를 줄임
+  flex: 0.8, // 크기를 줄임
   maxWidth: '400px', // 최대 너비 설정
-  marginLeft: '8px',
   marginRight: '16px',
 });
 
@@ -51,7 +50,7 @@ export const PriceContainer = styled(Box)({
 // 가격 텍스트 스타일
 export const PriceTypography = styled(Typography)({
   whiteSpace: 'nowrap',
-  fontWeight: 500,
+  fontWeight: 800,
   minWidth: '80px',
   textAlign: 'right',
 });

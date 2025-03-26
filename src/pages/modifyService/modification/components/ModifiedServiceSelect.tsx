@@ -3,7 +3,8 @@
 // API에서 서비스 목록을 가져와 최신 출시 순으로 정렬하여 보여주고, 선택된 서비스 정보를 상위 컴포넌트로 전달합니다.
 import { Box, Typography, TextField as MuiTextField } from '@mui/material';
 import { SyntheticEvent, useEffect, useState } from 'react';
-import RestoreIcon from '@mui/icons-material/Restore';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+
 import {
   useServicesQuery,
   Service,
@@ -12,7 +13,7 @@ import {
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import useCustomerStore from '@stores/CustomerStore';
 import Autocomplete from '@components/Autocomplete';
-import Tooltip from '@components/Tooltip';
+// import Tooltip from '@components/Tooltip';
 import ServiceModificationBlockModal, {
   ServiceModificationModalType,
 } from '../../modal/ServiceModificationBlockModal';
@@ -25,7 +26,7 @@ import {
   PriceContainer,
   PriceTypography,
   RevertButton,
-  InfoIcon,
+  // InfoIcon,
   WarningContainer,
   WarningMessage,
 } from './ModifiedServiceSelect.styled';
@@ -218,7 +219,7 @@ const SelectService = () => {
     : null;
 
   // 요금제 변경 불가 시 표시할 툴팁 메시지
-  const disabledTooltipMessage = '요금제 변경은 월 1회만 가능합니다. 다음 달에 다시 시도해 주세요.';
+  // const disabledTooltipMessage = '요금제 변경은 월 1회만 가능합니다. 다음 달에 다시 시도해 주세요.';
 
   // 이전 요금제가 있고, 당일 변경되었으며, 요금제 변경이 불가능한 상태인 경우에만 되돌리기 버튼 표시
   const showRevertButton = previousService && isRollbackAvailable && !isServiceModifiable;
@@ -230,11 +231,11 @@ const SelectService = () => {
           {/* 제목 */}
           <TitleTypography variant='subtitle1'>
             변경할 요금제
-            {!isServiceModifiable && (
+            {/* {!isServiceModifiable && (
               <Tooltip title={disabledTooltipMessage} placement='right'>
                 <InfoIcon />
               </Tooltip>
-            )}
+            )} */}
           </TitleTypography>
 
           {/* Autocomplete 컴포넌트: 검색 가능한 드롭다운 선택 UI */}
@@ -254,12 +255,36 @@ const SelectService = () => {
                 return (option as ServicePlan).id === (value as ServicePlan).id;
               }}
               disabled={!isServiceModifiable}
+              slotProps={{
+                listbox: {
+                  style: { 
+                    maxHeight: '190px',
+                    scrollbarWidth: 'thin'
+                  }
+                }
+              }}
               renderOption={(props, option) => (
-                <Box component='li' {...props}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                <Box 
+                  component='li' 
+                  {...props}
+                  sx={{
+                    padding: '0 !important',
+                    '&:hover, &.Mui-focused': {
+                      backgroundColor: '#EBF0F5',
+                    }
+                  }}
+                >
+                  <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    width: '100%', 
+                    padding: '12px 16px',
+                  }}>
                     <Typography>{(option as ServicePlan).name}</Typography>
-                    <Typography sx={{ fontWeight: 'bold' }}>
-                      {(option as ServicePlan).price.toLocaleString()}원
+                    <Typography sx={{
+                      color: '#6E7782'
+                    }}>
+                      {(option as ServicePlan).price.toLocaleString()}
                     </Typography>
                   </Box>
                 </Box>
@@ -285,7 +310,7 @@ const SelectService = () => {
 
         {/* 선택한 요금제의 요금 및 되돌리기 버튼 */}
         <PriceContainer>
-          <PriceTypography>
+          <PriceTypography variant='subtitle1'>
             {selectedService ? `${selectedService.serviceValue.toLocaleString()}원` : '0원'}
           </PriceTypography>
 
@@ -294,8 +319,8 @@ const SelectService = () => {
               variant='outlined'
               color='primary'
               size='small'
-              iconComponent={<RestoreIcon />}
-              iconPosition='left'
+              // iconComponent={<RestoreIcon />}
+              // iconPosition='left'
               onClick={handleRevertToPreviousService}
             >
               이전 요금제로 되돌리기
@@ -307,6 +332,7 @@ const SelectService = () => {
       {/* 금일 요금제 변경으로 인한 안내 메시지 */}
       {isRollbackAvailable && !isServiceModifiable && (
         <WarningContainer>
+          <ErrorOutlineIcon sx={{ color: '#f44336', fontSize: '12px', marginRight: '4px' }} />
           <WarningMessage>
             금일 요금제 변경으로 인해 이전 요금제로 되돌리기만 가능합니다.
           </WarningMessage>
