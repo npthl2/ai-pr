@@ -16,7 +16,7 @@ export const StyledSuccessContent = styled(MaterialDesignContent)({
 
 export const StyledErrorContent = styled(MaterialDesignContent)({
   '&.notistack-MuiContent-error': {
-    backgroundColor: green[50],
+    backgroundColor: red[50],
     width: '340px',
     minHeight: '48px',
     borderRadius: '4px',

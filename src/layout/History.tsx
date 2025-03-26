@@ -100,25 +100,27 @@ const History = ({ registrationStatus }: HistoryProps) => {
           처리중 {registrationStatus?.pendingCount ?? 0}건
         </Typography>
       </Header>
-      {registrationStatus === null ||
-        (registrationStatus?.registrations && registrationStatus?.registrations.length === 0 && (
-          <EmptyContent>
-            <Typography color='text.secondary' data-testid='history-area-empty-content'>
-              표시할 내용이 없습니다.
-            </Typography>
-          </EmptyContent>
-        ))}
-      <ContentWrapper>
-        {registrationStatus?.registrations.map((registration, index) => (
-          <Content key={`content-${index}`}>
-            <ContentStatus key={`content-status-${index}`}>
-              {renderStatus(registration.status, index)}
-              {renderContent(registration.customerName, registration.eventType, index)}
-            </ContentStatus>
-            {renderStatusTime(registration.status, registration.statusTime, index)}
-          </Content>
-        ))}
-      </ContentWrapper>
+      <>
+        {registrationStatus === null ||
+          (registrationStatus?.registrations && registrationStatus?.registrations.length === 0 && (
+            <EmptyContent>
+              <Typography color='text.secondary' data-testid='history-area-empty-content'>
+                표시할 내용이 없습니다.
+              </Typography>
+            </EmptyContent>
+          ))}
+        <ContentWrapper>
+          {registrationStatus?.registrations.map((registration, index) => (
+            <Content key={`content-${index}`}>
+              <ContentStatus key={`content-status-${index}`}>
+                {renderStatus(registration.status, index)}
+                {renderContent(registration.customerName, registration.eventType, index)}
+              </ContentStatus>
+              {renderStatusTime(registration.status, registration.statusTime, index)}
+            </Content>
+          ))}
+        </ContentWrapper>
+      </>
     </HistoryContainer>
   );
 };

@@ -1,4 +1,5 @@
 import { Box, CircularProgress, Fab } from '@mui/material';
+import { red } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
 
 export const HistoryWrapper = styled(Box)({
@@ -70,7 +71,7 @@ export const CountLabel = styled('span')({
   right: -20,
   width: '14px',
   height: '14px',
-  backgroundColor: '#ef5350',
+  backgroundColor: red[400],
   borderRadius: '50%',
   display: 'flex',
   alignItems: 'center',
