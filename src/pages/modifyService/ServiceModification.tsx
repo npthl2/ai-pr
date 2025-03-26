@@ -28,8 +28,17 @@ import {
   useCheckServiceModifiableQuery,
   Service,
 } from '@api/queries/modifyService/useModifyServiceQuery';
+// 변경요청 컴포넌트(저장버튼 동작)
+import ModificationRequest from './ModificationRequest';
 
-const ServiceModification: React.FC = () => {
+interface NewContractProps {
+  contractTabId: string;
+}
+
+const ServiceModification = ({ contractTabId }: NewContractProps) => {
+  // 변경요청 컴포넌트(저장버튼 동작)
+  const [isSaveRequested, setIsSaveRequested] = useState(false);
+
   // 모달 상태 관리
   const [modalState, setModalState] = useState<{
     open: boolean;
@@ -122,7 +131,8 @@ const ServiceModification: React.FC = () => {
         setInitialStates(false, modifiableData.isModifiable, null);
       }
 
-      if (!modifiableData.isModifiable) {
+      // 완료 페이지 상태가 아닐 때만 모달 표시
+      if (!modifiableData.isModifiable && !isSaveRequested) {
         // 모달 표시
         setModalState({
           open: true,
@@ -139,6 +149,7 @@ const ServiceModification: React.FC = () => {
     setPreviousService,
     setInitialStates,
     isServiceModificationTabActive,
+    isSaveRequested,
   ]);
 
   /**
@@ -153,6 +164,14 @@ const ServiceModification: React.FC = () => {
     setModalState((prev) => ({ ...prev, open: false }));
   };
 
+  // 저장 완료 상태가 되면 모달 닫기
+  useEffect(() => {
+    if (isSaveRequested) {  
+      // isModifiable 값을 true로 설정하여 모달이 더 이상 표시되지 않도록 함
+      setServiceModifiable(true);
+    }
+  }, [isSaveRequested, setServiceModifiable]);
+
   // 현재 요금제 데이터
   const currentServiceDataMock = {
     name: '넷플릭스 초이스 스페셜',
@@ -165,6 +184,11 @@ const ServiceModification: React.FC = () => {
     ],
     totalPrice: 45000,
   };
+
+  // 변경요청 컴포넌트(저장버튼 동작)
+  if (isSaveRequested) {
+    return <ModificationRequest contractTabId={contractTabId} />;
+  }
 
   return (
     <Box
@@ -238,7 +262,9 @@ const ServiceModification: React.FC = () => {
             </CurrentServiceContainer>
 
             <NewServiceContainer>
-              <ServiceModify />
+              <ServiceModify 
+              // contractTabId={contractTabId}
+              setIsSaveRequested={setIsSaveRequested} />
             </NewServiceContainer>
             <ServiceModificationBlockModal
               open={modalState.open}

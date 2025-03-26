@@ -19,9 +19,15 @@ import {
 
 interface ServiceModifyProps {
   // props 정의
+  setIsSaveRequested?: (isSaveRequested: boolean) => void;
+  // contractTabId: string;
 }
 
-const ServiceModify: React.FC<ServiceModifyProps> = () => {
+
+const ServiceModify  = ({ 
+  setIsSaveRequested,
+  // contractTabId,
+}: ServiceModifyProps) => {
   // 스토어에서 필요한 정보 가져오기
   const {
     resetAll,
@@ -162,7 +168,13 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
 
   // 모달 확인 핸들러
   const handleConfirmModal = () => {
-    // TODO: 실제 저장 API 호출 및 완료 화면으로 전환
+    // setModifiable을 true로 설정하여 모달이 다시 뜨지 않도록 함
+    useModifyServiceStore.getState().setServiceModifiable(true);
+    
+    // 저장 요청 상태를 true로 설정하여 부모 컴포넌트에 알림
+    if (setIsSaveRequested) {
+      setIsSaveRequested(true);
+    }
     handleCloseModal();
   };
 
@@ -235,5 +247,6 @@ const ServiceModify: React.FC<ServiceModifyProps> = () => {
     </Container>
   );
 };
+
 
 export default ServiceModify;
