@@ -16,6 +16,7 @@ import {
   StarIconButton,
 } from './ContentsLayout.styled';
 import useCustomerStore from '../stores/CustomerStore';
+import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import Breadcrumb from '@components/Breadcrumb';
 import FavoriteIcon from '@components/FavoriteIcon';
 import { amber } from '@mui/material/colors';
@@ -38,6 +39,8 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
   const { menuItems } = useMenuStore();
   const { handleBookmarkClick } = useBookmark();
   const { handleRemoveAllRegistrationInfo } = useRegistration();
+  const { deleteSelectedContractId, deleteCustomerContracts, deleteCurrentService } =
+    useCurrentServiceStore();
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     if (customerId) {
@@ -48,10 +51,19 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
   const handleCloseTab = (event: React.MouseEvent, tabId: number) => {
     event.stopPropagation();
     if (customerId) {
-      closeCustomerTab(customerId, tabId);
-      if (customerId.includes('NEW_SUBSCRIPTION')) {
-        removeCustomer(customerId);
-        handleRemoveAllRegistrationInfo(customerId);
+      // 1. customerTabs의 목록과 tabId를 비교하여 일치하는 탭을 찾는다.
+      const tabToClose = customerTabs.tabs.find((tab) => tab.id === tabId);
+
+      if (tabToClose) {
+        // 2. 일치하는 탭을 찾으면 해당 탭을 닫는다.
+        closeCustomerTab(customerId, tabId);
+
+        // 3. 닫은 탭의 라벨이 TabInfo.SERVICE_MODIFICATION.label와 같으면 currentServiceStore의 값을 초기화 한다
+        if (tabToClose.label === TabInfo.SERVICE_MODIFICATION.label) {
+          deleteSelectedContractId(customerId);
+          deleteCustomerContracts(customerId);
+          deleteCurrentService(customerId);
+        }
       }
     }
   };

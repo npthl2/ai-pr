@@ -6,9 +6,21 @@ import useCustomerStore from '@stores/CustomerStore';
 import { useEffect, useState } from 'react';
 import ContractServiceList from './ContractServiceList';
 import { useCustomerContractQuery } from '@api/queries/contract/useCustomerContractQuery';
-import { TabInfo } from '@constants/CommonConstant';
+import { ROLE_UNMASKING, MASKING_ITEM_CODE, TabInfo } from '@constants/CommonConstant';
 import Dialog from '@components/Dialog';
 import { CustomerContract } from '@model/Contract';
+import Unmasking from '@pages/unmasking/Unmasking';
+import useMemberStore from '@stores/MemberStore';
+
+interface MaskedTarget {
+  maskingType: string;
+}
+
+interface UnmaskingData {
+  itemTypeCode: string;
+  encryptedItem: string;
+  maskingType: string;
+}
 
 const transformContractToStoreFormat = (contract: CustomerContract) => ({
   contractId: contract.contractId,
@@ -17,8 +29,10 @@ const transformContractToStoreFormat = (contract: CustomerContract) => ({
   serviceId: contract.serviceId,
   serviceName: contract.serviceName,
   serviceType: contract.serviceType,
+  phoneNumber: '',
   maskingPhoneNumber: contract.maskingPhoneNumber,
   encryptedPhoneNumber: contract.encryptedPhoneNumber,
+  imei: '',
   maskingImei: contract.maskingImei,
   encryptedImei: contract.encryptedImei,
 });
@@ -27,8 +41,14 @@ const LineInformation = () => {
   const [isServiceListOpen, setIsServiceListOpen] = useState(false);
   const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
   const [showNoContractDialog, setShowNoContractDialog] = useState(false);
+  const [isUnmaskPopupOpen, setIsUnmaskPopupOpen] = useState(false);
+  const [unmaskingData, setUnmaskingData] = useState<UnmaskingData | null>(null);
 
-  const { setCustomerContracts, setSelectedContractId } = useCurrentServiceStore();
+  const memberInfo = useMemberStore((state) => state.memberInfo);
+  const isUnmaskable = memberInfo?.authorities.includes(ROLE_UNMASKING);
+
+  const { setCustomerContract, setCustomerContracts, setSelectedContractId } =
+    useCurrentServiceStore();
   const customerContract = useCurrentServiceStore(
     (state) =>
       state.customerContracts[selectedCustomerId]?.find(
@@ -51,12 +71,6 @@ const LineInformation = () => {
     enabled: isServiceModificationTabActive && !!selectedCustomerId,
   });
 
-  const handleCloseDialog = () => {
-    setShowNoContractDialog(false);
-    // Dialog가 닫힐 때 focus를 body로 이동
-    document.body.focus();
-  };
-
   useEffect(() => {
     if (!customerContractdata || !isServiceModificationTabActive) return;
 
@@ -74,6 +88,31 @@ const LineInformation = () => {
       setShowNoContractDialog(true);
     }
   }, [customerContractdata]);
+
+  const handleContextMenu = (event: React.MouseEvent, data: UnmaskingData) => {
+    event.preventDefault();
+    if (isUnmaskable) {
+      setUnmaskingData(data);
+      setIsUnmaskPopupOpen(true);
+    }
+  };
+
+  const handleCloseDialog = () => {
+    setShowNoContractDialog(false);
+    // Dialog가 닫힐 때 focus를 body로 이동
+    document.body.focus();
+  };
+
+  const updateMaskingValue = (unmaskedItem: string, param: MaskedTarget) => {
+    if (customerContract) {
+      setCustomerContract(selectedCustomerId, {
+        ...customerContract,
+        phoneNumber:
+          param.maskingType === 'phoneNumber' ? unmaskedItem : customerContract.phoneNumber,
+        imei: param.maskingType === 'imei' ? unmaskedItem : customerContract.imei,
+      });
+    }
+  };
 
   return (
     <>
@@ -107,7 +146,22 @@ const LineInformation = () => {
         <Box display='flex' alignItems='center' sx={{ minWidth: '200px', flexGrow: 0 }}>
           <ServiceLabel sx={{ mr: 1 }}>전화번호</ServiceLabel>
           {customerContract?.maskingPhoneNumber && (
-            <Typography>{customerContract?.maskingPhoneNumber}</Typography>
+            <div
+              onContextMenu={(e) =>
+                handleContextMenu(e, {
+                  itemTypeCode: MASKING_ITEM_CODE.CUSTOMER_PHONENUMBER,
+                  encryptedItem: customerContract.encryptedPhoneNumber,
+                  maskingType: 'phoneNumber',
+                })
+              }
+              style={{ cursor: isUnmaskable ? 'pointer' : 'default' }}
+            >
+              <Typography>
+                {customerContract?.phoneNumber
+                  ? customerContract?.phoneNumber
+                  : customerContract?.maskingPhoneNumber}
+              </Typography>
+            </div>
           )}
           <Button
             size='small'
@@ -128,10 +182,37 @@ const LineInformation = () => {
         <Box display='flex' alignItems='center' sx={{ minWidth: '160px', flexGrow: 0 }}>
           <ServiceLabel sx={{ mr: 1 }}>기기정보</ServiceLabel>
           {customerContract?.maskingImei && (
-            <ServiceValue>{customerContract?.maskingImei}</ServiceValue>
+            <div
+              onContextMenu={(e) =>
+                handleContextMenu(e, {
+                  itemTypeCode: MASKING_ITEM_CODE.CUSTOMER_PASSPORTNUMBER,
+                  encryptedItem: customerContract.encryptedImei,
+                  maskingType: 'imei',
+                })
+              }
+              style={{ cursor: isUnmaskable ? 'pointer' : 'default' }}
+            >
+              <ServiceValue>
+                {customerContract?.imei ? customerContract?.imei : customerContract?.maskingImei}
+              </ServiceValue>
+            </div>
           )}
           {customerContract?.maskingImei && <ServiceValue sx={{ ml: 1, mr: 1 }}>/</ServiceValue>}
-          {customerContract?.maskingImei && <ServiceValue>고객정보보호</ServiceValue>}
+
+          {customerContract?.maskingImei && (
+            <div
+              onContextMenu={(e) =>
+                handleContextMenu(e, {
+                  itemTypeCode: MASKING_ITEM_CODE.CUSTOMER_PASSPORTNUMBER,
+                  encryptedItem: customerContract.encryptedImei,
+                  maskingType: 'imei',
+                })
+              }
+              style={{ cursor: isUnmaskable ? 'pointer' : 'default' }}
+            >
+              <ServiceValue>고객정보보호</ServiceValue>
+            </div>
+          )}
         </Box>
       </LineInfoDetailsContainer>
 
@@ -140,6 +221,24 @@ const LineInformation = () => {
         onClose={() => setIsServiceListOpen(false)}
         contracts={customerContractdata?.contracts || []}
       />
+
+      {isUnmaskPopupOpen && customerContract && unmaskingData && (
+        <Unmasking
+          onClose={() => {
+            setIsUnmaskPopupOpen(false);
+            setUnmaskingData(null);
+          }}
+          onUnmask={updateMaskingValue}
+          requestData={{
+            itemTypeCode: unmaskingData.itemTypeCode,
+            encryptedItem: unmaskingData.encryptedItem,
+            param: {
+              maskingType: unmaskingData.maskingType,
+            },
+          }}
+          data-testid='service-search-unmasking-popup'
+        />
+      )}
     </>
   );
 };

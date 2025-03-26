@@ -16,8 +16,10 @@ interface CustomerContract {
   serviceId: string;
   serviceName: string;
   serviceType: string;
+  phoneNumber: string;
   maskingPhoneNumber: string;
   encryptedPhoneNumber: string;
+  imei: string;
   maskingImei: string;
   encryptedImei: string;
 }
@@ -42,6 +44,7 @@ interface ServiceState {
   getCurrentService: (customerId: string) => Service | null;
   deleteCurrentService: (customerId: string) => void;
   deleteAllServices: () => void;
+  setCustomerContract: (customerId: string, contract: CustomerContract) => void;
   setCustomerContracts: (customerId: string, contracts: CustomerContract[]) => void;
   getCustomerContracts: (customerId: string) => CustomerContract[];
   deleteCustomerContracts: (customerId: string) => void;
@@ -49,6 +52,8 @@ interface ServiceState {
   setSelectedContractId: (customerId: string, contractId: string) => void;
   getSelectedContractId: (customerId: string) => string;
   getSelectedCustomerContract: (customerId: string) => CustomerContract | null;
+  deleteSelectedContractId: (customerId: string) => void;
+  deleteCustomerData: (customerId: string) => void;
 }
 
 const useCurrentServiceStore = create<ServiceState>((set, get) => ({
@@ -98,6 +103,37 @@ const useCurrentServiceStore = create<ServiceState>((set, get) => ({
     const selectedId = get().selectedContractIds[customerId];
     return contracts.find((contract) => contract.contractId === selectedId) || null;
   },
+  setCustomerContract: (customerId: string, contract: CustomerContract) =>
+    set((state) => ({
+      customerContracts: {
+        ...state.customerContracts,
+        [customerId]: state.customerContracts[customerId].map((c) =>
+          c.contractId === contract.contractId ? contract : c,
+        ),
+      },
+    })),
+  deleteCustomerData: (customerId: string) =>
+    set((state) => {
+      const newServices = { ...state.service };
+      const newContracts = { ...state.customerContracts };
+      const newSelectedIds = { ...state.selectedContractIds };
+
+      delete newServices[customerId];
+      delete newContracts[customerId];
+      delete newSelectedIds[customerId];
+
+      return {
+        service: newServices,
+        customerContracts: newContracts,
+        selectedContractIds: newSelectedIds,
+      };
+    }),
+  deleteSelectedContractId: (customerId: string) =>
+    set((state) => {
+      const newSelectedIds = { ...state.selectedContractIds };
+      delete newSelectedIds[customerId];
+      return { selectedContractIds: newSelectedIds };
+    }),
 }));
 
 if (import.meta.env.DEV) {
