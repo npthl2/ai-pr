@@ -22,15 +22,39 @@ import {
   ButtonContainer,
 } from './ContractServiceList.styled';
 import { CustomerContract } from '@model/Contract';
+import useCurrentServiceStore from '@stores/CurrentServiceStore';
+import useCustomerStore from '@stores/CustomerStore';
+import { useState, useEffect } from 'react';
 
 interface ContractServiceListProps {
   open: boolean;
   onClose: () => void;
-  onSelect: (service: CustomerContract) => void;
   contracts: CustomerContract[];
 }
 
-const ContractServiceList = ({ open, onClose, onSelect, contracts }: ContractServiceListProps) => {
+const ContractServiceList = ({ open, onClose, contracts }: ContractServiceListProps) => {
+  const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
+  const selectedContractId = useCurrentServiceStore(
+    (state) => state.selectedContractIds[selectedCustomerId],
+  );
+  const { setSelectedContractId } = useCurrentServiceStore();
+  const [tempSelectedContractId, setTempSelectedContractId] = useState<string>('');
+
+  useEffect(() => {
+    if (open) {
+      setTempSelectedContractId(
+        selectedContractId || (contracts.length > 0 ? contracts[0].contractId : ''),
+      );
+    }
+  }, [open, selectedContractId, contracts]);
+
+  const handleSelect = () => {
+    if (tempSelectedContractId) {
+      setSelectedContractId(selectedCustomerId, tempSelectedContractId);
+      onClose();
+    }
+  };
+
   return (
     <Modal
       open={open}
@@ -83,7 +107,11 @@ const ContractServiceList = ({ open, onClose, onSelect, contracts }: ContractSer
                 {contracts.map((contract) => (
                   <TableRow key={contract.contractId}>
                     <TableCell>
-                      <Radio size='small' checked={true} onChange={() => onSelect(contract)} />
+                      <Radio
+                        size='small'
+                        checked={contract.contractId === tempSelectedContractId}
+                        onChange={() => setTempSelectedContractId(contract.contractId)}
+                      />
                     </TableCell>
                     <TableCell>{contract.maskingPhoneNumber}</TableCell>
                     <TableCell>{contract.serviceName}</TableCell>
@@ -101,7 +129,7 @@ const ContractServiceList = ({ open, onClose, onSelect, contracts }: ContractSer
           <Button
             variant='contained'
             size='small'
-            onClick={onClose}
+            onClick={handleSelect}
             iconPosition='left'
             iconComponent={<CheckIcon />}
           >

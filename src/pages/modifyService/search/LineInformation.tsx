@@ -69,6 +69,7 @@ const LineInformation = () => {
     } else if (contracts.length > 1) {
       const transformedContracts = contracts.map(transformContractToStoreFormat);
       setCustomerContracts(selectedCustomerId, transformedContracts);
+      setIsServiceListOpen(true);
     } else if (contracts.length === 0) {
       setShowNoContractDialog(true);
     }
@@ -137,9 +138,6 @@ const LineInformation = () => {
       <ContractServiceList
         open={isServiceListOpen}
         onClose={() => setIsServiceListOpen(false)}
-        onSelect={(_selectedContract) => {
-          setIsServiceListOpen(false);
-        }}
         contracts={customerContractdata?.contracts || []}
       />
     </>
