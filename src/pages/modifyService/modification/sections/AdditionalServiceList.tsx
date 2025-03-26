@@ -35,6 +35,8 @@ interface FilteredServiceItem extends AdditionalService {
 // 컴포넌트 props 타입 정의
 interface AdditionalServiceListProps {
   additionalServices: AdditionalService[];
+  _contractTabId: string;
+  contractTabId: string;
 }
 
 // 정렬 방향 타입 정의
@@ -49,8 +51,10 @@ type SortField = 'serviceName' | 'serviceValue' | null;
  *
  * @param props - 컴포넌트 props
  * @param props.additionalServices - 부가서비스 목록 배열
+ * @param props._contractTabId - 계약 탭 ID (내부에서 사용)
+ * @param props.contractTabId - 계약 탭 ID (PropTypes 검증용)
  */
-const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProps) => {
+const AdditionalServiceList = ({ additionalServices, _contractTabId }: AdditionalServiceListProps) => {
   // 검색어 상태
   const [searchKeyword, setSearchKeyword] = useState('');
   const [debouncedSearchKeyword, setDebouncedSearchKeyword] = useState('');
@@ -59,13 +63,16 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
 
-  // Zustand 스토어에서 부가서비스 관련 상태와 액션 가져오기
-  const {
-    selectedAdditionalServices,
-    currentAdditionalServices,
-    removedCurrentAdditionalServices,
-    addAdditionalService,
-  } = useModifyServiceStore();
+  // Zustand 스토어에서 필요한 함수와 데이터 가져오기
+  const { addAdditionalService } = useModifyServiceStore();
+  const modifyServiceInfo = useModifyServiceStore((state) => 
+    state.getModifyServiceInfo(_contractTabId)
+  );
+
+  // 계약 탭에 대한 정보가 없으면 기본값 제공
+  const selectedAdditionalServices = modifyServiceInfo?.selectedAdditionalServices || [];
+  const currentAdditionalServices = modifyServiceInfo?.currentAdditionalServices || [];
+  const removedCurrentAdditionalServices = modifyServiceInfo?.removedCurrentAdditionalServices || [];
 
   // 검색어로 필터링된 부가서비스 목록 상태
   const [filteredServices, setFilteredServices] = useState<FilteredServiceItem[]>([]);
@@ -191,9 +198,9 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
         // 나이 제한으로 추가할 수 없는 경우 처리
         return;
       }
-      addAdditionalService(service);
+      addAdditionalService(_contractTabId, service);
     },
-    [addAdditionalService],
+    [addAdditionalService, _contractTabId],
   );
 
   // 검색어 변경 핸들러
@@ -360,6 +367,7 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
 // PropTypes 정의
 AdditionalServiceList.propTypes = {
   additionalServices: PropTypes.array.isRequired,
+  contractTabId: PropTypes.string.isRequired,
 };
 
 export default AdditionalServiceList;

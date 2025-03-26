@@ -42,21 +42,32 @@ export interface ServicePlan {
   releaseDate: string; // 출시일 (최신출시순 정렬을 위한 필드)
 }
 
+interface SelectServiceProps {
+  contractTabId: string;
+}
+
 /**
  * 서비스 선택 컴포넌트
  * 요금제 목록을 조회하고 사용자가 선택한 요금제를 Zustand 스토어에 저장합니다.
  */
-const SelectService = () => {
-  // Zustand 스토어에서 서비스 선택 관련 상태와 액션 가져오기
+const SelectService = ({ contractTabId }: SelectServiceProps) => {
+  // Zustand 스토어에서 필요한 함수 가져오기
   const {
-    selectedService,
     setSelectedService,
-    isServiceModifiable,
-    previousService,
-    isRollbackAvailable,
     revertToPreviousService,
     setRevertButtonClickedDate,
   } = useModifyServiceStore();
+
+  // 해당 계약 탭 ID에 대한 정보 가져오기
+  const modifyServiceInfo = useModifyServiceStore((state) => 
+    state.getModifyServiceInfo(contractTabId)
+  );
+
+  // 계약 탭에 대한 정보가 없으면 기본값 제공
+  const selectedService = modifyServiceInfo?.selectedService || null;
+  const isServiceModifiable = modifyServiceInfo?.isServiceModifiable || false;
+  const previousService = modifyServiceInfo?.previousService || null;
+  const isRollbackAvailable = modifyServiceInfo?.isRollbackAvailable || false;
 
   // 고객 정보
   const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId);
@@ -129,7 +140,7 @@ const SelectService = () => {
   const handleConfirmChange = () => {
     // 요금제 변경 로직 처리
     if (tempSelectedService) {
-      setSelectedService(tempSelectedService);
+      setSelectedService(contractTabId, tempSelectedService);
     }
 
     // 모달 닫기
@@ -171,15 +182,15 @@ const SelectService = () => {
       }
     } else {
       // 선택되지 않은 경우 또는 지원하지 않는 값 형식인 경우
-      setSelectedService(null);
+      setSelectedService(contractTabId, null);
     }
   };
 
   // 이전 요금제로 되돌리기 핸들러
   const handleRevertToPreviousService = () => {
-    revertToPreviousService();
+    revertToPreviousService(contractTabId);
     // 되돌리기 버튼 클릭 시점의 날짜 저장
-    setRevertButtonClickedDate(new Date().toISOString());
+    setRevertButtonClickedDate(contractTabId, new Date().toISOString());
   };
 
   // 나이 제한 확인 결과 처리
@@ -193,7 +204,7 @@ const SelectService = () => {
         if (data.isAvailable) {
           if (tempSelectedService === previousService) {
             // 이전 요금제로 되돌리기인 경우 바로 적용
-            revertToPreviousService();
+            revertToPreviousService(contractTabId);
           } else {
             // 일반 요금제 변경인 경우 확인 모달 표시
             openConfirmModal(tempSelectedService.serviceName);
@@ -341,6 +352,7 @@ const SelectService = () => {
         serviceName={modalState.serviceName}
         onClose={closeModal}
         onConfirm={handleConfirmChange}
+        contractTabId={contractTabId}
       />
     </RootContainer>
   );

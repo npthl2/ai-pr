@@ -31,15 +31,19 @@ type SortDirection = 'asc' | 'desc' | null;
 // 정렬 필드 타입
 type SortField = 'serviceName' | 'serviceValue' | 'serviceStatus' | null;
 
+interface SelectedAdditionalServiceListProps {
+  additionalServices: AdditionalService[];
+  contractTabId: string;
+}
+
 /**
  * 선택된 부가서비스 목록 컴포넌트
  * 사용자가 선택한 부가서비스 목록을 보여주고 삭제 기능을 제공합니다.
  */
 const SelectedAdditionalServiceList = ({
   additionalServices,
-}: {
-  additionalServices: AdditionalService[];
-}) => {
+  contractTabId: _contractTabId,
+}: SelectedAdditionalServiceListProps) => {
   // 정렬 상태 관리
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
@@ -47,16 +51,23 @@ const SelectedAdditionalServiceList = ({
   // 전체 서비스 목록 상태
   const [allServices, setAllServices] = useState<AdditionalService[]>([]);
 
-  // Zustand 스토어에서 선택된 부가서비스 목록과 삭제 액션 가져오기
+  // 스토어에서 필요한 함수 가져오기
   const {
-    selectedAdditionalServices,
     removeAdditionalService,
-    currentAdditionalServices,
-    removedCurrentAdditionalServices,
     removeCurrentAdditionalService,
     setCurrentAdditionalServices,
     setHasRestrictedServices,
   } = useModifyServiceStore();
+
+  // 해당 계약 탭 ID에 대한 모든 정보 가져오기
+  const modifyServiceInfo = useModifyServiceStore((state) => 
+    state.getModifyServiceInfo(_contractTabId)
+  );
+
+  // 계약 탭에 대한 정보가 없으면 기본값 제공
+  const selectedAdditionalServices = modifyServiceInfo?.selectedAdditionalServices || [];
+  const currentAdditionalServices = modifyServiceInfo?.currentAdditionalServices || [];
+  const removedCurrentAdditionalServices = modifyServiceInfo?.removedCurrentAdditionalServices || [];
 
   // 현재 사용중인 서비스 정보 가져오기
   const currentService = useCurrentServiceStore((state) => state.currentService);
@@ -74,8 +85,8 @@ const SelectedAdditionalServiceList = ({
 
   // 나이 제한 상태가 변경될 때마다 스토어 업데이트
   useEffect(() => {
-    setHasRestrictedServices(hasRestrictedServices);
-  }, [hasRestrictedServices, setHasRestrictedServices]);
+    setHasRestrictedServices(_contractTabId, hasRestrictedServices);
+  }, [hasRestrictedServices, setHasRestrictedServices, _contractTabId]);
 
   // CurrentServiceStore의 AdditionalService 배열을 ModifyServiceStore에서 사용하는 AdditionalService 배열로 변환
   const mapToModifyAdditionalServices = (services: AdditionalService[]): AdditionalService[] => {
@@ -96,7 +107,7 @@ const SelectedAdditionalServiceList = ({
         const modifyAdditionalServices = mapToModifyAdditionalServices(
           currentService.additionalService,
         );
-        setCurrentAdditionalServices(modifyAdditionalServices);
+        setCurrentAdditionalServices(_contractTabId, modifyAdditionalServices);
       }
     }
   }, [
@@ -104,6 +115,7 @@ const SelectedAdditionalServiceList = ({
     currentAdditionalServices.length,
     removedCurrentAdditionalServices.length,
     setCurrentAdditionalServices,
+    _contractTabId,
   ]);
 
   // 정렬 핸들러
@@ -194,13 +206,13 @@ const SelectedAdditionalServiceList = ({
     (service: AdditionalService, isCurrentService: boolean) => {
       if (isCurrentService) {
         // 현재 가입중인 서비스 삭제
-        removeCurrentAdditionalService(service);
+        removeCurrentAdditionalService(_contractTabId, service);
       } else {
         // 새로 추가한 서비스 삭제
-        removeAdditionalService(service.serviceId);
+        removeAdditionalService(_contractTabId, service.serviceId);
       }
     },
-    [removeAdditionalService, removeCurrentAdditionalService],
+    [removeAdditionalService, removeCurrentAdditionalService, _contractTabId],
   );
 
   // 부가서비스 총 요금 계산 (요금제 + 부가서비스)

@@ -55,6 +55,7 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
     setPreviousService,
     setServiceModificationMounted,
     setInitialStates,
+    createModifyServiceInfo,
   } = useModifyServiceStore();
 
   // 고객 스토어에서 필요한 정보 가져오기
@@ -66,10 +67,12 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
   // 컴포넌트 마운트 시 상태 업데이트
   useEffect(() => {
     setServiceModificationMounted(true);
+    // 계약 탭 ID에 대한 스토어 정보 생성
+    createModifyServiceInfo(contractTabId);
     return () => {
       setServiceModificationMounted(false);
     };
-  }, [setServiceModificationMounted]);
+  }, [setServiceModificationMounted, createModifyServiceInfo, contractTabId]);
 
   // 현재 선택된 고객의 계약 ID 가져오기
   const selectedCustomer = customers.find((c) => c.id === selectedCustomerId);
@@ -105,30 +108,36 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
    */
   useEffect(() => {
     if (!isLoading && contractId && modifiableData && isServiceModificationTabActive) {
-      setServiceModifiable(modifiableData.isModifiable);
-      setIsRollbackAvailable(modifiableData.isRollbackAvailable || false);
+      setServiceModifiable(contractTabId, modifiableData.isModifiable);
+      setIsRollbackAvailable(contractTabId, modifiableData.isRollbackAvailable || false);
 
       // 백엔드에서 전달 받은 이전 서비스 정보가 있는 경우 저장
       if (modifiableData.isRollbackAvailable && modifiableData.previousService) {
-        // previousService 정보를 Service 타입으로 변환하여 저장
+        // 백엔드에서 받은 정보를 Service 타입으로 변환
         const prevService: Service = {
           serviceId: modifiableData.previousService.serviceId,
-          serviceName: modifiableData.previousService.serviceName,
-          serviceValue: Number(modifiableData.previousService.serviceValue),
-          serviceValueType: modifiableData.previousService.serviceValueType,
+          serviceName: modifiableData.previousService.serviceName || '이전 요금제',
+          serviceValue: modifiableData.previousService.serviceValue || 0,
+          serviceValueType: modifiableData.previousService.serviceValueType || '원정액',
           releaseDate: '', // 기본값 설정 (API에서 제공하지 않는 값이므로)
         };
-        setPreviousService(prevService);
+        setPreviousService(contractTabId, prevService);
         // 초기 상태 저장
         setInitialStates(
+          contractTabId,
           modifiableData.isRollbackAvailable || false,
           modifiableData.isModifiable,
           prevService,
         );
       } else {
-        setPreviousService(null);
+        setPreviousService(contractTabId, null);
         // 초기 상태 저장
-        setInitialStates(false, modifiableData.isModifiable, null);
+        setInitialStates(
+          contractTabId,
+          modifiableData.isRollbackAvailable || false,
+          modifiableData.isModifiable,
+          null,
+        );
       }
 
       // 완료 페이지 상태가 아닐 때만 모달 표시
@@ -150,6 +159,7 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
     setInitialStates,
     isServiceModificationTabActive,
     isSaveRequested,
+    contractTabId,
   ]);
 
   /**
@@ -168,9 +178,9 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
   useEffect(() => {
     if (isSaveRequested) {
       // isModifiable 값을 true로 설정하여 모달이 더 이상 표시되지 않도록 함
-      setServiceModifiable(true);
+      setServiceModifiable(contractTabId, true);
     }
-  }, [isSaveRequested, setServiceModifiable]);
+  }, [isSaveRequested, setServiceModifiable, contractTabId]);
 
   // 현재 요금제 데이터
   const currentServiceDataMock = {
@@ -263,7 +273,7 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
 
             <NewServiceContainer>
               <ServiceModify
-                // contractTabId={contractTabId}
+                contractTabId={contractTabId}
                 setIsSaveRequested={setIsSaveRequested}
               />
             </NewServiceContainer>
@@ -271,6 +281,7 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
               open={modalState.open}
               type={modalState.type}
               onClose={handleCloseModal}
+              contractTabId={contractTabId}
             />
           </ServicesContainer>
         </ContentContainer>

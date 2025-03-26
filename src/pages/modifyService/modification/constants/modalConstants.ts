@@ -19,7 +19,7 @@ interface ModalConfig {
 
 export const ServiceModificationModalConfig: Record<ServiceModificationModalType, ModalConfig> = {
   [ServiceModificationModalType.CONFIRM_CHANGE]: {
-    title: '상품 변경 확인',
+    title: '요금제 변경',
     showCancel: true,
     content: (props) =>
       `[${props.serviceName}]요금제, 부가서비스 ${props.additionalServicesCount}개로 변경하시겠습니까?`,
@@ -47,19 +47,19 @@ export const ServiceModificationModalConfig: Record<ServiceModificationModalType
       '이전 요금제로 되돌릴 수 없습니다. 요금제를 다시 선택한 후 저장해 주시기 바랍니다.',
   },
   [ServiceModificationModalType.MONTHLY_RESTRICTION]: {
-    title: '월 1회 제한으로 인한 불가 알림',
+    title: '요금제변경 불가 알림',
     showCancel: false,
-    content: () => '상품 변경이 불가능합니다. 월 1회 제한으로 인한 불가입니다.',
+    content: () => '요금제 변경은 월 1회만 가능합니다. 현재 당월에는 변경이 불가능하니, 다음 달에 다시 시도해 주세요.',
   },
   [ServiceModificationModalType.AGE_RESTRICTION]: {
-    title: '나이 제한으로 인한 불가 알림',
+    title: '요금제 변경 불가 알림',
     showCancel: false,
-    content: () => '상품 변경이 불가능합니다. 나이 제한으로 인한 불가입니다.',
+    content: () => '해당 요금제는 연령 제한으로 가입이용 불가능 합니다.',
   },
   [ServiceModificationModalType.SERVICE_CHANGE]: {
-    title: '상품 변경 확인',
+    title: '요금제 변경',
     showCancel: true,
-    content: (props) => `[${props.serviceName}] 요금제로 변경하시겠습니까?`,
+    content: (props) => `[${props.serviceName}]로 요금제 변경 처리하시겠습니까?`,
   },
 } as const;
 

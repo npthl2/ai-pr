@@ -85,7 +85,7 @@ const ServiceInfo: React.FC<ServiceInfoProps> = ({ serviceInfoParam, maskingPara
   const { selectedCustomerId, customerTabs, setCustomerTabs, setActiveTab } = useCustomerStore();
 
   // ModifyServiceStore에서 필요한 함수들 가져오기
-  const { resetAll } = useModifyServiceStore();
+  const { resetAll, createModifyServiceInfo } = useModifyServiceStore();
 
   const handleServiceChange = () => {
     const targetMenu = SUBSCRIPTION_MENUS.find((menu) => menu.id === 'SERVICE_MODIFICATION');
@@ -95,7 +95,14 @@ const ServiceInfo: React.FC<ServiceInfoProps> = ({ serviceInfoParam, maskingPara
     if (!currentTabs) return;
 
     // 모든 상태 초기화 - ServiceModification 컴포넌트가 처음부터 시작하도록
-    resetAll();
+    const contractTabId = selectedCustomerId; // 고객 ID를 계약 탭 ID로 사용
+
+    console.log('contractTabId', contractTabId);
+    
+    // 계약 탭 ID에 대한 스토어 정보 생성 후 초기화
+    createModifyServiceInfo(contractTabId);
+
+    resetAll(contractTabId);
 
     const existingTab = currentTabs.find((tab) => tab.label === targetMenu.name);
     if (existingTab) {
