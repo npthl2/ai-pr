@@ -101,7 +101,7 @@ export const serviceTextFieldStyle = {
     '&.Mui-disabled': {
       backgroundColor: '#E5E8EB',
     },
-  }
+  },
 };
 
 // 비활성화된 서비스 TextField 스타일 객체
@@ -111,5 +111,5 @@ export const disabledTextFieldStyle = {
     '&.Mui-disabled': {
       backgroundColor: '#E5E8EB',
     },
-  }
+  },
 };

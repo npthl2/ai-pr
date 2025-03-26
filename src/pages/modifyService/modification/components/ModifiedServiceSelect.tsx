@@ -31,7 +31,7 @@ import {
   ErrorIcon,
   ServicePrice,
   serviceTextFieldStyle,
-  disabledTextFieldStyle
+  disabledTextFieldStyle,
 } from './ModifiedServiceSelect.styled';
 
 // 타입 정의: 서비스 플랜(요금제) 데이터 구조
@@ -286,9 +286,7 @@ const SelectService = () => {
                     }}
                   >
                     <Typography>{(option as ServicePlan).name}</Typography>
-                    <ServicePrice>
-                      {(option as ServicePlan).price.toLocaleString()}
-                    </ServicePrice>
+                    <ServicePrice>{(option as ServicePlan).price.toLocaleString()}</ServicePrice>
                   </Box>
                 </Box>
               )}
