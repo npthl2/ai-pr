@@ -38,24 +38,24 @@ export const ServiceModificationModalConfig: Record<ServiceModificationModalType
     title: '상품 변경 불가 알림',
     showCancel: false,
     content: () =>
-      '상품 변경이 불가능합니다. 해지 필요한 부가서비스를 삭제한 후 다시 시도해 주세요.',
+      '상품 변경이 불가능합니다. \n해지 필요한 부가서비스를 삭제한 후 다시 시도해 주세요.',
   },
   [ServiceModificationModalType.ROLLBACK_EXPIRED]: {
     title: '이전 요금제로 되돌리기 불가 알림',
     showCancel: false,
     content: () =>
-      '이전 요금제로 되돌릴 수 없습니다. 요금제를 다시 선택한 후 저장해 주시기 바랍니다.',
+      '이전 요금제로 되돌릴 수 없습니다. \n요금제를 다시 선택한 후 저장해 주시기 바랍니다.',
   },
   [ServiceModificationModalType.MONTHLY_RESTRICTION]: {
     title: '요금제변경 불가 알림',
     showCancel: false,
     content: () =>
-      '요금제 변경은 월 1회만 가능합니다. 현재 당월에는 변경이 불가능하니, 다음 달에 다시 시도해 주세요.',
+      '요금제 변경은 월 1회만 가능합니다. \n현재 당월에는 변경이 불가능하니, 다음 달에 다시 시도해 주세요.',
   },
   [ServiceModificationModalType.AGE_RESTRICTION]: {
     title: '요금제 변경 불가 알림',
     showCancel: false,
-    content: () => '해당 요금제는 연령 제한으로 가입이용 불가능 합니다.',
+    content: () => '해당 요금제는 연령 제한으로 가입이용 불가능 합니다. \n다른 요금제를 선택해주세요.',
   },
   [ServiceModificationModalType.SERVICE_CHANGE]: {
     title: '요금제 변경',

@@ -82,3 +82,38 @@ export interface ServiceAgeCheckRequest {
 export interface ServiceAgeCheckResponse {
   isAvailable: boolean;
 }
+
+/**
+ * 요금제/부가서비스 변경 요청에 사용되는 서비스 정보
+ * 
+ * @property serviceId - 서비스 ID
+ */
+export interface ServiceRequest {
+  serviceId: string;
+}
+
+/**
+ * 요금제/부가서비스 변경 요청 인터페이스
+ * 
+ * @property gTrId - 글로벌 트랜잭션 ID
+ * @property customerId - 고객 ID
+ * @property contractId - 계약 ID
+ * @property service - 변경할 요금제 정보
+ * @property additionalServices - 부가서비스 목록
+ */
+export interface ServiceModificationRequest {
+  gTrId: string;
+  customerId: string;
+  contractId: string;
+  service?: ServiceRequest;
+  additionalServices?: ServiceRequest[];
+}
+
+/**
+ * 요금제/부가서비스 변경 응답 인터페이스
+ * 
+ * @property businessProcessId - 비즈니스 프로세스 ID (요청 추적용)
+ */
+export interface ServiceModificationResponseData {
+  businessProcessId: string;
+}
