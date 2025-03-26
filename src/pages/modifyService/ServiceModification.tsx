@@ -19,9 +19,8 @@ import {
   TotalPrice,
 } from './ServiceModification.styled';
 import ServiceModify from './modification/ServiceModify';
-import ServiceModificationBlockModal, {
-  ServiceModificationModalType,
-} from './modification/components/ServiceModificationBlockModal';
+import ServiceModificationBlockModal from './modification/components/ServiceModificationBlockModal';
+import { ServiceModificationModalType } from './modification/constants/modalConstants';
 import useCustomerStore from '@stores/CustomerStore';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import { TabInfo } from '@constants/CommonConstant';

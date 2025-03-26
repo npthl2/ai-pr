@@ -43,4 +43,31 @@ export const styles = {
     width: '100%',
     mt: 2,
   },
+  contentContainerWithStart: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    py: 3,
+    gap: 2,
+  },
+  messageTextWithPreLine: {
+    fontSize: '16px',
+    textAlign: 'center',
+    color: '#333',
+    fontWeight: 400,
+    whiteSpace: 'pre-line',
+  },
+  modalFooterWithCancel: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+    mt: 2,
+  },
+  modalFooterWithoutCancel: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    width: '100%',
+    mt: 2,
+  },
 };

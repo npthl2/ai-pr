@@ -10,7 +10,7 @@ import { useAdditionalServicesWithExclusiveQuery } from '@api/queries/modifyServ
 import SelectedAdditionalServiceList from './sections/SelectedAdditionalServiceList';
 import { Container, Section, ButtonGroup, WarningMessage, InfoIcon } from './ServiceModify.styled';
 import ServiceModificationBlockModal from './components/ServiceModificationBlockModal';
-import { ServiceModificationModalType } from './components/ServiceModificationBlockModal';
+import { ServiceModificationModalType } from './constants/modalConstants';
 interface ServiceModifyProps {
   // props 정의
 }

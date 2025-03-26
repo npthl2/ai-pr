@@ -13,9 +13,8 @@ import useModifyServiceStore from '@stores/ModifyServiceStore';
 import useCustomerStore from '@stores/CustomerStore';
 import Autocomplete from '@components/Autocomplete';
 // import Tooltip from '@components/Tooltip';
-import ServiceModificationBlockModal, {
-  ServiceModificationModalType,
-} from '../components/ServiceModificationBlockModal';
+import ServiceModificationBlockModal from '../components/ServiceModificationBlockModal';
+import { ServiceModificationModalType } from '../constants/modalConstants';
 import {
   RootContainer,
   ServiceRowContainer,
