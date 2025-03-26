@@ -31,13 +31,14 @@ export const PhoneTreeItem = ({ item, onPhoneSelect }: PhoneTreeItemProps) => (
     onClick={() => onPhoneSelect(item.contractId)}
     label={
       <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <Typography sx={{ fontSize: '14px' }}>{item.phone}</Typography>
+        <Typography sx={{ fontSize: '14px', fontWeight: 600 }}>{item.phone}</Typography>
         <Chip label={item.status} sx={chipStyles(item.status)} data-testid='phone-status' />
         <Typography
           component='span'
           sx={{
-            fontSize: '12px',
+            fontSize: '13px',
           }}
+          color='text.secondary'
         >
           {item.date}
         </Typography>

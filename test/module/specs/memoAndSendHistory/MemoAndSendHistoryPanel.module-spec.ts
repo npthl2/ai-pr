@@ -1,9 +1,10 @@
 import MemoHistoryPage from '../../../pages/memoAndSendHistory/MemoHistoryPage';
 import MemoHistoryServiceMock from '../../mock/memoAndSendHistory/MemoHistoryServiceMock';
-import { mockAuthStore } from '../../../support/helpers/mockAuthStore';
 import CustomerSearchTestPage from '../../../pages/customer/search/CustomerSearch';
 import { CustomerSearchServiceMock } from '../../mock/customer/search/CustomerSearchServiceMock';
+import { mockMemberStore } from '../../../support/helpers/mockMemberStore';
 import CustomerDetailServiceMock from '../../mock/customer/detail/CustomerDetailServiceMock';
+import { mockAuthStore } from '../../../support/helpers/mockAuthStore';
 
 describe('KAN-201 메모 및 작성이력 화면 진입', () => {
   const page = new MemoHistoryPage();
@@ -13,13 +14,15 @@ describe('KAN-201 메모 및 작성이력 화면 진입', () => {
   const customerDetailServiceMock = new CustomerDetailServiceMock();
 
   before(() => {
-    mockAuthStore({
+    mockAuthStore();
+    mockMemberStore({
       memberInfo: {
         memberId: 'user2',
         memberName: 'user2',
         authorities: [''],
       },
     });
+
     service.successWhenGetHomeBookmark();
 
     customerSearch.visitCustomerSearch();

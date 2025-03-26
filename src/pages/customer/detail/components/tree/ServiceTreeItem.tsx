@@ -24,24 +24,17 @@ export const ServiceTreeItem = ({ item, contractId, onPhoneSelect }: ServiceTree
   const boxStyles = {
     display: 'flex',
     alignItems: 'center',
-    gap: '12px',
+    gap: '8px',
   };
 
   const colorBoxStyles = {
     width: '3px',
     height: '21px',
     backgroundColor: typeColor,
-    marginRight: '8px',
   };
 
   const textStyles = {
-    fontSize: '14px',
     color: typeColor,
-  };
-
-  const smallTextStyles = {
-    fontSize: '12px',
-    color: '#666',
   };
 
   return (
@@ -53,18 +46,13 @@ export const ServiceTreeItem = ({ item, contractId, onPhoneSelect }: ServiceTree
       label={
         <Box sx={boxStyles}>
           <Box sx={colorBoxStyles} />
-          <Typography
-            sx={{
-              ...textStyles,
-              fontWeight: item.serviceType === CONTRACT_SERVICE_TYPE_CODE ? 500 : 400,
-            }}
-          >
+          <Typography sx={textStyles} variant='body2'>
             {item.serviceType}
           </Typography>
-          <Typography component='span' sx={smallTextStyles}>
+          <Typography component='span' variant='body1'>
             {item.serviceName}
           </Typography>
-          <Typography component='span' sx={smallTextStyles}>
+          <Typography component='span' variant='body2' color='text.secondary'>
             {item.date} -
           </Typography>
         </Box>

@@ -95,6 +95,11 @@ describe('KAN-2 신규가입 화면 진입', () => {
     before(() => {
       mockAuthStore();
       bookmarkService.successWhenGetBookmarkList();
+
+      // 먼저 마운트 하는 데이터 셋업
+      registrationContractService.successWhenGetServices();
+      registrationContractService.successWhenGetAdditionalServices();
+      
       page.setupVerificationModal();
     });
 

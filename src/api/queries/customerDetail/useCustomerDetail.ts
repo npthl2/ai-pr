@@ -59,7 +59,7 @@ function mapToTree(data: CustomerContract) {
       id: uuidv4(),
       phone: phoneNumber,
       status: contractStatus,
-      date: `${contractDate} -`,
+      date: `${contractDate} ~`,
       contractId,
       children: [],
     };

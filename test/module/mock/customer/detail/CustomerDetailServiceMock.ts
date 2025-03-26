@@ -1,8 +1,42 @@
 /// <reference types="cypress" />
 
 class CustomerDetailServiceMock {
+  homeBookmark() {
+    cy.intercept('GET', '**/cca-be/v1/member/bookmark', {
+      statusCode: 200,
+      body: {
+        successOrNot: 'Y',
+        statusCode: 'SUCCESS',
+        data: {
+          memberId: '0',
+          bookmarks: [],
+        },
+      },
+    });
+  }
+
+  successGetCustomer() {
+    cy.intercept('GET', '**/stg-be/v1/customers?**', {
+      statusCode: 200,
+      body: {
+        successOrNot: 'Y',
+        statusCode: 'SUCCESS',
+        data: {
+          customerId: '100000000001',
+          customerName: '김철수',
+          encryptedCustomerName: '김철수',
+          rrno: '781012-1658743',
+          encryptedRrno: '781012-1658743',
+          gender: 'M',
+          age: 46,
+          contractId: null,
+        },
+      },
+    });
+  }  
+
   successWhenGetCustomerContracts() {
-    cy.intercept('GET', '**/v1/customers/*/contracts', {
+    cy.intercept('GET', '**/stg-be/v1/customers/*/contracts', {
       statusCode: 200,
       body: {
         successOrNot: 'Y',
@@ -11,16 +45,18 @@ class CustomerDetailServiceMock {
       },
     }).as('getCustomerContracts');
   }
+  
   successWhenGetContractIdByPhoneNumber() {
-    cy.intercept('GET', '**/v1/customers/*/contractId', {
+    cy.intercept('GET', '**/stg-be/v1/customers/*/contractId?phoneNumber=01098765432', {
       statusCode: 200,
       body: {
         successOrNot: 'Y',
         statusCode: 'SUCCESS',
-        data: '01098765432',
+        data: '7823440192',
       },
     }).as('getContractIdByPhoneNumber');
   }
+
 }
 
 const successGetCustomerContracts = {

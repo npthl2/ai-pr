@@ -13,6 +13,7 @@ export const CustomerSearchContainer = styled('div')(({ theme }: { theme: Theme 
   padding: '24px 32px',
   backgroundColor: theme.palette.primary.contrastText, // 테마의 primary 색상 사용
   boxShadow: '0px 4px 15px 0px #00000033',
+  marginTop: '24px',
 }));
 
 // "고객조회" 제목의 스타일 (Figma 프로퍼티 적용)
@@ -29,7 +30,7 @@ export const SearchTitle = styled.div`
 export const RowWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
 `;
 
 export const CustomerSearchButton = styled(Button)(({ theme }: { theme: Theme }) => ({
@@ -59,6 +60,7 @@ export const RadioGroupContainer = styled.div`
   display: flex;
   gap: 8px;
   align-items: center;
+  padding-left: 8px;
 `;
 
 // 각각의 라디오 버튼을 감싸는 래퍼: Figma 프로퍼티: width: 33px, height: 21px, gap: 4px
