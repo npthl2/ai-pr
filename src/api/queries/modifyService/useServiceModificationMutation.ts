@@ -8,7 +8,7 @@ interface ServiceModificationParams {
   contractId: string;
   service?: {
     serviceId: string;
-  };
+  } | null;
   additionalServices: {
     serviceId: string;
   }[];

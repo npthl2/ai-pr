@@ -105,7 +105,7 @@ export interface ServiceModificationRequest {
   gTrId: string;
   customerId: string;
   contractId: string;
-  service?: ServiceRequest;
+  service?: ServiceRequest | null;
   additionalServices?: ServiceRequest[];
 }
 
