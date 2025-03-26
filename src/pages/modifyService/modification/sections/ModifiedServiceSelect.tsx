@@ -15,7 +15,7 @@ import Autocomplete from '@components/Autocomplete';
 // import Tooltip from '@components/Tooltip';
 import ServiceModificationBlockModal, {
   ServiceModificationModalType,
-} from '../../modal/ServiceModificationBlockModal';
+} from '../components/ServiceModificationBlockModal';
 import {
   RootContainer,
   ServiceRowContainer,

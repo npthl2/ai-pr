@@ -9,8 +9,8 @@ import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import { useAdditionalServicesWithExclusiveQuery } from '@api/queries/modifyService/useModifyServiceQuery';
 import SelectedAdditionalServiceList from './sections/SelectedAdditionalServiceList';
 import { Container, Section, ButtonGroup, WarningMessage, InfoIcon } from './ServiceModify.styled';
-import ServiceModificationBlockModal from '../modal/ServiceModificationBlockModal';
-import { ServiceModificationModalType } from '../modal/ServiceModificationBlockModal';
+import ServiceModificationBlockModal from './components/ServiceModificationBlockModal';
+import { ServiceModificationModalType } from './components/ServiceModificationBlockModal';
 interface ServiceModifyProps {
   // props 정의
 }

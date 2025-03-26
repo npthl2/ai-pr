@@ -21,7 +21,7 @@ import {
 import ServiceModify from './modification/ServiceModify';
 import ServiceModificationBlockModal, {
   ServiceModificationModalType,
-} from './modal/ServiceModificationBlockModal';
+} from './modification/components/ServiceModificationBlockModal';
 import useCustomerStore from '@stores/CustomerStore';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import { TabInfo } from '@constants/CommonConstant';
