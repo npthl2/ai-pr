@@ -22,6 +22,8 @@ interface CustomerContract {
   imei: string;
   maskingImei: string;
   encryptedImei: string;
+  deviceModelName: string;
+  deviceModelNameAlias: string;
 }
 
 interface AdditionalService extends ServiceCommon {}

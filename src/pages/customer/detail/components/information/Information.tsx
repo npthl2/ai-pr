@@ -45,7 +45,11 @@ const Information = ({ customerId, contractId }: InformationProps) => {
           maskingParam={maskingParam}
         />
         <InvoiceInfo invoiceInfoParam={selectedInfo?.invoice ?? null} maskingParam={maskingParam} />
-        <ServiceInfo serviceInfoParam={selectedInfo?.service ?? null} maskingParam={maskingParam} />
+        <ServiceInfo
+          serviceInfoParam={selectedInfo?.service ?? null}
+          maskingParam={maskingParam}
+          contractId={contractId}
+        />
       </Box>
       {isUnmaskable && (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '6px' }}>

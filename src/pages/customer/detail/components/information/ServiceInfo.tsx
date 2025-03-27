@@ -11,10 +11,12 @@ import { DEFAULT_TABS } from '@constants/CommonConstant';
 import { SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
 import useCustomerStore from '@stores/CustomerStore';
 import { CONTRACT_SERVICE_TYPE_CODE } from '@pages/customer/detail/CustomerDetailConstant';
+import useCurrentServiceStore from '@stores/CurrentServiceStore';
 
 interface ServiceInfoProps {
   serviceInfoParam: ServiceItem | null;
   maskingParam: MaskedTarget;
+  contractId: string;
 }
 
 const defaultServiceInfo: ServiceItem = {
@@ -76,12 +78,16 @@ const formatCurrencyKRW = (value: number | string) => {
   return numberValue.toLocaleString('ko-KR') + '원';
 };
 
-const ServiceInfo: React.FC<ServiceInfoProps> = ({ serviceInfoParam, maskingParam }) => {
+const ServiceInfo: React.FC<ServiceInfoProps> = ({
+  serviceInfoParam,
+  maskingParam,
+  contractId,
+}) => {
   const serviceInfo = serviceInfoParam ?? defaultServiceInfo;
 
   const { paidCount, freeCount, totalValue } = calculateAddOnServices(serviceInfo.serviceList);
   const { selectedCustomerId, customerTabs, setCustomerTabs, setActiveTab } = useCustomerStore();
-
+  const { setSelectedContractId } = useCurrentServiceStore();
   const handleServiceChange = () => {
     const targetMenu = SUBSCRIPTION_MENUS.find((menu) => menu.id === 'SERVICE_MODIFICATION');
     if (!targetMenu || !selectedCustomerId) return;
@@ -101,6 +107,7 @@ const ServiceInfo: React.FC<ServiceInfoProps> = ({ serviceInfoParam, maskingPara
       closeable: true,
     };
 
+    setSelectedContractId(selectedCustomerId, contractId);
     setCustomerTabs(selectedCustomerId, [...currentTabs, newTab]);
     setActiveTab(selectedCustomerId, newTab.id);
   };

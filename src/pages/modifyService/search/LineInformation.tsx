@@ -35,6 +35,8 @@ const transformContractToStoreFormat = (contract: CustomerContract) => ({
   imei: '',
   maskingImei: contract.maskingImei,
   encryptedImei: contract.encryptedImei,
+  deviceModelName: contract.deviceModelName,
+  deviceModelNameAlias: contract.deviceModelNameAlias,
 });
 
 const LineInformation = () => {
@@ -49,15 +51,19 @@ const LineInformation = () => {
   const memberInfo = useMemberStore((state) => state.memberInfo);
   const isUnmaskable = memberInfo?.authorities.includes(ROLE_UNMASKING);
 
-  const { setCustomerContract, setCustomerContracts, setSelectedContractId } =
-    useCurrentServiceStore();
+  const {
+    setCustomerContract,
+    getCustomerContracts,
+    setCustomerContracts,
+    getSelectedContractId,
+    setSelectedContractId,
+  } = useCurrentServiceStore();
   const customerContract = useCurrentServiceStore(
     (state) =>
       state.customerContracts[selectedCustomerId]?.find(
         (contract) => contract.contractId === state.selectedContractIds[selectedCustomerId],
       ) || null,
   );
-
   // 현재 활성화된 탭 정보 가져오기
   const customerTabs = useCustomerStore(
     (state) => state.customerTabs[selectedCustomerId] || { activeTab: -1, tabs: [] },
@@ -81,17 +87,28 @@ const LineInformation = () => {
     )
       return;
 
+    // 계약번호와 contractList가 0이면 아래 로직 실행
+    const selectedContractId = getSelectedContractId(customerId);
+    const alreadyContracts = getCustomerContracts(customerId);
+    if (selectedContractId && alreadyContracts.length > 0) return;
+
     const contracts = customerContractdata.contracts;
+    const transformedContracts = contracts.map(transformContractToStoreFormat);
 
     if (contracts.length === 1) {
+      // 계약이 단 1개인 경우: 선택된 계약 ID를 설정하고 계약을 저장
       const contract = contracts[0];
       setSelectedContractId(selectedCustomerId, contract.contractId);
-      setCustomerContracts(selectedCustomerId, [transformContractToStoreFormat(contract)]);
-    } else if (contracts.length > 1) {
-      const transformedContracts = contracts.map(transformContractToStoreFormat);
       setCustomerContracts(selectedCustomerId, transformedContracts);
-      setIsServiceListOpen(true);
-    } else if (contracts.length === 0) {
+    } else if (contracts.length > 1) {
+      // 계약이 2개 이상인 경우: 변환된 계약 목록을 저장
+      setCustomerContracts(selectedCustomerId, transformedContracts);
+      // 기존 계약이 이미 있을 경우 서비스 리스트를 오픈함
+      if (!selectedContractId) {
+        setIsServiceListOpen(true);
+      }
+    } else if (contracts.length === 0 && alreadyContracts.length > 0) {
+      // 계약이 0개인 경우: 이미 계약이 있었던 상황이라면 '계약 없음' 다이얼로그를 보여줌
       setShowNoContractDialog(true);
     }
   }, [customerContractdata, customerId]);
@@ -174,6 +191,7 @@ const LineInformation = () => {
             size='small'
             variant='outlined'
             color='grey'
+            disabled={getCustomerContracts(selectedCustomerId).length > 2}
             sx={{ ml: 1, minWidth: 'auto', height: 22, px: 1, fontSize: '0.75rem' }}
             onClick={() => setIsServiceListOpen(true)}
           >
@@ -188,21 +206,8 @@ const LineInformation = () => {
         </Box>
         <Box display='flex' alignItems='center' sx={{ minWidth: '160px', flexGrow: 0 }}>
           <ServiceLabel sx={{ mr: 1 }}>기기정보</ServiceLabel>
-          {customerContract?.maskingImei && (
-            <div
-              onContextMenu={(e) =>
-                handleContextMenu(e, {
-                  itemTypeCode: MASKING_ITEM_CODE.CUSTOMER_PASSPORTNUMBER,
-                  encryptedItem: customerContract.encryptedImei,
-                  maskingType: 'imei',
-                })
-              }
-              style={{ cursor: isUnmaskable ? 'pointer' : 'default' }}
-            >
-              <ServiceValue>
-                {customerContract?.imei ? customerContract?.imei : customerContract?.maskingImei}
-              </ServiceValue>
-            </div>
+          {customerContract?.deviceModelNameAlias && (
+            <ServiceValue>{customerContract?.deviceModelNameAlias}</ServiceValue>
           )}
           {customerContract?.maskingImei && <ServiceValue sx={{ ml: 1, mr: 1 }}>/</ServiceValue>}
 
@@ -217,7 +222,9 @@ const LineInformation = () => {
               }
               style={{ cursor: isUnmaskable ? 'pointer' : 'default' }}
             >
-              <ServiceValue>고객정보보호</ServiceValue>
+              <ServiceValue>
+                {customerContract?.imei ? customerContract?.imei : '고객정보보호'}
+              </ServiceValue>
             </div>
           )}
         </Box>

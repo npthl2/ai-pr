@@ -78,6 +78,8 @@ export interface CustomerContract {
   encryptedPhoneNumber: string;
   maskingImei: string;
   encryptedImei: string;
+  deviceModelName: string;
+  deviceModelNameAlias: string;
 }
 
 export interface CustomerContractResponse {

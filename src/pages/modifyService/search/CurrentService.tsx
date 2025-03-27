@@ -12,7 +12,7 @@ import TableCell from '@components/Table/TableCell';
 import TableRow from '@components/Table/TableRow';
 
 import { ServiceValue, ServicePrice, ServiceItemContainer } from '../ServiceModification.styled';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import useCustomerStore from '@stores/CustomerStore';
 import { useContractServiceQuery } from '@api/queries/contract/useContractServiceQuery';
 
@@ -20,9 +20,10 @@ import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import { ContractServiceResponse } from '@model/Contract';
 
 const ConcurrentService = () => {
+  const customerId = useCustomerStore((state) => state.selectedCustomerId) || '';
+  const selectedCustomerId = useRef(customerId).current;
   const [orderBy, setOrderBy] = useState<'name' | 'price'>('name');
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-  const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
   const selectedContractId = useCurrentServiceStore(
     (state) => state.selectedContractIds[selectedCustomerId] || '',
   );
@@ -38,7 +39,7 @@ const ConcurrentService = () => {
   });
 
   useEffect(() => {
-    if (contractServiceData && selectedContractId) {
+    if (contractServiceData && selectedContractId && selectedCustomerId === customerId) {
       const data = contractServiceData as ContractServiceResponse;
 
       // API 데이터를 스토어 형식으로 변환 (CurrentServiceStore의 Service 타입에 맞춤)
@@ -61,7 +62,7 @@ const ConcurrentService = () => {
 
       setCurrentService(selectedCustomerId, storeService);
     }
-  }, [contractServiceData]);
+  }, [contractServiceData, customerId]);
 
   // 정렬 핸들러
   const handleRequestSort = (property: 'name' | 'price') => {
