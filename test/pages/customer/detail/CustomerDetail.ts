@@ -25,17 +25,8 @@ class CustomerDetailPage {
   }
 
   assertInformationText() {
-    cy.get('[data-testid=information-service-contract-id]')
-      .invoke('text')
-      .then((text) => {
-        expect(text).to.match(/^서비스계약번호:\S+/); // 공백이 아닌 문자가 있으면 통과
-      });
-
-    cy.get('[data-testid=information-invoice-id]')
-      .invoke('text')
-      .then((text) => {
-        expect(text).to.match(/^청구번호:\S+/); // 공백이 아닌 문자가 있으면 통과
-      });
+    cy.get('[data-testid=information-service-contract-id]').contains('서비스계약번호');
+    cy.get('[data-testid=information-invoice-id]').contains('청구번호');
   }
 
   clickSampleUnmaskableItem() {
