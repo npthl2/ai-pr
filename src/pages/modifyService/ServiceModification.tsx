@@ -23,6 +23,7 @@ import ServiceModificationBlockModal from './modification/components/ServiceModi
 import { ServiceModificationModalType } from './modification/constants/modalConstants';
 import useCustomerStore from '@stores/CustomerStore';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
+import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import { TabInfo } from '@constants/CommonConstant';
 import {
   useCheckServiceModifiableQuery,
@@ -60,9 +61,11 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
 
   // 고객 스토어에서 필요한 정보 가져오기
   const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId);
-  const customers = useCustomerStore((state) => state.customers);
-  const isCustomer = useCustomerStore((state) => state.isCustomer);
   const customerTabs = useCustomerStore((state) => state.customerTabs);
+
+  // CurrentServiceStore에서 contractId 가져오기
+  const currentService = useCurrentServiceStore((state) => state.currentService);
+  const contractId = currentService?.contractId || '';
 
   // 컴포넌트 마운트 시 상태 업데이트
   useEffect(() => {
@@ -73,12 +76,6 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
       setServiceModificationMounted(false);
     };
   }, [setServiceModificationMounted, createModifyServiceInfo, contractTabId]);
-
-  // TODO CurrentServiceStore에서 가져오는거로 수정 필요!
-  // 현재 선택된 고객의 계약 ID 가져오기
-  const selectedCustomer = customers.find((c) => c.id === selectedCustomerId);
-  const contractId =
-    selectedCustomer && isCustomer(selectedCustomer) ? selectedCustomer.contractId : '';
 
   // 현재 활성화된 탭이 ServiceModification 탭인지 확인
   const isServiceModificationTabActive = (() => {

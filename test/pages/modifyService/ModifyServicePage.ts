@@ -94,7 +94,9 @@ class ModifyServicePage {
 
   // 선택된 요금제로 값이 변경되었는지 확인
   assertSelectedServiceIs(serviceName: string) {
-    cy.get('[data-testid="service-select-box"] input').should('have.value', serviceName);
+    cy.get('[data-testid="selected-additional-service-list"]')
+      .contains(serviceName)
+      .should('be.visible');
   }
 
   // 선택된 요금제의 금액이 표시되는지 확인
@@ -127,9 +129,17 @@ class ModifyServicePage {
     cy.get('[data-testid="selected-additional-service-list"]').should('not.be.empty');
   }
 
-  // 가입 불가 부가서비스에 불가 표시가 되어있는지 확인
+  // '5G'가 포함된 부가서비스 이름이 있는 행들 중에서
+  // 제한 아이콘(InfoIcon)이 존재하는지 하나씩 확인
   assertAdditionalServiceRestrictionVisible() {
-    cy.get('[data-testid="additional-service-restriction"]').should('be.visible');
+    cy.get('[data-testid="additional-service-list"]')
+      .filter(':contains("5G")') // "5G" 포함된 행만 필터링
+      .each(($row) => {
+        cy.wrap($row).within(() => {
+          // 제한 아이콘(svg)이 존재하는지 확인
+          cy.get('[data-testid="restricted-icon"]').should('exist');
+        });
+      });
   }
 
   // 가입 불가 부가서비스의 추가 버튼이 비활성화되어 있는지 확인
@@ -139,7 +149,15 @@ class ModifyServicePage {
 
   // 부가서비스 항목에 마우스 올리기
   hoverAdditionalServiceItem(serviceName: string) {
-    cy.get('[data-testid="additional-service-item"]').contains(serviceName).trigger('mouseover');
+    cy.get('[data-testid="additional-service-list"]')
+      .filter(`:contains(${serviceName})`)
+      .each(($row) => {
+        cy.wrap($row).within(() => {
+          cy.get('td') // 또는 Typography 포함한 셀
+            .first()
+            .trigger('mouseover'); // 마우스 오버
+        });
+      });
   }
 
   // 툴팁이 보이는지 확인
@@ -147,9 +165,25 @@ class ModifyServicePage {
     cy.get('.MuiTooltip-popper').should('be.visible');
   }
 
+  // 부가서비스 리스트에 특정 부가서비스가 보이는지 확인
+  assertAdditionalServiceInList(serviceName: string) {
+    cy.get('[data-testid="additional-service-list"]')
+      .contains(serviceName)
+      .scrollIntoView()
+      .should('be.visible');
+  }
+
   // 부가서비스 정렬 (이름)
   clickAdditionalServiceNameSort() {
     cy.get('[data-testid="sort-by-name"]').click();
+  }
+
+  assertTopAdditionalServiceIs(expectedServiceName: string) {
+    cy.get('[data-testid="additional-service-list"]')
+      .first() // 가장 첫 번째 행
+      .find('p') // 내부의 <Typography> (serviceName 표시되는 곳)
+      .first() // 그 중 첫 번째 텍스트 (이름)
+      .should('have.text', expectedServiceName);
   }
 
   // 부가서비스 정렬 (요금)
@@ -159,23 +193,31 @@ class ModifyServicePage {
 
   // 부가서비스 추가 버튼 클릭
   clickAddAdditionalServiceButton(serviceName: string) {
-    cy.get('[data-testid="additional-service-item"]')
-      .contains(serviceName)
-      .siblings('[data-testid="add-button"]')
-      .click();
+    cy.contains('[data-testid="additional-service-list"]', serviceName)
+      .closest('[data-testid="additional-service-list"]') // 행 전체로 이동
+      .within(() => {
+        cy.get('[data-testid="add-button"]').click(); // 해당 행 내부의 버튼 클릭
+      });
   }
 
   // 선택된 부가서비스 삭제 버튼 클릭
   clickRemoveSelectedServiceButton(serviceName: string) {
-    cy.get('[data-testid="selected-additional-service-item"]')
+    cy.get('[data-testid="selected-additional-service-list"]')
       .contains(serviceName)
-      .siblings('[data-testid="remove-button"]')
-      .click();
+      .parents('[data-testid="selected-additional-service-list"]')
+      .within(() => {
+        cy.get('[data-testid="remove-button"]').click();
+      });
   }
 
   // 부가서비스 합계 금액 확인
   assertTotalAmountIs(amount: string) {
     cy.get('[data-testid="total-amount"]').should('contain.text', amount);
+  }
+
+  // 선택된 부가서비스 목록이 비어있는지 확인
+  assertSelectedServiceListEmpty() {
+    cy.get('[data-testid="selected-additional-service-list"]').should('not.exist');
   }
 
   // 저장 버튼이 활성화되어 있는지 확인
@@ -197,17 +239,7 @@ class ModifyServicePage {
   clickResetButton() {
     cy.get('[data-testid="reset-button"]').click();
   }
-
-  // 확인 모달이 보이는지 확인
-  assertConfirmModalVisible() {
-    cy.get('[data-testid="confirm-modal"]').should('be.visible');
-  }
-
-  // 변경 불가 모달이 보이는지 확인
-  assertBlockModalVisible() {
-    cy.get('[data-testid="block-modal"]').should('be.visible');
-  }
-
+  
   // 요약 페이지로 이동했는지 확인
   assertModificationRequestVisible() {
     cy.get('[data-testid="modification-request"]').should('be.visible');

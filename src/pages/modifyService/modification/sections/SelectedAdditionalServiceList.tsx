@@ -265,6 +265,7 @@ const SelectedAdditionalServiceList = ({
               key={service.serviceId}
               hover
               sx={isCurrentService && isRestricted ? { backgroundColor: '#ffebee' } : {}}
+              data-testid='selected-additional-service-list'
             >
               <TableCell align='left' width='100px'>
                 {isCurrentService && isRestricted ? (
@@ -288,6 +289,7 @@ const SelectedAdditionalServiceList = ({
                   iconComponent={<CloseIcon />}
                   iconPosition='right'
                   onClick={() => handleRemoveService(service, isCurrentService)}
+                  data-testid='remove-button'
                 >
                   삭제
                 </DeleteButton>
@@ -378,7 +380,7 @@ const SelectedAdditionalServiceList = ({
               <TotalText>합계</TotalText>
             </TableCell>
             <StyledTableHeaderCell align='right' width='120px'>
-              <Typography variant='subtitle1'>{totalPrice.toLocaleString()}원</Typography>
+              <Typography variant='subtitle1' data-testid='total-amount'>{totalPrice.toLocaleString()}원</Typography>
             </StyledTableHeaderCell>
             <StyledTableBlankCell width='100px'></StyledTableBlankCell>
           </TableRow>

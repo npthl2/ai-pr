@@ -361,6 +361,151 @@ const successGetAdditionalServices = [
   },
 ];
 
+// 목 데이터: 부가서비스 목록
+const successGetAdditional_SVC60_Services = [
+  {
+    serviceId: 'a_5g_1',
+    serviceName: '5G 1 Giga 충전 부가서비스',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 21000,
+    exclusiveServiceIds: [
+      'svc_51',
+      'svc_52',
+      'svc_53',
+      'svc_54',
+      'svc_55',
+      'svc_56',
+      'svc_57',
+      'svc_58',
+      'svc_59',
+      'svc_60',
+    ],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+    hasAgeRestriction: false,
+    exclusive: true,
+  },
+  {
+    serviceId: 'a_5g_2',
+    serviceName: '5G 2 Giga 충전 부가서비스',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 26000,
+    exclusiveServiceIds: [
+      'svc_51',
+      'svc_52',
+      'svc_53',
+      'svc_54',
+      'svc_55',
+      'svc_56',
+      'svc_57',
+      'svc_58',
+      'svc_59',
+      'svc_60',
+    ],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+    hasAgeRestriction: false,
+    exclusive: true,
+  },
+  {
+    serviceId: 'a_lte_3',
+    serviceName: 'LTE 3 Giga 충전 부가서비스',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 23000,
+    exclusiveServiceIds: ['svc_1', 'svc_2', 'svc_3', 'svc_4', 'svc_5', 'svc_6'],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'a_lte_1',
+    serviceName: 'LTE 1 Giga 충전 부가서비스',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 19000,
+    exclusiveServiceIds: [
+      'svc_1',
+      'svc_2',
+      'svc_3',
+      'svc_4',
+      'svc_5',
+      'svc_6',
+      'svc_7',
+      'svc_8',
+      'svc_9',
+      'svc_10',
+    ],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+
+  },
+  {
+    serviceId: 'a_lte_2',
+    serviceName: 'LTE 2 Giga 충전 부가서비스',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 20000,
+    exclusiveServiceIds: [
+      'svc_1',
+      'svc_2',
+      'svc_3',
+      'svc_4',
+      'svc_5',
+      'svc_6',
+      'svc_7',
+      'svc_8',
+      'svc_9',
+      'svc_10',
+    ],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'a_ai_1',
+    serviceName: 'AI로봇 부가서비스 Alpha',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 200000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'a_5g_3',
+    serviceName: '5G 3 Giga 충전 부가서비스',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 5000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+    hasAgeRestriction: false,
+    exclusive: true,
+  },
+  {
+    serviceId: 'a_ai_2',
+    serviceName: 'AI로봇 부가서비스 Beta',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 240000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'a_biz_2',
+    serviceName: '클라우드 스토리지 부가서비스',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 8000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+];
+
 // 목 데이터: 요금제 변경 가능 여부 응답
 const modifiableResponseTrue = {
   successOrNot: 'Y',
@@ -422,8 +567,7 @@ const serviceModificationSuccessResponse = {
   successOrNot: 'Y',
   statusCode: 'SUCCESS',
   data: {
-    modificationId: 'MOD12345',
-    status: 'REQUESTED'
+    businessProcessId: 'CCA_0000000001'
   }
 };
 
@@ -454,9 +598,23 @@ class ModifyServiceMock {
     ).as('getAdditionalServices');
   }
 
+    // 부가서비스 목록 조회 API 모킹
+    successWhenGetAdditional_SVC60_Services() {
+      cy.intercept(
+        'GET', '**/v1/additional-services/age-exclusive?age=46&serviceId=svc_60', {
+          statusCode: 200,
+          body: {
+            successOrNot: 'Y',
+            statusCode: 'SUCCESS',
+            data: successGetAdditional_SVC60_Services
+          }
+        }
+      ).as('getAdditional_SVC60_Services');
+    }
+
   // 요금제 변경 가능 여부 확인 API 모킹 (가능)
   successWhenCheckServiceModifiable() {
-    cy.intercept('GET', /\/v1\/contract\/service-modify\/[^/]+\/check$/, {
+    cy.intercept('GET', '**/v1/contract/service-modify/**/check', {
       statusCode: 200,
       body: modifiableResponseTrue
     }).as('successWhenCheckServiceModifiable');
@@ -496,11 +654,12 @@ class ModifyServiceMock {
 
   // 서비스 변경 요청 API 모킹 (성공)
   successWhenModifyService() {
-    cy.intercept('POST', '**/v1/service-modification', {
+    cy.intercept('PUT', '**/v1/registration-service', {
       statusCode: 200,
       body: serviceModificationSuccessResponse
     }).as('modifyService');
   }
+
 }
 
 export default ModifyServiceMock; 

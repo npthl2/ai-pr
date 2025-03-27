@@ -68,17 +68,6 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
     serviceModificationMounted,
   );
 
-  // 나이 제한으로 인해 제거해야 하는 서비스가 있는지 확인
-  const hasRestrictedServices = currentAdditionalServices.some((service) => {
-    // API에서 받아온 부가서비스 목록에서 해당 서비스 찾기
-    const apiService = additionalServices.find(
-      (apiService) => apiService.serviceId === service.serviceId,
-    );
-
-    // API에서 받아온 hasAgeRestriction과 exclusive 값 사용
-    return apiService?.hasAgeRestriction || apiService?.exclusive || false;
-  });
-
   // 모달 상태 관리
   const [modalState, setModalState] = useState<{
     open: boolean;
@@ -302,19 +291,17 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
             width: '100%',
           }}
         >
-          <Box sx={{ flex: 1 }}>
-            {hasRestrictedServices && (
+          <Box sx={{ flex: 1 }} data-testid='additional-service-disabled-message'>
               <WarningMessage>
                 <InfoIcon fontSize='small' sx={{ mr: 1 }} />
-                나이 제한 또는 베타 서비스로 인해 해지가 필요한 서비스가 있습니다.
+                빨간색으로 음영 처리된 부가서비스는 가입이 불가능합니다.
               </WarningMessage>
-            )}
           </Box>
           <Box sx={{ display: 'flex', gap: 1, ml: 2 }}>
-            <Button variant='outlined' onClick={handleReset} disabled={isResetDisabled}>
+            <Button variant='outlined' onClick={handleReset} disabled={isResetDisabled} data-testid='reset-button'>
               초기화
             </Button>
-            <Button variant='contained' onClick={handleSave} disabled={isSaveDisabled}>
+            <Button variant='contained' onClick={handleSave} disabled={isSaveDisabled} data-testid='save-button'>
               저장
             </Button>
           </Box>

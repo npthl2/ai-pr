@@ -229,6 +229,7 @@ const AdditionalServiceList = ({
       return (
         <ArrowDownward
           sx={{ verticalAlign: 'middle', marginLeft: '4px', fontSize: '16px', opacity: 0.3 }}
+          data-testid={field === 'serviceName' ? 'sort-by-name' : 'sort-by-price'}
         />
       );
     }
@@ -240,6 +241,7 @@ const AdditionalServiceList = ({
           fontSize: '16px',
           transform: sortDirection === 'desc' ? 'rotate(180deg)' : 'none',
         }}
+        data-testid={field === 'serviceName' ? 'sort-by-name' : 'sort-by-price'}
       />
     );
   };
@@ -254,9 +256,10 @@ const AdditionalServiceList = ({
           key={service.serviceId}
           hover
           sx={isRestricted ? { backgroundColor: '#ffebee' } : {}}
+          data-testid='additional-service-list'
         >
           <StyledTableBlankCell width='10px'>
-            {isRestricted && <InfoIcon color='error' sx={{ verticalAlign: 'middle' }} />}
+            {isRestricted && <InfoIcon color='error' sx={{ verticalAlign: 'middle' }} data-testid="restricted-icon" />}
           </StyledTableBlankCell>
           <TableCell>
             {isRestricted && (
@@ -277,6 +280,7 @@ const AdditionalServiceList = ({
               iconPosition='right'
               onClick={() => handleAddService(service, isRestricted)}
               disabled={isRestricted}
+              data-testid='add-button'
             >
               추가
             </AddButton>
@@ -294,7 +298,7 @@ const AdditionalServiceList = ({
           <CountTypography>{filteredServices.length}</CountTypography>
         </TitleSection>
 
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }} data-testid='additional-service-search'>
           <TextField
             value={searchKeyword}
             onChange={handleSearchChange}
