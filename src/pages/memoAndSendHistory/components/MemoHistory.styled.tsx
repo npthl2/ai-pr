@@ -24,6 +24,9 @@ export const MemoContentTypography = styled(Typography)(({ theme }) => ({
   overflow: 'hidden',
   WebkitLineClamp: 2,
   textOverflow: 'ellipsis',
+  wordBreak: 'break-all',
+  width: '100%',
+  maxWidth: '100%',
 }));
 
 export const MemoEditorTextarea = styled(TextareaAutosize)(({ theme }) => ({
@@ -32,14 +35,19 @@ export const MemoEditorTextarea = styled(TextareaAutosize)(({ theme }) => ({
   resize: 'none',
   borderRadius: '4px',
   padding: '2px 12px',
+  '&:focus': {
+    outlineColor: theme.palette.primary.main,
+  },
 }));
 
 export const MemoHistoryTableContainer = styled(TableContainer)(({ theme }) => ({
-  maxHeight: '220px',
-  minHeight: '220px',
+  maxHeight: '233px',
+  minHeight: '233px',
   overflowY: 'auto',
   position: 'relative',
   borderBottom: `1px solid ${theme.palette.grey[200]}`,
+  overflowX: 'hidden',
+  marginTop: '4px',
 }));
 
 export const MemoHistoryTable = styled(Table)(({ theme }) => ({

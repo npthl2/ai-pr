@@ -38,7 +38,6 @@ const defaultServiceInfo: ServiceItem = {
 };
 
 const CELL_WIDTH = 200;
-const SUB_CELL_WIDTH = 310.5;
 
 const renderMaskingInfo = (
   maskingParam: MaskedTarget,
@@ -146,41 +145,41 @@ const ServiceInfo: React.FC<ServiceInfoProps> = ({ serviceInfoParam, maskingPara
           요금제/부가서비스 변경
         </Button>
       </Box>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ boxShadow: 'none' }}>
         <Table>
           <TableBody>
             <TableRow size='small' disableEffect={true}>
               <TableCell variant='head' width={CELL_WIDTH}>
-                약정정보
+                <Typography>약정정보</Typography>
               </TableCell>
               <TableCell colSpan={3}>{serviceInfo.engagementType}</TableCell>
             </TableRow>
             <TableRow size='small' disableEffect={true}>
               <TableCell variant='head' width={CELL_WIDTH}>
-                약정일자
+                <Typography>약정일자</Typography>
               </TableCell>
-              <TableCell width={SUB_CELL_WIDTH}>{serviceInfo.engagementDate}</TableCell>
+              <TableCell sx={{ flex: 1 }}>{serviceInfo.engagementDate}</TableCell>
               <TableCell variant='head' width={CELL_WIDTH}>
-                요금할인종료일
+                <Typography>요금할인종료일</Typography>
               </TableCell>
-              <TableCell width={SUB_CELL_WIDTH}>{serviceInfo.discountEndDate}</TableCell>
+              <TableCell sx={{ flex: 1 }}>{serviceInfo.discountEndDate}</TableCell>
             </TableRow>
             <TableRow size='small' disableEffect={true}>
               <TableCell variant='head' width={CELL_WIDTH}>
-                경과/실사용일
+                <Typography>경과/실사용일</Typography>
               </TableCell>
-              <TableCell width={SUB_CELL_WIDTH}>{serviceInfo.elapsedDays}</TableCell>
+              <TableCell sx={{ flex: 1 }}>{serviceInfo.elapsedDays}</TableCell>
               <TableCell variant='head' width={CELL_WIDTH}>
-                총할인반환금
+                <Typography>총할인반환금</Typography>
               </TableCell>
-              <TableCell width={SUB_CELL_WIDTH}>
+              <TableCell sx={{ flex: 1 }}>
                 {serviceInfo.totalDiscountRefundAmount &&
                   formatCurrencyKRW(serviceInfo.totalDiscountRefundAmount)}
               </TableCell>
             </TableRow>
             <TableRow size='small' disableEffect={true}>
               <TableCell variant='head' width={CELL_WIDTH}>
-                기기정보
+                <Typography>기기정보</Typography>
               </TableCell>
               <TableCell colSpan={3}>
                 <div style={{ display: 'flex', gap: 8 }}>
@@ -207,7 +206,7 @@ const ServiceInfo: React.FC<ServiceInfoProps> = ({ serviceInfoParam, maskingPara
             </TableRow>
             <TableRow size='small' disableEffect={true}>
               <TableCell variant='head' width={CELL_WIDTH}>
-                SIM정보
+                <Typography>SIM정보</Typography>
               </TableCell>
               <TableCell colSpan={3}>
                 <div style={{ display: 'flex', gap: 8 }}>
@@ -228,19 +227,19 @@ const ServiceInfo: React.FC<ServiceInfoProps> = ({ serviceInfoParam, maskingPara
             </TableRow>
             <TableRow size='small' disableEffect={true}>
               <TableCell variant='head' width={CELL_WIDTH}>
-                잔여대금
+                <Typography>잔여대금</Typography>
               </TableCell>
-              <TableCell width={SUB_CELL_WIDTH}>
+              <TableCell sx={{ flex: 1 }}>
                 {serviceInfo.remainingPayment && formatCurrencyKRW(serviceInfo.remainingPayment)}
               </TableCell>
               <TableCell variant='head' width={CELL_WIDTH}>
-                잔여분납
+                <Typography>잔여분납</Typography>
               </TableCell>
-              <TableCell width={SUB_CELL_WIDTH}>{serviceInfo.remainingInstallment}</TableCell>
+              <TableCell sx={{ flex: 1 }}>{serviceInfo.remainingInstallment}</TableCell>
             </TableRow>
             <TableRow size='small' disableEffect={true}>
               <TableCell variant='head' width={CELL_WIDTH}>
-                요금제
+                <Typography>요금제</Typography>
               </TableCell>
               <TableCell colSpan={3}>
                 <div
@@ -266,7 +265,7 @@ const ServiceInfo: React.FC<ServiceInfoProps> = ({ serviceInfoParam, maskingPara
             </TableRow>
             <TableRow size='small' disableEffect={true}>
               <TableCell variant='head' width={CELL_WIDTH}>
-                부가서비스
+                <Typography>부가서비스</Typography>
               </TableCell>
               <TableCell colSpan={3}>
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -283,7 +282,7 @@ const ServiceInfo: React.FC<ServiceInfoProps> = ({ serviceInfoParam, maskingPara
             </TableRow>
             <TableRow size='small' disableEffect={true}>
               <TableCell variant='head' width={CELL_WIDTH}>
-                단말기보험
+                <Typography>단말기보험</Typography>
               </TableCell>
               <TableCell colSpan={3}>-</TableCell>
             </TableRow>

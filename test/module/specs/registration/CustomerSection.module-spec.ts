@@ -2,16 +2,21 @@ import CustomerSectionPage from '../../../pages/registration/CustomerSectionPage
 import { mockAuthStore } from '../../../support/helpers/mockAuthStore';
 import BookmarkServiceMock from '../../mock/bookmark/BookmarkServiceMock';
 import CustomerSectionServiceMock from '../../mock/registration/CustomerSectionServiceMock';
+import ContractSectionServiceMock from '../../mock/registration/ContractSectionServiceMock';
 
 describe('KAN-2 신규가입 화면 진입', () => {
   const page = new CustomerSectionPage();
   const service = new CustomerSectionServiceMock();
   const bookmarkService = new BookmarkServiceMock();
-
+  const registrationContractService = new ContractSectionServiceMock();
   before(() => {
     // 초기 셋업
     mockAuthStore();
     bookmarkService.successWhenGetBookmarkList();
+
+    // 먼저 마운트 하는 데이터 셋업
+    registrationContractService.successWhenGetServices();
+    registrationContractService.successWhenGetAdditionalServices();
   });
 
   it('KAN-36-1 신규가입 메뉴 클릭시 MDI 신규가입 탭 생성이 된다.', () => {
@@ -90,6 +95,11 @@ describe('KAN-2 신규가입 화면 진입', () => {
     before(() => {
       mockAuthStore();
       bookmarkService.successWhenGetBookmarkList();
+
+      // 먼저 마운트 하는 데이터 셋업
+      registrationContractService.successWhenGetServices();
+      registrationContractService.successWhenGetAdditionalServices();
+      
       page.setupVerificationModal();
     });
 

@@ -5,6 +5,7 @@ import { customerContractsTreeData } from '@api/queries/customerDetail/useCustom
 import { useRef, useState } from 'react';
 import { useEffect } from 'react';
 import { CONTRACT_STATUS_CODE_CANCEL } from '@pages/customer/detail/CustomerDetailConstant';
+import { TreeContainer, TreeHeader } from './Tree.styled';
 
 interface TreeComponentProps {
   customerId: string;
@@ -50,7 +51,6 @@ const Tree = ({
 
   // 초기 트리 확장 처리
   useEffect(() => {
-    console.debug('[Tree]initial useEffect', selectedContractId);
     const shouldInitializeExpansion =
       selectedContractId && !isInitialExpansionDone.current && expandedItems.length === 0;
 
@@ -69,7 +69,6 @@ const Tree = ({
 
   // Filter 트리 확장 처리
   useEffect(() => {
-    console.debug('[Tree]filter useEffect', filteredContractId);
     if (filteredContractId) {
       handleExpandedItemsForFilter(filteredContractId);
     }
@@ -79,21 +78,12 @@ const Tree = ({
   };
 
   return (
-    <div style={{ border: '1px solid #D1D6DA', borderRadius: '4px' }}>
-      <Box
-        sx={{
-          paddingTop: '8px',
-          paddingRight: '24px',
-          paddingBottom: '8px',
-          paddingLeft: '24px',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
+    <TreeContainer>
+      <TreeHeader>
         {filteredContractId !== '' && (
           <Typography variant='body1'>전체 - {countractCount}</Typography>
         )}
-      </Box>
+      </TreeHeader>
       <StyledTreeView
         selectedItems={selectedContractId ? [selectedContractId] : []}
         expandedItems={expandedItems ? expandedItems : []}
@@ -131,7 +121,7 @@ const Tree = ({
           </Box>
         )}
       </StyledTreeView>
-    </div>
+    </TreeContainer>
   );
 };
 

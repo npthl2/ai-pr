@@ -4,6 +4,7 @@ import customerContractService from '@api/services/cusotmerDetailService'; // En
 import { CustomerContract } from '@model/CustomerContract'; // Ensure this module is correctly referenced
 import { Info } from '@pages/customer/detail/components/information/types';
 import { LobItem, PhoneItem } from '@pages/customer/detail/components/tree/types';
+import { ContractData, ContractService } from '@model/Contract';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useCustomerContractsQuery = (customerId: string) => {
@@ -14,7 +15,6 @@ export const useCustomerContractsQuery = (customerId: string) => {
         throw new Error('customerId is required');
       }
       const response = await customerContractService.getCustomerContracts(customerId);
-      console.debug('[useCustomerContractsQuery]response', response);
 
       // Type Guard를 사용하여 CustomerContract만 반환
       if (!response.data || typeof response.data !== 'object') {
@@ -28,9 +28,7 @@ export const useCustomerContractsQuery = (customerId: string) => {
 };
 
 export const customerContractsTreeData = (customerId: string) => {
-  console.debug('[customerContractsTreeData]customerId', customerId);
   const { data } = useCustomerContractsQuery(customerId);
-  console.debug('[customerContractsTreeData]data', data);
   return useMemo(() => {
     if (!data) return null;
     return mapToTree(data);
@@ -61,7 +59,7 @@ function mapToTree(data: CustomerContract) {
       id: uuidv4(),
       phone: phoneNumber,
       status: contractStatus,
-      date: `${contractDate} -`,
+      date: `${contractDate} ~`,
       contractId,
       children: [],
     };
@@ -86,10 +84,6 @@ const getFirstPartOfEngagementDate = (str: string): string => {
 };
 
 export const customerContractsInfoData = (customerId: string, contractId: string) => {
-  // customerId와 contractId가 유효한지 확인
-  console.debug('[customerContractsInfoData]customerId', customerId);
-  console.debug('[customerContractsInfoData]contractId', contractId);
-
   const { data } = useCustomerContractsQuery(customerId);
   const selectedContract = data.contracts.find((contract) => contract.contractId === contractId);
   if (!selectedContract) return null;
@@ -101,7 +95,7 @@ export const customerContractsInfoData = (customerId: string, contractId: string
   // }, [customerId, contractId]);
 };
 
-export function mapToInfo(data: any): Info {
+export function mapToInfo(data: ContractData): Info {
   return {
     contractId: data.contractId,
     contract: {
@@ -144,7 +138,7 @@ export function mapToInfo(data: any): Info {
       simModelName: data.contractDetail.device.simModelName,
       simSerialNumber: data.contractDetail.device.simSerialNumber,
       simSerialNumberEncrypted: data.contractDetail.device.simSerialNumberEncrypted,
-      serviceList: data.contractDetail.serviceList.map((service: any) => ({
+      serviceList: data.contractDetail.serviceList.map((service: ContractService) => ({
         serviceType: service.serviceType,
         serviceName: service.serviceName,
         serviceValueType: service.serviceValueType,

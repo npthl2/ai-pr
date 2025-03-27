@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import SummaryInfo from './SummaryInfo';
-import { InvoiceInfo, DeviceInfo, ContractInfo, SalesInfo } from '@model/RegistrationInfo';
+import { InvoiceInfo, DeviceInfo, ContractInfo, SalesAgentInfo } from '@model/RegistrationInfo';
 
 // 모킹된 하위 컴포넌트들
 vi.mock('./summary/BillingInfo', () => ({
@@ -11,8 +11,8 @@ vi.mock('./summary/BillingInfo', () => ({
 }));
 
 vi.mock('./summary/SalesInfo', () => ({
-  default: ({ salesInfo }: { salesInfo: SalesInfo }) => (
-    <div data-testid='sales-info'>SalesInfo: {salesInfo.salesDepartment || ''}</div>
+  default: ({ salesAgentInfo }: { salesAgentInfo: SalesAgentInfo }) => (
+    <div data-testid='sales-info'>SalesInfo: {salesAgentInfo.salesDepartment || ''}</div>
   ),
 }));
 
@@ -45,7 +45,7 @@ describe('SummaryInfo 컴포넌트', () => {
       phoneNumber: '010-1234-5678',
     };
 
-    const salesInfo: Partial<SalesInfo> = {
+    const salesAgentInfo: Partial<SalesAgentInfo> = {
       salesDepartment: '온라인',
     };
 
@@ -55,7 +55,7 @@ describe('SummaryInfo 컴포넌트', () => {
         invoiceInfo={invoiceInfo as InvoiceInfo}
         deviceInfo={deviceInfo as DeviceInfo}
         contractInfo={contractInfo as ContractInfo}
-        salesInfo={salesInfo as SalesInfo}
+        salesAgentInfo={salesAgentInfo as SalesAgentInfo}
       />,
     );
 
@@ -77,7 +77,7 @@ describe('SummaryInfo 컴포넌트', () => {
     const invoiceInfo: Partial<InvoiceInfo> = { paymentMethod: '신용카드' };
     const deviceInfo: Partial<DeviceInfo> = { deviceName: 'Galaxy S23' };
     const contractInfo: Partial<ContractInfo> = { phoneNumber: '010-1234-5678' };
-    const salesInfo: Partial<SalesInfo> = { salesDepartment: '온라인' };
+    const salesAgentInfo: Partial<SalesAgentInfo> = { salesDepartment: '온라인' };
 
     // When: 컴포넌트를 렌더링하면
     const { container } = render(
@@ -85,7 +85,7 @@ describe('SummaryInfo 컴포넌트', () => {
         invoiceInfo={invoiceInfo as InvoiceInfo}
         deviceInfo={deviceInfo as DeviceInfo}
         contractInfo={contractInfo as ContractInfo}
-        salesInfo={salesInfo as SalesInfo}
+        salesAgentInfo={salesAgentInfo as SalesAgentInfo}
       />,
     );
 

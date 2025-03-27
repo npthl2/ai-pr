@@ -2,7 +2,7 @@ class CustomerDetailPage {
   constructor() {}
 
   visitCustomerDetailPage() {
-    cy.visit('/test/customer-detail');
+    cy.visit('/');
   }
 
   assertTree() {
@@ -44,7 +44,7 @@ class CustomerDetailPage {
   }
 
   clickUnmaskingMenuItem() {
-    cy.contains('마스킹 해제').click();
+    cy.get('[data-testid="unmasking-menu-item"]').click();
   }
 
   cancelUnmaskingPopup() {
@@ -78,7 +78,7 @@ class CustomerDetailPage {
   }
 
   putPhoneNumber(phoneNumber: string) {
-    cy.get('input[placeholder="전화번호 (숫자만 입력)"]').clear().type(phoneNumber);
+    cy.get('input[placeholder="전화번호 (11자리 숫자 입력)"]').clear().type(phoneNumber);
   }
 
   clickSearchIcon() {

@@ -1,26 +1,32 @@
 import CustomerDetailPage from '../../../../pages/customer/detail/CustomerDetail';
-import { mockAuthStore } from '../../../../support/helpers/mockAuthStore';
+import CustomerSearchTestPage from '../../../../pages/customer/search/CustomerSearch';
+import { mockMemberStore } from '../../../../support/helpers/mockMemberStore';
 import CustomerDetailServiceMock from '../../../mock/customer/detail/CustomerDetailServiceMock';
 
 describe('KAN-20 고객 조회 페이지 진입', () => {
   const page = new CustomerDetailPage();
+  const customerSearchPage = new CustomerSearchTestPage();
   const service = new CustomerDetailServiceMock();
 
   before(() => {
-    mockAuthStore({
-      isAuthenticated: true,
-      accessToken: 'mock-token',
+    mockMemberStore({
       memberInfo: {
-        id: 'test-id',
-        username: 'testuser',
-        role: ['ROLE_SEARCH_TEL_NO', 'ROLE_UNMASKING'], // 필요한 권한 추가
+        memberId: 'user1',
+        memberName: 'user1',
+        authorities: ['ROLE_SEARCH_TEL_NO', 'ROLE_UNMASKING'],
       },
     });
+
+    service.homeBookmark();
+    page.visitCustomerDetailPage();
+    customerSearchPage.getOpenModalButton().click();
+    customerSearchPage.typePhoneNumber('01012345678');
+    service.successGetCustomer();
+    service.successWhenGetCustomerContracts();
+    customerSearchPage.clickSearch();
   });
 
   it('KAN-20-1 고객 조회 화면 진입', () => {
-    page.visitCustomerDetailPage();
-    service.successWhenGetCustomerContracts();
     page.assertTree();
     page.assertInformation();
   });
@@ -41,23 +47,22 @@ describe('KAN-20 고객 조회 페이지 진입', () => {
     page.assertCancelledPhoneStatus();
   });
 
-  it('KAN-20-4 알맞은 핸드폰 번호 검색 했을 때 해당 회선만 표시되어야 한다', () => {
+  it('KAN-20-5 알맞은 핸드폰 번호 검색 했을 때 해당 회선만 표시되어야 한다', () => {
     page.putPhoneNumber('01098765432');
-    page.clickSearchIcon();
     service.successWhenGetContractIdByPhoneNumber();
+    page.clickSearchIcon();
     page.clickFirstNodeOfTree();
     page.assertSearchContract();
   });
 
-  it('KAN-20-4 마스킹 해제 권한이 있는 경우 우클릭 시 마스킹 해제 창 호출이 확인되어야 한다', () => {
+  it('KAN-20-6 마스킹 해제 권한이 있는 경우 우클릭 시 마스킹 해제 창 호출이 확인되어야 한다', () => {
     page.clickSampleUnmaskableItem();
     page.clickUnmaskingMenuItem();
     page.cancelUnmaskingPopup();
     // page.assertUnmaskingPopup();
-    // 마스킹은 KAN-27에서 확인
   });
 
-  it('KAN-20-4 요금제/부가서비스 변경 메뉴 클릭 시 탭 추가가 되어야 한다', () => {
+  it('KAN-20-7 요금제/부가서비스 변경 메뉴 클릭 시 탭 추가가 되어야 한다', () => {
     page.clickServiceInfoChangeButton();
     //탭체크는 KAN-16에서 확인
   });

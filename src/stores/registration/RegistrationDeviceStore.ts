@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
-// import useRegistrationContractStore from './RegistrationContractStore';
 
 export interface RegistrationDeviceInfo {
   deviceId: string;
@@ -29,64 +28,60 @@ export interface RegistrationDevices {
 export interface RegistrationDeviceState {
   displayMode: string;
   registrationDevices: RegistrationDevices;
-  // Store previous values to detect changes
-  previousContractValues: Record<string, { imei: string; serviceId: string }>;
   setDisplayMode: (displayMode: string) => void;
   getRegistrationDeviceInfo: (contractTapId: string) => RegistrationDeviceInfo | undefined;
   setRegistrationDeviceInfo: (contractTapId: string, info: RegistrationDeviceInfo) => void;
   removeRegistrationDeviceInfo: (contractTapId: string) => void;
   clearRegistrationDeviceInfo: () => void;
-  // New method to check for contract changes
-  // checkForContractChanges: (contractTapId: string) => void;
+  initializeDeviceStore: (contractTapId: string) => void;
+  updateDeviceInfo: (tabId: string, partialInfo: Partial<RegistrationDeviceInfo>) => void;
 }
 
 const useRegistrationDeviceStore = create<RegistrationDeviceState>((set, get) => ({
   displayMode: 'home',
   registrationDevices: {},
-  previousContractValues: {},
 
   setDisplayMode: (displayMode: string) => {
-    console.log('[RegistrationDeviceStore] setDisplayMode:', displayMode);
     set(() => ({
       displayMode,
     }));
   },
 
+  initializeDeviceStore: (contractTapId: string) => {
+    // Reset device info and set default values
+    const defaultDeviceInfo: RegistrationDeviceInfo = {
+      deviceId: '',
+      deviceName: '',
+      deviceNameAlias: '',
+      devicePaymentType: 'installment',
+      deviceSponsorName: '통합스폰서',
+      deviceEngagementType: 'PUBLIC_POSTED_SUPPORT',
+      deviceEngagementPeriod: 0,
+      deviceEngagementName: '공시지원금',
+      deviceSalesPrice: 0,
+      deviceDiscountPrice: 0,
+      devicePrepaidPrice: 0,
+      deviceInstallmentAmount: 0,
+      deviceInstallmentFee: 0,
+      deviceTotalPrice: 0,
+      deviceInstallmentPeriod: 0,
+      monthlyInstallmentPrice: 0,
+      isValidated: false,
+    };
+
+    set((state) => ({
+      registrationDevices: {
+        ...state.registrationDevices,
+        [contractTapId]: defaultDeviceInfo,
+      },
+    }));
+  },
+
   getRegistrationDeviceInfo: (contractTapId: string) => {
-    // Check for contract changes before returning device info
-    //get().checkForContractChanges(contractTapId);
-
-    const deviceInfo = get().registrationDevices[contractTapId];
-
-    if (!deviceInfo) {
-      return {
-        deviceId: '',
-        deviceName: '',
-        deviceNameAlias: '',
-        devicePaymentType: 'installment' as const,
-        deviceSponsorName: '통합스폰서',
-        deviceEngagementType: 'PUBLIC_POSTED_SUPPORT' as const,
-        deviceEngagementPeriod: 0,
-        deviceEngagementName: '공시지원금' as const,
-        deviceSalesPrice: 0,
-        deviceDiscountPrice: 0,
-        devicePrepaidPrice: 0,
-        deviceInstallmentAmount: 0,
-        deviceInstallmentFee: 0,
-        deviceTotalPrice: 0,
-        deviceInstallmentPeriod: 0,
-        monthlyInstallmentPrice: 0,
-        isValidated: false,
-      };
-    }
-    return deviceInfo;
+    return get().registrationDevices[contractTapId] || null;
   },
 
   setRegistrationDeviceInfo: (contractTapId: string, info: RegistrationDeviceInfo) => {
-    // Check for contract changes before setting device info
-    //get().checkForContractChanges(contractTapId);
-
-    // Then set the new info (removed the clearing of data)
     set((state) => {
       return {
         registrationDevices: {
@@ -99,68 +94,36 @@ const useRegistrationDeviceStore = create<RegistrationDeviceState>((set, get) =>
 
   removeRegistrationDeviceInfo: (contractTapId: string) => {
     set((state) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { [contractTapId]: _, ...rest } = state.registrationDevices;
-      return { registrationDevices: rest };
+      const newDevices = { ...state.registrationDevices };
+      delete newDevices[contractTapId];
+      return { registrationDevices: newDevices };
     });
   },
 
   clearRegistrationDeviceInfo: () => {
-    set(() => ({ registrationDevices: {} }));
+    set(() => ({
+      registrationDevices: {},
+    }));
   },
 
-  // New method to check for changes in the contract store
-  // checkForContractChanges: (contractTapId: string) => {
-  //   // Get current contract information
-  //   const contractStore = useRegistrationContractStore.getState();
-  //   const contract = contractStore.getRegistrationContractInfo(contractTapId);
+  updateDeviceInfo: (tabId: string, partialInfo: Partial<RegistrationDeviceInfo>) => {
+    set((state) => {
+      const currentInfo = state.registrationDevices[tabId];
+      if (!currentInfo) return state;
 
-  //   if (!contract) return;
-
-  //   // Get current values
-  //   const currentImei = contract.imei || '';
-  //   const currentServiceId = contract.service?.serviceId || '';
-
-  //   // Get previous values
-  //   const previousValues = get().previousContractValues[contractTapId] || {
-  //     imei: '',
-  //     serviceId: '',
-  //   };
-
-  //   // Check if values have changed - only consider it a change if:
-  //   // 1. We had a previous non-empty value
-  //   // 2. The current value is different from the previous value
-  //   const imeiChanged =
-  //     previousValues.imei !== '' && currentImei !== '' && currentImei !== previousValues.imei;
-
-  //   const serviceIdChanged =
-  //     previousValues.serviceId !== '' &&
-  //     currentServiceId !== '' &&
-  //     currentServiceId !== previousValues.serviceId;
-
-  //   // If either value has changed, reset device info
-  //   if (imeiChanged || serviceIdChanged) {
-  //     // Remove device info for this tabId
-  //     get().removeRegistrationDeviceInfo(contractTapId);
-  //   }
-
-  //   // Only update previous values if they are not empty
-  //   if (currentImei !== '' || currentServiceId !== '') {
-  //     set((state) => ({
-  //       previousContractValues: {
-  //         ...state.previousContractValues,
-  //         [contractTapId]: {
-  //           imei: currentImei || previousValues.imei,
-  //           serviceId: currentServiceId || previousValues.serviceId,
-  //         },
-  //       },
-  //     }));
-  //   }
-  // },
+      return {
+        registrationDevices: {
+          ...state.registrationDevices,
+          [tabId]: {
+            ...currentInfo,
+            ...partialInfo,
+          },
+        },
+      };
+    });
+  },
 }));
 
-if (import.meta.env.DEV) {
-  mountStoreDevtool('RegistrationDevice Store', useRegistrationDeviceStore);
-}
+mountStoreDevtool('RegistrationDevice Store', useRegistrationDeviceStore);
 
 export default useRegistrationDeviceStore;

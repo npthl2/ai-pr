@@ -4,11 +4,11 @@ import { Chip } from '@components/Chip';
 
 const ChipExample = () => {
   const handleDelete = () => {
-    console.info('You clicked the delete icon.');
+    // console.info('You clicked the delete icon.');
   };
 
   const handleClick = () => {
-    console.info('You clicked the click icon.');
+    // console.info('You clicked the click icon.');
   };
 
   return (

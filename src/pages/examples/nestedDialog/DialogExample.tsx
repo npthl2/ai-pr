@@ -16,7 +16,9 @@ const DialogExample = () => {
 
   const handleOpenAlert = () => {
     alert(<AlertContent />, {
-      onClose: () => console.log('알림창이 닫혔습니다.'),
+      onClose: () => {
+        // 알림창이 닫혔을 때의 처리
+      },
     });
   };
 
@@ -24,13 +26,16 @@ const DialogExample = () => {
     confirm(
       <ConfirmContent />,
       () => {
-        console.log('삭제 확인됨');
-        // 여기에 삭제 로직 추가
+        // 삭제 확인 처리
       },
       {
         title: '삭제 확인',
-        onCancel: () => console.log('삭제가 취소되었습니다.'),
-        onClose: () => console.log('확인 창이 닫혔습니다.'),
+        onCancel: () => {
+          // 삭제 취소 처리
+        },
+        onClose: () => {
+          // 확인 창이 닫혔을 때의 처리
+        },
       },
     );
   };

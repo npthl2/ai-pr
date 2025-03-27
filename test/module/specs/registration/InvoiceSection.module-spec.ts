@@ -5,7 +5,7 @@ import BookmarkServiceMock from '../../mock/bookmark/BookmarkServiceMock';
 import CustomerDetailServiceMock from '../../mock/customer/detail/CustomerDetailServiceMock';
 import CustomerSectionPage from '../../../pages/registration/CustomerSectionPage';
 import CustomerSectionServiceMock from '../../mock/registration/CustomerSectionServiceMock';
-const CUSTOMER_SECTION_NAME = 'NEW_SUBSCRIPTION0-section-customer';
+import ContractSectionServiceMock from '../../mock/registration/ContractSectionServiceMock';
 const INVOICE_SEARCH_MODAL_NAME = 'invoice-search-modal';
 const ADDRESS_SEARCH_MODAL_NAME = 'address-search-modal';
 const INVOICE_ADDRESS_NAME = 'invoice-address';
@@ -32,12 +32,17 @@ describe('KAN-7 신규가입 진입', () => {
   const customerDetailService = new CustomerDetailServiceMock();
   const customerSectionPage = new CustomerSectionPage();
   const customerSectionService = new CustomerSectionServiceMock();
+  const registrationContractService = new ContractSectionServiceMock();
 
   before(() => {
     // 초기 셋업
     mockAuthStore();
     bookmarkService.successWhenGetBookmarkList();
     customerDetailService.successWhenGetCustomerContracts();
+
+    // 먼저 마운트 하는 데이터 셋업
+    registrationContractService.successWhenGetServices();
+    registrationContractService.successWhenGetAdditionalServices();
 
     // 고객정보 입력
     page.visit();
@@ -80,6 +85,11 @@ describe('KAN-7 신규가입 진입', () => {
     // 재진입
     bookmarkService.successWhenGetBookmarkList();
     customerDetailService.successWhenGetCustomerContracts();
+
+    // 먼저 마운트 하는 데이터 셋업
+    registrationContractService.successWhenGetServices();
+    registrationContractService.successWhenGetAdditionalServices();
+
     page.visit();
     page.clickMenuButton();
     page.clickCustomerSectionButton('신규가입');

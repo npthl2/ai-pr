@@ -5,7 +5,11 @@ import Information from './components/information/Information';
 import { SearchComponent } from './components/search/SearchComponent';
 import useCustomerStore from '@stores/CustomerStore';
 import { useQueryClient } from '@tanstack/react-query';
-import { treeContainerStyle } from './CustomerDetail.styled';
+import {
+  boxContainerStyle,
+  informationContainerStyle,
+  treeContainerStyle,
+} from './CustomerDetail.styled';
 import { boxStyle } from './CustomerDetail.styled';
 
 const CustomerDetail = () => {
@@ -35,7 +39,6 @@ const CustomerDetail = () => {
   };
 
   const handleFilteredContractId = (id: string | null) => {
-    console.debug('handleFilteredContractId', id);
     setFilteredContractId(id);
     if (id) {
       setSelectedContractId(id);
@@ -44,22 +47,26 @@ const CustomerDetail = () => {
 
   return (
     <Box sx={boxStyle}>
-      <Box sx={treeContainerStyle}>
-        <SearchComponent
-          customerId={customerId}
-          includeCancelled={includeCancelled}
-          onIncludeCancelledChange={setIncludeCancelled}
-          onFilteredContractId={handleFilteredContractId}
-        />
-        <Tree
-          customerId={customerId}
-          selectedContractId={selectedContractId}
-          includeCancelled={includeCancelled}
-          filteredContractId={filteredContractId}
-          onPhoneSelect={setSelectedContractId}
-        />
+      <Box sx={boxContainerStyle}>
+        <Box sx={treeContainerStyle}>
+          <SearchComponent
+            customerId={customerId}
+            includeCancelled={includeCancelled}
+            onIncludeCancelledChange={setIncludeCancelled}
+            onFilteredContractId={handleFilteredContractId}
+          />
+          <Tree
+            customerId={customerId}
+            selectedContractId={selectedContractId}
+            includeCancelled={includeCancelled}
+            filteredContractId={filteredContractId}
+            onPhoneSelect={setSelectedContractId}
+          />
+        </Box>
+        <Box sx={informationContainerStyle}>
+          <Information customerId={customerId} contractId={selectedContractId} />
+        </Box>
       </Box>
-      <Information customerId={customerId} contractId={selectedContractId} />
     </Box>
   );
 };

@@ -131,7 +131,13 @@ const MaskingInfo: React.FC<MaskingInfoProps> = ({ originalInfo, encryptedInfo, 
       style={{ cursor: isUnmaskable ? 'context-menu' : 'default' }}
     >
       <Typography variant='body2' sx={{ cursor: 'pointer' }}>
-        {originalInfo}
+        {originalInfo === '고객정보보호' ? (
+          <Typography sx={{ color: '#6E7782 !important', fontWeight: '400 !important' }}>
+            {originalInfo}
+          </Typography>
+        ) : (
+          originalInfo
+        )}
       </Typography>
       {isUnmaskPopupOpen && (
         <Unmasking
@@ -160,6 +166,7 @@ const MaskingInfo: React.FC<MaskingInfoProps> = ({ originalInfo, encryptedInfo, 
       >
         <MenuItem
           onClick={handleMaskingOpen}
+          data-testid='unmasking-menu-item'
           sx={{
             width: '206px',
             height: '33px',

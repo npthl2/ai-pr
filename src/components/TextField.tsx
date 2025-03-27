@@ -6,7 +6,7 @@ import {
   InputAdornment,
   Typography,
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, Theme } from '@mui/material/styles';
 
 type TextFieldSize = 'small' | 'medium';
 type TextFieldState = 'inactive' | 'active' | 'disabled' | 'error';
@@ -24,7 +24,7 @@ interface CustomTextFieldProps
   maxLength?: number;
 }
 
-const getBorderColor = (theme: any, state: TextFieldState) =>
+const getBorderColor = (theme: Theme, state: TextFieldState) =>
   ({
     inactive: theme.palette.grey[200],
     active: theme.palette.primary.main,
@@ -64,6 +64,7 @@ const StyledTextField = styled(MuiTextField, {
       margin: '0 !important',
     },
   },
+
   '& .MuiOutlinedInput-notchedOutline': {
     borderColor: getBorderColor(theme, state),
   },
@@ -75,6 +76,9 @@ const StyledTextField = styled(MuiTextField, {
   },
   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
     borderColor: getBorderColor(theme, state),
+  },
+  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+    borderWidth: '1px !important',
   },
   '& .MuiInputBase-input::placeholder': {
     color: theme.palette.text.secondary,

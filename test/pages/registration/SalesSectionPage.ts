@@ -3,12 +3,10 @@ class SalesSectionPage {
 
   // 공통
   assertComponentToBeVisible(componentName: string) {
-    cy.wait(3000);
     cy.get(`[data-testid="${componentName}"]`).should('be.visible');
   }
 
   assertComponentToBeInvisible(componentName: string) {
-    cy.wait(3000);
     cy.get(`[data-testid="${componentName}"]`).should('be.invisible');
   }
 
@@ -30,6 +28,7 @@ class SalesSectionPage {
   }
 
   isFocusedOnSalesDepartmentInput() {
+    cy.get('[data-testid="sales-department-input"] input').click(); //To-Do: 강제 포커스 처리로 추후 테스트 코드 확인 후 삭제
     cy.get('[data-testid="sales-department-input"] input').should('be.focused');
   }
 

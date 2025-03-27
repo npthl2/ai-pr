@@ -32,7 +32,6 @@ const defaultInvoiceInfo: InvoiceItem = {
 
 // 상수 정의
 const CELL_WIDTH = 200;
-const SUB_CELL_WIDTH = 310.5;
 
 // MaskingInfo를 사용하는 부분을 별도의 함수로 분리
 const renderMaskingInfo = (
@@ -67,44 +66,26 @@ const InvoiceInfo: React.FC<InvoiceInfoProps> = ({
           gap: '16px',
         }}
       >
-        <Typography
-          variant='h3'
-          sx={{
-            gap: 16,
-            fontFamily: 'Pretendard',
-            fontWeight: 700,
-            fontSize: '18px',
-            lineHeight: '27px',
-            letterSpacing: '0px',
-          }}
-        >
-          납부정보
-        </Typography>
+        <Typography variant='h3'>납부정보</Typography>
         {invoiceInfo.paymentId && (
-          <Typography
-            variant='body2'
-            sx={{
-              color: '#6E7782',
-              fontFamily: 'Pretendard',
-              fontWeight: 400,
-              fontSize: '13px',
-              lineHeight: '19.5px',
-              letterSpacing: '0px',
-            }}
-            data-testid='information-invoice-id'
-          >
-            청구번호:{invoiceInfo.paymentId}
+          <Typography sx={{ gap: '8px', display: 'flex', alignItems: 'center' }}>
+            <Typography variant='body2' data-testid='information-invoice-id'>
+              청구번호
+            </Typography>
+            <Typography variant='h6' color='text.secondary'>
+              {invoiceInfo.paymentId}
+            </Typography>
           </Typography>
         )}
       </Box>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ boxShadow: 'none' }}>
         <Table>
           <TableBody>
             <TableRow size='small' disableEffect={true}>
               <TableCell variant='head' width={CELL_WIDTH}>
-                청구고객
+                <Typography>납부고객</Typography>
               </TableCell>
-              <TableCell width={SUB_CELL_WIDTH}>
+              <TableCell sx={{ flex: 1 }}>
                 {renderMaskingInfo(
                   maskingParam,
                   invoiceInfo.paymentName,
@@ -113,9 +94,9 @@ const InvoiceInfo: React.FC<InvoiceInfoProps> = ({
                 )}
               </TableCell>
               <TableCell variant='head' width={CELL_WIDTH}>
-                수령인
+                <Typography>수령인</Typography>
               </TableCell>
-              <TableCell width={SUB_CELL_WIDTH}>
+              <TableCell sx={{ flex: 1 }}>
                 {renderMaskingInfo(
                   maskingParam,
                   invoiceInfo.recipient,
@@ -126,17 +107,17 @@ const InvoiceInfo: React.FC<InvoiceInfoProps> = ({
             </TableRow>
             <TableRow size='small' disableEffect={true}>
               <TableCell variant='head' width={CELL_WIDTH}>
-                납부방법
+                <Typography>납부방법</Typography>
               </TableCell>
-              <TableCell width={SUB_CELL_WIDTH}>{invoiceInfo.paymentMethod}</TableCell>
+              <TableCell sx={{ flex: 1 }}>{invoiceInfo.paymentMethod}</TableCell>
               <TableCell variant='head' width={CELL_WIDTH}>
-                납부일
+                <Typography>납부일</Typography>
               </TableCell>
-              <TableCell width={SUB_CELL_WIDTH}>{invoiceInfo.paymentDate}</TableCell>
+              <TableCell sx={{ flex: 1 }}>{invoiceInfo.paymentDate}</TableCell>
             </TableRow>
             <TableRow size='small' disableEffect={true}>
               <TableCell variant='head' width={CELL_WIDTH}>
-                계좌/카드
+                <Typography>계좌/카드</Typography>
               </TableCell>
               <TableCell colSpan={3}>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
@@ -162,7 +143,7 @@ const InvoiceInfo: React.FC<InvoiceInfoProps> = ({
             </TableRow>
             <TableRow size='small' disableEffect={true}>
               <TableCell variant='head' width={CELL_WIDTH}>
-                청구유형
+                <Typography>청구유형</Typography>
               </TableCell>
               <TableCell colSpan={3}>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
@@ -183,7 +164,7 @@ const InvoiceInfo: React.FC<InvoiceInfoProps> = ({
             </TableRow>
             <TableRow size='small' disableEffect={true}>
               <TableCell variant='head' width={CELL_WIDTH}>
-                청구주소
+                <Typography>청구주소</Typography>
               </TableCell>
               <TableCell colSpan={3}>
                 {renderMaskingInfo(
