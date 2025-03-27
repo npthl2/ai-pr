@@ -50,6 +50,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
           contractTabId={contractTabId}
           onComplete={() => handleSectionComplete(SECTION_IDS.INVOICE)}
           completed={completedSections.includes(SECTION_IDS.INVOICE)}
+          isExpanded={expanded === SECTION_IDS.INVOICE}
         />
       ),
       canExpand: (completedSections: SectionId[]) =>
@@ -63,6 +64,7 @@ const NewContract = ({ contractTabId }: NewContractProps) => {
           contractTabId={contractTabId}
           onComplete={() => handleSectionComplete(SECTION_IDS.SALES)}
           completed={completedSections.includes(SECTION_IDS.SALES)}
+          isExpanded={expanded === SECTION_IDS.SALES}
         />
       ),
       canExpand: (completedSections: SectionId[]) =>

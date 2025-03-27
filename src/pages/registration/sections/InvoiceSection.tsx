@@ -48,6 +48,7 @@ interface InvoiceSectionProps {
   contractTabId: string;
   onComplete: () => void;
   completed?: boolean;
+  isExpanded?: boolean;
 }
 
 interface InvoiceFormData {
@@ -123,7 +124,12 @@ const initialInvoiceError: InvoiceError = {
   birthDate: false,
 };
 
-const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSectionProps) => {
+const InvoiceSection = ({
+  contractTabId,
+  onComplete,
+  completed,
+  isExpanded,
+}: InvoiceSectionProps) => {
   const theme = useTheme();
   const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
   const customerInfo = getRegistrationCustomerInfo(contractTabId);
@@ -307,11 +313,12 @@ const InvoiceSection = ({ contractTabId, onComplete, completed }: InvoiceSection
   };
 
   useEffect(() => {
-    // 진입시 수령인 포커스
-    if (recipientRef.current) {
-      recipientRef.current.focus();
+    if (isExpanded) {
+      setTimeout(() => {
+        recipientRef.current?.focus();
+      }, 300);
     }
-  }, []);
+  }, [isExpanded]);
 
   useEffect(() => {
     // select box에 선택된 값이 있으면 에러 제거.
