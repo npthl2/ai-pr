@@ -276,7 +276,6 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
               renderOption={(props, option) => (
                 <Box
                   component='li'
-                  
                   {...props}
                   sx={{
                     padding: '0 !important',
