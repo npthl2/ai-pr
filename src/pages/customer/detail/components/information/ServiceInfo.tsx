@@ -16,7 +16,7 @@ import useCurrentServiceStore from '@stores/CurrentServiceStore';
 interface ServiceInfoProps {
   serviceInfoParam: ServiceItem | null;
   maskingParam: MaskedTarget;
-  contractId: string;
+  contractStatus: string;
 }
 
 const defaultServiceInfo: ServiceItem = {
@@ -81,7 +81,7 @@ const formatCurrencyKRW = (value: number | string) => {
 const ServiceInfo: React.FC<ServiceInfoProps> = ({
   serviceInfoParam,
   maskingParam,
-  contractId,
+  contractStatus,
 }) => {
   const serviceInfo = serviceInfoParam ?? defaultServiceInfo;
 
@@ -107,7 +107,7 @@ const ServiceInfo: React.FC<ServiceInfoProps> = ({
       closeable: true,
     };
 
-    setSelectedContractId(selectedCustomerId, contractId);
+    setSelectedContractId(selectedCustomerId, serviceInfo.contractId);
     setCustomerTabs(selectedCustomerId, [...currentTabs, newTab]);
     setActiveTab(selectedCustomerId, newTab.id);
   };
@@ -127,16 +127,18 @@ const ServiceInfo: React.FC<ServiceInfoProps> = ({
         <Typography variant='h3' sx={{ height: 27, gap: 16 }}>
           상세정보
         </Typography>
-        <Button
-          variant='outlined'
-          size='small'
-          color='grey'
-          sx={{ height: 28 }}
-          onClick={handleServiceChange}
-          data-testid='service-info-change-button'
-        >
-          요금제/부가서비스 변경
-        </Button>
+        {contractStatus !== '해지' && (
+          <Button
+            variant='outlined'
+            size='small'
+            color='grey'
+            sx={{ height: 28 }}
+            onClick={handleServiceChange}
+            data-testid='service-info-change-button'
+          >
+            요금제/부가서비스 변경
+          </Button>
+        )}
       </Box>
       <TableContainer component={Paper} sx={{ boxShadow: 'none' }}>
         <Table>

@@ -65,6 +65,7 @@ const ContractServiceList = ({ open, onClose, contracts }: ContractServiceListPr
           style: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
         },
       }}
+      data-testid='contract-service-list-modal'
     >
       <ModalContainer>
         <ModalTitle>

@@ -19,6 +19,7 @@ export interface ContractData {
     contractId: string;
     phoneNumber: string;
     contractType: string;
+    contractStatus: string;
     contractor: {
       assignee: string;
       assigneeDepartment: string;
@@ -96,6 +97,7 @@ export interface Service {
 
 export interface ContractServiceResponse {
   contractId: string;
+  contractStatusCode: string;
   serviceId: string;
   serviceName: string;
   serviceType: string;

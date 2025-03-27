@@ -5,12 +5,13 @@ import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import useCustomerStore from '@stores/CustomerStore';
 import { useEffect, useRef, useState } from 'react';
 import ContractServiceList from './ContractServiceList';
+import ContractServiceDialog from './ContractServiceDialog';
 import { useCustomerContractQuery } from '@api/queries/contract/useCustomerContractQuery';
 import { ROLE_UNMASKING, MASKING_ITEM_CODE, TabInfo } from '@constants/CommonConstant';
-import Dialog from '@components/Dialog';
 import { CustomerContract } from '@model/Contract';
 import Unmasking from '@pages/unmasking/Unmasking';
 import useMemberStore from '@stores/MemberStore';
+import { Customer } from '@model/Customer';
 
 interface MaskedTarget {
   maskingType: string;
@@ -41,7 +42,11 @@ const transformContractToStoreFormat = (contract: CustomerContract) => ({
 
 const LineInformation = () => {
   const customerId = useCustomerStore((state) => state.selectedCustomerId) || '';
+  const selectedCustomer = useCustomerStore(
+    (state) => state.customers.find((c) => c.id === customerId) as Customer,
+  );
   const selectedCustomerId = useRef(customerId).current;
+  const isCustomer = useCustomerStore((state) => state.isCustomer(selectedCustomer));
 
   const [isServiceListOpen, setIsServiceListOpen] = useState(false);
   const [showNoContractDialog, setShowNoContractDialog] = useState(false);
@@ -95,6 +100,13 @@ const LineInformation = () => {
     const contracts = customerContractdata.contracts;
     const transformedContracts = contracts.map(transformContractToStoreFormat);
 
+    // 전화번호로 조회한 고객이면 조회한 고객 store에 contractId 존재
+    if (isCustomer && selectedCustomer?.contractId) {
+      setSelectedContractId(selectedCustomerId, selectedCustomer.contractId);
+      setCustomerContracts(selectedCustomerId, transformedContracts);
+      return;
+    }
+
     if (contracts.length === 1) {
       // 계약이 단 1개인 경우: 선택된 계약 ID를 설정하고 계약을 저장
       const contract = contracts[0];
@@ -140,27 +152,11 @@ const LineInformation = () => {
 
   return (
     <>
-      <Dialog
+      <ContractServiceDialog
         open={showNoContractDialog}
-        closeLabel='확인'
         title='상품 변경 불가 알림'
         content='사용중인 회선이 없으므로, 상품변경이 불가합니다.'
         onClose={handleCloseDialog}
-        size='small'
-        disableRestoreFocus
-        sx={{
-          '& .MuiDialog-paper': {
-            height: '169px',
-            width: '400px',
-          },
-          '& [data-testid="component-dialog-close-button"]': {
-            backgroundColor: 'primary.main',
-            borderColor: 'primary.main',
-            '& .MuiTypography-root': {
-              color: 'primary.contrastText',
-            },
-          },
-        }}
       />
 
       <Typography variant='h3' sx={{ mr: 2, fontWeight: 700, fontSize: '1.1rem' }}>
@@ -180,7 +176,7 @@ const LineInformation = () => {
               }
               style={{ cursor: isUnmaskable ? 'pointer' : 'default' }}
             >
-              <Typography>
+              <Typography data-testid='line-information-phone-number'>
                 {customerContract?.phoneNumber
                   ? customerContract?.phoneNumber
                   : customerContract?.maskingPhoneNumber}

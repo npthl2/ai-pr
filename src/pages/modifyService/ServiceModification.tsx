@@ -29,7 +29,7 @@ const ServiceModification: React.FC = () => {
       }}
     >
       <Container>
-        <ContentContainer>
+        <ContentContainer data-testid='service-modification-container'>
           <LineInfoContainer sx={{ flexShrink: 0 }}>
             <LineInformation />
           </LineInfoContainer>
