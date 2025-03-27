@@ -1,64 +1,364 @@
 /// <reference types="cypress" />
 
 // 목 데이터: 요금제 목록
-const servicesMock = [
+const successGetServices = [
   {
-    serviceId: 'S001',
-    serviceName: '5G 스탠다드 요금제',
-    serviceValue: 55000,
-    serviceValueType: 'KRW',
-    releaseDate: '2022-01-01'
+    serviceId: 'svc_58',
+    serviceName: 'LTE Speed Max 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 60000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
   },
   {
-    serviceId: 'S002',
-    serviceName: '5G 프리미엄 요금제',
-    serviceValue: 75000,
-    serviceValueType: 'KRW',
-    releaseDate: '2022-06-01'
+    serviceId: 'svc_60',
+    serviceName: 'LTE Prime Max 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 180000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
   },
   {
-    serviceId: 'S003',
-    serviceName: '데이터 무제한 요금제',
-    serviceValue: 95000,
-    serviceValueType: 'KRW',
-    releaseDate: '2023-01-01'
-  }
+    serviceId: 'svc_55',
+    serviceName: 'LTE Premium Pro 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 150000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'svc_7',
+    serviceName: '5G Speed Master 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 10000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'svc_1',
+    serviceName: '5G Ultra Plus 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 130000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'svc_9',
+    serviceName: '5G Turbo Flex 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 110000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'svc_57',
+    serviceName: 'LTE Flex Ultra 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 30000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'svc_51',
+    serviceName: 'LTE Ultra Max 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 100000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'svc_53',
+    serviceName: 'LTE Speed Elite 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 40000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'svc_3',
+    serviceName: '5G Turbo Pro 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 90000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'svc_52',
+    serviceName: 'LTE Power Plus 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 20000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'svc_8',
+    serviceName: '5G Hyper Ultra 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 80000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'svc_59',
+    serviceName: 'LTE Hyper Elite 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 90000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'svc_2',
+    serviceName: '5G Max Speed 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 80000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'svc_56',
+    serviceName: 'LTE Max Power 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 160000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'svc_5',
+    serviceName: '5G Infinity Max 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 20000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'svc_6',
+    serviceName: '5G Power Max 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 130000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'svc_4',
+    serviceName: '5G Elite Pro 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 110000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'svc_10',
+    serviceName: '5G Premium Max 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 20000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'svc_54',
+    serviceName: 'LTE Turbo Flex 요금제',
+    serviceType: '요금제',
+    serviceValueType: '유료',
+    serviceValue: 100000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
 ];
 
 // 목 데이터: 부가서비스 목록
-const additionalServicesMock = [
+const successGetAdditionalServices = [
   {
-    serviceId: 'A001',
-    serviceName: '안심 데이터 차단',
-    serviceValue: 0,
-    serviceValueType: 'KRW',
-    hasAgeRestriction: false,
-    exclusive: false
+    serviceId: 'a_5g_1',
+    serviceName: '5G 1 Giga 충전 부가서비스',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 21000,
+    exclusiveServiceIds: [
+      'svc_51',
+      'svc_52',
+      'svc_53',
+      'svc_54',
+      'svc_55',
+      'svc_56',
+      'svc_57',
+      'svc_58',
+      'svc_59',
+      'svc_60',
+    ],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
   },
   {
-    serviceId: 'A002',
-    serviceName: '데이터 안심옵션',
+    serviceId: 'a_lte_3',
+    serviceName: 'LTE 3 Giga 충전 부가서비스',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 23000,
+    exclusiveServiceIds: ['svc_1', 'svc_2', 'svc_3', 'svc_4', 'svc_5', 'svc_6'],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'a_lte_1',
+    serviceName: 'LTE 1 Giga 충전 부가서비스',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 19000,
+    exclusiveServiceIds: [
+      'svc_1',
+      'svc_2',
+      'svc_3',
+      'svc_4',
+      'svc_5',
+      'svc_6',
+      'svc_7',
+      'svc_8',
+      'svc_9',
+      'svc_10',
+    ],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'a_lte_2',
+    serviceName: 'LTE 2 Giga 충전 부가서비스',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 20000,
+    exclusiveServiceIds: [
+      'svc_1',
+      'svc_2',
+      'svc_3',
+      'svc_4',
+      'svc_5',
+      'svc_6',
+      'svc_7',
+      'svc_8',
+      'svc_9',
+      'svc_10',
+    ],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'a_ai_1',
+    serviceName: 'AI로봇 부가서비스 Alpha',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 200000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'a_5g_3',
+    serviceName: '5G 3 Giga 충전 부가서비스',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
     serviceValue: 5000,
-    serviceValueType: 'KRW',
-    hasAgeRestriction: false,
-    exclusive: false
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
   },
   {
-    serviceId: 'A003',
-    serviceName: '청소년 안심 서비스',
-    serviceValue: 2000,
-    serviceValueType: 'KRW',
-    hasAgeRestriction: true,
-    exclusive: false
+    serviceId: 'a_5g_2',
+    serviceName: '5G 2 Giga 충전 부가서비스',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 26000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
   },
   {
-    serviceId: 'A004',
-    serviceName: 'VIP 로밍 서비스',
-    serviceValue: 15000,
-    serviceValueType: 'KRW',
-    hasAgeRestriction: false,
-    exclusive: true
-  }
+    serviceId: 'a_ai_2',
+    serviceName: 'AI로봇 부가서비스 Beta',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 240000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'a_biz_1',
+    serviceName: '스마트 라이프 부가서비스',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 8000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'a_app_2',
+    serviceName: '기가 지니 부가서비스 2',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 29000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'a_app_1',
+    serviceName: '기가 지니 부가서비스 1',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 14000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
+  {
+    serviceId: 'a_biz_2',
+    serviceName: '클라우드 스토리지 부가서비스',
+    serviceType: '부가서비스',
+    serviceValueType: '유료',
+    serviceValue: 8000,
+    exclusiveServiceIds: [''],
+    validStartDatetime: '2025-03-09T15:00:00.000+00:00',
+    validEndDatetime: '2028-03-09T15:00:00.000+00:00',
+  },
 ];
 
 // 목 데이터: 요금제 변경 가능 여부 응답
@@ -128,50 +428,6 @@ const serviceModificationSuccessResponse = {
 };
 
 class ModifyServiceMock {
-  // 고객 검색 결과 모킹
-  successWhenSearchCustomer() {
-    cy.intercept('GET', '**/v1/customers?**', {
-      statusCode: 200,
-      body: {
-        successOrNot: 'Y',
-        statusCode: 'SUCCESS',
-        data: {
-          customerId: '100000000001',
-          customerName: '김철수',
-          encryptedCustomerName: '김철수',
-          rrno: '781012-1658743',
-          encryptedRrno: '781012-1658743',
-          gender: 'M',
-          age: 46,
-          contractId: null,
-        },
-      },
-    }).as('searchCustomer');
-  }
-
-  // 고객 상세 정보 모킹
-  successWhenGetCustomerDetail() {
-    cy.intercept('GET', '**/v1/customers/100000000001**', {
-      statusCode: 200,
-      body: {
-        successOrNot: 'Y',
-        statusCode: 'SUCCESS',
-        data: {
-          customerId: '100000000001',
-          contracts: [
-            {
-              contractId: '6872339294',
-              orderId: '1000000001',
-              contractDate: '2025-03-06T07:18:32.461+00:00',
-              phoneNumber: '010-12**-*678',
-              phoneNumberEncrypted: 'encrypted-phone'
-            }
-          ]
-        }
-      }
-    }).as('getCustomerDetail');
-  }
-
   // 요금제 목록 조회 API 모킹
   successWhenGetServices() {
     cy.intercept('GET', '**/v1/services', {
@@ -179,45 +435,47 @@ class ModifyServiceMock {
       body: {
         successOrNot: 'Y',
         statusCode: 'SUCCESS',
-        data: servicesMock
+        data: successGetServices
       }
     }).as('getServices');
   }
 
   // 부가서비스 목록 조회 API 모킹
   successWhenGetAdditionalServices() {
-    cy.intercept('GET', '**/v1/services/additional**', {
-      statusCode: 200,
-      body: {
-        successOrNot: 'Y', 
-        statusCode: 'SUCCESS',
-        data: additionalServicesMock
+    cy.intercept(
+      'GET', /\/v1\/additional-services\/age-exclusive\?age=\d+&serviceId=.+/, {
+        statusCode: 200,
+        body: {
+          successOrNot: 'Y',
+          statusCode: 'SUCCESS',
+          data: successGetAdditionalServices
+        }
       }
-    }).as('getAdditionalServices');
+    ).as('getAdditionalServices');
   }
 
   // 요금제 변경 가능 여부 확인 API 모킹 (가능)
   successWhenCheckServiceModifiable() {
-    cy.intercept('GET', '**/v1/service-modification/check**', {
+    cy.intercept('GET', /\/v1\/contract\/service-modify\/[^/]+\/check$/, {
       statusCode: 200,
       body: modifiableResponseTrue
-    }).as('checkServiceModifiable');
+    }).as('successWhenCheckServiceModifiable');
   }
 
   // 요금제 변경 가능 여부 확인 API 모킹 (불가능 - 당월 변경 이력)
   failWhenCheckServiceModifiable() {
-    cy.intercept('GET', '**/v1/service-modification/check**', {
+    cy.intercept('GET', /\/v1\/contract\/service-modify\/[^/]+\/check$/, {
       statusCode: 200,
       body: modifiableResponseFalse
-    }).as('checkServiceModifiable');
+    }).as('failWhenCheckServiceModifiable');
   }
 
   // 요금제 변경 가능 여부 확인 API 모킹 (불가능 - 당일 변경 이력, 되돌리기 가능)
   rollbackAvailableWhenCheckServiceModifiable() {
-    cy.intercept('GET', '**/v1/service-modification/check**', {
+    cy.intercept('GET', '**/v1/contract/service-modify/${contractId}/check', {
       statusCode: 200,
       body: modifiableResponseWithRollback
-    }).as('checkServiceModifiable');
+    }).as('rollbackAvailableWhenCheckServiceModifiable');
   }
 
   // 나이 제한 확인 API 모킹 (제한 없음)

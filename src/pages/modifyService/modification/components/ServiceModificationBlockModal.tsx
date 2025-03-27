@@ -41,7 +41,7 @@ const ModalFooter: React.FC<ModalFooterProps> = ({ showCancel, onClose, onConfir
           variant='outlined'
           onClick={onClose}
           size='medium'
-          data-testid='service-modification-cancel-button'
+          data-testid='modal-cancel-button'
         >
           취소
         </Button>
@@ -50,7 +50,7 @@ const ModalFooter: React.FC<ModalFooterProps> = ({ showCancel, onClose, onConfir
         variant='contained'
         onClick={handleConfirm}
         size='medium'
-        data-testid='service-modification-confirm-button'
+        data-testid='modal-confirm-button'
       >
         확인
       </Button>
@@ -80,7 +80,7 @@ const ServiceModificationModal: React.FC<ServiceModificationModalProps> = ({
       open={open}
       onClose={onClose}
       aria-labelledby='service-modification-modal-title'
-      data-testid='service-modification-modal'
+      data-testid='service-modification-block-modal'
     >
       <Box sx={styles.modalContainer}>
         {/* 모달 헤더 */}
@@ -94,7 +94,7 @@ const ServiceModificationModal: React.FC<ServiceModificationModalProps> = ({
         </Box>
 
         {/* 모달 컨텐츠 */}
-        <Box sx={styles.contentContainerWithStart}>
+        <Box sx={styles.contentContainerWithStart} data-testid='service-modification-modal-message'>
           <Typography sx={styles.messageTextWithPreLine}>
             {modalConfig.content({
               open,

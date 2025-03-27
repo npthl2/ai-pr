@@ -276,6 +276,7 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
               renderOption={(props, option) => (
                 <Box
                   component='li'
+                  
                   {...props}
                   sx={{
                     padding: '0 !important',
@@ -285,6 +286,7 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
                   }}
                 >
                   <Box
+                    data-testid='service-option'
                     sx={{
                       display: 'flex',
                       justifyContent: 'space-between',
@@ -303,6 +305,7 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
                   placeholder={isServiceModifiable ? '요금제 선택' : '요금제 검색'}
                   size='small'
                   sx={isServiceModifiable ? serviceTextFieldStyle : disabledTextFieldStyle}
+                  data-testid='service-select-box'
                 />
               )}
               onChange={handlePlanChange}
@@ -313,7 +316,7 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
 
         {/* 선택한 요금제의 요금 및 되돌리기 버튼 */}
         <PriceContainer>
-          <PriceTypography variant='subtitle1'>
+          <PriceTypography variant='subtitle1' data-testid='selected-service-price'>
             {selectedService ? `${selectedService.serviceValue.toLocaleString()}원` : '0원'}
           </PriceTypography>
 
