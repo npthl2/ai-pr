@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import MemoHistory from './components/MemoHistory';
-import SendHistory from './components/sendHistory';
+import SendHistory from './components/SendHistory';
 import DoubleArrow from '@mui/icons-material/DoubleArrow';
 import {
   PanelCloseButton,
