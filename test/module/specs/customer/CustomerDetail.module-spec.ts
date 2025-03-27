@@ -36,11 +36,11 @@ describe('KAN-20 고객 조회 페이지 진입', () => {
   it('KAN-20-2 검색 항목에 맞는 트리 상태 확인이 가능해야 한다', () => {
     // 이름 - 생일 - 성별 검색의 경우 모든 노드가 닫혀있어야 한다
     page.assertTreeSelected1depthClosed();
-    page.clickFirstNodeOfTree(); // 20-3을 위한 노드 열기
   });
 
   it('KAN-20-3 항목 클릭 시 상세 정보 확인이 가능해야 한다', () => {
     page.clickFirstNodeOfTree();
+    page.clickPhoneTreeItem();
     page.assertInformationText();
   });
 

@@ -14,6 +14,10 @@ class CustomerDetailPage {
     cy.get('[data-testid="tree-lob-item"]').first().click();
   }
 
+  clickPhoneTreeItem() {
+    cy.get('[data-testid="phone-tree-item"]').first().click();
+  }
+
   assertInformation() {
     cy.get('[data-testid="information"]').should('exist');
   }
