@@ -82,7 +82,6 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
 
   // 현재 활성화된 탭이 ServiceModification 탭인지 확인
   const isServiceModificationTabActive = (() => {
-
     // 고객 ID가 없거나 해당 고객의 탭 정보가 없으면 false 반환
     if (!selectedCustomerId || !customerTabs[selectedCustomerId]) return false;
 
