@@ -475,7 +475,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
                       height: '28px',
                     },
                   }}
-                  data-testId='service-search-text-field'
+                  data-testid='service-search-text-field'
                 />
                 <Typography
                   sx={{

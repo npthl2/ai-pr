@@ -1,78 +1,60 @@
 import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
-import { RegistrationInfo } from '@model/RegistrationInfo';
-import { RegistrationStatusType } from '@constants/RegistrationConstants';
-// 스토어 상태 인터페이스 정의
+
+export interface Registration {
+  businessProcessId: string;
+}
+
+export interface Registrations {
+  [contractTapId: string]: Registration;
+}
+
 export interface RegistrationStoreState {
-  registrationInfo: Record<string, RegistrationInfo>; // 계약 ID를 키로 갖는 저장된 계약 데이터 객체
+  registrationInfo: Registrations;
 
-  // 특정 계약 ID에 대한 데이터를 저장하는 함수
-  setRegistrationInfo: (contractTapId: string, data: RegistrationInfo) => void;
-
-  // 특정 계약 ID의 데이터를 조회하는 함수
-  getRegistrationInfo: (contractTapId: string) => RegistrationInfo | undefined;
-
-  // 특정 계약 ID에 대한 저장된 데이터를 삭제하는 함수
+  getRegistrationInfo: (contractTapId: string) => Registration | undefined;
+  setRegistrationInfo: (contractTapId: string, info: Registration) => void;
+  getRegistrationBusinessProcessId: (contractTapId: string) => string | undefined;
+  setRegistrationBusinessProcessId: (contractTapId: string, businessProcessId: string) => void;
   removeRegistrationInfo: (contractTapId: string) => void;
-
-  // 전체 계약 데이터를 초기화하는 함수
-  clearAllRegistrationInfo: () => void;
-
-  // 저장 상태를 업데이트하는 함수 추가
-  updateRegistrationStatus: (contractTapId: string, status: RegistrationStatusType) => void;
+  clearRegistrationInfo: () => void;
 }
 
 // Zustand 상태 생성 및 정의
 const useRegistrationStore = create<RegistrationStoreState>((set, get) => ({
   registrationInfo: {}, // 초기 상태는 빈 객체
 
-  // 특정 계약 ID에 대한 데이터를 저장하는 함수 구현
-  setRegistrationInfo: (contractTapId, data) => {
+  getRegistrationInfo: (contractTapId: string) => {
+    return get().registrationInfo[contractTapId];
+  },
+
+  setRegistrationInfo: (contractTapId: string, info: Registration) => {
+    set((state) => ({ registrationInfo: { ...state.registrationInfo, [contractTapId]: info } }));
+  },
+
+  getRegistrationBusinessProcessId: (contractTapId: string) => {
+    return get().registrationInfo[contractTapId]?.businessProcessId;
+  },
+
+  setRegistrationBusinessProcessId: (contractTapId: string, businessProcessId: string) => {
     set((state) => ({
       registrationInfo: {
         ...state.registrationInfo,
-        [contractTapId]: data,
+        [contractTapId]: { ...state.registrationInfo[contractTapId], businessProcessId },
       },
     }));
   },
 
-  // 특정 계약 ID의 데이터를 조회하는 함수 구현
-  getRegistrationInfo: (contractTapId) => {
-    return get().registrationInfo[contractTapId];
-  },
-
-  // 특정 계약 ID에 대한 저장된 데이터를 삭제하는 함수 구현
-  removeRegistrationInfo: (contractTapId) => {
+  removeRegistrationInfo: (contractTapId: string) => {
     set((state) => {
-      const newRegistrationInfo = { ...state.registrationInfo };
-      delete newRegistrationInfo[contractTapId];
-      return { registrationInfo: newRegistrationInfo };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { [contractTapId]: removed, ...rest } = state.registrationInfo;
+      return { registrationInfo: rest };
     });
   },
 
-  // 전체 계약 데이터를 초기화하는 함수 구현
-  clearAllRegistrationInfo: () => {
-    set({ registrationInfo: {} });
-  },
-
-  // 저장 상태를 업데이트하는 함수 구현
-  updateRegistrationStatus: (contractTapId, status) => {
-    set((state) => {
-      const currentInfo = state.registrationInfo[contractTapId];
-      if (!currentInfo) {
-        return state; // 해당 ID의 데이터가 없으면 상태 변경 없음
-      }
-
-      return {
-        registrationInfo: {
-          ...state.registrationInfo,
-          [contractTapId]: {
-            ...currentInfo,
-            status,
-          },
-        },
-      };
-    });
+  clearRegistrationInfo: () => {
+    set(() => ({ registrationInfo: {} }));
   },
 }));
 
