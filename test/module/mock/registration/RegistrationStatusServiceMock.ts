@@ -69,7 +69,7 @@ class RegistrationStatusServiceMock {
                 registrations: [],
               },
       },
-    });
+    }).as('registrationStatusRequest');
   }
 }
 export default RegistrationStatusServiceMock;

@@ -5,8 +5,8 @@ export const bookmarkListResponse = {
   statusCode: 'SUCCESS',
   data: {
     memberId: 'S-0001',
-    bookmarks: ['NEW_SUBSCRIPTION', 'CUSTOMER_SEARCH']
-  }
+    bookmarks: ['SERVICE_MODIFICATION'],
+  },
 };
 
 export class BookmarkServiceMock {
@@ -14,7 +14,7 @@ export class BookmarkServiceMock {
   successWhenGetBookmarkList() {
     cy.intercept('GET', '**/v1/member/bookmark', {
       statusCode: 200,
-      body: bookmarkListResponse
+      body: bookmarkListResponse,
     }).as('bookmarkRequest');
   }
 
