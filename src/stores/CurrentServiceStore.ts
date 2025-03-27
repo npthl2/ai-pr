@@ -53,7 +53,8 @@ interface ServiceState {
   getSelectedContractId: (customerId: string) => string;
   getSelectedCustomerContract: (customerId: string) => CustomerContract | null;
   deleteSelectedContractId: (customerId: string) => void;
-  deleteCustomerData: (customerId: string) => void;
+  deleteCustomerServiceData: (customerId: string) => void;
+  resetAllData: () => void;
 }
 
 const useCurrentServiceStore = create<ServiceState>((set, get) => ({
@@ -112,7 +113,7 @@ const useCurrentServiceStore = create<ServiceState>((set, get) => ({
         ),
       },
     })),
-  deleteCustomerData: (customerId: string) =>
+  deleteCustomerServiceData: (customerId: string) =>
     set((state) => {
       const newServices = { ...state.service };
       const newContracts = { ...state.customerContracts };
@@ -133,6 +134,12 @@ const useCurrentServiceStore = create<ServiceState>((set, get) => ({
       const newSelectedIds = { ...state.selectedContractIds };
       delete newSelectedIds[customerId];
       return { selectedContractIds: newSelectedIds };
+    }),
+  resetAllData: () =>
+    set({
+      service: {},
+      customerContracts: {},
+      selectedContractIds: {},
     }),
 }));
 

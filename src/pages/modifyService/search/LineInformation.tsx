@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 import { LineInfoDetailsContainer, ServiceLabel, ServiceValue } from './LineInformation.styled';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import useCustomerStore from '@stores/CustomerStore';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ContractServiceList from './ContractServiceList';
 import { useCustomerContractQuery } from '@api/queries/contract/useCustomerContractQuery';
 import { ROLE_UNMASKING, MASKING_ITEM_CODE, TabInfo } from '@constants/CommonConstant';
@@ -38,8 +38,10 @@ const transformContractToStoreFormat = (contract: CustomerContract) => ({
 });
 
 const LineInformation = () => {
+  const customerId = useCustomerStore((state) => state.selectedCustomerId) || '';
+  const selectedCustomerId = useRef(customerId).current;
+
   const [isServiceListOpen, setIsServiceListOpen] = useState(false);
-  const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
   const [showNoContractDialog, setShowNoContractDialog] = useState(false);
   const [isUnmaskPopupOpen, setIsUnmaskPopupOpen] = useState(false);
   const [unmaskingData, setUnmaskingData] = useState<UnmaskingData | null>(null);
@@ -72,7 +74,12 @@ const LineInformation = () => {
   });
 
   useEffect(() => {
-    if (!customerContractdata || !isServiceModificationTabActive) return;
+    if (
+      !customerContractdata ||
+      !isServiceModificationTabActive ||
+      selectedCustomerId !== customerId
+    )
+      return;
 
     const contracts = customerContractdata.contracts;
 
@@ -87,7 +94,7 @@ const LineInformation = () => {
     } else if (contracts.length === 0) {
       setShowNoContractDialog(true);
     }
-  }, [customerContractdata]);
+  }, [customerContractdata, customerId]);
 
   const handleContextMenu = (event: React.MouseEvent, data: UnmaskingData) => {
     event.preventDefault();

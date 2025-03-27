@@ -39,8 +39,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
   const { menuItems } = useMenuStore();
   const { handleBookmarkClick } = useBookmark();
   const { handleRemoveAllRegistrationInfo } = useRegistration();
-  const { deleteSelectedContractId, deleteCustomerContracts, deleteCurrentService } =
-    useCurrentServiceStore();
+  const { deleteCustomerServiceData, resetAllData } = useCurrentServiceStore();
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     if (customerId) {
@@ -60,9 +59,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
 
         // 3. 닫은 탭의 라벨이 TabInfo.SERVICE_MODIFICATION.label와 같으면 currentServiceStore의 값을 초기화 한다
         if (tabToClose.label === TabInfo.SERVICE_MODIFICATION.label) {
-          deleteSelectedContractId(customerId);
-          deleteCustomerContracts(customerId);
-          deleteCurrentService(customerId);
+          deleteCustomerServiceData(customerId);
         }
       }
     }
@@ -72,6 +69,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
     if (customerId) {
       removeCustomer(customerId);
       handleRemoveAllRegistrationInfo(customerId);
+      resetAllData();
     }
   };
 
