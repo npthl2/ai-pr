@@ -1,9 +1,9 @@
-import { InvoiceInfo } from '@model/RegistrationInfo';
 import { InfoSection, InfoRow, InfoLabel, InfoValue, SubSectionTitle } from '../SummaryInfo.styled';
 import { Box } from '@mui/material';
+import { RegistrationInvoiceInfo } from '@stores/registration/RegistrationInvoiceStore';
 
 interface BillingInfoProps {
-  invoiceInfo: InvoiceInfo;
+  invoiceInfo: RegistrationInvoiceInfo;
 }
 
 const BillingInfo = ({ invoiceInfo }: BillingInfoProps) => {

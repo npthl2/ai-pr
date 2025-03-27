@@ -38,6 +38,7 @@ const aliasConfig = {
   '@assets': './src/assets',
   '@router': './src/router',
   '@layout': './src/layout',
+  '@providers': './src/providers',
   '@constants': './src/constants',
   '@theme': './src/theme',
 };

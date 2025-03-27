@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { Box, Switch, FormControlLabel } from '@mui/material';
-import registrationService from '@api/services/registrationService';
 import useRegistrationStore from '@stores/registration/RegistrationStore';
 import {
   RegistrationRequestContainer,
@@ -13,15 +11,6 @@ import StatusMessage from './components/StatusMessage';
 import SummaryInfo from './components/SummaryInfo';
 import EmailForm from './components/EmailForm';
 import ActionButtons from './components/ActionButtons';
-import {
-  InvoiceInfo,
-  DeviceInfo,
-  ContractInfo,
-  RegistrationStatus,
-  RegistrationInfo,
-  CustomerInfo,
-  SalesAgentInfo,
-} from '@model/RegistrationInfo';
 import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants';
 import { useEmailSendMutation } from '@api/queries/email/useEmailSendMutation';
 import { EmailSendRequest } from '@model/Email';
@@ -33,13 +22,14 @@ import { MainMenu, TabInfo } from '@constants/CommonConstant';
 import customerService from '@api/services/customerService';
 import { Gender } from '@model/Customer';
 import { useRegistration } from '@hooks/useRegistration';
+import { useRegistrationStatus } from '@hooks/useRegistrationStatus';
+import { useRegistrationInfo } from '@hooks/useRegistrationInfo';
 
 interface RegistrationRequestProps {
-  contractTabId?: string;
+  contractTabId: string;
 }
 
 const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
-  const [status, setStatus] = useState<RegistrationStatusType>(REGISTRATION_STATUS.PENDING);
   const [isEmailEnabled, setIsEmailEnabled] = useState<boolean>(false);
 
   // Toast 스토어 접근
@@ -48,89 +38,24 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
   // 이메일 발송 mutation 훅 사용
   const { mutate: sendEmail, isPending: isEmailSending } = useEmailSendMutation();
 
-  // 스토어 접근
-  const updateRegistrationStatus = useRegistrationStore((state) => state.updateRegistrationStatus);
-  const getRegistrationInfo = useRegistrationStore((state) => state.getRegistrationInfo);
+  const registrationInfo = useRegistrationInfo(contractTabId);
+  const invoiceInfo = registrationInfo.invoice;
+  const salesInfo = registrationInfo.sales;
+  const contractInfo = registrationInfo.contract;
+  const deviceInfo = registrationInfo.device;
+  const customerInfo = registrationInfo.customer;
 
-  // RegistrationStore에서 데이터 가져오기
-  const registrationData = contractTabId ? getRegistrationInfo(contractTabId) : undefined;
+  const businessProcessId = useRegistrationStore(
+    (state) => state.registrationInfo[contractTabId]?.businessProcessId,
+  );
 
-  // 각 정보 추출
-  const customerInfo = registrationData?.customer as CustomerInfo;
-  const invoiceInfo = registrationData?.invoice as InvoiceInfo;
-  const deviceInfo = registrationData?.device as DeviceInfo;
-  const contractInfo = registrationData?.contract as ContractInfo;
-  const salesAgentInfo = registrationData?.sales as SalesAgentInfo;
-
-  // 등록 상태를 폴링하는 쿼리
-  const { data, isError } = useQuery({
-    queryKey: ['registrationStatus', contractTabId, registrationData?.businessProcessId],
-    queryFn: async () => {
-      // 필수 정보가 없는 경우 PENDING 상태 반환
-      if (!contractTabId || !registrationData?.businessProcessId) {
-        return { status: REGISTRATION_STATUS.PENDING } as RegistrationStatus;
-      }
-
-      // API 서비스 레이어에서 상태 조회 및 데이터 변환 처리
-      return registrationService.getRegistrationStatusWithMapping(
-        registrationData.businessProcessId,
-      );
-    },
-    // 쿼리 옵션
-    refetchInterval: status === REGISTRATION_STATUS.PENDING ? 2000 : false, // PENDING 상태일 때만 2초마다 폴링
-    enabled:
-      !!contractTabId &&
-      status === REGISTRATION_STATUS.PENDING &&
-      !!registrationData?.businessProcessId, // 필요한 정보가 있을 때만 활성화
-    staleTime: 0, // 항상 최신 데이터 사용
-    gcTime: 0, // 캐시 사용하지 않음
-    retry: 3, // 실패 시 3번까지 재시도
-    refetchOnWindowFocus: false, // 창 포커스 시 다시 가져오지 않음
+  const { data } = useRegistrationStatus({
+    isRegistrationRequestMounted: true,
+    businessProcessId,
   });
-
-  useEffect(() => {
-    // 에러 발생 시 처리
-    if (isError) {
-      setStatus(REGISTRATION_STATUS.FAILED);
-      if (contractTabId) {
-        updateRegistrationStatus(contractTabId, REGISTRATION_STATUS.FAILED);
-      }
-      return;
-    }
-
-    // 데이터가 없는 경우 처리하지 않음
-    if (!data?.status) return;
-
-    // 타입 안전성을 위해 status 값을 검증
-    const newStatus =
-      data.status === REGISTRATION_STATUS.COMPLETED
-        ? REGISTRATION_STATUS.COMPLETED
-        : data.status === REGISTRATION_STATUS.FAILED
-          ? REGISTRATION_STATUS.FAILED
-          : REGISTRATION_STATUS.PENDING;
-
-    // 상태가 변경되지 않은 경우 처리하지 않음
-    if (status === newStatus) return;
-
-    // 상태 업데이트
-    setStatus(newStatus);
-
-    // contractTabId가 없는 경우 처리하지 않음
-    if (!contractTabId) return;
-
-    // 상태 업데이트
-    updateRegistrationStatus(contractTabId, newStatus);
-
-    // contract_id가 있고 상태가 COMPLETED인 경우 RegistrationStore에 저장
-    if (data.contract_id && newStatus === REGISTRATION_STATUS.COMPLETED && registrationData) {
-      const updatedInfo: RegistrationInfo = {
-        ...registrationData,
-        contract_id: data.contract_id,
-        status: newStatus,
-      };
-      useRegistrationStore.getState().setRegistrationInfo(contractTabId, updatedInfo);
-    }
-  }, [data, isError, contractTabId, updateRegistrationStatus, registrationData, status]);
+  const registrationData = data?.registrations.find(
+    (registration) => registration.businessProcessId === businessProcessId,
+  );
 
   // 이메일 발송 처리
   const handleSendEmail = (email: string) => {
@@ -140,7 +65,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
     }
 
     // 저장된 계약 ID 사용
-    const contractId = registrationData?.contract_id;
+    const contractId = registrationData?.contractId;
 
     const emailRequest: EmailSendRequest = {
       customerId: customerInfo.customerId,
@@ -258,7 +183,10 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
   return (
     <RegistrationRequestContainer>
       <ContentContainer>
-        <StatusMessage status={status} customerName={customerInfo?.name || ''} />
+        <StatusMessage
+          status={registrationData?.status as RegistrationStatusType}
+          customerName={registrationData?.customerName || ''}
+        />
 
         <SectionContainer>
           <Box
@@ -290,7 +218,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
                   invoiceInfo={invoiceInfo}
                   deviceInfo={deviceInfo}
                   contractInfo={contractInfo}
-                  salesAgentInfo={salesAgentInfo}
+                  salesInfo={salesInfo}
                 />
               )}
             </Box>
@@ -319,7 +247,10 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
                   <Switch
                     checked={isEmailEnabled}
                     onChange={handleEmailToggleChange}
-                    disabled={status !== REGISTRATION_STATUS.COMPLETED}
+                    disabled={
+                      (registrationData?.status as RegistrationStatusType) !==
+                      REGISTRATION_STATUS.COMPLETED
+                    }
                     size='small'
                     data-testid='email-toggle'
                   />
@@ -328,7 +259,10 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
                 sx={{
                   '& .MuiFormControlLabel-label': {
                     color:
-                      status === REGISTRATION_STATUS.COMPLETED ? 'text.primary' : 'text.disabled',
+                      (registrationData?.status as RegistrationStatusType) ===
+                      REGISTRATION_STATUS.COMPLETED
+                        ? 'text.primary'
+                        : 'text.disabled',
                     fontSize: '0.875rem',
                   },
                 }}
@@ -347,7 +281,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
               }}
             >
               <EmailForm
-                status={status}
+                status={registrationData?.status as RegistrationStatusType}
                 onSendEmail={handleSendEmail}
                 isEnabled={isEmailEnabled}
                 isLoading={isEmailSending}
@@ -356,7 +290,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
           </Box>
 
           <ActionButtons
-            status={status}
+            status={registrationData?.status as RegistrationStatusType}
             onGoHome={handleGoHome}
             onGoCustomerSearch={handleGoCustomerSearch}
           />
