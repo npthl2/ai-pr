@@ -54,6 +54,7 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
     selectedCustomerId,
     addCustomer,
     selectCustomer,
+    updateCustomer,
     removeCustomer,
     customerTabs,
     setCustomerTabs,
@@ -160,6 +161,10 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
           return;
         }
 
+        // 사용자 조회 시 요금제 기본 조회값 초기화
+        updateCustomer(selectedCustomerId, {
+          serviceContractId: '',
+        });
         setCustomerTabs(selectedCustomerId, [...currentTabs, newTab]);
         setActiveTab(selectedCustomerId, newTab.id);
       }
@@ -183,7 +188,6 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
         label: targetMenu.name,
         closeable: true,
       };
-
       setCustomerTabs(selectedCustomerId, [...currentTabs, newTab]);
       setActiveTab(selectedCustomerId, newTab.id);
     }

@@ -65,6 +65,7 @@ const ContractServiceList = ({ open, onClose, contracts }: ContractServiceListPr
           style: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
         },
       }}
+      data-testid='contract-service-list-modal'
     >
       <ModalContainer>
         <ModalTitle>
@@ -94,7 +95,7 @@ const ContractServiceList = ({ open, onClose, contracts }: ContractServiceListPr
             <Typography variant='h4'>{contracts.length}</Typography>
           </Box>
           <TableContainer component={Paper} sx={{ boxShadow: 'none' }}>
-            <Table size='small'>
+            <Table size='small' data-testid='contract-service-list-table'>
               <TableHead>
                 <TableRow variant='head'>
                   <TableCell width={48}></TableCell>
@@ -105,12 +106,16 @@ const ContractServiceList = ({ open, onClose, contracts }: ContractServiceListPr
               </TableHead>
               <TableBody>
                 {contracts.map((contract) => (
-                  <TableRow key={contract.contractId}>
+                  <TableRow
+                    key={contract.contractId}
+                    data-testid={`contract-service-list-table-row-${contract.contractId}`}
+                  >
                     <TableCell>
                       <Radio
                         size='small'
                         checked={contract.contractId === tempSelectedContractId}
                         onChange={() => setTempSelectedContractId(contract.contractId)}
+                        data-testid={`contract-service-list-table-row-${contract.contractId}-radio`}
                       />
                     </TableCell>
                     <TableCell>{contract.maskingPhoneNumber}</TableCell>
@@ -123,7 +128,13 @@ const ContractServiceList = ({ open, onClose, contracts }: ContractServiceListPr
           </TableContainer>
         </ContentWrapper>
         <ButtonContainer>
-          <Button variant='outlined' size='small' color='grey' onClick={onClose}>
+          <Button
+            variant='outlined'
+            size='small'
+            color='grey'
+            onClick={onClose}
+            data-testid='contract-service-list-cancel-button'
+          >
             취소
           </Button>
           <Button
@@ -132,6 +143,7 @@ const ContractServiceList = ({ open, onClose, contracts }: ContractServiceListPr
             onClick={handleSelect}
             iconPosition='left'
             iconComponent={<CheckIcon />}
+            data-testid='contract-service-list-confirm-button'
           >
             선택
           </Button>

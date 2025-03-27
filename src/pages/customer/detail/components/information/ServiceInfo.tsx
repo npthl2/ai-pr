@@ -11,10 +11,12 @@ import { DEFAULT_TABS } from '@constants/CommonConstant';
 import { SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
 import useCustomerStore from '@stores/CustomerStore';
 import { CONTRACT_SERVICE_TYPE_CODE } from '@pages/customer/detail/CustomerDetailConstant';
+import useCurrentServiceStore from '@stores/CurrentServiceStore';
 
 interface ServiceInfoProps {
   serviceInfoParam: ServiceItem | null;
   maskingParam: MaskedTarget;
+  contractStatus: string;
 }
 
 const defaultServiceInfo: ServiceItem = {
@@ -76,12 +78,17 @@ const formatCurrencyKRW = (value: number | string) => {
   return numberValue.toLocaleString('ko-KR') + '원';
 };
 
-const ServiceInfo: React.FC<ServiceInfoProps> = ({ serviceInfoParam, maskingParam }) => {
+const ServiceInfo: React.FC<ServiceInfoProps> = ({
+  serviceInfoParam,
+  maskingParam,
+  contractStatus,
+}) => {
   const serviceInfo = serviceInfoParam ?? defaultServiceInfo;
 
   const { paidCount, freeCount, totalValue } = calculateAddOnServices(serviceInfo.serviceList);
-  const { selectedCustomerId, customerTabs, setCustomerTabs, setActiveTab } = useCustomerStore();
-
+  const { selectedCustomerId, updateCustomer, customerTabs, setCustomerTabs, setActiveTab } =
+    useCustomerStore();
+  const { setSelectedContractId } = useCurrentServiceStore();
   const handleServiceChange = () => {
     const targetMenu = SUBSCRIPTION_MENUS.find((menu) => menu.id === 'SERVICE_MODIFICATION');
     if (!targetMenu || !selectedCustomerId) return;
@@ -101,6 +108,11 @@ const ServiceInfo: React.FC<ServiceInfoProps> = ({ serviceInfoParam, maskingPara
       closeable: true,
     };
 
+    // 사용자 조회 시 요금제 기본 조회값 초기화
+    updateCustomer(selectedCustomerId, {
+      serviceContractId: '',
+    });
+    setSelectedContractId(selectedCustomerId, serviceInfo.contractId);
     setCustomerTabs(selectedCustomerId, [...currentTabs, newTab]);
     setActiveTab(selectedCustomerId, newTab.id);
   };
@@ -120,16 +132,18 @@ const ServiceInfo: React.FC<ServiceInfoProps> = ({ serviceInfoParam, maskingPara
         <Typography variant='h3' sx={{ height: 27, gap: 16 }}>
           상세정보
         </Typography>
-        <Button
-          variant='outlined'
-          size='small'
-          color='grey'
-          sx={{ height: 28 }}
-          onClick={handleServiceChange}
-          data-testid='service-info-change-button'
-        >
-          요금제/부가서비스 변경
-        </Button>
+        {contractStatus !== '해지' && (
+          <Button
+            variant='outlined'
+            size='small'
+            color='grey'
+            sx={{ height: 28 }}
+            onClick={handleServiceChange}
+            data-testid='service-info-change-button'
+          >
+            요금제/부가서비스 변경
+          </Button>
+        )}
       </Box>
       <TableContainer component={Paper} sx={{ boxShadow: 'none' }}>
         <Table>

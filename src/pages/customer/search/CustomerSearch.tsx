@@ -263,6 +263,7 @@ const CustomerSearch = ({ authority, open, onCloseModal }: CustomerSearchProps) 
           age: data.age,
           gender: data.gender === 'M' ? Gender.MALE : Gender.FEMALE,
           contractId: data.contractId,
+          serviceContractId: data.contractId,
         });
 
         // store에서 10명 이상 추가 불가 시 false 반환

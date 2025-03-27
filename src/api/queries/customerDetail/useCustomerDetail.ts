@@ -105,6 +105,7 @@ export function mapToInfo(data: ContractData): Info {
       assigneeDepartment: data.contractDetail.contractor.assigneeDepartment,
       salesDepartment: data.contractDetail.contractor.salesDepartment,
       finalSeller: data.contractDetail.contractor.finalSeller,
+      contractStatus: data.contractDetail.contractStatus,
     },
     invoice: {
       paymentId: data.invoiceDetail.paymentId,
