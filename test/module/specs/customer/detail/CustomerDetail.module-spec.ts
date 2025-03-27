@@ -1,5 +1,6 @@
 import CustomerDetailPage from '../../../../pages/customer/detail/CustomerDetail';
 import CustomerSearchTestPage from '../../../../pages/customer/search/CustomerSearch';
+import { mockAuthStore } from '../../../../support/helpers/mockAuthStore';
 import { mockMemberStore } from '../../../../support/helpers/mockMemberStore';
 import CustomerDetailServiceMock from '../../../mock/customer/detail/CustomerDetailServiceMock';
 
@@ -9,6 +10,7 @@ describe('KAN-20 고객 조회 페이지 진입', () => {
   const service = new CustomerDetailServiceMock();
 
   before(() => {
+    mockAuthStore();
     mockMemberStore({
       memberInfo: {
         memberId: 'user1',

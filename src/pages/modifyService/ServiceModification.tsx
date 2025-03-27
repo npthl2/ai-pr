@@ -74,6 +74,7 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
     };
   }, [setServiceModificationMounted, createModifyServiceInfo, contractTabId]);
 
+  // TODO CurrentServiceStore에서 가져오는거로 수정 필요!
   // 현재 선택된 고객의 계약 ID 가져오기
   const selectedCustomer = customers.find((c) => c.id === selectedCustomerId);
   const contractId =
@@ -81,6 +82,7 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
 
   // 현재 활성화된 탭이 ServiceModification 탭인지 확인
   const isServiceModificationTabActive = (() => {
+
     // 고객 ID가 없거나 해당 고객의 탭 정보가 없으면 false 반환
     if (!selectedCustomerId || !customerTabs[selectedCustomerId]) return false;
 
