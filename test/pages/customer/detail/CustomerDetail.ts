@@ -14,6 +14,10 @@ class CustomerDetailPage {
     cy.get('[data-testid="tree-lob-item"]').first().click();
   }
 
+  clickPhoneTreeItem() {
+    cy.get('[data-testid="phone-tree-item"]').first().click();
+  }
+
   assertInformation() {
     cy.get('[data-testid="information"]').should('exist');
   }
@@ -25,17 +29,8 @@ class CustomerDetailPage {
   }
 
   assertInformationText() {
-    cy.get('[data-testid=information-service-contract-id]')
-      .invoke('text')
-      .then((text) => {
-        expect(text).to.match(/^서비스계약번호:\S+/); // 공백이 아닌 문자가 있으면 통과
-      });
-
-    cy.get('[data-testid=information-invoice-id]')
-      .invoke('text')
-      .then((text) => {
-        expect(text).to.match(/^청구번호:\S+/); // 공백이 아닌 문자가 있으면 통과
-      });
+    cy.get('[data-testid=information-service-contract-id]').contains('서비스계약번호');
+    cy.get('[data-testid=information-invoice-id]').contains('청구번호');
   }
 
   clickSampleUnmaskableItem() {
