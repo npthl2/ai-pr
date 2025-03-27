@@ -313,11 +313,19 @@ const InvoiceSection = ({
   };
 
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
     if (isExpanded) {
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         recipientRef.current?.focus();
       }, 300);
     }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [isExpanded]);
 
   useEffect(() => {

@@ -58,11 +58,19 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({
   }, []);
 
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
     if (isExpanded) {
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         salesDepartmentInputRef.current?.focus();
       }, 300);
     }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [isExpanded]);
 
   // 모든 필드가 채워졌는지 확인하여 완료 되었을 때만 아코디언 활성화 함수 호출(한번 활성화 되면 비활성화 X)
