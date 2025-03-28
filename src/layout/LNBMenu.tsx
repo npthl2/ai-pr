@@ -25,6 +25,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Work } from '@model/Customer';
 import { useRegistration } from '@hooks/useRegistration';
+import useCurrentServiceStore from '@stores/CurrentServiceStore';
 
 interface LNBMenuProps {
   selectedMenu?: string | null;
@@ -48,17 +49,20 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
 
   const { menuItems, displayMode, setMenuItems, setSelectedMainMenu } = useMenuStore();
   const [newCustomerId, setNewCustomerId] = useState<number>(0);
-
   const {
     customers,
     selectedCustomerId,
     addCustomer,
     selectCustomer,
+    updateCustomer,
     removeCustomer,
     customerTabs,
     setCustomerTabs,
     setActiveTab,
+    setCustomerSearchModal,
+    setMoveTab,
   } = useCustomerStore();
+  const { deleteCustomerServiceData } = useCurrentServiceStore();
 
   const { handleBookmarkClick } = useBookmark();
   const { handleRemoveAllRegistrationInfo } = useRegistration();
@@ -133,6 +137,37 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
       setCustomerTabs(newCustomer.id, [newTab]);
       setActiveTab(newCustomer.id, newTab.id);
       setSelectedMainMenu(MainMenu.CUSTOMERS);
+    } else if (itemId === 'SERVICE_MODIFICATION') {
+      const newTab = {
+        id: TabInfo.SERVICE_MODIFICATION.id,
+        label: TabInfo.SERVICE_MODIFICATION.label,
+        closeable: true,
+      };
+
+      // 요금제/부가서비스 변경
+      if (!selectedCustomerId) {
+        setMoveTab(newTab);
+        setCustomerSearchModal(true);
+      } else {
+        const targetMenu = SUBSCRIPTION_MENUS.find((menu) => menu.id === itemId);
+        if (!targetMenu) return;
+
+        const currentTabs = customerTabs[selectedCustomerId]?.tabs;
+        if (!currentTabs) return;
+
+        const existingTab = currentTabs.find((tab) => tab.label === newTab.label);
+        if (existingTab) {
+          setActiveTab(selectedCustomerId, existingTab.id);
+          return;
+        }
+
+        // 사용자 조회 시 요금제 기본 조회값 초기화
+        updateCustomer(selectedCustomerId, {
+          serviceContractId: '',
+        });
+        setCustomerTabs(selectedCustomerId, [...currentTabs, newTab]);
+        setActiveTab(selectedCustomerId, newTab.id);
+      }
     } else {
       if (!selectedCustomerId || selectedCustomerId.includes('NEW_SUBSCRIPTION')) return;
 
@@ -153,7 +188,6 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
         label: targetMenu.name,
         closeable: true,
       };
-
       setCustomerTabs(selectedCustomerId, [...currentTabs, newTab]);
       setActiveTab(selectedCustomerId, newTab.id);
     }
@@ -166,6 +200,7 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
   const handleRemoveCustomer = (id: string) => {
     removeCustomer(id);
     handleRemoveAllRegistrationInfo(id);
+    deleteCustomerServiceData(id);
   };
 
   return (

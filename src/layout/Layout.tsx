@@ -22,7 +22,8 @@ import { Customer } from '@model/Customer';
 const Layout = () => {
   const navigate = useNavigate();
   const { setSelectedMainMenu } = useMenuStore();
-  const { selectCustomer, reset, isCustomer } = useCustomerStore();
+  const { selectCustomer, reset, isCustomer, customerSearchModal, setCustomerSearchModal } =
+    useCustomerStore();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const memberInfo = useMemberStore((state) => state.memberInfo);
   const logout = useAuthStore((state) => state.logout);
@@ -42,11 +43,10 @@ const Layout = () => {
   };
 
   // 고객 검색 Modal 출력 및 단축키 설정
-  const [open, setOpen] = useState(false);
-  useHotkeys('ctrl+/', () => setOpen(true));
+  useHotkeys('ctrl+/', () => setCustomerSearchModal(true));
 
   const handleSearch = () => {
-    setOpen(true);
+    setCustomerSearchModal(true);
   };
 
   // 로그아웃 버튼 클릭 시 확인 팝업 표시
@@ -140,8 +140,8 @@ const Layout = () => {
         <Outlet />
         <CustomerSearch
           authority={memberInfo?.authorities}
-          open={open}
-          onCloseModal={() => setOpen(false)}
+          open={customerSearchModal}
+          onCloseModal={() => setCustomerSearchModal(false)}
         />
 
         <LogoutDialogForm

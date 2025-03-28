@@ -10,6 +10,7 @@ interface Tab {
 }
 
 interface CustomerState {
+  customerSearchModal: boolean; // 고객조회 모달 오픈여부
   customers: Customer[] | Work[];
   selectedCustomerId: string | null;
   customerTabs: {
@@ -18,6 +19,7 @@ interface CustomerState {
       activeTab: number;
     };
   };
+  moveTab: Tab | null;
   addCustomer: (customer: Customer | Work) => boolean;
   removeCustomer: (id: string) => void;
   selectCustomer: (id: string) => void;
@@ -29,17 +31,21 @@ interface CustomerState {
   reset: () => void;
   isCustomer: (customer: Customer | Work) => customer is Customer;
   isWork: (customer: Customer | Work) => customer is Work;
+  setCustomerSearchModal: (customerSearchModal: boolean) => void;
+  setMoveTab: (moveTab: Tab | null) => void;
+  handleMoveToTab: () => void;
 }
 
 const useCustomerStore = create<CustomerState>((set, get) => ({
+  customerSearchModal: false,
+  onMoveToTab: null,
   customers: [],
   selectedCustomerId: null,
   customerTabs: {},
-
+  moveTab: null,
   addCustomer: (customer: Customer | Work) => {
     const { customers, selectedCustomerId, isCustomer } = get();
     const isCustomerType = isCustomer(customer);
-
     const updatedCustomers = selectedCustomerId
       ? customers.map((c) =>
           c.id === selectedCustomerId ? { ...c, unmaskingRrno: '', unmaskingName: '' } : c,
@@ -199,6 +205,38 @@ const useCustomerStore = create<CustomerState>((set, get) => ({
 
   isWork: (customer: Customer | Work): customer is Work => {
     return !('contractId' in customer);
+  },
+
+  setCustomerSearchModal: (customerSearchModal: boolean) => {
+    set(() => ({
+      customerSearchModal,
+    }));
+  },
+
+  setMoveTab: (moveTab: Tab | null) => {
+    set(() => ({
+      moveTab,
+    }));
+  },
+
+  handleMoveToTab: () => {
+    const { selectedCustomerId, customerTabs, moveTab, setCustomerTabs, setActiveTab } = get();
+    if (selectedCustomerId) {
+      const currentTabs = customerTabs[selectedCustomerId]?.tabs ?? [];
+
+      if (!moveTab) return;
+
+      // 이미 해당 탭이 있는지 확인
+      const existingTab = currentTabs?.find((tab) => tab.id === moveTab.id);
+      if (existingTab) {
+        setActiveTab(selectedCustomerId, existingTab.id);
+        return;
+      }
+
+      // 기존 탭 유지하고 새 탭 추가
+      setCustomerTabs(selectedCustomerId, [...currentTabs, moveTab]);
+      setActiveTab(selectedCustomerId, moveTab.id);
+    }
   },
 }));
 

@@ -1,6 +1,7 @@
 export interface ContractItem {
   contractId: string;
   contractType: string;
+  contractStatus: string;
   assignee: string;
   assigneeDepartment: string;
   salesDepartment: string;
