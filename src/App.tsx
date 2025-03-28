@@ -9,6 +9,7 @@ import { getTheme } from '@theme/theme';
 import { Toast } from '@components/Toast';
 import MainLayout from '@layout/MainLayout';
 import CustomerLayout from '@layout/CustomerLayout';
+import { SnackbarProvider } from '@providers/SnackbarProvider';
 
 import NestedDialogExample from '@pages/examples/nestedDialog/DialogExample';
 import SelectExample from '@pages/examples/select/SelectExample';
@@ -33,41 +34,43 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={getTheme('light')}>
-        <CssBaseline />
-        <BrowserRouter>
-          <Routes>
-            <Route path='/login' element={<Login />} />
-            <Route element={<Layout />}>
-              <Route path='example'>
-                <Route path='nestedDialog' element={<NestedDialogExample />} />
-                <Route path='select' element={<SelectExample />} />
-                <Route path='checkbox' element={<CheckboxExample />} />
-                <Route path='button' element={<ButtonExample />} />
-                <Route path='radio' element={<RadioExample />} />
-                <Route path='autocomplete' element={<AutocompleteExample />} />
-                <Route path='chip' element={<ChipExample />} />
-                <Route path='textField' element={<TextFieldExample />} />
-                <Route path='tooltip' element={<TooltipExample />} />
-                <Route path='alert' element={<AlertExample />} />
-                <Route path='dialog' element={<DialogExample />} />
-                <Route path='tabs' element={<TabsExample />} />
-                <Route path='table' element={<TableExample />} />
-                <Route path='toast' element={<ToastExample />} />
-              </Route>
-              <Route path='test'>
-                <Route path='board' element={<Board />} />
-                <Route path='board/regist' element={<RegistBoard />} />
-              </Route>
-              <Route element={<ProtectedRoute />}>
-                <Route element={<MainLayout />}>
-                  <Route path='/' element={<CustomerLayout />} />
+        <SnackbarProvider>
+          <CssBaseline />
+          <BrowserRouter>
+            <Routes>
+              <Route path='/login' element={<Login />} />
+              <Route element={<Layout />}>
+                <Route path='example'>
+                  <Route path='nestedDialog' element={<NestedDialogExample />} />
+                  <Route path='select' element={<SelectExample />} />
+                  <Route path='checkbox' element={<CheckboxExample />} />
+                  <Route path='button' element={<ButtonExample />} />
+                  <Route path='radio' element={<RadioExample />} />
+                  <Route path='autocomplete' element={<AutocompleteExample />} />
+                  <Route path='chip' element={<ChipExample />} />
+                  <Route path='textField' element={<TextFieldExample />} />
+                  <Route path='tooltip' element={<TooltipExample />} />
+                  <Route path='alert' element={<AlertExample />} />
+                  <Route path='dialog' element={<DialogExample />} />
+                  <Route path='tabs' element={<TabsExample />} />
+                  <Route path='table' element={<TableExample />} />
+                  <Route path='toast' element={<ToastExample />} />
+                </Route>
+                <Route path='test'>
+                  <Route path='board' element={<Board />} />
+                  <Route path='board/regist' element={<RegistBoard />} />
+                </Route>
+                <Route element={<ProtectedRoute />}>
+                  <Route element={<MainLayout />}>
+                    <Route path='/' element={<CustomerLayout />} />
+                  </Route>
                 </Route>
               </Route>
-            </Route>
-          </Routes>
-        </BrowserRouter>
-        <MemoAndHistoryPanel />
-        <Toast />
+            </Routes>
+          </BrowserRouter>
+          <MemoAndHistoryPanel />
+          <Toast />
+        </SnackbarProvider>
       </ThemeProvider>
       <ReactQueryDevtools />
     </QueryClientProvider>

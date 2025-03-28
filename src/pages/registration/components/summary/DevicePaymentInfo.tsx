@@ -1,4 +1,4 @@
-import { DeviceInfo } from '@model/RegistrationInfo';
+import { RegistrationDeviceInfo } from '@stores/registration/RegistrationDeviceStore';
 import {
   InfoSection,
   InfoRow,
@@ -8,7 +8,7 @@ import {
   StyledDivider,
 } from '../SummaryInfo.styled';
 interface DevicePaymentInfoProps {
-  deviceInfo: DeviceInfo;
+  deviceInfo: RegistrationDeviceInfo;
 }
 
 const DevicePaymentInfo = ({ deviceInfo }: DevicePaymentInfoProps) => {

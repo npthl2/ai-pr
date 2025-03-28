@@ -1,23 +1,23 @@
 import { Box } from '@mui/material';
-import { InvoiceInfo, DeviceInfo, ContractInfo, SalesAgentInfo } from '@model/RegistrationInfo';
+import { RegistrationDeviceInfo } from '@stores/registration/RegistrationDeviceStore';
+import { Contract } from '@stores/registration/RegistrationContractStore';
+import { Sales } from '@stores/registration/RegistrationSalesStore';
 import { StyledDivider, VerticalDivider } from './SummaryInfo.styled';
 import BillingInfo from './summary/BillingInfo';
 import SalesInfo from './summary/SalesInfo';
 import SubscriptionInfo from './summary/SubscriptionInfo';
 import DevicePaymentInfo from './summary/DevicePaymentInfo';
+
+import { RegistrationInvoiceInfo } from '@stores/registration/RegistrationInvoiceStore';
+
 interface SummaryInfoProps {
-  invoiceInfo: InvoiceInfo;
-  deviceInfo: DeviceInfo;
-  contractInfo: ContractInfo;
-  salesAgentInfo?: SalesAgentInfo;
+  invoiceInfo: RegistrationInvoiceInfo;
+  deviceInfo: RegistrationDeviceInfo;
+  contractInfo: Contract;
+  salesInfo?: Sales;
 }
 
-const SummaryInfo = ({
-  invoiceInfo,
-  deviceInfo,
-  contractInfo,
-  salesAgentInfo,
-}: SummaryInfoProps) => {
+const SummaryInfo = ({ invoiceInfo, deviceInfo, contractInfo, salesInfo }: SummaryInfoProps) => {
   return (
     <Box sx={{ display: 'flex', flexWrap: 'nowrap', width: '100%', gap: 3 }}>
       {/* 왼쪽 컬럼 */}
@@ -26,7 +26,7 @@ const SummaryInfo = ({
 
         <StyledDivider />
 
-        <SalesInfo salesAgentInfo={salesAgentInfo} />
+        <SalesInfo salesInfo={salesInfo} />
 
         <StyledDivider />
 

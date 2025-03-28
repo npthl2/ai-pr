@@ -1,29 +1,33 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import SummaryInfo from './SummaryInfo';
-import { InvoiceInfo, DeviceInfo, ContractInfo, SalesAgentInfo } from '@model/RegistrationInfo';
+
+import { Contract } from '@stores/registration/RegistrationContractStore';
+import { Sales } from '@stores/registration/RegistrationSalesStore';
+import { RegistrationDeviceInfo } from '@stores/registration/RegistrationDeviceStore';
+import { RegistrationInvoiceInfo } from '@stores/registration/RegistrationInvoiceStore';
 
 // 모킹된 하위 컴포넌트들
 vi.mock('./summary/BillingInfo', () => ({
-  default: ({ invoiceInfo }: { invoiceInfo: InvoiceInfo }) => (
+  default: ({ invoiceInfo }: { invoiceInfo: RegistrationInvoiceInfo }) => (
     <div data-testid='billing-info'>BillingInfo: {invoiceInfo.paymentMethod || ''}</div>
   ),
 }));
 
 vi.mock('./summary/SalesInfo', () => ({
-  default: ({ salesAgentInfo }: { salesAgentInfo: SalesAgentInfo }) => (
-    <div data-testid='sales-info'>SalesInfo: {salesAgentInfo.salesDepartment || ''}</div>
+  default: ({ salesInfo }: { salesInfo: Sales }) => (
+    <div data-testid='sales-info'>SalesInfo: {salesInfo.salesDepartment || ''}</div>
   ),
 }));
 
 vi.mock('./summary/SubscriptionInfo', () => ({
-  default: ({ contractInfo }: { contractInfo: ContractInfo }) => (
+  default: ({ contractInfo }: { contractInfo: Contract }) => (
     <div data-testid='subscription-info'>SubscriptionInfo: {contractInfo.phoneNumber || ''}</div>
   ),
 }));
 
 vi.mock('./summary/DevicePaymentInfo', () => ({
-  default: ({ deviceInfo }: { deviceInfo: DeviceInfo }) => (
+  default: ({ deviceInfo }: { deviceInfo: RegistrationDeviceInfo }) => (
     <div data-testid='device-payment-info'>DevicePaymentInfo: {deviceInfo.deviceName || ''}</div>
   ),
 }));
@@ -33,29 +37,29 @@ describe('SummaryInfo 컴포넌트', () => {
 
   it('모든 정보가 제공되었을 때 모든 하위 컴포넌트를 렌더링해야 한다', () => {
     // Given: 필요한 모든 정보가 주어졌을 때
-    const invoiceInfo: Partial<InvoiceInfo> = {
+    const invoiceInfo: Partial<RegistrationInvoiceInfo> = {
       paymentMethod: '신용카드',
     };
 
-    const deviceInfo: Partial<DeviceInfo> = {
+    const deviceInfo: Partial<RegistrationDeviceInfo> = {
       deviceName: 'Galaxy S23',
     };
 
-    const contractInfo: Partial<ContractInfo> = {
+    const contractInfo: Partial<Contract> = {
       phoneNumber: '010-1234-5678',
     };
 
-    const salesAgentInfo: Partial<SalesAgentInfo> = {
+    const salesInfo: Partial<Sales> = {
       salesDepartment: '온라인',
     };
 
     // When: 컴포넌트를 렌더링하면
     render(
       <SummaryInfo
-        invoiceInfo={invoiceInfo as InvoiceInfo}
-        deviceInfo={deviceInfo as DeviceInfo}
-        contractInfo={contractInfo as ContractInfo}
-        salesAgentInfo={salesAgentInfo as SalesAgentInfo}
+        invoiceInfo={invoiceInfo as RegistrationInvoiceInfo}
+        deviceInfo={deviceInfo as RegistrationDeviceInfo}
+        contractInfo={contractInfo as Contract}
+        salesInfo={salesInfo as Sales}
       />,
     );
 
@@ -74,18 +78,18 @@ describe('SummaryInfo 컴포넌트', () => {
 
   it('컴포넌트가 올바른 레이아웃 구조로 렌더링되어야 한다', () => {
     // Given: 필요한 모든 정보가 주어졌을 때
-    const invoiceInfo: Partial<InvoiceInfo> = { paymentMethod: '신용카드' };
-    const deviceInfo: Partial<DeviceInfo> = { deviceName: 'Galaxy S23' };
-    const contractInfo: Partial<ContractInfo> = { phoneNumber: '010-1234-5678' };
-    const salesAgentInfo: Partial<SalesAgentInfo> = { salesDepartment: '온라인' };
+    const invoiceInfo: Partial<RegistrationInvoiceInfo> = { paymentMethod: '신용카드' };
+    const deviceInfo: Partial<RegistrationDeviceInfo> = { deviceName: 'Galaxy S23' };
+    const contractInfo: Partial<Contract> = { phoneNumber: '010-1234-5678' };
+    const salesInfo: Partial<Sales> = { salesDepartment: '온라인' };
 
     // When: 컴포넌트를 렌더링하면
     const { container } = render(
       <SummaryInfo
-        invoiceInfo={invoiceInfo as InvoiceInfo}
-        deviceInfo={deviceInfo as DeviceInfo}
-        contractInfo={contractInfo as ContractInfo}
-        salesAgentInfo={salesAgentInfo as SalesAgentInfo}
+        invoiceInfo={invoiceInfo as RegistrationInvoiceInfo}
+        deviceInfo={deviceInfo as RegistrationDeviceInfo}
+        contractInfo={contractInfo as Contract}
+        salesInfo={salesInfo as Sales}
       />,
     );
 

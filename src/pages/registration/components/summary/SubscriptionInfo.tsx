@@ -1,8 +1,8 @@
-import { ContractInfo } from '@model/RegistrationInfo';
+import { Contract } from '@stores/registration/RegistrationContractStore';
 import { InfoSection, InfoRow, InfoLabel, InfoValue, SubSectionTitle } from '../SummaryInfo.styled';
 
 interface SubscriptionInfoProps {
-  contractInfo: ContractInfo;
+  contractInfo: Contract;
 }
 
 const SubscriptionInfo = ({ contractInfo }: SubscriptionInfoProps) => {
