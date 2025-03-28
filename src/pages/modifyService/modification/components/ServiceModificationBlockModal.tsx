@@ -8,7 +8,6 @@ import {
   ServiceModificationModalConfig,
 } from '../constants/modalConstants';
 
-// 모달 타입을 추가하여 다양한 경우를 처리
 export interface ServiceModificationModalProps {
   open: boolean;
   type: ServiceModificationModalType;
