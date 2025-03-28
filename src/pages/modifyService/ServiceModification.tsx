@@ -22,7 +22,7 @@ const ServiceModification: React.FC = () => {
   return (
     <Box
       sx={{
-        height: 'calc(100vh - 100px)', // Adjust based on your header/footer height
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',

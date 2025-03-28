@@ -6,9 +6,6 @@ export const Container = styled(Box)(({ theme }: { theme: Theme }) => ({
   height: '100%',
   maxWidth: 1828,
   maxHeight: 759,
-  borderRight: '1px solid',
-  borderBottom: '1px solid',
-  borderLeft: '1px solid',
   paddingTop: 16,
   paddingRight: 16,
   paddingBottom: 16,
@@ -45,8 +42,7 @@ export const ServicesContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
   overflow: 'hidden',
   minHeight: 0,
   border: `1px solid ${theme.palette.grey[200]}`,
-  borderTopLeftRadius: 8,
-  borderBottomLeftRadius: 8,
+  borderRadius: 8,
 }));
 
 export const CurrentServiceContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
@@ -57,6 +53,7 @@ export const CurrentServiceContainer = styled(Box)(({ theme }: { theme: Theme })
   padding: 16,
   backgroundColor: theme.palette.grey[50],
   overflow: 'hidden',
+  borderRight: `1px solid ${theme.palette.grey[200]}`,
 }));
 
 export const NewServiceContainer = styled(Box)(() => ({

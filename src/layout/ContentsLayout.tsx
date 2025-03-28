@@ -57,8 +57,11 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
         // 2. 일치하는 탭을 찾으면 해당 탭을 닫는다.
         closeCustomerTab(customerId, tabId);
 
-        // 3. 닫은 탭의 라벨이 TabInfo.SERVICE_MODIFICATION.label와 같으면 currentServiceStore의 값을 초기화 한다
-        if (tabToClose.label === TabInfo.SERVICE_MODIFICATION.label) {
+        // 신규가입 탭
+        if (customerId.includes('NEW_SUBSCRIPTION')) {
+          removeCustomer(customerId);
+          handleRemoveAllRegistrationInfo(customerId);
+        } else if (tabToClose.label === TabInfo.SERVICE_MODIFICATION.label) {
           deleteCustomerServiceData(customerId);
         }
       }

@@ -128,7 +128,7 @@ const ConcurrentService = () => {
               </ServiceValue>
             </Box>
             <ServicePrice variant='h2' data-testid='current-service-price'>
-              {currentService?.serviceValue.toLocaleString()}원
+              {`${currentService?.serviceValue.toLocaleString()}원`}
             </ServicePrice>
           </ServiceItemContainer>
         </Box>
