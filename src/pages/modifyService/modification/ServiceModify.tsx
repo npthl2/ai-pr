@@ -17,6 +17,7 @@ import {
   ModalConditionInputs,
 } from './constants/modalConstants';
 import { useServiceModificationMutation } from '@api/queries/modifyService/useServiceModificationMutation';
+import { AdditionalService } from '@model/modifyService/ModifyServiceModel';
 
 interface ServiceModifyProps {
   // props 정의
@@ -86,7 +87,7 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
     removedCurrentAdditionalServices.length > 0;
 
   // 서비스 제한 상태 확인 함수
-  const checkServiceRestrictions = (services: any[]) => {
+  const checkServiceRestrictions = (services: AdditionalService[]) => {
     return services.some((service) => {
       const apiService = additionalServices.find(
         (apiService) => apiService.serviceId === service.serviceId,
