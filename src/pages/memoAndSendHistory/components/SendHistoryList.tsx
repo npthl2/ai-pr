@@ -143,6 +143,10 @@ const SendHistoryList = () => {
     setPage(0);
   }, [showSuccessOnly]);
 
+  useEffect(() => {
+    setPage(0);
+  }, [smsChecked, emailChecked, rowsPerPage]);
+
   return (
     <SendHistoryBox>
       <Box>
