@@ -148,6 +148,7 @@ const MaskingInfo: React.FC<MaskingInfoProps> = ({ originalInfo, encryptedInfo, 
             encryptedItem: encryptedInfo,
             param: maskingParam,
           }}
+          data-testid='unmasking-popup'
         />
       )}
       <Menu
