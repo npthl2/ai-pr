@@ -29,15 +29,15 @@ import {
   useCheckServiceModifiableQuery,
   Service,
 } from '@api/queries/modifyService/useModifyServiceQuery';
-// 변경요청 컴포넌트(저장버튼 동작)
 import ModificationRequest from './ModificationRequest';
 
 interface NewContractProps {
   contractTabId: string;
 }
 
+// 서비스 변경 메인 컴포넌트
 const ServiceModification = ({ contractTabId }: NewContractProps) => {
-  // 변경요청 컴포넌트(저장버튼 동작)
+  // 저장 요청 상태 관리
   const [isSaveRequested, setIsSaveRequested] = useState(false);
 
   // 모달 상태 관리
@@ -49,7 +49,7 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
     type: ServiceModificationModalType.MONTHLY_RESTRICTION,
   });
 
-  // 요금제 수정 상태 관리 - ModifyServiceStore에서 필요한 함수 가져오기
+  // ModifyServiceStore에서 필요한 함수 가져오기
   const {
     setServiceModifiable,
     setIsRollbackAvailable,
@@ -67,10 +67,9 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
   const currentService = useCurrentServiceStore((state) => state.currentService);
   const contractId = currentService?.contractId || '';
 
-  // 컴포넌트 마운트 시 상태 업데이트
+  // 컴포넌트 마운트 시 상태 초기화
   useEffect(() => {
     setServiceModificationMounted(true);
-    // 계약 탭 ID에 대한 스토어 정보 생성
     createModifyServiceInfo(contractTabId);
     return () => {
       setServiceModificationMounted(false);
@@ -79,49 +78,33 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
 
   // 현재 활성화된 탭이 ServiceModification 탭인지 확인
   const isServiceModificationTabActive = (() => {
-    // 고객 ID가 없거나 해당 고객의 탭 정보가 없으면 false 반환
     if (!selectedCustomerId || !customerTabs[selectedCustomerId]) return false;
-
-    // 현재 활성화된 탭 ID 가져오기
     const activeTabId = customerTabs[selectedCustomerId].activeTab;
-
-    // 활성화된 탭 객체 찾기
     const activeTab = customerTabs[selectedCustomerId].tabs.find((tab) => tab.id === activeTabId);
-
-    // 활성화된 탭이 SERVICE_MODIFICATION 탭인지 확인
     return activeTab?.id === TabInfo.SERVICE_MODIFICATION.id;
   })();
 
-  //요금제 변경 가능 여부 확인 API 호출
+  // 요금제 변경 가능 여부 확인 API 호출
   const { data: modifiableData, isLoading } = useCheckServiceModifiableQuery(
     contractId,
-    // !!contractId && isServiceModificationTabActive,
     true,
   );
 
-  /**
-   * 컴포넌트 마운트 시 요금제 변경 가능 여부와 현재 서비스 정보 설정
-   *
-   * ModifyServiceStore에 요금제 변경 가능 여부와 당일 변경 여부를 저장하고,
-   * 요금제 변경이 불가능한 경우에만 모달을 표시합니다.
-   */
+  // 요금제 변경 가능 여부와 현재 서비스 정보 설정
   useEffect(() => {
     if (!isLoading && contractId && modifiableData && isServiceModificationTabActive) {
       setServiceModifiable(contractTabId, modifiableData.isModifiable);
       setIsRollbackAvailable(contractTabId, modifiableData.isRollbackAvailable || false);
 
-      // 백엔드에서 전달 받은 이전 서비스 정보가 있는 경우 저장
       if (modifiableData.isRollbackAvailable && modifiableData.previousService) {
-        // 백엔드에서 받은 정보를 Service 타입으로 변환
         const prevService: Service = {
           serviceId: modifiableData.previousService.serviceId,
           serviceName: modifiableData.previousService.serviceName || '이전 요금제',
           serviceValue: modifiableData.previousService.serviceValue || 0,
-          serviceValueType: modifiableData.previousService.serviceValueType || '',
-          releaseDate: '', // 기본값 설정 (API에서 제공하지 않는 값이므로)
+          serviceValueType: modifiableData.previousService.serviceValueType || '원정액',
+          releaseDate: '',
         };
         setPreviousService(contractTabId, prevService);
-        // 초기 상태 저장
         setInitialStates(
           contractTabId,
           modifiableData.isRollbackAvailable || false,
@@ -130,7 +113,6 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
         );
       } else {
         setPreviousService(contractTabId, null);
-        // 초기 상태 저장
         setInitialStates(
           contractTabId,
           modifiableData.isRollbackAvailable || false,
@@ -139,9 +121,7 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
         );
       }
 
-      // 완료 페이지 상태가 아닐 때만 모달 표시
       if (!modifiableData.isModifiable && !isSaveRequested) {
-        // 모달 표시
         setModalState({
           open: true,
           type: ServiceModificationModalType.MONTHLY_RESTRICTION,
@@ -161,13 +141,6 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
     contractTabId,
   ]);
 
-  /**
-   * 현재 서비스 정보가 있으면 이전 요금제로 설정
-   *
-   * API에서 받아온 서비스 정보를 ModifyServiceStore에 저장합니다.
-   * 이전 요금제로 되돌리기 기능을 위해 필요합니다.
-   */
-
   // 모달 닫기 핸들러
   const handleCloseModal = () => {
     setModalState((prev) => ({ ...prev, open: false }));
@@ -176,7 +149,6 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
   // 저장 완료 상태가 되면 모달 닫기
   useEffect(() => {
     if (isSaveRequested) {
-      // isModifiable 값을 true로 설정하여 모달이 더 이상 표시되지 않도록 함
       setServiceModifiable(contractTabId, true);
     }
   }, [isSaveRequested, setServiceModifiable, contractTabId]);
@@ -194,7 +166,7 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
     totalPrice: 45000,
   };
 
-  // 변경요청 컴포넌트(저장버튼 동작)
+  // 저장 요청 상태일 때 변경 요청 컴포넌트 렌더링
   if (isSaveRequested) {
     return <ModificationRequest contractTabId={contractTabId} />;
   }
@@ -202,7 +174,7 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
   return (
     <Box
       sx={{
-        height: 'calc(100vh - 100px)', // Adjust based on your header/footer height
+        height: 'calc(100vh - 100px)',
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
@@ -210,6 +182,7 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
     >
       <Container>
         <ContentContainer>
+          {/* 회선 정보 섹션 */}
           <LineInfoContainer sx={{ flexShrink: 0 }}>
             <Typography variant='h3' sx={{ mr: 2, fontWeight: 700, fontSize: '1.1rem' }}>
               회선정보
@@ -242,7 +215,9 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
             </LineInfoDetailsContainer>
           </LineInfoContainer>
 
+          {/* 서비스 정보 섹션 */}
           <ServicesContainer>
+            {/* 현재 서비스 정보 */}
             <CurrentServiceContainer>
               <Box sx={{ flexShrink: 0 }}>
                 <ServiceValue>현재 요금제</ServiceValue>
@@ -270,6 +245,7 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
               </Box>
             </CurrentServiceContainer>
 
+            {/* 새로운 서비스 선택 */}
             <NewServiceContainer>
               <ServiceModify
                 contractTabId={contractTabId}

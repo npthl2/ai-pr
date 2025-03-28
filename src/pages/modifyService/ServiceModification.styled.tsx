@@ -1,6 +1,7 @@
 import { Box, Typography, styled } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 
+// 전체 컨테이너 스타일
 export const Container = styled(Box)(({ theme }: { theme: Theme }) => ({
   width: '100%',
   height: '100%',
@@ -19,6 +20,7 @@ export const Container = styled(Box)(({ theme }: { theme: Theme }) => ({
   overflow: 'hidden',
 }));
 
+// 컨텐츠 컨테이너 스타일
 export const ContentContainer = styled(Box)(() => ({
   width: '100%',
   height: '100%',
@@ -28,6 +30,7 @@ export const ContentContainer = styled(Box)(() => ({
   overflow: 'hidden',
 }));
 
+// 회선 정보 컨테이너 스타일
 export const LineInfoContainer = styled(Box)(() => ({
   width: '100%',
   display: 'flex',
@@ -38,6 +41,7 @@ export const LineInfoContainer = styled(Box)(() => ({
   flexShrink: 0,
 }));
 
+// 회선 정보 상세 컨테이너 스타일
 export const LineInfoDetailsContainer = styled(Box)(() => ({
   width: 'calc(100% - 120px)',
   maxWidth: 1200,
@@ -47,6 +51,7 @@ export const LineInfoDetailsContainer = styled(Box)(() => ({
   flexWrap: 'wrap',
 }));
 
+// 서비스 정보 컨테이너 스타일
 export const ServicesContainer = styled(Box)(() => ({
   display: 'flex',
   width: '100%',
@@ -55,6 +60,7 @@ export const ServicesContainer = styled(Box)(() => ({
   minHeight: 0,
 }));
 
+// 현재 서비스 컨테이너 스타일
 export const CurrentServiceContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
   width: '50%',
   display: 'flex',
@@ -68,6 +74,7 @@ export const CurrentServiceContainer = styled(Box)(({ theme }: { theme: Theme })
   overflow: 'hidden',
 }));
 
+// 새로운 서비스 컨테이너 스타일
 export const NewServiceContainer = styled(Box)(() => ({
   width: '50%',
   display: 'flex',
@@ -76,6 +83,7 @@ export const NewServiceContainer = styled(Box)(() => ({
   overflow: 'hidden',
 }));
 
+// 서비스 값 스타일
 export const ServiceValue = styled(Typography)(() => ({
   fontFamily: 'Pretendard, sans-serif',
   fontWeight: 400,
@@ -84,12 +92,14 @@ export const ServiceValue = styled(Typography)(() => ({
   letterSpacing: '0px',
 }));
 
+// 서비스 가격 스타일
 export const ServicePrice = styled(Typography)(({ theme }: { theme: Theme }) => ({
   fontSize: 16,
   fontWeight: 700,
   color: theme.palette.text.primary,
 }));
 
+// 서비스 라벨 스타일
 export const ServiceLabel = styled(Typography)(({ theme }: { theme: Theme }) => ({
   fontFamily: 'Pretendard, sans-serif',
   fontSize: 13,
@@ -99,6 +109,7 @@ export const ServiceLabel = styled(Typography)(({ theme }: { theme: Theme }) => 
   color: theme.palette.text.secondary,
 }));
 
+// 서비스 아이템 컨테이너 스타일
 export const ServiceItemContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
@@ -107,6 +118,7 @@ export const ServiceItemContainer = styled(Box)(({ theme }: { theme: Theme }) =>
   borderBottom: `1px solid ${theme.palette.grey[100]}`,
 }));
 
+// 총액 컨테이너 스타일
 export const TotalContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
@@ -115,12 +127,14 @@ export const TotalContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
   borderTop: `1px solid ${theme.palette.grey[200]}`,
 }));
 
+// 총액 라벨 스타일
 export const TotalLabel = styled(Typography)(({ theme }: { theme: Theme }) => ({
   fontSize: 14,
   fontWeight: 600,
   color: theme.palette.text.primary,
 }));
 
+// 총액 가격 스타일
 export const TotalPrice = styled(Typography)(({ theme }: { theme: Theme }) => ({
   fontSize: 16,
   fontWeight: 700,

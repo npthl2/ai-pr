@@ -14,18 +14,18 @@ import registrationContractService, {
 import { CommonResponse } from '@model/common/CommonResponse';
 import { ServiceAgeCheckResponse } from '@model/modifyService/ModifyServiceModel';
 
-// SelectService 컴포넌트에서 사용할 Service 타입 확장
+// Service 타입에 releaseDate 필드 추가
 export interface Service extends BaseService {
   releaseDate: string;
 }
 
-// CustomerCurrentServiceResponse 타입 정의
+// 현재 서비스와 이전 서비스 정보를 포함하는 응답 타입
 export interface CustomerCurrentServiceResponse {
   currentService: Service;
   previousService?: Service;
 }
 
-// ServiceResponse를 Service로 변환하는 매핑 함수
+// API 응답을 Service 타입으로 변환
 const mapServiceResponseToService = (serviceResponse: ServiceResponse): Service => {
   return {
     serviceId: serviceResponse.serviceId,
@@ -36,7 +36,7 @@ const mapServiceResponseToService = (serviceResponse: ServiceResponse): Service 
   };
 };
 
-// ServiceResponse를 AdditionalService로 변환하는 매핑 함수
+// API 응답을 AdditionalService 타입으로 변환
 const mapServiceResponseToAdditionalService = (
   serviceResponse: ServiceResponseWithExclusiveQuery,
 ): AdditionalService => {

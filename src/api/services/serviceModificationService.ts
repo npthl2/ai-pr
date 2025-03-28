@@ -18,6 +18,7 @@ import {
   ServiceModificationResponseData,
 } from '@model/modifyService/ModifyServiceModel';
 
+// 부가 서비스 응답 타입 정의
 export interface ServiceResponseWithExclusiveQuery {
   serviceId: string;
   serviceName: string;
