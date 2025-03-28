@@ -53,6 +53,9 @@ const SendHistoryList = () => {
   const handleSort = (field: SortField) => {
     if (sortField === field) {
       setSortOrder((prev) => (prev === 'asc' ? 'desc' : prev === 'desc' ? null : 'asc'));
+      if (sortOrder === 'desc') {
+        setSortField(null);
+      }
     } else {
       setSortField(field);
       setSortOrder('asc');
@@ -127,18 +130,49 @@ const SendHistoryList = () => {
 
     if (response?.data && typeof response.data === 'object' && 'sendHistories' in response.data) {
       const data = response.data as SendHistoryResponse;
-      return {
-        histories: data.sendHistories.map((item: SendHistoryItem) => ({
-          messageType: item.messageType,
-          requestTime: item.requestTime,
-          sentTime: item.sentTime,
-          message: item.message,
-          successYn: item.successYn,
-        })),
-        totalCount: data.totalCount,
-      };
+      let histories = data.sendHistories.map((item: SendHistoryItem) => ({
+        messageType: item.messageType,
+        requestTime: item.requestTime,
+        sentTime: item.sentTime,
+        message: item.message,
+        successYn: item.successYn,
+      }));
+
+      // Apply sorting if needed
+      if (sortField && sortOrder) {
+        histories = [...histories].sort((a, b) => {
+          let compareA: string;
+          let compareB: string;
+
+          switch (sortField) {
+            case 'messageType':
+              compareA = a.messageType;
+              compareB = b.messageType;
+              break;
+            case 'requestDate':
+              compareA = a.requestTime;
+              compareB = b.requestTime;
+              break;
+            case 'sendDate':
+              compareA = a.sentTime;
+              compareB = b.sentTime;
+              break;
+            case 'success':
+              compareA = a.successYn;
+              compareB = b.successYn;
+              break;
+            default:
+              return 0;
+          }
+
+          const result = compareA.localeCompare(compareB);
+          return sortOrder === 'asc' ? result : -result;
+        });
+      }
+
+      return histories;
     }
-    return { histories: [], totalCount: 0 };
+    return [];
   };
 
   const { data: totalCount = 0 } = useReactQuery({
@@ -149,6 +183,8 @@ const SendHistoryList = () => {
       showSuccessOnly ? 'Y' : 'N',
       page.toString(),
       rowsPerPage.toString(),
+      sortField || '',
+      sortOrder || '',
     ],
     queryFn: async () => {
       const response = await fetchSendHistory();
@@ -242,13 +278,10 @@ const SendHistoryList = () => {
                 showSuccessOnly ? 'Y' : 'N',
                 page.toString(),
                 rowsPerPage.toString(),
-                smsChecked.toString(),
-                emailChecked.toString(),
+                sortField || '',
+                sortOrder || '',
               ]}
-              queryFn={async () => {
-                const response = await fetchSendHistory();
-                return response.histories;
-              }}
+              queryFn={fetchSendHistory}
               columns={columns}
               emptyMessage='발송이력이 없습니다.'
             />
