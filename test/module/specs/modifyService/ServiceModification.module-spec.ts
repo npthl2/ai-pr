@@ -124,7 +124,6 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
     });
   });
 
-  // 테스트 성공 확인
   describe('KAN-22-2 요금제 변경', () => {
     beforeEach(() => {
       customerDetailService.homeBookmark();
@@ -135,6 +134,8 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
       customerDetailService.successWhenGetCustomerContracts();
       customerSearchPage.clickSearch();
 
+      service.successWhenCheckServiceModifiable();
+      service.noAgeRestrictionWhenCheckServiceAgeRestriction;
       service.successWhenGetServices();
       service.successWhenGetAdditionalServices();
 
@@ -186,6 +187,7 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
     });
 
     it('KAN-22-2-5 변경 가능한 요금제를 클릭 시 요금제 변경 모달이 보여야 한다', () => {
+      service.noAgeRestrictionWhenCheckServiceAgeRestriction();
       // 요금제 선택 박스 클릭
       page.clickServiceSelectBox();
 
@@ -200,6 +202,7 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
     });
 
     it('KAN-22-2-6 모달 확인 클릭 시 선택한 요금제로 변경되고 금액이 표시되어야 한다', () => {
+      service.noAgeRestrictionWhenCheckServiceAgeRestriction();
       // 요금제 선택 박스 클릭
       page.clickServiceSelectBox();
 
@@ -236,7 +239,6 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
     });
   });
 
-  // 테스트 성공 확인
   describe('KAN-22-3 부가서비스 목록', () => {
     beforeEach(() => {
       customerDetailService.homeBookmark();
@@ -277,6 +279,7 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
     });
 
     it('KAN-22-3-5 가입 불가 부가서비스는 불가 표시가 되어야 한다', () => {
+      service.noAgeRestrictionWhenCheckServiceAgeRestriction();
       // 요금제 선택 박스 클릭
       page.clickServiceSelectBox();
 
@@ -293,6 +296,7 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
     });
 
     it('KAN-22-3-6 가입 불가 부가서비스의 추가 버튼은 비활성화되어야 한다', () => {
+      service.noAgeRestrictionWhenCheckServiceAgeRestriction();
       // 요금제 선택 박스 클릭
       page.clickServiceSelectBox();
 
@@ -312,6 +316,7 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
     });
 
     it('KAN-22-3-7 가입 불가 부가서비스에 마우스를 hover 했을 때 툴팁이 보여야 한다', () => {
+      service.noAgeRestrictionWhenCheckServiceAgeRestriction();
       // 요금제 선택 박스 클릭
       page.clickServiceSelectBox();
 
@@ -331,6 +336,7 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
     });
 
     it('KAN-22-3-8 검색어 입력 시 해당 키워드를 포함한 부가서비스만 보여야 한다', () => {
+      service.noAgeRestrictionWhenCheckServiceAgeRestriction();
       // 부가서비스 검색어 입력
       page.typeAdditionalServiceSearchKeyword('5G');
 
@@ -347,6 +353,7 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
     });
 
     it('KAN-22-3-10 부가서비스명/요금을 클릭 시 오름차/내림차순 정렬되어야 한다', () => {
+      service.noAgeRestrictionWhenCheckServiceAgeRestriction();
       // 이름으로 정렬 클릭
       page.clickAdditionalServiceNameSort();
       page.assertTopAdditionalServiceIs('5G 3 Giga 충전 부가서비스');
@@ -357,21 +364,22 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
     });
 
     it('KAN-22-3-11 부가서비스 추가 버튼 클릭 시 선택된 목록으로 이동해야 한다', () => {
+      service.noAgeRestrictionWhenCheckServiceAgeRestriction();
       //   // 부가서비스 추가 버튼 클릭
       page.clickAddAdditionalServiceButton('LTE 3 Giga 충전 부가서비스');
 
       // 선택된 부가서비스 목록에 해당 서비스가 표시되는지 확인
-      page.assertSelectedServiceIs('LTE 3 Giga 충전 부가서비스');
+      page.assertSelectedAdditionalServiceIs('LTE 3 Giga 충전 부가서비스');
     });
 
     it('KAN-22-3-12 선택된 부가서비스 목록도 정렬 가능해야 한다', () => {
       // 선택된 부가서비스 목록의 이름 정렬 클릭
       page.clickAdditionalServiceNameSort();
-      page.assertTopAdditionalServiceIs('5G 1 Giga 충전 부가서비스');
+      page.assertSelectedTopAdditionalServiceIs('5G 1 Giga 충전 부가서비스');
 
       // 선택된 부가서비스 목록의 요금 정렬 클릭
       page.clickAdditionalServicePriceSort();
-      page.assertTopAdditionalServiceIs('5G 1 Giga 충전 부가서비스');
+      page.assertSelectedTopAdditionalServiceIs('5G 1 Giga 충전 부가서비스');
     });
 
     it('KAN-22-3-12 삭제 버튼 클릭 시 부가서비스 목록으로 이동해야 한다', () => {
@@ -400,7 +408,6 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
     });
   });
 
-  // KAN-22-4-6 제외 성공
   describe('KAN-22-4 저장 / 초기화', () => {
     beforeEach(() => {
       customerDetailService.homeBookmark();
@@ -466,6 +473,7 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
     });
 
     it('KAN-22-4-5 해지필요 부가서비스가 있을 경우 변경 불가 모달이 보여야 한다', () => {
+      service.noAgeRestrictionWhenCheckServiceAgeRestriction();
       // 요금제 선택 박스 클릭
       page.clickServiceSelectBox();
 
@@ -487,7 +495,8 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
       page.assertModalContentVisible('해지 필요한 부가서비스를 삭제한 후 다시 시도해 주세요.');
     });
 
-    it('KAN-22-4-7 초기화 클릭 시 요금제가 클리어되어야 한다', () => {
+    it('KAN-22-4-6 초기화 클릭 시 요금제가 클리어되어야 한다', () => {
+      service.noAgeRestrictionWhenCheckServiceAgeRestriction();
       // 요금제 선택 박스 클릭
       page.clickServiceSelectBox();
 
@@ -502,24 +511,26 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
       page.assertServiceListEmpty();
     });
 
-    it('KAN-22-4-8 부가서비스 목록은 최초 조회 상태로 변경되어야 한다', () => {
+    it('KAN-22-4-7 부가서비스 목록은 최초 조회 상태로 변경되어야 한다', () => {
+      service.noAgeRestrictionWhenCheckServiceAgeRestriction();
       // 부가서비스 추가
       page.clickAddAdditionalServiceButton('LTE 3 Giga 충전 부가서비스');
 
-      page.assertSelectedServiceIs('LTE 3 Giga 충전 부가서비스');
+      page.assertSelectedAdditionalServiceIs('LTE 3 Giga 충전 부가서비스');
       // 초기화 버튼 클릭
       page.clickResetButton();
-      // 요금제가 초기화되었는지 확인
+      // 부가서비스가 초기화되었는지 확인
       page.assertAdditionalServiceInList('LTE 3 Giga 충전 부가서비스');
     });
 
-    it('KAN-22-4-9 선택된 부가서비스가 현재 부가서비스로 변경되어야 한다', () => {
+    it('KAN-22-4-8 선택된 부가서비스가 현재 부가서비스로 변경되어야 한다', () => {
+      service.noAgeRestrictionWhenCheckServiceAgeRestriction();
       // 부가서비스 삭제
       page.clickRemoveSelectedServiceButton('5G 1 Giga 충전 부가서비스');
       // 초기화 버튼 클릭
       page.clickResetButton();
-      // 요금제가 초기화되었는지 확인
-      page.assertSelectedServiceIs('5G 1 Giga 충전 부가서비스');
+      // 부가서비스가 초기화되었는지 확인
+      page.assertSelectedAdditionalServiceIs('5G 1 Giga 충전 부가서비스');
     });
   });
 });

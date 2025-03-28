@@ -637,7 +637,7 @@ class ModifyServiceMock {
 
   // 나이 제한 확인 API 모킹 (제한 없음)
   noAgeRestrictionWhenCheckServiceAgeRestriction() {
-    cy.intercept('GET', '**/v1/services/check-age**', {
+    cy.intercept('POST', '**/v1/contract/service-modify/age/check', {
       statusCode: 200,
       body: ageRestrictionResponseFalse
     }).as('checkServiceAgeRestriction');
@@ -645,7 +645,7 @@ class ModifyServiceMock {
 
   // 나이 제한 확인 API 모킹 (제한 있음)
   hasAgeRestrictionWhenCheckServiceAgeRestriction() {
-    cy.intercept('GET', '**/v1/services/check-age**', {
+    cy.intercept('POST', '**/v1/contract/service-modify/age/check', {
       statusCode: 200,
       body: ageRestrictionResponseTrue
     }).as('checkServiceAgeRestriction');

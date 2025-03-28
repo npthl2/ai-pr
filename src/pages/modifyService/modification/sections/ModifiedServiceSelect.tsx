@@ -156,30 +156,22 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
     _: SyntheticEvent,
     newValue: NonNullable<string | ServicePlan> | (string | ServicePlan)[] | null,
   ) => {
-    // ServicePlan 객체인 경우 (단일 선택)
+    // 새로운 선택이 들어오면 먼저 이전 선택 초기화
+    setSelectedService(contractTabId, null);
+
     if (newValue && typeof newValue === 'object' && !Array.isArray(newValue) && 'id' in newValue) {
       if (!customerAge || !isServiceModifiable) {
-        // 고객 나이 정보가 없거나 서비스 변경 불가능한 경우 처리
         return;
       }
 
-      // 선택한 요금제 정보 찾기
-      const selectedServiceData =
-        services.find((service: Service) => service.serviceId === newValue.id) || null;
-
+      const selectedServiceData = services.find((service: Service) => service.serviceId === newValue.id) || null;
       if (selectedServiceData) {
-        // 임시 저장
         setTempSelectedService(selectedServiceData);
-
-        // 나이 제한 확인 API 호출 - 파라미터 설정으로 쿼리 자동 실행
         setServiceAgeCheckParams({
           age: customerAge,
           serviceId: selectedServiceData.serviceId,
         });
       }
-    } else {
-      // 선택되지 않은 경우 또는 지원하지 않는 값 형식인 경우
-      setSelectedService(contractTabId, null);
     }
   };
 

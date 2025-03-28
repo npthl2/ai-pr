@@ -25,7 +25,6 @@ class ModifyServicePage {
     cy.get('[data-testid="modal-cancel-button"]').click();
   }
 
-
   assertServiceSelectBoxDisabled() {
     cy.get('[data-testid="service-select-box"]')
       .find('input') // 내부 input 필드를 찾아서
@@ -87,15 +86,20 @@ class ModifyServicePage {
 
   // 선택된 요금제로 값이 변경되었는지 확인
   assertSelectedServiceIs(serviceName: string) {
-    cy.get('[data-testid="selected-service-price"]')
+    cy.get('[data-testid="service-select-box"] input') // Autocomplete 내부 input 선택
+      .should('have.value', serviceName);
+  }
+
+  // 선택된 부가서비스가 추가 됐는지 확인
+  assertSelectedAdditionalServiceIs(serviceName: string) {
+    cy.get('[data-testid="selected-additional-service-list"]')
       .contains(serviceName)
       .should('be.visible');
   }
 
   // 이전 요금제가 보이는지 확인
   assertSelectedPreviousServiceIs(serviceName: string) {
-    cy.get('[data-testid="service-select-box"] input')
-      .should('have.value', serviceName);
+    cy.get('[data-testid="service-select-box"] input').should('have.value', serviceName);
   }
 
   // 선택된 요금제의 금액이 표시되는지 확인
@@ -185,6 +189,15 @@ class ModifyServicePage {
       .should('have.text', expectedServiceName);
   }
 
+  assertSelectedTopAdditionalServiceIs(expectedServiceName: string) {
+    cy.get('[data-testid="selected-additional-service-list"]')
+      .first() // 가장 첫 번째 행
+      .find('p') // 내부의 <Typography> (serviceName 표시되는 곳)
+      .first() // 그 중 첫 번째 텍스트 (이름)
+      .should('have.text', expectedServiceName);
+  }
+
+
   // 부가서비스 정렬 (요금)
   clickAdditionalServicePriceSort() {
     cy.get('[data-testid="sort-by-price"]').click();
@@ -238,7 +251,7 @@ class ModifyServicePage {
   clickResetButton() {
     cy.get('[data-testid="reset-button"]').click();
   }
-  
+
   // 요약 페이지로 이동했는지 확인
   assertModificationRequestVisible() {
     cy.get('[data-testid="modification-request"]').should('be.visible');
