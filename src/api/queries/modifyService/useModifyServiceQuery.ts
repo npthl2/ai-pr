@@ -1,4 +1,3 @@
-// src/api/queries/modifyService/useModifyServiceQuery.ts
 import { Service as BaseService } from '@pages/registration/sections/contract/types';
 import {
   ServiceModifiableResponse,
