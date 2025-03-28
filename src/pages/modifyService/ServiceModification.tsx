@@ -6,7 +6,7 @@ import {
   LineInfoContainer,
   ServicesContainer,
   CurrentServiceContainer,
-  NewServiceContainer
+  NewServiceContainer,
 } from './ServiceModification.styled';
 import ServiceModify from './modification/ServiceModify';
 import ServiceModificationBlockModal from './modification/components/ServiceModificationBlockModal';
@@ -147,7 +147,6 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
     return <ModificationRequest contractTabId={contractTabId} />;
   }
 
-
   const selectedContractId = useCurrentServiceStore(
     (state) => state.selectedContractIds[selectedCustomerId] || '',
   );
@@ -174,18 +173,18 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
               </CurrentServiceContainer>
 
               {/* 새로운 서비스 선택 */}
-            <NewServiceContainer>
-              <ServiceModify
+              <NewServiceContainer>
+                <ServiceModify
+                  contractTabId={contractTabId}
+                  setIsSaveRequested={setIsSaveRequested}
+                />
+              </NewServiceContainer>
+              <ServiceModificationBlockModal
+                open={modalState.open}
+                type={modalState.type}
+                onClose={handleCloseModal}
                 contractTabId={contractTabId}
-                setIsSaveRequested={setIsSaveRequested}
               />
-            </NewServiceContainer>
-            <ServiceModificationBlockModal
-              open={modalState.open}
-              type={modalState.type}
-              onClose={handleCloseModal}
-              contractTabId={contractTabId}
-            />
             </ServicesContainer>
           )}
         </ContentContainer>
