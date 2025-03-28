@@ -144,7 +144,6 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
 
   // 저장 요청 상태일 때 변경 요청 컴포넌트 렌더링
 
-
   const selectedContractId = useCurrentServiceStore(
     (state) => state.selectedContractIds[selectedCustomerId] || '',
   );
