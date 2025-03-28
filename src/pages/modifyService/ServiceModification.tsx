@@ -1,22 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Typography, Box } from '@mui/material';
-import Button from '@components/Button';
-
+import { Box } from '@mui/material';
 import {
   Container,
   ContentContainer,
   LineInfoContainer,
-  LineInfoDetailsContainer,
   ServicesContainer,
   CurrentServiceContainer,
-  NewServiceContainer,
-  ServiceValue,
-  ServicePrice,
-  ServiceLabel,
-  ServiceItemContainer,
-  TotalContainer,
-  TotalLabel,
-  TotalPrice,
+  NewServiceContainer
 } from './ServiceModification.styled';
 import ServiceModify from './modification/ServiceModify';
 import ServiceModificationBlockModal from './modification/components/ServiceModificationBlockModal';
@@ -30,6 +20,8 @@ import {
   Service,
 } from '@api/queries/modifyService/useModifyServiceQuery';
 import ModificationRequest from './ModificationRequest';
+import LineInformation from './search/LineInformation';
+import ConcurrentService from './search/CurrentService';
 
 interface NewContractProps {
   contractTabId: string;
@@ -60,12 +52,12 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
   } = useModifyServiceStore();
 
   // 고객 스토어에서 필요한 정보 가져오기
-  const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId);
+  const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
   const customerTabs = useCustomerStore((state) => state.customerTabs);
 
   // CurrentServiceStore에서 contractId 가져오기
-  const currentService = useCurrentServiceStore((state) => state.currentService);
-  const contractId = currentService?.contractId || '';
+  const getCurrentService = useCurrentServiceStore((state) => state.getCurrentService);
+  const contractId = getCurrentService?.(selectedCustomerId)?.contractId || '';
 
   // 컴포넌트 마운트 시 상태 초기화
   useEffect(() => {
@@ -150,99 +142,38 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
     }
   }, [isSaveRequested, setServiceModifiable, contractTabId]);
 
-  // 현재 요금제 데이터
-  const currentServiceDataMock = {
-    name: '넷플릭스 초이스 스페셜',
-    price: 110000,
-    items: [
-      { id: 1, name: '부가서비스 1', price: 10000 },
-      { id: 2, name: '부가서비스 2', price: 10000 },
-      { id: 3, name: '부가서비스 3', price: 10000 },
-      { id: 4, name: '부가서비스 4', price: 10000 },
-    ],
-    totalPrice: 45000,
-  };
-
   // 저장 요청 상태일 때 변경 요청 컴포넌트 렌더링
   if (isSaveRequested) {
     return <ModificationRequest contractTabId={contractTabId} />;
   }
 
+
+  const selectedContractId = useCurrentServiceStore(
+    (state) => state.selectedContractIds[selectedCustomerId] || '',
+  );
+
   return (
     <Box
       sx={{
-        height: 'calc(100vh - 100px)',
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
       }}
     >
       <Container>
-        <ContentContainer>
-          {/* 회선 정보 섹션 */}
+        <ContentContainer data-testid='service-modification-container'>
           <LineInfoContainer sx={{ flexShrink: 0 }}>
-            <Typography variant='h3' sx={{ mr: 2, fontWeight: 700, fontSize: '1.1rem' }}>
-              회선정보
-            </Typography>
-            <LineInfoDetailsContainer>
-              <Box display='flex' alignItems='center' sx={{ minWidth: '200px', flexGrow: 0 }}>
-                <ServiceLabel sx={{ mr: 1 }}>전화번호</ServiceLabel>
-                <ServiceValue>010-297-*964</ServiceValue>
-                <Button
-                  size='small'
-                  variant='outlined'
-                  color='grey'
-                  sx={{ ml: 1, minWidth: 'auto', height: 22, px: 1, fontSize: '0.75rem' }}
-                >
-                  번호 선택
-                </Button>
-              </Box>
-              <Box display='flex' alignItems='center' sx={{ minWidth: '180px', flexGrow: 0 }}>
-                <ServiceLabel sx={{ mr: 1 }}>담당 지점</ServiceLabel>
-                <ServiceValue>서울시 서울자치 무역길 5번길</ServiceValue>
-              </Box>
-              <Box display='flex' alignItems='center' sx={{ minWidth: '160px', flexGrow: 0 }}>
-                <ServiceLabel sx={{ mr: 1 }}>가입일자</ServiceLabel>
-                <ServiceValue>AR214-113-1257</ServiceValue>
-              </Box>
-              <Box display='flex' alignItems='center' sx={{ minWidth: '160px', flexGrow: 0 }}>
-                <ServiceLabel sx={{ mr: 1 }}>고객식별코드</ServiceLabel>
-                <ServiceValue>WRT42-887F2</ServiceValue>
-              </Box>
-            </LineInfoDetailsContainer>
+            <LineInformation />
           </LineInfoContainer>
 
-          {/* 서비스 정보 섹션 */}
-          <ServicesContainer>
-            {/* 현재 서비스 정보 */}
-            <CurrentServiceContainer>
-              <Box sx={{ flexShrink: 0 }}>
-                <ServiceValue>현재 요금제</ServiceValue>
-                <ServiceItemContainer sx={{ borderBottom: 'none', marginTop: 0.5, py: 0.5 }}>
-                  <ServiceValue>{currentServiceDataMock.name}</ServiceValue>
-                  <ServicePrice>{currentServiceDataMock.price.toLocaleString()}원</ServicePrice>
-                </ServiceItemContainer>
-              </Box>
+          {selectedContractId && (
+            <ServicesContainer>
+              <CurrentServiceContainer>
+                <ConcurrentService />
+              </CurrentServiceContainer>
 
-              <Box sx={{ flex: 1, overflow: 'auto', minHeight: 0 }}>
-                <ServiceValue>현재 부가서비스 ({currentServiceDataMock.items.length})</ServiceValue>
-                {currentServiceDataMock.items.map((item) => (
-                  <ServiceItemContainer key={item.id} sx={{ py: 0.5 }}>
-                    <ServiceLabel>{item.name}</ServiceLabel>
-                    <ServicePrice>{item.price.toLocaleString()}원</ServicePrice>
-                  </ServiceItemContainer>
-                ))}
-              </Box>
-
-              <Box sx={{ flexShrink: 0 }}>
-                <TotalContainer>
-                  <TotalLabel>합계</TotalLabel>
-                  <TotalPrice>{currentServiceDataMock.totalPrice.toLocaleString()}원</TotalPrice>
-                </TotalContainer>
-              </Box>
-            </CurrentServiceContainer>
-
-            {/* 새로운 서비스 선택 */}
+              {/* 새로운 서비스 선택 */}
             <NewServiceContainer>
               <ServiceModify
                 contractTabId={contractTabId}
@@ -255,7 +186,8 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
               onClose={handleCloseModal}
               contractTabId={contractTabId}
             />
-          </ServicesContainer>
+            </ServicesContainer>
+          )}
         </ContentContainer>
       </Container>
     </Box>

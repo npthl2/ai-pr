@@ -89,8 +89,7 @@ export const useCheckServiceModifiableQuery = (contractId: string, enabled: bool
         previousService: null,
       };
     },
-    enabled: enabled && !!contractId, // API 호출 활성화 조건: enabled가 true이고 contractId가 존재하는 경우에만
-    staleTime: 1000 * 60 * 5, // 5분
+    enabled: enabled && !!contractId,
   });
 };
 

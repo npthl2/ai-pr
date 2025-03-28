@@ -7,9 +7,6 @@ export const Container = styled(Box)(({ theme }: { theme: Theme }) => ({
   height: '100%',
   maxWidth: 1828,
   maxHeight: 759,
-  borderRight: '1px solid',
-  borderBottom: '1px solid',
-  borderLeft: '1px solid',
   paddingTop: 16,
   paddingRight: 16,
   paddingBottom: 16,
@@ -41,23 +38,15 @@ export const LineInfoContainer = styled(Box)(() => ({
   flexShrink: 0,
 }));
 
-// 회선 정보 상세 컨테이너 스타일
-export const LineInfoDetailsContainer = styled(Box)(() => ({
-  width: 'calc(100% - 120px)',
-  maxWidth: 1200,
-  display: 'flex',
-  alignItems: 'center',
-  gap: 16,
-  flexWrap: 'wrap',
-}));
-
 // 서비스 정보 컨테이너 스타일
-export const ServicesContainer = styled(Box)(() => ({
+export const ServicesContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
   display: 'flex',
   width: '100%',
   flex: 1,
   overflow: 'hidden',
   minHeight: 0,
+  border: `1px solid ${theme.palette.grey[200]}`,
+  borderRadius: 8,
 }));
 
 // 현재 서비스 컨테이너 스타일
@@ -66,12 +55,10 @@ export const CurrentServiceContainer = styled(Box)(({ theme }: { theme: Theme })
   display: 'flex',
   flexDirection: 'column',
   gap: 12,
-  borderRight: `1px solid ${theme.palette.grey[200]}`,
-  borderTopLeftRadius: 8,
-  borderBottomLeftRadius: 8,
   padding: 16,
-  backgroundColor: theme.palette.grey[200],
+  backgroundColor: theme.palette.grey[50],
   overflow: 'hidden',
+  borderRight: `1px solid ${theme.palette.grey[200]}`,
 }));
 
 // 새로운 서비스 컨테이너 스타일
@@ -83,13 +70,14 @@ export const NewServiceContainer = styled(Box)(() => ({
   overflow: 'hidden',
 }));
 
-// 서비스 값 스타일
-export const ServiceValue = styled(Typography)(() => ({
+export const ServiceValue = styled(Typography)(({ variant }) => ({
   fontFamily: 'Pretendard, sans-serif',
-  fontWeight: 400,
-  fontSize: 13,
-  lineHeight: '140%',
-  letterSpacing: '0px',
+  ...(variant === undefined && {
+    fontWeight: 400,
+    fontSize: 13,
+    lineHeight: '140%',
+    letterSpacing: '0px',
+  }),
 }));
 
 // 서비스 가격 스타일
@@ -109,13 +97,11 @@ export const ServiceLabel = styled(Typography)(({ theme }: { theme: Theme }) => 
   color: theme.palette.text.secondary,
 }));
 
-// 서비스 아이템 컨테이너 스타일
-export const ServiceItemContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
+export const ServiceItemContainer = styled(Box)(() => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
   padding: '5px 0',
-  borderBottom: `1px solid ${theme.palette.grey[100]}`,
 }));
 
 // 총액 컨테이너 스타일

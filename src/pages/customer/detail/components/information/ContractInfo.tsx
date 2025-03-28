@@ -18,6 +18,7 @@ const defaultContractInfo: ContractItem = {
   assigneeDepartment: '',
   salesDepartment: '',
   finalSeller: '',
+  contractStatus: '',
 };
 
 const ContractInfo: React.FC<ContractInfoProps> = ({ contractInfoParam }) => {

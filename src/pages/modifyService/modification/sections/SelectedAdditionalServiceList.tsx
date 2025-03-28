@@ -24,6 +24,7 @@ import {
   TitleSection,
   StyledTableBlankCell,
 } from './SelectedAdditionalServiceList.styled';
+import useCustomerStore from '@stores/CustomerStore';
 
 // 정렬 방향 타입
 type SortDirection = 'asc' | 'desc' | null;
@@ -70,8 +71,11 @@ const SelectedAdditionalServiceList = ({
   const removedCurrentAdditionalServices =
     modifyServiceInfo?.removedCurrentAdditionalServices || [];
 
+  const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
+
   // 현재 사용중인 서비스 정보 가져오기
-  const currentService = useCurrentServiceStore((state) => state.currentService);
+  const getCurrentService = useCurrentServiceStore((state) => state.getCurrentService);
+  const currentService = getCurrentService?.(selectedCustomerId) || null;
 
   // 나이 제한으로 인해 제거해야 하는 서비스가 있는지 확인
   const hasRestrictedServices = currentAdditionalServices.some((service) => {

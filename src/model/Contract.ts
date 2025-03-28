@@ -19,6 +19,7 @@ export interface ContractData {
     contractId: string;
     phoneNumber: string;
     contractType: string;
+    contractStatus: string;
     contractor: {
       assignee: string;
       assigneeDepartment: string;
@@ -65,4 +66,41 @@ export interface ContractData {
     remainingPayment: string;
     remainingInstallment: string;
   };
+}
+
+export interface CustomerContract {
+  contractId: string;
+  statusCode: string;
+  customerId: string;
+  serviceId: string;
+  serviceName: string;
+  serviceType: string;
+  maskingPhoneNumber: string;
+  encryptedPhoneNumber: string;
+  maskingImei: string;
+  encryptedImei: string;
+  deviceModelName: string;
+  deviceModelNameAlias: string;
+}
+
+export interface CustomerContractResponse {
+  contracts: CustomerContract[];
+}
+
+export interface Service {
+  contractId: string;
+  serviceId: string;
+  serviceName: string;
+  serviceType: string;
+  serviceValue: number;
+}
+
+export interface ContractServiceResponse {
+  contractId: string;
+  contractStatusCode: string;
+  serviceId: string;
+  serviceName: string;
+  serviceType: string;
+  serviceValue: number;
+  additionalService: Service[];
 }

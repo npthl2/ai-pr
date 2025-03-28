@@ -44,7 +44,9 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
   const { customers, selectedCustomerId } = useCustomerStore();
 
   // CurrentServiceStore에서 초기 서비스 정보 가져오기
-  const currentService = useCurrentServiceStore((state) => state.currentService);
+  const getCurrentService = useCurrentServiceStore((state) => state.getCurrentService);
+  const currentService = getCurrentService?.(selectedCustomerId || '') || null;
+  const contractId = currentService?.contractId || '';
 
   // 서비스 변경 요청 mutation 사용
   const serviceModificationMutation = useServiceModificationMutation();
@@ -187,10 +189,6 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
     if (!modifyServiceInfo) {
       return;
     }
-
-    // CurrentServiceStore에서 현재 계약 ID 가져오기
-    const currentService = useCurrentServiceStore.getState().currentService;
-    const contractId = currentService?.contractId;
 
     // CustomerStore에서 고객 ID 가져오기
     const selectedCustomerId = useCustomerStore.getState().selectedCustomerId;

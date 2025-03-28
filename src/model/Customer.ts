@@ -32,6 +32,7 @@ export interface Customer {
   age: number;
   gender: Gender;
   contractId: string;
+  serviceContractId: string; // 요금제 확인용 계약ID
 }
 
 export interface Work {

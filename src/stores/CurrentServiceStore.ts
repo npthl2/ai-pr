@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
-import { AdditionalService } from '@model/modifyService/ModifyServiceModel';
 
 interface ServiceCommon {
   contractId: string;
@@ -10,49 +9,140 @@ interface ServiceCommon {
   serviceValue: number;
 }
 
-interface Service extends ServiceCommon {
+interface CustomerContract {
+  contractId: string;
+  statusCode: string;
+  customerId: string;
+  serviceId: string;
+  serviceName: string;
+  serviceType: string;
+  phoneNumber: string;
+  maskingPhoneNumber: string;
+  encryptedPhoneNumber: string;
+  imei: string;
+  maskingImei: string;
+  encryptedImei: string;
+  deviceModelName: string;
+  deviceModelNameAlias: string;
+}
+
+interface AdditionalService extends ServiceCommon {}
+
+export interface Service extends ServiceCommon {
   additionalService: AdditionalService[];
 }
 
-// 초기 서비스 정의
-const initialService: Service = {
-  contractId: 's100000000',
-  serviceId: 'svc_1',
-  serviceName: '5G Ultra Plus 요금제',
-  serviceType: 'PLAN',
-  serviceValue: 130000,
-  additionalService: [
-    {
-      contractId: 's100000000',
-      serviceId: 'a_5g_1',
-      serviceName: '5G 1 Giga 충전 부가서비스',
-      serviceType: 'ADDITIONAL',
-      serviceValue: 21000,
-      availableAgeMin: undefined,
-      availableAgeMax: undefined,
-    },
-    {
-      contractId: 's100000000',
-      serviceId: 'a_5g_2',
-      serviceName: '5G 2 Giga 충전 부가서비스',
-      serviceType: 'ADDITIONAL',
-      serviceValue: 26000,
-      availableAgeMin: '13',
-      availableAgeMax: '18',
-    },
-  ],
-};
-
 interface ServiceState {
-  currentService: Service | null;
-  setCurrentService: (service: Service) => void;
-  clearCurrentService: () => void;
+  service: {
+    [customerId: string]: Service;
+  };
+  customerContracts: {
+    [customerId: string]: CustomerContract[];
+  };
+  selectedContractIds: {
+    [customerId: string]: string;
+  };
+  setCurrentService: (customerId: string, service: Service) => void;
+  getCurrentService: (customerId: string) => Service | null;
+  deleteCurrentService: (customerId: string) => void;
+  deleteAllServices: () => void;
+  setCustomerContract: (customerId: string, contract: CustomerContract) => void;
+  setCustomerContracts: (customerId: string, contracts: CustomerContract[]) => void;
+  getCustomerContracts: (customerId: string) => CustomerContract[];
+  deleteCustomerContracts: (customerId: string) => void;
+  deleteAllCustomerContracts: () => void;
+  setSelectedContractId: (customerId: string, contractId: string) => void;
+  getSelectedContractId: (customerId: string) => string;
+  getSelectedCustomerContract: (customerId: string) => CustomerContract | null;
+  deleteSelectedContractId: (customerId: string) => void;
+  deleteCustomerServiceData: (customerId: string) => void;
+  resetAllData: () => void;
 }
 
-const useCurrentServiceStore = create<ServiceState>((set) => ({
-  currentService: initialService,
-  setCurrentService: (service: Service) => set({ currentService: service }),
-  clearCurrentService: () => set({ currentService: null }),
+const useCurrentServiceStore = create<ServiceState>((set, get) => ({
+  service: {},
+  customerContracts: {},
+  selectedContractIds: {},
+  setCurrentService: (customerId: string, service: Service) =>
+    set((state) => ({
+      service: {
+        ...state.service,
+        [customerId]: service,
+      },
+    })),
+  getCurrentService: (customerId: string) => get().service[customerId] || null,
+  deleteCurrentService: (customerId: string) =>
+    set((state) => {
+      const newServices = { ...state.service };
+      delete newServices[customerId];
+      return { service: newServices };
+    }),
+  deleteAllServices: () => set({ service: {} }),
+  setCustomerContracts: (customerId: string, contracts: CustomerContract[]) =>
+    set((state) => ({
+      customerContracts: {
+        ...state.customerContracts,
+        [customerId]: contracts,
+      },
+    })),
+  getCustomerContracts: (customerId: string) => get().customerContracts[customerId] || [],
+  deleteCustomerContracts: (customerId: string) =>
+    set((state) => {
+      const contracts = { ...state.customerContracts };
+      delete contracts[customerId];
+      return { customerContracts: contracts };
+    }),
+  deleteAllCustomerContracts: () => set({ customerContracts: {} }),
+  setSelectedContractId: (customerId: string, contractId: string) =>
+    set((state) => ({
+      selectedContractIds: {
+        ...state.selectedContractIds,
+        [customerId]: contractId,
+      },
+    })),
+  getSelectedContractId: (customerId: string) => get().selectedContractIds[customerId] || '',
+  getSelectedCustomerContract: (customerId: string) => {
+    const contracts = get().customerContracts[customerId] || [];
+    const selectedId = get().selectedContractIds[customerId];
+    return contracts.find((contract) => contract.contractId === selectedId) || null;
+  },
+  setCustomerContract: (customerId: string, contract: CustomerContract) =>
+    set((state) => ({
+      customerContracts: {
+        ...state.customerContracts,
+        [customerId]: state.customerContracts[customerId].map((c) =>
+          c.contractId === contract.contractId ? contract : c,
+        ),
+      },
+    })),
+  deleteCustomerServiceData: (customerId: string) =>
+    set((state) => {
+      const newServices = { ...state.service };
+      const newContracts = { ...state.customerContracts };
+      const newSelectedIds = { ...state.selectedContractIds };
+
+      delete newServices[customerId];
+      delete newContracts[customerId];
+      delete newSelectedIds[customerId];
+
+      return {
+        service: newServices,
+        customerContracts: newContracts,
+        selectedContractIds: newSelectedIds,
+      };
+    }),
+  deleteSelectedContractId: (customerId: string) =>
+    set((state) => {
+      const newSelectedIds = { ...state.selectedContractIds };
+      delete newSelectedIds[customerId];
+      return { selectedContractIds: newSelectedIds };
+    }),
+  resetAllData: () =>
+    set({
+      service: {},
+      customerContracts: {},
+      selectedContractIds: {},
+    }),
 }));
 
 if (import.meta.env.DEV) {

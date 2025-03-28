@@ -10,13 +10,16 @@ interface ModificationRequestProps {
 
 const ModificationRequest: React.FC<ModificationRequestProps> = ({ contractTabId }) => {
   // 스토어에서 필요한 정보 가져오기
-  const currentService = useCurrentServiceStore((state) => state.currentService);
+  const getCurrentService = useCurrentServiceStore((state) => state.getCurrentService);
+
   const modifyServiceInfo = useModifyServiceStore((state) =>
     state.getModifyServiceInfo(contractTabId),
   );
-  const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId);
+  const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
   const customers = useCustomerStore((state) => state.customers);
   const selectedCustomer = customers.find((c) => c.id === selectedCustomerId);
+
+  const contractId = getCurrentService?.(selectedCustomerId)?.contractId || '';
 
   // 요청 정보 가져오기
   const selectedService = modifyServiceInfo?.selectedService;
@@ -137,7 +140,7 @@ const ModificationRequest: React.FC<ModificationRequestProps> = ({ contractTabId
                     계약 ID
                   </Typography>
                   <Typography variant='body1' sx={{ fontWeight: 'medium' }}>
-                    {currentService?.contractId || '정보 없음'}
+                    {contractId || '정보 없음'}
                   </Typography>
                 </Box>
               </Box>
