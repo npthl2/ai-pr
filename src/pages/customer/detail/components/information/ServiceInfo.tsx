@@ -96,8 +96,6 @@ const ServiceInfo: React.FC<ServiceInfoProps> = ({ serviceInfoParam, maskingPara
     // 모든 상태 초기화 - ServiceModification 컴포넌트가 처음부터 시작하도록
     const contractTabId = selectedCustomerId; // 고객 ID를 계약 탭 ID로 사용
 
-    console.log('contractTabId', contractTabId);
-
     // 계약 탭 ID에 대한 스토어 정보 생성 후 초기화
     createModifyServiceInfo(contractTabId);
 
