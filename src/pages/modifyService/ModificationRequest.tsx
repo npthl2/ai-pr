@@ -71,7 +71,7 @@ const ModificationRequest: React.FC<ModificationRequestProps> = ({ contractTabId
         p: 3,
         backgroundColor: (theme) => theme.palette.background.paper,
       }}
-      data-testid="modification-request"
+      data-testid='modification-request'
     >
       <Paper
         elevation={1}

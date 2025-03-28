@@ -292,16 +292,26 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
           }}
         >
           <Box sx={{ flex: 1 }} data-testid='additional-service-disabled-message'>
-              <WarningMessage>
-                <InfoIcon fontSize='small' sx={{ mr: 1 }} />
-                빨간색으로 음영 처리된 부가서비스는 가입이 불가능합니다.
-              </WarningMessage>
+            <WarningMessage>
+              <InfoIcon fontSize='small' sx={{ mr: 1 }} />
+              빨간색으로 음영 처리된 부가서비스는 가입이 불가능합니다.
+            </WarningMessage>
           </Box>
           <Box sx={{ display: 'flex', gap: 1, ml: 2 }}>
-            <Button variant='outlined' onClick={handleReset} disabled={isResetDisabled} data-testid='reset-button'>
+            <Button
+              variant='outlined'
+              onClick={handleReset}
+              disabled={isResetDisabled}
+              data-testid='reset-button'
+            >
               초기화
             </Button>
-            <Button variant='contained' onClick={handleSave} disabled={isSaveDisabled} data-testid='save-button'>
+            <Button
+              variant='contained'
+              onClick={handleSave}
+              disabled={isSaveDisabled}
+              data-testid='save-button'
+            >
               저장
             </Button>
           </Box>

@@ -259,7 +259,13 @@ const AdditionalServiceList = ({
           data-testid='additional-service-list'
         >
           <StyledTableBlankCell width='10px'>
-            {isRestricted && <InfoIcon color='error' sx={{ verticalAlign: 'middle' }} data-testid="restricted-icon" />}
+            {isRestricted && (
+              <InfoIcon
+                color='error'
+                sx={{ verticalAlign: 'middle' }}
+                data-testid='restricted-icon'
+              />
+            )}
           </StyledTableBlankCell>
           <TableCell>
             {isRestricted && (

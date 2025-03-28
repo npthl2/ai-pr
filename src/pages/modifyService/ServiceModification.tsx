@@ -117,7 +117,7 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
           serviceId: modifiableData.previousService.serviceId,
           serviceName: modifiableData.previousService.serviceName || '이전 요금제',
           serviceValue: modifiableData.previousService.serviceValue || 0,
-          serviceValueType: modifiableData.previousService.serviceValueType || '원정액',
+          serviceValueType: modifiableData.previousService.serviceValueType || '',
           releaseDate: '', // 기본값 설정 (API에서 제공하지 않는 값이므로)
         };
         setPreviousService(contractTabId, prevService);

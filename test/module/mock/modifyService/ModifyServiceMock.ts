@@ -536,10 +536,9 @@ const modifiableResponseWithRollback = {
     isModifiable: false,
     isRollbackAvailable: true,
     previousService: {
-      serviceId: 'S001',
-      serviceName: '5G 스탠다드 요금제',
-      serviceValue: 55000,
-      serviceValueType: 'KRW'
+        serviceId: 'svc_60',
+        serviceName: 'LTE Prime Max 요금제',
+        serviceValue: 180000,
     }
   }
 };
@@ -614,7 +613,7 @@ class ModifyServiceMock {
 
   // 요금제 변경 가능 여부 확인 API 모킹 (가능)
   successWhenCheckServiceModifiable() {
-    cy.intercept('GET', '**/v1/contract/service-modify/**/check', {
+    cy.intercept('GET', /\/v1\/contract\/service-modify\/[^/]+\/check$/, {
       statusCode: 200,
       body: modifiableResponseTrue
     }).as('successWhenCheckServiceModifiable');
@@ -630,7 +629,7 @@ class ModifyServiceMock {
 
   // 요금제 변경 가능 여부 확인 API 모킹 (불가능 - 당일 변경 이력, 되돌리기 가능)
   rollbackAvailableWhenCheckServiceModifiable() {
-    cy.intercept('GET', '**/v1/contract/service-modify/${contractId}/check', {
+    cy.intercept('GET', /\/v1\/contract\/service-modify\/[^/]+\/check$/, {
       statusCode: 200,
       body: modifiableResponseWithRollback
     }).as('rollbackAvailableWhenCheckServiceModifiable');

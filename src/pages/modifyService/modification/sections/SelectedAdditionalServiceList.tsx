@@ -380,7 +380,9 @@ const SelectedAdditionalServiceList = ({
               <TotalText>합계</TotalText>
             </TableCell>
             <StyledTableHeaderCell align='right' width='120px'>
-              <Typography variant='subtitle1' data-testid='total-amount'>{totalPrice.toLocaleString()}원</Typography>
+              <Typography variant='subtitle1' data-testid='total-amount'>
+                {totalPrice.toLocaleString()}원
+              </Typography>
             </StyledTableHeaderCell>
             <StyledTableBlankCell width='100px'></StyledTableBlankCell>
           </TableRow>

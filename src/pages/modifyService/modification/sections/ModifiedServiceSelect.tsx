@@ -199,8 +199,7 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
       // 실제 ServiceAgeCheckResponse 타입으로 처리
       if ('isAvailable' in data) {
         if (data.isAvailable) {
-          if (tempSelectedService === previousService) {
-            // 이전 요금제로 되돌리기인 경우 바로 적용
+          if (tempSelectedService.serviceId === previousService?.serviceId) {
             revertToPreviousService(contractTabId);
           } else {
             // 일반 요금제 변경인 경우 확인 모달 표시
@@ -324,9 +323,8 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
               variant='outlined'
               color='primary'
               size='small'
-              // iconComponent={<RestoreIcon />}
-              // iconPosition='left'
               onClick={handleRevertToPreviousService}
+              data-testid='revert-service-button'
             >
               이전 요금제로 되돌리기
             </RevertButton>

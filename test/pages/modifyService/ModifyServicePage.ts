@@ -15,28 +15,21 @@ class ModifyServicePage {
       .should('be.visible');
   }
 
-  // 요금제 변경 모달에서 확인 버튼 클릭
+  // 모달에서 확인 버튼 클릭
   clickModalConfirmButton() {
     cy.get('[data-testid="modal-confirm-button"]').click();
   }
 
-  // 요금제 변경 모달에서 취소 버튼 클릭
+  // 모달에서 취소 버튼 클릭
   clickModalCancelButton() {
     cy.get('[data-testid="modal-cancel-button"]').click();
   }
 
-  // 요금제 변경 불가 모달이 보이는지 확인
-  assertServiceModificationBlockModalVisible() {
-    cy.get('[data-testid="service-modification-block-modal"]').should('be.visible');
-  }
 
-  // 모달의 타입이 일치하는지 확인
-  assertModalTypeIs(type: string) {
-    cy.get('[data-testid="service-modification-block-modal"]').should(
-      'have.attr',
-      'data-type',
-      type,
-    );
+  assertServiceSelectBoxDisabled() {
+    cy.get('[data-testid="service-select-box"]')
+      .find('input') // 내부 input 필드를 찾아서
+      .should('be.disabled'); // 비활성화 상태인지 확인
   }
 
   // 이전 요금제로 되돌리기 버튼이 보이는지 확인
@@ -94,9 +87,15 @@ class ModifyServicePage {
 
   // 선택된 요금제로 값이 변경되었는지 확인
   assertSelectedServiceIs(serviceName: string) {
-    cy.get('[data-testid="selected-additional-service-list"]')
+    cy.get('[data-testid="selected-service-price"]')
       .contains(serviceName)
       .should('be.visible');
+  }
+
+  // 이전 요금제가 보이는지 확인
+  assertSelectedPreviousServiceIs(serviceName: string) {
+    cy.get('[data-testid="service-select-box"] input')
+      .should('have.value', serviceName);
   }
 
   // 선택된 요금제의 금액이 표시되는지 확인
