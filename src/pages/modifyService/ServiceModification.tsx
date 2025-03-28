@@ -85,10 +85,7 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
   })();
 
   // 요금제 변경 가능 여부 확인 API 호출
-  const { data: modifiableData, isLoading } = useCheckServiceModifiableQuery(
-    contractId,
-    true,
-  );
+  const { data: modifiableData, isLoading } = useCheckServiceModifiableQuery(contractId, true);
 
   // 요금제 변경 가능 여부와 현재 서비스 정보 설정
   useEffect(() => {
