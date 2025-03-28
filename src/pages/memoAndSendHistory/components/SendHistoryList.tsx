@@ -4,6 +4,7 @@ import TableRow from '@components/Table/TableRow';
 import TableBody from '@components/Table/TableBody';
 import { useReactQuery } from '@hooks/useReactQuery';
 import Checkbox from '@components/Checkbox';
+import Tooltip from '@components/Tooltip';
 import {
   SendHistoryBox,
   SendHistoryTableContainer,
@@ -83,7 +84,23 @@ const SendHistoryList = () => {
     {
       key: 'message',
       label: '메시지',
-      render: (item: SendHistoryItem) => <Typography>{item.message}</Typography>,
+      render: (item: SendHistoryItem) => (
+        <Tooltip sx={{ zIndex: 10000 }} title={item.message} placement='bottom' arrow>
+          <Box sx={{ maxWidth: '100%' }}>
+            <Typography
+              sx={{
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {item.message}
+            </Typography>
+          </Box>
+        </Tooltip>
+      ),
     },
     {
       key: 'success',
