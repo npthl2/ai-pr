@@ -164,7 +164,8 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
         return;
       }
 
-      const selectedServiceData = services.find((service: Service) => service.serviceId === newValue.id) || null;
+      const selectedServiceData =
+        services.find((service: Service) => service.serviceId === newValue.id) || null;
       if (selectedServiceData) {
         setTempSelectedService(selectedServiceData);
         setServiceAgeCheckParams({
