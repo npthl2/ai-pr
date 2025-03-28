@@ -20,6 +20,7 @@ import {
   ModalTitle,
   ContentWrapper,
   ButtonContainer,
+  TableHeaderTitle,
 } from './ContractServiceList.styled';
 import { CustomerContract } from '@model/Contract';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
@@ -112,9 +113,15 @@ const ContractServiceList = ({ open, onClose, contracts }: ContractServiceListPr
                 <TableHead>
                   <TableRow variant='head'>
                     <TableCell width={48}></TableCell>
-                    <TableCell>전화번호</TableCell>
-                    <TableCell>요금제</TableCell>
-                    <TableCell>기기정보</TableCell>
+                    <TableCell>
+                      <TableHeaderTitle>전화번호</TableHeaderTitle>
+                    </TableCell>
+                    <TableCell>
+                      <TableHeaderTitle>요금제</TableHeaderTitle>
+                    </TableCell>
+                    <TableCell>
+                      <TableHeaderTitle>기기정보</TableHeaderTitle>
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

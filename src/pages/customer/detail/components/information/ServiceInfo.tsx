@@ -97,24 +97,24 @@ const ServiceInfo: React.FC<ServiceInfoProps> = ({
     if (!currentTabs) return;
 
     const existingTab = currentTabs.find((tab) => tab.label === targetMenu.name);
-    if (existingTab) {
-      setActiveTab(selectedCustomerId, existingTab.id);
-      return;
-    }
-
     const newTab = {
       id: DEFAULT_TABS.find((tab) => tab.label === targetMenu.name)?.id ?? currentTabs.length,
       label: targetMenu.name,
       closeable: true,
     };
 
+    if (existingTab) {
+      setActiveTab(selectedCustomerId, existingTab.id);
+    } else {
+      setCustomerTabs(selectedCustomerId, [...currentTabs, newTab]);
+      setActiveTab(selectedCustomerId, newTab.id);
+    }
+
     // 사용자 조회 시 요금제 기본 조회값 초기화
     updateCustomer(selectedCustomerId, {
       serviceContractId: '',
     });
     setSelectedContractId(selectedCustomerId, serviceInfo.contractId);
-    setCustomerTabs(selectedCustomerId, [...currentTabs, newTab]);
-    setActiveTab(selectedCustomerId, newTab.id);
   };
 
   return (

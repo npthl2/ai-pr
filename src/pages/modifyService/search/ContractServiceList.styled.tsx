@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 export const ModalContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
@@ -20,6 +20,12 @@ export const ModalContainer = styled(Box)(({ theme }) => ({
 export const ModalTitle = styled(Box)({
   height: 60,
 });
+
+export const TableHeaderTitle = styled(Typography)(({ theme }) => ({
+  fontWeight: 600,
+  fontSize: '14px',
+  color: theme.palette.text.secondary,
+}));
 
 export const ContentWrapper = styled(Box)({
   height: 150,

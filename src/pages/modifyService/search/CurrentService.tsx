@@ -163,6 +163,7 @@ const ConcurrentService = () => {
                       active={orderBy === 'name'}
                       direction={orderBy === 'name' ? order : 'asc'}
                       onClick={() => handleRequestSort('name')}
+                      sx={{ color: 'text.secondary' }}
                     >
                       부가서비스명
                     </TableSortLabel>
@@ -173,6 +174,7 @@ const ConcurrentService = () => {
                         active={orderBy === 'price'}
                         direction={orderBy === 'price' ? order : 'asc'}
                         onClick={() => handleRequestSort('price')}
+                        sx={{ color: 'text.secondary' }}
                       >
                         요금(원)
                       </TableSortLabel>
