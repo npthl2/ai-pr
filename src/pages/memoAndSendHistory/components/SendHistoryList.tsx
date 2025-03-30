@@ -228,6 +228,7 @@ const SendHistoryList = () => {
                   }
                 }}
                 label='SMS'
+                data-testid='send-history-list-sms-checkbox'
               />
               <Checkbox
                 checked={emailChecked}
@@ -238,12 +239,14 @@ const SendHistoryList = () => {
                   }
                 }}
                 label='E-Mail'
+                data-testid='send-history-list-email-checkbox'
               />
             </CheckboxContainer>
             <ToggleContainer>
               <StyledSwitch
                 checked={showSuccessOnly}
                 onChange={(e) => setShowSuccessOnly(e.target.checked)}
+                data-testid='send-history-list-success-only-switch'
               />
               <Typography>성공 건만 보기</Typography>
             </ToggleContainer>
@@ -271,7 +274,10 @@ const SendHistoryList = () => {
                     <HeaderCellWrapper>
                       <Typography>{column.label}</Typography>
                       {column.key !== 'message' && (
-                        <SortIconButton onClick={() => handleSort(column.key as SortField)}>
+                        <SortIconButton
+                          onClick={() => handleSort(column.key as SortField)}
+                          data-testid={`send-history-list-sort-icon-${column.key}`}
+                        >
                           <StyledAscIcon style={getSortIconStyle(column.key as SortField)} />
                         </SortIconButton>
                       )}
@@ -308,7 +314,7 @@ const SendHistoryList = () => {
             setRowsPerPage(parseInt(e.target.value));
             setPage(0);
           }}
-          sx={{}}
+          data-testid='send-history-list-pagination'
         />
       </Box>
     </SendHistoryBox>
