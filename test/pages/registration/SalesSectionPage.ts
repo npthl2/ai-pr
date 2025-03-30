@@ -28,7 +28,6 @@ class SalesSectionPage {
   }
 
   isFocusedOnSalesDepartmentInput() {
-    cy.get('[data-testid="sales-department-input"] input').click(); //To-Do: 강제 포커스 처리로 추후 테스트 코드 확인 후 삭제
     cy.get('[data-testid="sales-department-input"] input').should('be.focused');
   }
 

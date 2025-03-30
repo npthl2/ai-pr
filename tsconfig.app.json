@@ -32,6 +32,7 @@
       "@assets/*": ["src/assets/*"],
       "@router/*": ["src/router/*"],
       "@layout/*": ["src/layout/*"],
+      "@providers/*": ["src/providers/*"],
       "@theme/*": ["src/theme/*"]
     }
   },

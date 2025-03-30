@@ -27,6 +27,10 @@ class InvoiceSectionPage {
     cy.get('[data-testid="NEW_SUBSCRIPTION0-section-invoice"]').should('be.visible');
   }
 
+  assertComponentToBeFocused(componentName: string) {
+    cy.get(`[data-testid="${componentName}"] input`).should('be.focused');
+  }
+
   assertInvoiceSearchButtonEnabled() {
     cy.get('[data-testid="invoice-search-button"]').should('be.enabled');
   }

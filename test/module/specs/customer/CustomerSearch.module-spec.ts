@@ -1,7 +1,8 @@
-import CustomerSearchTestPage from '../../../../pages/customer/search/CustomerSearch';
-import { CustomerSearchServiceMock } from '../../../mock/customer/search/CustomerSearchServiceMock';
-import { mockMemberStore } from '../../../../support/helpers/mockMemberStore';
-import CustomerDetailServiceMock from '../../../mock/customer/detail/CustomerDetailServiceMock';
+import CustomerSearchTestPage from '../../../pages/customer/search/CustomerSearch';
+import { CustomerSearchServiceMock } from '../../mock/customer/search/CustomerSearchServiceMock';
+import { mockMemberStore } from '../../../support/helpers/mockMemberStore';
+import CustomerDetailServiceMock from '../../mock/customer/detail/CustomerDetailServiceMock';
+import { mockAuthStore } from '../../../support/helpers/mockAuthStore';
 
 describe('[KAN-18-1] 고객검색 Modal - 일반유저', () => {
   const customerSearch = new CustomerSearchTestPage();
@@ -9,6 +10,7 @@ describe('[KAN-18-1] 고객검색 Modal - 일반유저', () => {
   const customerDetailServiceMock = new CustomerDetailServiceMock();
 
   before(() => {
+    mockAuthStore();
     mockMemberStore({
       memberInfo: {
         memberId: 'user2',

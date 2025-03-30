@@ -18,9 +18,14 @@ interface validationField {
 interface SalesSectionComponentProps {
   tabId: string;
   onComplete: () => void;
+  isExpanded?: boolean;
 }
 
-const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, onComplete }) => {
+const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({
+  tabId,
+  onComplete,
+  isExpanded,
+}) => {
   const {
     addRegistrationSalesInfo,
     updateRegistrationSalesInfo,
@@ -50,11 +55,23 @@ const SalesSectionComponent: React.FC<SalesSectionComponentProps> = ({ tabId, on
     // store 정보 생성
     // setCustomerId(currentCustomerId ?? '');
     addRegistrationSalesInfo(tabId);
-    // 가입대리점 필드에 포커스 설정
-    if (salesDepartmentInputRef.current) {
-      salesDepartmentInputRef.current?.focus();
-    }
   }, []);
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    if (isExpanded) {
+      timeoutId = setTimeout(() => {
+        salesDepartmentInputRef.current?.focus();
+      }, 300);
+    }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [isExpanded]);
 
   // 모든 필드가 채워졌는지 확인하여 완료 되었을 때만 아코디언 활성화 함수 호출(한번 활성화 되면 비활성화 X)
   useEffect(() => {
