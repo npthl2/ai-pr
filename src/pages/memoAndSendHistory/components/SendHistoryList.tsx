@@ -187,8 +187,18 @@ const SendHistoryList = () => {
       sortOrder || '',
     ],
     queryFn: async () => {
-      const response = await fetchSendHistory();
-      return response.totalCount;
+      const response = await sendHistoryService.sendHistory({
+        customerId,
+        messageType: getMessageType(),
+        includeOnlySuccessYN: showSuccessOnly ? 'Y' : 'N',
+        page: page + 1,
+        size: rowsPerPage,
+      });
+      return typeof response.data === 'object' &&
+        response.data !== null &&
+        'totalCount' in response.data
+        ? response.data.totalCount
+        : 0;
     },
   });
 
@@ -293,9 +303,9 @@ const SendHistoryList = () => {
           page={page}
           count={totalCount}
           rowsPerPage={rowsPerPage}
-          onPageChange={(event, newPage) => setPage(newPage)}
-          onRowsPerPageChange={(event) => {
-            setRowsPerPage(parseInt(event.target.value));
+          onPageChange={(__, newPage) => setPage(newPage)}
+          onRowsPerPageChange={(e) => {
+            setRowsPerPage(parseInt(e.target.value));
             setPage(0);
           }}
           sx={{}}
