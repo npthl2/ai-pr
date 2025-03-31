@@ -1,6 +1,6 @@
 // src/pages/modifyService/modification/ServiceModify.tsx
 import { Box, Button } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import SelectService from './sections/ModifiedServiceSelect';
 import AdditionalServiceList from './sections/AdditionalServiceList';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
@@ -260,13 +260,13 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
   // 변경사항이 없는 경우 초기화 버튼 비활성화
   const isResetDisabled = !hasChanges;
 
-  // 컴포넌트 언마운트 시 cleanup
-  useEffect(() => {
-    return () => {
-      // 해당 고객ID의 데이터만 삭제
-      removeModifyServiceInfo(contractTabId);
-    };
-  }, [contractTabId, removeModifyServiceInfo]);
+  // // 컴포넌트 언마운트 시 cleanup
+  // useEffect(() => {
+  //   return () => {
+  //     // 해당 고객ID의 데이터만 삭제
+  //     removeModifyServiceInfo(contractTabId);
+  //   };
+  // }, [contractTabId, removeModifyServiceInfo]);
 
   return (
     <Container>
