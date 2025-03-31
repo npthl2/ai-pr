@@ -55,7 +55,7 @@ const DraggableFloatingButton = () => {
       case REGISTRATION_EVENT_TYPE.REGISTRATION_SAVE_REQUEST:
         message = `${name}님 가입`;
         break;
-      case REGISTRATION_EVENT_TYPE.PLAN_ADDITIONAL_SERVICE_CHANGE:
+      case REGISTRATION_EVENT_TYPE.PLAN_ADDITIONAL_SERVICE_CHANGE_REQUEST:
         message = `${name}님 요금제/부가서비스 변경`;
         break;
     }

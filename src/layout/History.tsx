@@ -64,7 +64,7 @@ const History = ({ registrationStatus }: HistoryProps) => {
             {name}님 가입
           </Typography>
         );
-      case REGISTRATION_EVENT_TYPE.PLAN_ADDITIONAL_SERVICE_CHANGE:
+      case REGISTRATION_EVENT_TYPE.PLAN_ADDITIONAL_SERVICE_CHANGE_REQUEST:
         return (
           <Typography
             variant='body2'
