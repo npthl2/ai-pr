@@ -332,13 +332,8 @@ const SelectedAdditionalServiceList = ({
         <Table stickyHeader>
           <TableHead>
             <TableRow variant='head'>
-              <StyledTableHeaderCell
-                align='center'
-                width='92px'
-              >
-                <Typography>
-                  상태
-                </Typography>
+              <StyledTableHeaderCell align='center' width='92px'>
+                <Typography>상태</Typography>
               </StyledTableHeaderCell>
               <StyledTableHeaderCell onClick={() => handleSort('serviceName')}>
                 <Typography>
