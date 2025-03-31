@@ -247,7 +247,11 @@ const SelectedAdditionalServiceList = ({
           fontSize: '16px',
           transform: sortDirection === 'desc' ? 'rotate(180deg)' : 'none',
         }}
-        data-testid={field === 'serviceName' ? 'selected-additional-service-list-sort-by-name' : 'selected-additional-service-list-sort-by-price'}
+        data-testid={
+          field === 'serviceName'
+            ? 'selected-additional-service-list-sort-by-name'
+            : 'selected-additional-service-list-sort-by-price'
+        }
       />
     );
   };
@@ -325,13 +329,8 @@ const SelectedAdditionalServiceList = ({
         <StyledTable stickyHeader>
           <TableHead>
             <TableRow variant='head'>
-              <StyledTableHeaderCell
-                align='left'
-                width='100px'
-              >
-                <Typography>
-                  상태
-                </Typography>
+              <StyledTableHeaderCell align='left' width='100px'>
+                <Typography>상태</Typography>
               </StyledTableHeaderCell>
               <StyledTableHeaderCell onClick={() => handleSort('serviceName')}>
                 <Typography>
