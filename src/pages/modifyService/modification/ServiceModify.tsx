@@ -260,14 +260,6 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
   // 변경사항이 없는 경우 초기화 버튼 비활성화
   const isResetDisabled = !hasChanges;
 
-  // // 컴포넌트 언마운트 시 cleanup
-  // useEffect(() => {
-  //   return () => {
-  //     // 해당 고객ID의 데이터만 삭제
-  //     removeModifyServiceInfo(contractTabId);
-  //   };
-  // }, [contractTabId, removeModifyServiceInfo]);
-
   return (
     <Container>
       {/* 1. 요금제 선택 영역 */}
