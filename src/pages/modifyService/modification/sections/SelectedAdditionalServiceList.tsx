@@ -1,4 +1,4 @@
-import { Typography, TableBody, TableHead, Box } from '@mui/material';
+import { Typography, TableBody, TableHead, Box, Table } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowDownward from '@mui/icons-material/ArrowDownward';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
@@ -12,7 +12,6 @@ import {
   TitleTypography,
   CountTypography,
   ListContainer,
-  StyledTable,
   ScrollableTableContainer,
   StyledTableHeaderCell,
   SubscribeStatusBadge,
@@ -23,6 +22,8 @@ import {
   HeaderContainer,
   TitleSection,
   StyledTableBlankCell,
+  EllipsisTypography,
+  TextContainer,
 } from './SelectedAdditionalServiceList.styled';
 import useCustomerStore from '@stores/CustomerStore';
 
@@ -290,8 +291,10 @@ const SelectedAdditionalServiceList = ({
                   <SubscribeStatusBadge>가입</SubscribeStatusBadge>
                 )}
               </TableCell>
-              <TableCell>
-                <Typography>{service.serviceName}</Typography>
+              <TableCell width='500px'>
+                <TextContainer>
+                  <EllipsisTypography>{service.serviceName}</EllipsisTypography>
+                </TextContainer>
               </TableCell>
               <TableCell align='right' sx={{ width: '150px' }}>
                 <Typography>{service.serviceValue.toLocaleString()}</Typography>
@@ -326,11 +329,16 @@ const SelectedAdditionalServiceList = ({
       </HeaderContainer>
 
       <ListContainer>
-        <StyledTable stickyHeader>
+        <Table stickyHeader>
           <TableHead>
             <TableRow variant='head'>
-              <StyledTableHeaderCell align='left' width='100px'>
-                <Typography>상태</Typography>
+              <StyledTableHeaderCell
+                align='center'
+                width='92px'
+              >
+                <Typography>
+                  상태
+                </Typography>
               </StyledTableHeaderCell>
               <StyledTableHeaderCell onClick={() => handleSort('serviceName')}>
                 <Typography>
@@ -351,10 +359,10 @@ const SelectedAdditionalServiceList = ({
               <StyledTableBlankCell width='100px'></StyledTableBlankCell>
             </TableRow>
           </TableHead>
-        </StyledTable>
+        </Table>
 
         <ScrollableTableContainer>
-          <StyledTable>
+          <Table>
             <TableBody>
               {tableContent}
               {allServices.length === 0 && (
@@ -378,10 +386,10 @@ const SelectedAdditionalServiceList = ({
                 </TableRow>
               )}
             </TableBody>
-          </StyledTable>
+          </Table>
         </ScrollableTableContainer>
 
-        <StyledTable>
+        <Table>
           <TableRow variant='head'>
             <TableCell colSpan={2}>
               <TotalText>합계</TotalText>
@@ -393,7 +401,7 @@ const SelectedAdditionalServiceList = ({
             </StyledTableHeaderCell>
             <StyledTableBlankCell width='100px'></StyledTableBlankCell>
           </TableRow>
-        </StyledTable>
+        </Table>
       </ListContainer>
     </RootContainer>
   );

@@ -1,4 +1,4 @@
-import { Box, Typography, TableBody, TableHead } from '@mui/material';
+import { Box, Typography, TableBody, TableHead, Table } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState, useEffect, useCallback, useMemo } from 'react';
@@ -16,12 +16,13 @@ import {
   TitleTypography,
   CountTypography,
   ListContainer,
-  StyledTable,
   ScrollableTableContainer,
   StyledTableHeaderCell,
   AddButton,
   InfoIcon,
   StyledTableBlankCell,
+  EllipsisTypography,
+  TextContainer,
 } from './AdditionalServiceList.styled';
 import { ArrowDownward } from '@mui/icons-material';
 
@@ -258,7 +259,7 @@ const AdditionalServiceList = ({
           sx={isRestricted ? { backgroundColor: '#ffebee' } : {}}
           data-testid='additional-service-list'
         >
-          <StyledTableBlankCell width='10px'>
+          <StyledTableBlankCell width='10px' sx={{ paddingRight: '0px' }}>
             {isRestricted && (
               <InfoIcon
                 color='error'
@@ -268,22 +269,20 @@ const AdditionalServiceList = ({
             )}
           </StyledTableBlankCell>
           <TableCell>
-            <Box sx={{ display: 'flex', alignItems: 'left' }}>
-              {isRestricted && (
-                <Tooltip
-                  title={getRestrictionMessage(service)}
-                  arrow
-                  placement='bottom'
-                  data-testid={`additional-service-tooltip-${service.serviceId}`}
-                >
-                  <Typography data-testid={`service-name-${service.serviceId}`}>
-                    {service.serviceName}
-                  </Typography>
-                </Tooltip>
-              )}
-              {!isRestricted && <Typography>{service.serviceName}</Typography>}
+            <Box sx={{ width: '500px', alignItems: 'left' }}>
+              <TextContainer>
+                {isRestricted && (
+                  <Tooltip title={getRestrictionMessage(service)} arrow placement='bottom'>
+                    <EllipsisTypography data-testid={`service-name-${service.serviceId}`}>
+                      {service.serviceName}
+                    </EllipsisTypography>
+                  </Tooltip>
+                )}
+                {!isRestricted && <EllipsisTypography>{service.serviceName}</EllipsisTypography>}
+              </TextContainer>
             </Box>
           </TableCell>
+
           <TableCell align='right' sx={{ width: '150px' }}>
             <Typography>{service.serviceValue.toLocaleString()}</Typography>
           </TableCell>
@@ -330,7 +329,7 @@ const AdditionalServiceList = ({
       </HeaderContainer>
 
       <ListContainer>
-        <StyledTable stickyHeader>
+        <Table stickyHeader>
           <TableHead>
             <TableRow variant='head'>
               <StyledTableBlankCell width='10px'></StyledTableBlankCell>
@@ -353,10 +352,10 @@ const AdditionalServiceList = ({
               <StyledTableBlankCell width='100px'></StyledTableBlankCell>
             </TableRow>
           </TableHead>
-        </StyledTable>
+        </Table>
 
         <ScrollableTableContainer>
-          <StyledTable>
+          <Table>
             <TableBody>
               {tableContent}
               {filteredServices.length === 0 && (
@@ -380,7 +379,7 @@ const AdditionalServiceList = ({
                 </TableRow>
               )}
             </TableBody>
-          </StyledTable>
+          </Table>
         </ScrollableTableContainer>
       </ListContainer>
     </RootContainer>

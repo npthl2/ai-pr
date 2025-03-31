@@ -1,4 +1,4 @@
-import { Box, Typography, Table, TableContainer } from '@mui/material';
+import { Box, Typography, TableContainer } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import TableCell from '@components/Table/TableCell';
 import Button from '@components/Button';
@@ -50,11 +50,6 @@ export const ListContainer = styled(Box)({
   height: 'auto', // 내부 컨텐츠에 맞춤
 });
 
-// 테이블 레이아웃 고정 스타일
-export const StyledTable = styled(Table)({
-  tableLayout: 'fixed',
-});
-
 // 스크롤 가능한 테이블 컨테이너
 export const ScrollableTableContainer = styled(TableContainer)({
   // 헤더와 데이터 6개가 보이도록 고정 높이 설정 (행 높이 37px × 6개 = 222px)
@@ -99,4 +94,18 @@ export const AddButton = styled(Button)(({ color }) => ({
 // 툴팁 아이콘 스타일
 export const InfoIcon = styled(InfoOutlinedIcon)({
   fontSize: 16,
+});
+
+// 테이블 셀 내 텍스트를 감싸는 컨테이너
+export const TextContainer = styled(Box)({
+  overflow: 'hidden',
+  display: 'grid',
+});
+
+// 말줄임표가 적용된 Typography
+export const EllipsisTypography = styled(Typography)({
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  width: '100%',
 });

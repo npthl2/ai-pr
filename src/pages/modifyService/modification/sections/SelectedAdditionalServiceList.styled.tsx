@@ -1,4 +1,4 @@
-import { Box, Typography, Table, TableContainer } from '@mui/material';
+import { Box, Typography, TableContainer } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import TableCell from '@components/Table/TableCell';
 import TableRow from '@components/Table/TableRow';
@@ -66,13 +66,6 @@ export const WarningMessage = styled(Typography)({
     marginRight: '8px',
   },
 });
-
-// 테이블 레이아웃 고정 스타일
-export const StyledTable = styled(Table)({
-  tableLayout: 'fixed',
-  borderCollapse: 'collapse',
-});
-
 // 스크롤 가능한 테이블 컨테이너
 export const ScrollableTableContainer = styled(TableContainer)({
   // 헤더와 데이터 6개가 보이도록 고정 높이 설정 (행 높이 37px × 4개 = 148px)
@@ -203,4 +196,18 @@ export const TitleSection = styled(Box)({
   display: 'flex',
   alignItems: 'center',
   marginBottom: '2px',
+});
+
+// 테이블 셀 내 텍스트를 감싸는 컨테이너
+export const TextContainer = styled(Box)({
+  overflow: 'hidden',
+  display: 'grid',
+});
+
+// 말줄임표가 적용된 Typography
+export const EllipsisTypography = styled(Typography)({
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  width: '100%',
 });
