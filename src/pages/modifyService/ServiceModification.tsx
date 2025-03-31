@@ -56,8 +56,9 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
   const customerTabs = useCustomerStore((state) => state.customerTabs);
 
   // CurrentServiceStore에서 contractId 가져오기
-  const getCurrentService = useCurrentServiceStore((state) => state.getCurrentService);
-  const contractId = getCurrentService?.(selectedCustomerId)?.contractId || '';
+  const contractId = useCurrentServiceStore(
+    (state) => state.selectedContractIds[selectedCustomerId] || '',
+  );
 
   // 컴포넌트 마운트 시 상태 초기화
   useEffect(() => {
