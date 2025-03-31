@@ -155,13 +155,13 @@ class ModifyServicePage {
     cy.get(`[data-testid="service-name-${serviceId}"]`)
       .scrollIntoView()
       .trigger('mouseenter', { force: true })
-      .trigger('mousemove', { force: true })
+      .trigger('mouseover', { force: true })
       .wait(300);
   }
 
   // 툴팁이 보이는지 확인
-  assertTooltipTextEquals(expectedText: string) {
-    cy.get('.MuiTooltip-popper')
+  assertTooltipTextEquals(serviceId: string, expectedText: string) {
+    cy.get(`[data-testid="additional-service-tooltip-${serviceId}"]`)
       .should('be.visible')
       .find('[role="tooltip"]') // 툴팁 내부 컨테이너
       .invoke('text')

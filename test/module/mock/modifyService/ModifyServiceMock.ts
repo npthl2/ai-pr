@@ -621,7 +621,7 @@ class ModifyServiceMock {
 
   // 요금제 변경 가능 여부 확인 API 모킹 (불가능 - 당월 변경 이력)
   failWhenCheckServiceModifiable() {
-    cy.intercept('GET', /\/v1\/contract\/service-modify\/[^/]+\/check$/, {
+    cy.intercept('GET', '**/v1/contract/service-modify/7823440192/check', {
       statusCode: 200,
       body: modifiableResponseFalse
     }).as('failWhenCheckServiceModifiable');
@@ -629,7 +629,7 @@ class ModifyServiceMock {
 
   // 요금제 변경 가능 여부 확인 API 모킹 (불가능 - 당일 변경 이력, 되돌리기 가능)
   rollbackAvailableWhenCheckServiceModifiable() {
-    cy.intercept('GET', /\/v1\/contract\/service-modify\/[^/]+\/check$/, {
+    cy.intercept('GET', '**/v1/contract/service-modify/7823440192/check', {
       statusCode: 200,
       body: modifiableResponseWithRollback
     }).as('rollbackAvailableWhenCheckServiceModifiable');

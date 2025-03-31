@@ -270,7 +270,12 @@ const AdditionalServiceList = ({
           <TableCell>
             <Box sx={{ display: 'flex', alignItems: 'left' }}>
               {isRestricted && (
-                <Tooltip title={getRestrictionMessage(service)} arrow placement='bottom'>
+                <Tooltip
+                  title={getRestrictionMessage(service)}
+                  arrow
+                  placement='bottom'
+                  data-testid={`additional-service-tooltip-${service.serviceId}`}
+                >
                   <Typography data-testid={`service-name-${service.serviceId}`}>
                     {service.serviceName}
                   </Typography>

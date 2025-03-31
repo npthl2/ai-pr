@@ -32,29 +32,18 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
         authorities: ['ROLE_SEARCH_TEL_NO', 'ROLE_UNMASKING'],
       },
     });
-
-    customerDetailService.homeBookmark();
-    customerDetailPage.visitCustomerDetailPage();
-    customerSearchPage.getOpenModalButton().click();
-    customerSearchPage.typePhoneNumber('01077775555');
-    customerDetailService.successGetCustomer();
-    customerDetailService.successWhenGetCustomerContracts();
-    customerSearchPage.clickSearch();
-
-    service.rollbackAvailableWhenCheckServiceModifiable();
   });
 
   // describe('KAN-22-1 사전 제약 사항', () => {
   //   beforeEach(() => {
-  //     // customerDetailService.homeBookmark();
-  //     // customerDetailPage.visitCustomerDetailPage();
-  //     // customerSearchPage.getOpenModalButton().click();
-  //     // customerSearchPage.typePhoneNumber('01077775555');
-  //     // customerDetailService.successGetCustomer();
-  //     // customerDetailService.successWhenGetCustomerContracts();
   //     serviceSearchServiceMock.getCustomerSearchPhoneNumber();
   //     serviceSearchServiceMock.getCustomerTwoLineContract();
+  //     serviceSearchServiceMock.getCustomerTwoLineContractService();
+
   //     serviceSearchServiceMock.getCustomerInfomation100000000001();
+  //     service.successWhenGetServices();
+  //     service.successWhenGetAdditionalServices();
+
   //     serviceSearchPage.visitHome();
   //     layoutPage.clickMenuButton();
   //     customerSearch.getOpenModalButton().click();
@@ -64,8 +53,9 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
 
   //   it('KAN-22-1-1 요금제/부가서비스 화면이 렌더링 될 때 당월 요금제 변경 이력이 있으면 요금제 변경 불가 모달이 보여야 한다', () => {
   //     service.failWhenCheckServiceModifiable();
-  //     // 요금제/부가서비스 변경버튼 클릭
-  //     customerDetailPage.clickServiceInfoChangeButton();
+
+  //     serviceSearchPage.getServiceInfoChangeButton().click();
+
   //     // 모달이 표시되는지 확인
   //     page.assertModalVisible();
 
@@ -76,7 +66,7 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
   //   it('KAN-22-1-2 요금제 변경 박스가 비활성화되어야 한다', () => {
   //     service.failWhenCheckServiceModifiable();
   //     // 요금제/부가서비스 변경버튼 클릭
-  //     customerDetailPage.clickServiceInfoChangeButton();
+  //     serviceSearchPage.getServiceInfoChangeButton().click();
   //     // 모달이 표시되는지 확인
   //     page.assertModalVisible();
 
@@ -95,7 +85,7 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
   //     service.rollbackAvailableWhenCheckServiceModifiable();
 
   //     // 요금제/부가서비스 변경버튼 클릭
-  //     customerDetailPage.clickServiceInfoChangeButton();
+  //     serviceSearchPage.getServiceInfoChangeButton().click();
 
   //     // 모달이 표시되는지 확인
   //     page.assertModalVisible();
@@ -111,17 +101,8 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
   //     // 테스트 설정 변경: 당일 변경 이력 있음, 되돌리기 가능
   //     service.rollbackAvailableWhenCheckServiceModifiable();
 
-  //     // 전체 요금제
-  //     service.successWhenGetServices();
-
-  //     // 현재 요금제 부가서비스
-  //     service.successWhenGetAdditionalServices();
-
-  //     // 이전 요금제 정보
-  //     service.successWhenGetAdditional_SVC60_Services();
-
   //     // 요금제/부가서비스 변경버튼 클릭
-  //     customerDetailPage.clickServiceInfoChangeButton();
+  //     serviceSearchPage.getServiceInfoChangeButton().click();
 
   //     // 모달이 표시되는지 확인
   //     page.assertModalVisible();
@@ -144,15 +125,22 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
   //   beforeEach(() => {
   //     serviceSearchServiceMock.getCustomerSearchPhoneNumber();
   //     serviceSearchServiceMock.getCustomerTwoLineContract();
+  //     serviceSearchServiceMock.getCustomerTwoLineContractService();
   //     serviceSearchServiceMock.getCustomerInfomation100000000001();
+
+  //     service.successWhenGetServices();
+  //     service.successWhenGetAdditionalServices();
+
   //     serviceSearchPage.visitHome();
   //     layoutPage.clickMenuButton();
   //     customerSearch.getOpenModalButton().click();
   //     customerSearch.typePhoneNumber('01098765432');
   //     customerSearch.clickSearch();
 
+  // service.successWhenCheckServiceModifiable();
+
   //     // 요금제/부가서비스 변경버튼 클릭
-  //     customerDetailPage.clickServiceInfoChangeButton();
+  //     serviceSearchPage.getServiceInfoChangeButton().click();
   //   });
 
   //   it('KAN-22-2-1 변경할 요금제 박스를 포커스 했을 때 요금제 리스트가 보여야 한다', () => {
@@ -172,6 +160,8 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
   //     // 검색어 입력
   //     page.typeServiceSearchKeyword('Speed');
 
+  //     cy.wait(500);
+
   //     // 검색 결과에 프리미엄 요금제만 표시되는지 확인
   //     page.assertServiceInList('LTE Speed Max 요금제');
   //     page.assertServiceInList('LTE Speed Elite 요금제');
@@ -185,6 +175,8 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
 
   //     // 검색어 입력
   //     page.typeServiceSearchKeyword('존재하지 않는 요금제');
+
+  //     cy.wait(500);
 
   //     // 요금제가 없다는 메시지가 표시되는지 확인
   //     page.assertServiceListEmpty();
@@ -255,39 +247,59 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
     beforeEach(() => {
       serviceSearchServiceMock.getCustomerSearchPhoneNumber();
       serviceSearchServiceMock.getCustomerTwoLineContract();
+      serviceSearchServiceMock.getCustomerTwoLineContractService();
       serviceSearchServiceMock.getCustomerInfomation100000000001();
+
+      service.successWhenCheckServiceModifiable();
+      service.successWhenGetServices();
+
       serviceSearchPage.visitHome();
       layoutPage.clickMenuButton();
       customerSearch.getOpenModalButton().click();
       customerSearch.typePhoneNumber('01098765432');
       customerSearch.clickSearch();
-
-      // 요금제/부가서비스 변경버튼 클릭
-      customerDetailPage.clickServiceInfoChangeButton();
     });
 
     // it('KAN-22-3-1 부가서비스 가입 불가 안내 문구가 보여야 한다', () => {
+    //   service.successWhenGetAdditionalServices();
+    //   // 요금제/부가서비스 변경버튼 클릭
+    //   serviceSearchPage.getServiceInfoChangeButton().click();
     //   // 부가서비스 가입 불가 안내 문구가 표시되는지 확인
     //   page.assertAdditionalServiceDisabledMessageVisible();
     // });
 
     // it('KAN-22-3-2 부가서비스 목록이 렌더링 되면 모든 부가서비스가 보여야 한다', () => {
+    //   service.successWhenGetAdditionalServices();
+    //   // 요금제/부가서비스 변경버튼 클릭
+    //   serviceSearchPage.getServiceInfoChangeButton().click();
     //   // 부가서비스 목록이 표시되는지 확인
     //   page.assertAdditionalServiceListVisible();
     // });
 
     // it('KAN-22-3-3 부가서비스 검색 기능이 보여야 한다', () => {
+    //   service.successWhenGetAdditionalServices();
+    //   // 요금제/부가서비스 변경버튼 클릭
+    //   serviceSearchPage.getServiceInfoChangeButton().click();
     //   // 부가서비스 검색 입력 필드가 표시되는지 확인
     //   page.assertAdditionalServiceSearchVisible();
     // });
 
     // it('KAN-22-3-4 현재 요금제의 부가서비스 목록이 선택된 목록에 보여야 한다', () => {
+    //   service.successWhenGetAdditionalServices();
+    //   // 요금제/부가서비스 변경버튼 클릭
+    //   serviceSearchPage.getServiceInfoChangeButton().click();
     //   // 현재 부가서비스가 선택된 목록에 표시되는지 확인
     //   page.assertCurrentAdditionalServiceInSelectedList();
     // });
 
     // it('KAN-22-3-5 가입 불가 부가서비스는 불가 표시가 되어야 한다', () => {
-    //   service.hasAgeRestrictionWhenCheckServiceAgeRestriction();
+    //   service.noAgeRestrictionWhenCheckServiceAgeRestriction();
+
+    //   service.successWhenGetAdditional_SVC60_Services();
+
+    //   // 요금제/부가서비스 변경버튼 클릭
+    //   serviceSearchPage.getServiceInfoChangeButton().click();
+
     //   // 요금제 선택 박스 클릭
     //   page.clickServiceSelectBox();
 
@@ -303,6 +315,12 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
 
     // it('KAN-22-3-6 가입 불가 부가서비스의 추가 버튼은 비활성화되어야 한다', () => {
     //   service.noAgeRestrictionWhenCheckServiceAgeRestriction();
+
+    //   service.successWhenGetAdditional_SVC60_Services();
+
+    //   // 요금제/부가서비스 변경버튼 클릭
+    //   serviceSearchPage.getServiceInfoChangeButton().click();
+
     //   // 요금제 선택 박스 클릭
     //   page.clickServiceSelectBox();
 
@@ -319,30 +337,43 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
     //   page.assertAddButtonDisabled();
     // });
 
-    // it('KAN-22-3-7 가입 불가 부가서비스에 마우스를 hover 했을 때 툴팁이 보여야 한다', () => {
-    //   // 요금제 선택 박스 클릭
-    //   page.clickServiceSelectBox();
+    it('KAN-22-3-7 가입 불가 부가서비스에 마우스를 hover 했을 때 툴팁이 보여야 한다', () => {
+      service.noAgeRestrictionWhenCheckServiceAgeRestriction();
 
-    //   // 요금제 선택
-    //   page.selectServiceFromList('LTE Prime Max 요금제');
+      service.successWhenGetAdditional_SVC60_Services();
 
-    //   // 모달의 확인 버튼 클릭
-    //   page.clickModalConfirmButton();
+      // 요금제/부가서비스 변경버튼 클릭
+      serviceSearchPage.getServiceInfoChangeButton().click();
 
-    //   // 가입 불가 부가서비스에 마우스 오버
-    //   page.hoverAdditionalServiceItem('a_5g_2');
+      // 요금제 선택 박스 클릭
+      page.clickServiceSelectBox();
 
-    //   // 툴팁이 표시되는지 확인
-    //   page.assertTooltipTextEquals('나이 제한으로 인해 가입이 불가능합니다.');
-    // });
+      // 요금제 선택
+      page.selectServiceFromList('LTE Prime Max 요금제');
 
-    it('KAN-22-3-8 검색어 입력 시 해당 키워드를 포함한 부가서비스만 보여야 한다', () => {
-      // 부가서비스 검색어 입력
-      page.typeAdditionalServiceSearchKeyword('5G');
+      // 모달의 확인 버튼 클릭
+      page.clickModalConfirmButton();
 
-      // 검색 결과에 안심이 포함된 서비스만 표시되는지 확인
-      page.assertAdditionalServiceInList('5G 2 Giga 충전 부가서비스');
+      // 가입 불가 부가서비스에 마우스 오버
+      page.hoverAdditionalServiceItem('a_5g_2');
+
+      // 툴팁이 표시되는지 확인
+      page.assertTooltipTextEquals('a_5g_2', '요금제 제한으로 인해 가입이 불가능합니다.');
     });
+
+    // it('KAN-22-3-8 검색어 입력 시 해당 키워드를 포함한 부가서비스만 보여야 한다', () => {
+    //   service.noAgeRestrictionWhenCheckServiceAgeRestriction();
+
+    //   service.successWhenGetAdditionalServices();
+
+    //   // 요금제/부가서비스 변경버튼 클릭
+    //   serviceSearchPage.getServiceInfoChangeButton().click();
+    //   // 부가서비스 검색어 입력
+    //   page.typeAdditionalServiceSearchKeyword('5G');
+
+    //   // 검색 결과에 안심이 포함된 서비스만 표시되는지 확인
+    //   page.assertAdditionalServiceInList('5G 2 Giga 충전 부가서비스');
+    // });
 
     // it('KAN-22-3-9 키워드가 없으면 빈 리스트가 보여야 한다', () => {
     //   // 부가서비스 검색어 입력
