@@ -9,9 +9,15 @@ interface ServiceModificationParams {
   contractId: string;
   service?: {
     serviceId: string;
+    serviceName: string;
+    serviceValue: number;
+    serviceValueType: string;
   } | null;
   additionalServices: {
     serviceId: string;
+    serviceName: string;
+    serviceValue: number;
+    serviceValueType: string;
   }[];
 }
 
@@ -30,6 +36,9 @@ export const useServiceModificationMutation = () => {
         service: data.service,
         additionalServices: data.additionalServices.map((service) => ({
           serviceId: service.serviceId,
+          serviceName: service.serviceName,
+          serviceValue: service.serviceValue,
+          serviceValueType: service.serviceValueType,
         })),
       };
 

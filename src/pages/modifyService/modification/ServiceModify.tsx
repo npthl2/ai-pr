@@ -1,6 +1,6 @@
 // src/pages/modifyService/modification/ServiceModify.tsx
 import { Box, Button } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SelectService from './sections/ModifiedServiceSelect';
 import AdditionalServiceList from './sections/AdditionalServiceList';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
@@ -30,7 +30,7 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
   const modifyServiceInfo = useModifyServiceStore((state) =>
     state.getModifyServiceInfo(contractTabId),
   );
-  const { resetAll, serviceModificationMounted } = useModifyServiceStore();
+  const { resetAll, serviceModificationMounted, removeModifyServiceInfo } = useModifyServiceStore();
 
   // 계약 탭에 대한 정보가 없으면 기본값 제공
   const selectedService = modifyServiceInfo?.selectedService || null;
@@ -184,54 +184,63 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
 
   // 모달 확인 핸들러
   const handleConfirmModal = async () => {
-    // ModifyServiceStore에서 선택된 서비스 정보 가져오기
-    const modifyServiceInfo = useModifyServiceStore.getState().getModifyServiceInfo(contractTabId);
-    if (!modifyServiceInfo) {
-      return;
-    }
 
-    // CustomerStore에서 고객 ID 가져오기
-    const selectedCustomerId = useCustomerStore.getState().selectedCustomerId;
+      // ModifyServiceStore에서 선택된 서비스 정보 가져오기
+      const modifyServiceInfo = useModifyServiceStore.getState().getModifyServiceInfo(contractTabId);
+      if (!modifyServiceInfo) {
+        return;
+      }
 
-    // 선택된 서비스 및 부가서비스 정보 추출
-    const {
-      selectedService,
-      selectedAdditionalServices,
-      currentAdditionalServices,
-      removedCurrentAdditionalServices,
-    } = modifyServiceInfo;
+      // CustomerStore에서 고객 ID 가져오기
+      const selectedCustomerId = useCustomerStore.getState().selectedCustomerId;
 
-    // 부가서비스 배열 생성 (선택된 부가서비스와 유지할 현재 부가서비스)
-    // 제거된 현재 부가서비스는 제외해야 함
-    const currentServicesToKeep = currentAdditionalServices.filter(
-      (currentService) =>
-        !removedCurrentAdditionalServices.some(
-          (removed) => removed.serviceId === currentService.serviceId,
-        ),
-    );
+      // 선택된 서비스 및 부가서비스 정보 추출
+      const {
+        selectedService,
+        selectedAdditionalServices,
+        currentAdditionalServices,
+        removedCurrentAdditionalServices,
+      } = modifyServiceInfo;
 
-    const allAdditionalServices = [...currentServicesToKeep, ...(selectedAdditionalServices || [])];
+      // 부가서비스 배열 생성 (선택된 부가서비스와 유지할 현재 부가서비스)
+      // 제거된 현재 부가서비스는 제외해야 함
+      const currentServicesToKeep = currentAdditionalServices.filter(
+        (currentService) =>
+          !removedCurrentAdditionalServices.some(
+            (removed) => removed.serviceId === currentService.serviceId,
+          ),
+      );
 
-    // additionalServices는 빈 배열이라도 정의되어야 함 (모든 부가서비스 제거를 명시적으로 전달하기 위함)
-    const additionalServicesRequest = allAdditionalServices.map((service) => ({
-      serviceId: service.serviceId,
-    }));
+      const allAdditionalServices = [...currentServicesToKeep, ...(selectedAdditionalServices || [])];
 
-    // 요청 데이터 구성 및 API 호출
-    await serviceModificationMutation.mutateAsync({
-      customerId: selectedCustomerId || '',
-      contractId: contractId || '',
-      // selectedService가 없을 경우 null 전달 (요금제 변경 없음)
-      service: selectedService ? { serviceId: selectedService.serviceId } : null,
-      // 빈 배열이라도 그대로 전달 (모든 부가서비스 제거를 의미)
-      additionalServices: additionalServicesRequest,
-    });
+      // additionalServices는 빈 배열이라도 정의되어야 함 (모든 부가서비스 제거를 명시적으로 전달하기 위함)
+      const additionalServicesRequest = allAdditionalServices.map((service) => ({
+        serviceId: service.serviceId,
+        serviceName: service.serviceName,
+        serviceValue: service.serviceValue,
+        serviceValueType: service.serviceValueType || '',
+      }));
 
-    // 요청 성공 시 저장 요청 상태를 true로 설정하여 부모 컴포넌트에 알림
-    if (setIsSaveRequested) {
-      setIsSaveRequested(true);
-    }
-    handleCloseModal();
+      // 요청 데이터 구성 및 API 호출
+      await serviceModificationMutation.mutateAsync({
+        customerId: selectedCustomerId || '',
+        contractId: contractId || '',
+        // selectedService가 없을 경우 null 전달 (요금제 변경 없음)
+        service: selectedService ? { serviceId: selectedService.serviceId, serviceName: selectedService.serviceName, serviceValue: selectedService.serviceValue, serviceValueType: selectedService.serviceValueType } : null,
+        // 빈 배열이라도 그대로 전달 (모든 부가서비스 제거를 의미)
+        additionalServices: additionalServicesRequest,
+      });
+
+      // 요청 성공 시
+      if (setIsSaveRequested) {
+        setIsSaveRequested(true);
+      }
+
+      // 모달 닫기
+      handleCloseModal();
+
+      // 해당 고객ID의 데이터만 삭제
+    removeModifyServiceInfo(contractTabId);
   };
 
   // 저장 버튼 비활성화 조건
@@ -244,6 +253,14 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
 
   // 변경사항이 없는 경우 초기화 버튼 비활성화
   const isResetDisabled = !hasChanges;
+
+  // 컴포넌트 언마운트 시 cleanup
+  useEffect(() => {
+    return () => {
+      // 해당 고객ID의 데이터만 삭제
+      removeModifyServiceInfo(contractTabId);
+    };
+  }, [contractTabId, removeModifyServiceInfo]);
 
   return (
     <Container>

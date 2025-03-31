@@ -151,21 +151,23 @@ class ModifyServicePage {
   }
 
   // 부가서비스 항목에 마우스 올리기
-  hoverAdditionalServiceItem(serviceName: string) {
-    cy.get('[data-testid="additional-service-list"]')
-      .filter(`:contains(${serviceName})`)
-      .each(($row) => {
-        cy.wrap($row).within(() => {
-          cy.get('td') // 또는 Typography 포함한 셀
-            .first()
-            .trigger('mouseover'); // 마우스 오버
-        });
-      });
+  hoverAdditionalServiceItem(serviceId: string) {
+    cy.get(`[data-testid="service-name-${serviceId}"]`)
+      .scrollIntoView()
+      .trigger('mouseenter', { force: true })
+      .trigger('mousemove', { force: true })
+      .wait(300);
   }
 
   // 툴팁이 보이는지 확인
-  assertTooltipVisible() {
-    cy.get('.MuiTooltip-popper').should('be.visible');
+  assertTooltipTextEquals(expectedText: string) {
+    cy.get('.MuiTooltip-popper')
+      .should('be.visible')
+      .find('[role="tooltip"]') // 툴팁 내부 컨테이너
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(expectedText);
+      });
   }
 
   // 부가서비스 리스트에 특정 부가서비스가 보이는지 확인
@@ -196,7 +198,6 @@ class ModifyServicePage {
       .first() // 그 중 첫 번째 텍스트 (이름)
       .should('have.text', expectedServiceName);
   }
-
 
   // 부가서비스 정렬 (요금)
   clickAdditionalServicePriceSort() {

@@ -69,7 +69,7 @@ const mapServiceResponseToAdditionalService = (
  *          - isError: 에러 발생 여부
  *          - error: 에러 정보
  */
-export const useCheckServiceModifiableQuery = (contractId: string, enabled: boolean = false) => {
+export const useCheckServiceModifiableQuery = (contractId: string) => {
   return useReactQuery({
     queryKey: ['checkServiceModifiable', contractId],
     queryFn: () => serviceModificationService.checkServiceModifiable(contractId),
@@ -89,7 +89,6 @@ export const useCheckServiceModifiableQuery = (contractId: string, enabled: bool
         previousService: null,
       };
     },
-    enabled: enabled && !!contractId,
   });
 };
 

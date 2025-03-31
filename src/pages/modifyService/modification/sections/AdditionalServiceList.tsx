@@ -268,12 +268,15 @@ const AdditionalServiceList = ({
             )}
           </StyledTableBlankCell>
           <TableCell>
+            <Box sx={{ display: 'flex', alignItems: 'left' }}>
             {isRestricted && (
-              <Tooltip title={getRestrictionMessage(service)}>
-                <Typography>{service.serviceName}</Typography>
+              <Tooltip title={getRestrictionMessage(service)} arrow placement='bottom'>
+                <Typography data-testid={`service-name-${service.serviceId}`}>{service.serviceName}</Typography>
               </Tooltip>
+              
             )}
             {!isRestricted && <Typography>{service.serviceName}</Typography>}
+            </Box>
           </TableCell>
           <TableCell align='right' sx={{ width: '150px' }}>
             <Typography>{service.serviceValue.toLocaleString()}</Typography>
