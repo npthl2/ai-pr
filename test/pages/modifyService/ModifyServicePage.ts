@@ -160,10 +160,11 @@ class ModifyServicePage {
   }
 
   // 툴팁이 보이는지 확인
-  assertTooltipTextEquals(serviceId: string, expectedText: string) {
-    cy.get(`[data-testid="additional-service-tooltip-${serviceId}"]`)
-      .should('be.visible')
-      .find('[role="tooltip"]') // 툴팁 내부 컨테이너
+  assertTooltipTextEquals(expectedText: string) {
+    cy.get('[role="tooltip"]')
+      .filter(':visible') // 현재 화면에 떠 있는 툴팁 중
+      .should('have.length.at.least', 1)
+      .last() // 가장 최근에 떠 있는 툴팁만
       .invoke('text')
       .then((text) => {
         expect(text.trim()).to.equal(expectedText);
@@ -183,6 +184,18 @@ class ModifyServicePage {
     cy.get('[data-testid="sort-by-name"]').click();
   }
 
+  // 부가서비스 정렬 (요금)
+  clickAdditionalServicePriceSort() {
+    cy.get('[data-testid="sort-by-price"]').click();
+  }
+
+  clickSelectedAdditionalServiceNameSort() {
+    cy.get('[data-testid="selected-additional-service-list-sort-by-name"]').click();
+  }
+
+  clickSelectedAdditionalServicePriceSort() {
+    cy.get('[data-testid="selected-additional-service-list-sort-by-price"]').click();
+  }
   assertTopAdditionalServiceIs(expectedServiceName: string) {
     cy.get('[data-testid="additional-service-list"]')
       .first() // 가장 첫 번째 행
@@ -197,11 +210,6 @@ class ModifyServicePage {
       .find('p') // 내부의 <Typography> (serviceName 표시되는 곳)
       .first() // 그 중 첫 번째 텍스트 (이름)
       .should('have.text', expectedServiceName);
-  }
-
-  // 부가서비스 정렬 (요금)
-  clickAdditionalServicePriceSort() {
-    cy.get('[data-testid="sort-by-price"]').click();
   }
 
   // 부가서비스 추가 버튼 클릭

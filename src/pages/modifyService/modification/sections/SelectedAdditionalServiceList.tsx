@@ -30,7 +30,7 @@ import useCustomerStore from '@stores/CustomerStore';
 type SortDirection = 'asc' | 'desc' | null;
 
 // 정렬 필드 타입
-type SortField = 'serviceName' | 'serviceValue' | 'serviceStatus' | null;
+type SortField = 'serviceName' | 'serviceValue' | null;
 
 interface SelectedAdditionalServiceListProps {
   additionalServices: AdditionalService[];
@@ -231,6 +231,11 @@ const SelectedAdditionalServiceList = ({
       return (
         <ArrowDownward
           sx={{ verticalAlign: 'middle', marginLeft: '4px', fontSize: '16px', opacity: 0.3 }}
+          data-testid={
+            field === 'serviceName'
+              ? 'selected-additional-service-list-sort-by-name'
+              : 'selected-additional-service-list-sort-by-price'
+          }
         />
       );
     }
@@ -242,6 +247,7 @@ const SelectedAdditionalServiceList = ({
           fontSize: '16px',
           transform: sortDirection === 'desc' ? 'rotate(180deg)' : 'none',
         }}
+        data-testid={field === 'serviceName' ? 'selected-additional-service-list-sort-by-name' : 'selected-additional-service-list-sort-by-price'}
       />
     );
   };
@@ -320,13 +326,11 @@ const SelectedAdditionalServiceList = ({
           <TableHead>
             <TableRow variant='head'>
               <StyledTableHeaderCell
-                onClick={() => handleSort('serviceStatus')}
                 align='left'
                 width='100px'
               >
                 <Typography>
                   상태
-                  {renderSortIcon('serviceStatus')}
                 </Typography>
               </StyledTableHeaderCell>
               <StyledTableHeaderCell onClick={() => handleSort('serviceName')}>
