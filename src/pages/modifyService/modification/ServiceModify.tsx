@@ -30,7 +30,7 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
   const modifyServiceInfo = useModifyServiceStore((state) =>
     state.getModifyServiceInfo(contractTabId),
   );
-  const { resetAll, serviceModificationMounted, removeModifyServiceInfo } = useModifyServiceStore();
+  const { resetAll, serviceModificationMounted } = useModifyServiceStore();
 
   // 계약 탭에 대한 정보가 없으면 기본값 제공
   const selectedService = modifyServiceInfo?.selectedService || null;
@@ -246,7 +246,7 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
     handleCloseModal();
 
     // 해당 고객ID의 데이터만 삭제
-    removeModifyServiceInfo(contractTabId);
+    // removeModifyServiceInfo(contractTabId);
   };
 
   // 저장 버튼 비활성화 조건
