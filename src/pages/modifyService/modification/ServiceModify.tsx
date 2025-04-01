@@ -245,7 +245,7 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
     // 모달 닫기
     handleCloseModal();
 
-    // 해당 고객ID의 데이터만 삭제
+    // TODO 완료 페이지 개발 시 주석 해제
     // removeModifyServiceInfo(contractTabId);
   };
 
