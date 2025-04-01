@@ -270,7 +270,7 @@ const AdditionalServiceList = ({
           </StyledTableBlankCell>
           <TableCell>
             <Box sx={{ width: '500px', alignItems: 'left' }}>
-              <Box display='flex'  alignItems='left'>
+              <Box display='flex' alignItems='left'>
                 <TextContainer>
                   {isRestricted && (
                     <Tooltip title={getRestrictionMessage(service)} arrow placement='bottom'>
