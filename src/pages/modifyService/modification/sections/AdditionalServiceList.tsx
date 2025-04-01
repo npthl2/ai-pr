@@ -365,7 +365,7 @@ const AdditionalServiceList = ({
                   <TableCell
                     colSpan={4}
                     align='center'
-                    sx={{ py: 0, height: '148px', border: 'none' }}
+                    sx={{ py: 0, height: '220px', border: 'none' }}
                   >
                     <Box
                       sx={{
