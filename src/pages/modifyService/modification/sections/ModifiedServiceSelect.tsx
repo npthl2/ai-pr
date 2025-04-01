@@ -169,16 +169,14 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
       const selectedServiceData =
         services.find((service: Service) => service.serviceId === newValue.id) || null;
       if (selectedServiceData) {
-
         // 먼저 파라미터 설정
         setServiceAgeCheckParams({
           age: customerAge,
           serviceId: selectedServiceData.serviceId,
         });
-        
+
         // 파라미터 설정 후 다음 렌더링 사이클에서 임시 선택 서비스 설정
         setTimeout(() => {
-
           setTempSelectedService(selectedServiceData);
           refetch(); // 쿼리 강제 재실행
         }, 0);

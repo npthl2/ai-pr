@@ -29,9 +29,8 @@ export const useCustomerContractsQuery = (customerId: string) => {
 export const customerContractsTreeData = (customerId: string) => {
   const { data } = useCustomerContractsQuery(customerId);
 
-    if (!data) return null;
-    return mapToTree(data);
-
+  if (!data) return null;
+  return mapToTree(data);
 };
 
 function mapToTree(data: CustomerContract) {
