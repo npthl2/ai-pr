@@ -86,11 +86,6 @@ export const customerContractsInfoData = (customerId: string, contractId: string
   const selectedContract = data.contracts.find((contract) => contract.contractId === contractId);
   if (!selectedContract) return null;
   return mapToInfo(selectedContract);
-  // FIXME: useMemo 이용 시 데이터 변경 시 렌더링 안됨
-  // return useMemo(() => {
-  //     if(!selectedContract) return null;
-  //     return mapToInfo(selectedContract);
-  // }, [customerId, contractId]);
 };
 
 export function mapToInfo(data: ContractData): Info {
