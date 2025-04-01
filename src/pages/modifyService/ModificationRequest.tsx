@@ -113,7 +113,7 @@ const ModificationRequest: React.FC<ModificationRequestProps> = ({ contractTabId
                   alignItems: 'center',
                 }}
               >
-                처리중입니다.
+                처리중입니다.
               </Typography>
 
               <Divider sx={{ mb: 2 }} />
