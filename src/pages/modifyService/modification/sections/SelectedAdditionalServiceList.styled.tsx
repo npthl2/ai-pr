@@ -136,17 +136,19 @@ const BadgeBase = styled(Box)({
 });
 
 // 가입 상태 배지
-export const SubscribeStatusBadge = styled(BadgeBase)({
+export const CurrentStatusBadge = styled(BadgeBase)({
   fontWeight: 400,
   backgroundColor: '#e3f2fd',
   color: '#0d47a1',
+  borderRadius: '10px',
 });
 
 // 가입중 상태 배지
-export const CurrentStatusBadge = styled(BadgeBase)({
+export const SubscribeStatusBadge = styled(BadgeBase)({
   fontWeight: 500,
   backgroundColor: '#f0f0f0',
   color: '#616161',
+  borderRadius: '10px',
 });
 
 // 해지필요 상태 배지
@@ -154,6 +156,7 @@ export const RestrictedStatusBadge = styled(BadgeBase)({
   fontWeight: 500,
   backgroundColor: '#ff5252',
   color: '#ffffff',
+  borderRadius: '10px',
 });
 
 // 삭제 버튼 스타일

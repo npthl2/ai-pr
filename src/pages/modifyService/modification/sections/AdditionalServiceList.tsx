@@ -270,16 +270,18 @@ const AdditionalServiceList = ({
           </StyledTableBlankCell>
           <TableCell>
             <Box sx={{ width: '500px', alignItems: 'left' }}>
-              <TextContainer>
-                {isRestricted && (
-                  <Tooltip title={getRestrictionMessage(service)} arrow placement='bottom'>
-                    <EllipsisTypography data-testid={`service-name-${service.serviceId}`}>
-                      {service.serviceName}
-                    </EllipsisTypography>
-                  </Tooltip>
-                )}
-                {!isRestricted && <EllipsisTypography>{service.serviceName}</EllipsisTypography>}
-              </TextContainer>
+              <Box display='flex' alignItems='left'>
+                <TextContainer>
+                  {isRestricted && (
+                    <Tooltip title={getRestrictionMessage(service)} arrow placement='bottom'>
+                      <EllipsisTypography data-testid={`service-name-${service.serviceId}`}>
+                        {service.serviceName}
+                      </EllipsisTypography>
+                    </Tooltip>
+                  )}
+                  {!isRestricted && <EllipsisTypography>{service.serviceName}</EllipsisTypography>}
+                </TextContainer>
+              </Box>
             </Box>
           </TableCell>
 
@@ -363,7 +365,7 @@ const AdditionalServiceList = ({
                   <TableCell
                     colSpan={4}
                     align='center'
-                    sx={{ py: 0, height: '148px', border: 'none' }}
+                    sx={{ py: 0, height: '220px', border: 'none' }}
                   >
                     <Box
                       sx={{

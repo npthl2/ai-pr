@@ -286,9 +286,9 @@ const SelectedAdditionalServiceList = ({
                 {isCurrentService && isRestricted ? (
                   <RestrictedStatusBadge>해지필요</RestrictedStatusBadge>
                 ) : isCurrentService ? (
-                  <CurrentStatusBadge>가입중</CurrentStatusBadge>
+                  <CurrentStatusBadge>가입</CurrentStatusBadge>
                 ) : (
-                  <SubscribeStatusBadge>가입</SubscribeStatusBadge>
+                  <SubscribeStatusBadge>가입중</SubscribeStatusBadge>
                 )}
               </TableCell>
               <TableCell width='500px'>

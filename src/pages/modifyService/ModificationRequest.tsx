@@ -15,6 +15,7 @@ const ModificationRequest: React.FC<ModificationRequestProps> = ({ contractTabId
   const modifyServiceInfo = useModifyServiceStore((state) =>
     state.getModifyServiceInfo(contractTabId),
   );
+  const { removeModifyServiceInfo } = useModifyServiceStore();
   const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
   const customers = useCustomerStore((state) => state.customers);
   const selectedCustomer = customers.find((c) => c.id === selectedCustomerId);
@@ -59,11 +60,14 @@ const ModificationRequest: React.FC<ModificationRequestProps> = ({ contractTabId
     return () => clearTimeout(timer);
   }, []);
 
-  // 변경사항이 있는지 확인
-  const hasChanges =
-    selectedService !== null ||
-    selectedAdditionalServices.length > 0 ||
-    removedCurrentAdditionalServices.length > 0;
+  // TODO 완료 페이지 개발 시 삭제 필요
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      removeModifyServiceInfo(contractTabId);
+    }, 7000);
+
+    return () => clearTimeout(timer);
+  }, [contractTabId]);
 
   return (
     <Box
@@ -109,7 +113,7 @@ const ModificationRequest: React.FC<ModificationRequestProps> = ({ contractTabId
                   alignItems: 'center',
                 }}
               >
-                {hasChanges ? '요청이 성공적으로 처리되었습니다' : '변경 사항이 없습니다'}
+                처리중입니다.
               </Typography>
 
               <Divider sx={{ mb: 2 }} />
