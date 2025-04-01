@@ -8,11 +8,16 @@ import ModifyServiceMock from '../../mock/modifyService/ModifyServiceMock';
 import { ServiceSearchMock } from '../../mock/modifyService/search/ServiceSearch';
 import LayoutPage from '../../../pages/layout/LayoutPage';
 import ServiceSearchPage from '../../../pages/modifyService/search/ServiceSearch';
+import RegistrationStatusServiceMock from '../../mock/registration/RegistrationStatusServiceMock';
+import { CustomerSearchServiceMock } from '../../mock/customer/search/CustomerSearchServiceMock';
 
 describe('KAN-22 요금제/부가서비스 변경', () => {
   const customerDetailPage = new CustomerDetailPage();
   const customerSearchPage = new CustomerSearchTestPage();
   const customerDetailService = new CustomerDetailServiceMock();
+
+  const registrationStatusService = new RegistrationStatusServiceMock();
+  const customerSearchServiceMock = new CustomerSearchServiceMock();
 
   const customerSearch = new CustomerSearchTestPage();
   const layoutPage = new LayoutPage();
@@ -22,6 +27,8 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
 
   const service = new ModifyServiceMock();
   const page = new ModifyServicePage();
+
+  const USER_ID = 'user1';
 
   before(() => {
     mockAuthStore();
@@ -39,6 +46,9 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
       serviceSearchServiceMock.getCustomerSearchPhoneNumber();
       serviceSearchServiceMock.getCustomerTwoLineContract();
       serviceSearchServiceMock.getCustomerTwoLineContractService();
+
+      customerSearchServiceMock.homeBookmark();
+      registrationStatusService.successWhenGetRegistrationStatus(USER_ID);
 
       serviceSearchServiceMock.getCustomerInfomation100000000001();
       service.successWhenGetServices();
@@ -127,6 +137,9 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
       serviceSearchServiceMock.getCustomerTwoLineContract();
       serviceSearchServiceMock.getCustomerTwoLineContractService();
       serviceSearchServiceMock.getCustomerInfomation100000000001();
+
+      customerSearchServiceMock.homeBookmark();
+      registrationStatusService.successWhenGetRegistrationStatus(USER_ID);
 
       service.successWhenGetServices();
       service.successWhenGetAdditionalServices();
@@ -250,6 +263,9 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
       serviceSearchServiceMock.getCustomerTwoLineContractService();
       serviceSearchServiceMock.getCustomerInfomation100000000001();
 
+      customerSearchServiceMock.homeBookmark();
+      registrationStatusService.successWhenGetRegistrationStatus(USER_ID);
+
       service.successWhenCheckServiceModifiable();
       service.successWhenGetServices();
 
@@ -295,6 +311,8 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
     it('KAN-22-3-5 가입 불가 부가서비스는 불가 표시가 되어야 한다', () => {
       service.noAgeRestrictionWhenCheckServiceAgeRestriction();
 
+      service.successWhenGetAdditionalServices();
+
       service.successWhenGetAdditional_SVC60_Services();
 
       // 요금제/부가서비스 변경버튼 클릭
@@ -315,6 +333,8 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
 
     it('KAN-22-3-6 가입 불가 부가서비스의 추가 버튼은 비활성화되어야 한다', () => {
       service.noAgeRestrictionWhenCheckServiceAgeRestriction();
+
+      service.successWhenGetAdditionalServices();
 
       service.successWhenGetAdditional_SVC60_Services();
 
@@ -339,6 +359,8 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
 
     it('KAN-22-3-7 가입 불가 부가서비스에 마우스를 hover 했을 때 툴팁이 보여야 한다', () => {
       service.noAgeRestrictionWhenCheckServiceAgeRestriction();
+
+      service.successWhenGetAdditionalServices();
 
       service.successWhenGetAdditional_SVC60_Services();
 
@@ -495,6 +517,9 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
       serviceSearchServiceMock.getCustomerTwoLineContract();
       serviceSearchServiceMock.getCustomerTwoLineContractService();
       serviceSearchServiceMock.getCustomerInfomation100000000001();
+
+      customerSearchServiceMock.homeBookmark();
+      registrationStatusService.successWhenGetRegistrationStatus(USER_ID);
 
       service.successWhenCheckServiceModifiable();
       service.successWhenGetServices();
