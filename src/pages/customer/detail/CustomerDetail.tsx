@@ -23,13 +23,26 @@ const CustomerDetail = () => {
     state.customers.find((c) => c.id === state.selectedCustomerId),
   ) as { id: string; contractId?: string } | undefined;
   const customerId = selectedCustomer?.id || '';
+  const customerTabs = useCustomerStore((state) => state.customerTabs[customerId]);
 
   useEffect(() => {
     initializeContractId();
     return () => {
-      queryClient.invalidateQueries({ queryKey: ['customerContracts', customerId] });
+      queryClient.invalidateQueries({
+        queryKey: ['customerContracts', customerId],
+        refetchType: 'none',
+      });
     };
   }, []);
+
+  useEffect(() => {
+    console.log('customerTabs', customerTabs);
+    if (customerTabs.activeTab === 0) {
+      queryClient.invalidateQueries({
+        queryKey: ['customerContracts', customerId],
+      });
+    }
+  }, [customerTabs]);
 
   const initializeContractId = () => {
     const contractId = selectedCustomer?.contractId;
