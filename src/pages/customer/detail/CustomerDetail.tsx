@@ -4,7 +4,6 @@ import { Box } from '@mui/material';
 import Information from './components/information/Information';
 import { SearchComponent } from './components/search/SearchComponent';
 import useCustomerStore from '@stores/CustomerStore';
-import { useQueryClient } from '@tanstack/react-query';
 import {
   boxContainerStyle,
   informationContainerStyle,
@@ -13,8 +12,6 @@ import {
 import { boxStyle } from './CustomerDetail.styled';
 
 const CustomerDetail = () => {
-  const queryClient = useQueryClient();
-
   const [selectedContractId, setSelectedContractId] = useState<string>('');
   const [includeCancelled, setIncludeCancelled] = useState<boolean>(false);
   const [filteredContractId, setFilteredContractId] = useState<string | null>(null);
@@ -26,9 +23,6 @@ const CustomerDetail = () => {
 
   useEffect(() => {
     initializeContractId();
-    return () => {
-      queryClient.invalidateQueries({ queryKey: ['customerContracts', customerId] });
-    };
   }, []);
 
   const initializeContractId = () => {
