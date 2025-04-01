@@ -60,7 +60,7 @@ const ModificationRequest: React.FC<ModificationRequestProps> = ({ contractTabId
     return () => clearTimeout(timer);
   }, []);
 
-  // 고객 데이터 삭제용 타이머
+  // TODO 완료 페이지 개발 시 삭제 필요
   useEffect(() => {
     const timer = setTimeout(() => {
       removeModifyServiceInfo(contractTabId);
