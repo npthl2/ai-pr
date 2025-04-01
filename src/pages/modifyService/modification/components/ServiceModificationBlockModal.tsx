@@ -93,7 +93,11 @@ const ServiceModificationModal: React.FC<ServiceModificationModalProps> = ({
         </Box>
 
         {/* 모달 컨텐츠 */}
-        <Box sx={styles.contentContainerWithStart} data-testid='service-modification-modal-message' alignItems='left'>
+        <Box
+          sx={styles.contentContainerWithStart}
+          data-testid='service-modification-modal-message'
+          alignItems='left'
+        >
           <Typography sx={styles.messageTextWithPreLine}>
             {modalConfig.content({
               open,
