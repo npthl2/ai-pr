@@ -1,5 +1,4 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
 import customerContractService from '@api/services/cusotmerDetailService'; // Ensure this import is correct
 import { CustomerContract } from '@model/CustomerContract'; // Ensure this module is correctly referenced
 import { Info } from '@pages/customer/detail/components/information/types';
@@ -29,10 +28,10 @@ export const useCustomerContractsQuery = (customerId: string) => {
 
 export const customerContractsTreeData = (customerId: string) => {
   const { data } = useCustomerContractsQuery(customerId);
-  return useMemo(() => {
+
     if (!data) return null;
     return mapToTree(data);
-  }, [customerId]);
+
 };
 
 function mapToTree(data: CustomerContract) {

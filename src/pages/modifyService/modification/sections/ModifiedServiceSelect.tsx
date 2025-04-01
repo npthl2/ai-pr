@@ -145,7 +145,7 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
   };
 
   // 나이 제한 확인 쿼리
-  const { data: ageRestrictionData } = useCheckServiceAgeRestrictionQuery(
+  const { data: ageRestrictionData, refetch } = useCheckServiceAgeRestrictionQuery(
     serviceAgeCheckParams.age,
     serviceAgeCheckParams.serviceId,
     !!serviceAgeCheckParams.age && !!serviceAgeCheckParams.serviceId, // 두 값이 모두 있을 때만 쿼리 활성화
@@ -158,6 +158,8 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
   ) => {
     // 새로운 선택이 들어오면 먼저 이전 선택 초기화
     setSelectedService(contractTabId, null);
+    // 임시 선택된 서비스도 초기화
+    setTempSelectedService(null);
 
     if (newValue && typeof newValue === 'object' && !Array.isArray(newValue) && 'id' in newValue) {
       if (!customerAge || !isServiceModifiable) {
@@ -167,11 +169,19 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
       const selectedServiceData =
         services.find((service: Service) => service.serviceId === newValue.id) || null;
       if (selectedServiceData) {
-        setTempSelectedService(selectedServiceData);
+
+        // 먼저 파라미터 설정
         setServiceAgeCheckParams({
           age: customerAge,
           serviceId: selectedServiceData.serviceId,
         });
+        
+        // 파라미터 설정 후 다음 렌더링 사이클에서 임시 선택 서비스 설정
+        setTimeout(() => {
+
+          setTempSelectedService(selectedServiceData);
+          refetch(); // 쿼리 강제 재실행
+        }, 0);
       }
     }
   };
