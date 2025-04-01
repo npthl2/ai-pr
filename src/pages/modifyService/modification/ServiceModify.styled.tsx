@@ -3,6 +3,8 @@ import { styled } from '@mui/material/styles';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 // 메인 컨테이너 - 전체 페이지 레이아웃
 export const Container = styled(Box)({
+  paddingTop: '10px',
+  paddingBottom: '10px',
   paddingLeft: '20px',
   paddingRight: '20px',
   borderTopRightRadius: '8px',
