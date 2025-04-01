@@ -60,10 +60,10 @@ const ModificationRequest: React.FC<ModificationRequestProps> = ({ contractTabId
   }, []);
 
   // 변경사항이 있는지 확인
-  const hasChanges =
-    selectedService !== null ||
-    selectedAdditionalServices.length > 0 ||
-    removedCurrentAdditionalServices.length > 0;
+  // const hasChanges =
+  //   selectedService !== null ||
+  //   selectedAdditionalServices.length > 0 ||
+  //   removedCurrentAdditionalServices.length > 0;
 
   return (
     <Box
@@ -109,7 +109,7 @@ const ModificationRequest: React.FC<ModificationRequestProps> = ({ contractTabId
                   alignItems: 'center',
                 }}
               >
-                {hasChanges ? '요청이 성공적으로 처리되었습니다' : '변경 사항이 없습니다'}
+                처리중입니다.
               </Typography>
 
               <Divider sx={{ mb: 2 }} />
