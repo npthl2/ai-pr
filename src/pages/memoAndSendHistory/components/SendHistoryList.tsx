@@ -1,4 +1,4 @@
-import { Box, Typography, TableHead, TablePagination } from '@mui/material';
+import { Box, Typography, TableHead } from '@mui/material';
 import TableCell from '@components/Table/TableCell';
 import TableRow from '@components/Table/TableRow';
 import TableBody from '@components/Table/TableBody';
@@ -17,6 +17,7 @@ import {
   HeaderWrapper,
   CheckboxContainer,
   FilterContainer,
+  StyledTablePagination,
 } from './SendHistoryList.styled';
 import { useState, useEffect, useMemo } from 'react';
 import useCustomerStore from '@stores/CustomerStore';
@@ -114,7 +115,7 @@ const SendHistoryList = () => {
     getMessageType(),
     showSuccessOnly ? 'Y' : 'N',
     page + 1,
-    rowsPerPage
+    rowsPerPage,
   );
 
   console.log('SendHistory Query Response:', sendHistoryResponse);
@@ -125,7 +126,7 @@ const SendHistoryList = () => {
       console.log('No histories found in response');
       return [];
     }
-    
+
     let histories = [...(sendHistoryResponse.content as SendHistory[])];
     console.log('Histories:', histories);
 
@@ -243,16 +244,15 @@ const SendHistoryList = () => {
                 ))}
               </TableRow>
             </TableHead>
-            <TableBody<SendHistory> 
+            <TableBody<SendHistory>
               content={sortedData}
               columns={columns}
               emptyMessage='발송이력이 없습니다.'
             />
           </SendHistoryTable>
         </SendHistoryTableContainer>
-        <TablePagination
+        <StyledTablePagination
           rowsPerPageOptions={[0, DEFAULT_ROWS_PER_PAGE]}
-          component='div'
           page={page}
           count={sendHistoryResponse?.totalCount || 0}
           rowsPerPage={rowsPerPage}

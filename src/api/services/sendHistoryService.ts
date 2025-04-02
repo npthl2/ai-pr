@@ -5,9 +5,7 @@ import { SendHistoryRequestDto, SendHistoryResponseDto } from '@model/SendHistor
 const sendHistoryService = {
   sendHistory(data: SendHistoryRequestDto): Promise<CommonResponse<SendHistoryResponseDto>> {
     const queryString = new URLSearchParams(Object.entries(data)).toString();
-    return baseService.get<SendHistoryResponseDto>(
-      `/adm-be/v1/send-histories?${queryString}`,
-    );
+    return baseService.get<SendHistoryResponseDto>(`/adm-be/v1/send-histories?${queryString}`);
   },
 };
 export default sendHistoryService;

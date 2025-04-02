@@ -1,10 +1,6 @@
-import { Typography, TableContainer, Table, Box, Switch } from '@mui/material';
+import { TableContainer, Table, Box, Switch, TablePagination } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AscIcon from '@mui/icons-material/ArrowDownward';
-
-export const HighlightedTypography = styled(Typography)(({ theme }) => ({
-  color: theme.palette.secondary.main,
-}));
 
 export const SendHistoryBox = styled(Box)({
   display: 'flex',
@@ -21,17 +17,6 @@ export const SendHistoryTableContainer = styled(TableContainer)(({ theme }) => (
   overflowX: 'hidden',
   marginTop: '4px',
 }));
-
-export const SortIconWrapper = styled('span')({
-  display: 'inline-flex',
-  alignItems: 'center',
-  marginLeft: '4px',
-  cursor: 'pointer',
-  '& .MuiSvgIcon-root': {
-    fontSize: '16px',
-    color: '#6B7280',
-  },
-});
 
 export const HeaderCellWrapper = styled(Box)({
   minWidth: 'auto',
@@ -57,10 +42,7 @@ export const StyledAscIcon = styled(AscIcon)({
   marginBottom: '-1px',
 });
 
-
 export const SendHistoryTable = styled(Table)(({ theme }) => ({
-  borderCollapse: 'separate',
-  borderSpacing: 0,
   width: '825px',
   '& .MuiTableCell-root': {
     borderBottom: 'none',
@@ -127,3 +109,13 @@ export const StyledSwitch = styled(Switch)(({ theme }) => ({
     backgroundColor: theme.palette.primary.main,
   },
 }));
+
+export const StyledTablePagination = styled(TablePagination)({
+  width: '852px',
+  height: '44px',
+  padding: '2px 0',
+  borderBottom: 'none',
+  '& .MuiTablePagination-root': {
+    gap: '26px',
+  },
+});
