@@ -123,12 +123,12 @@ export const FilterContainer = styled(Box)`
 
 export const StyledSwitch = styled(Switch)(({ theme }) => ({
   '& .MuiSwitch-switchBase.Mui-checked': {
-    color: theme.palette.secondary.main,
+    color: theme.palette.primary.main,
     '&:hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.04)',
     },
   },
   '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
   },
 }));
