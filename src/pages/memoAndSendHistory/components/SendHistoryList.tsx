@@ -24,7 +24,7 @@ import useCustomerStore from '@stores/CustomerStore';
 import { MessageType, SendHistory } from '@model/SendHistory';
 
 type SortOrder = 'asc' | 'desc' | null;
-type SortField = 'messageType' | 'requestDate' | 'sendDate' | 'success';
+type SortField = 'messageType' | 'requestTime' | 'sendTime' | 'success';
 const DEFAULT_ROWS_PER_PAGE = 8;
 
 const SendHistoryList = () => {
@@ -66,12 +66,12 @@ const SendHistoryList = () => {
       render: (item: SendHistory) => <Typography>{item.messageType}</Typography>,
     },
     {
-      key: 'requestDate',
+      key: 'requestTime',
       label: '요청일시',
       render: (item: SendHistory) => <Typography>{item.requestTime}</Typography>,
     },
     {
-      key: 'sendDate',
+      key: 'sendTime',
       label: '발송일시',
       render: (item: SendHistory) => <Typography>{item.sentTime}</Typography>,
     },
@@ -118,17 +118,12 @@ const SendHistoryList = () => {
     rowsPerPage,
   );
 
-  console.log('SendHistory Query Response:', sendHistoryResponse);
-
   const sortedData = useMemo(() => {
-    console.log('Response in sortedData:', sendHistoryResponse);
     if (!sendHistoryResponse?.content) {
-      console.log('No histories found in response');
       return [];
     }
 
     let histories = [...(sendHistoryResponse.content as SendHistory[])];
-    console.log('Histories:', histories);
 
     if (sortField && sortOrder) {
       histories.sort((a, b) => {
@@ -140,11 +135,11 @@ const SendHistoryList = () => {
             compareA = a.messageType;
             compareB = b.messageType;
             break;
-          case 'requestDate':
+          case 'requestTime':
             compareA = a.requestTime;
             compareB = b.requestTime;
             break;
-          case 'sendDate':
+          case 'sendTime':
             compareA = a.sentTime;
             compareB = b.sentTime;
             break;
@@ -222,7 +217,7 @@ const SendHistoryList = () => {
                       width:
                         column.key === 'messageType'
                           ? '85px'
-                          : column.key === 'requestDate' || column.key === 'sendDate'
+                          : column.key === 'requestTime' || column.key === 'sendTime'
                             ? '180px'
                             : column.key === 'success'
                               ? '110px'

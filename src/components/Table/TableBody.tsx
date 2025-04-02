@@ -1,7 +1,7 @@
 import React from 'react';
 import TableRow from './TableRow';
 import TableCell from './TableCell';
-
+import { TableBody as MuiTableBody } from '@mui/material';
 interface TableBodyProps<T> {
   content: T[];
   columns: {
@@ -17,28 +17,21 @@ function TableBody<T>({
   columns,
   emptyMessage = '데이터가 없습니다.',
 }: TableBodyProps<T>) {
-  // const { data, isLoading, isError } = useReactQuery({
-  //   queryKey: ['tableBody', columns, emptyMessage],
-  //   queryFn: () => Promise.resolve([]),
-  // });
-
-  console.log(content.length);
-  console.log(content[0]);
 
   if (!content || content.length === 0) {
     return (
-      <tbody>
-        <tr>
-          <td colSpan={columns.length} style={{ textAlign: 'center' }}>
+      <MuiTableBody>
+        <TableRow>
+          <TableCell colSpan={columns.length} style={{ textAlign: 'center' }}>
             {emptyMessage}
-          </td>
-        </tr>
-      </tbody>
+          </TableCell>
+        </TableRow>
+      </MuiTableBody>
     );
   }
 
   return (
-    <tbody>
+    <MuiTableBody>
       {content.map((item, index) => (
         <TableRow key={index}>
           {columns.map((column) => (
@@ -48,7 +41,7 @@ function TableBody<T>({
           ))}
         </TableRow>
       ))}
-    </tbody>
+    </MuiTableBody>
   );
 }
 
