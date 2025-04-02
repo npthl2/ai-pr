@@ -1,5 +1,4 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
 import customerContractService from '@api/services/cusotmerDetailService'; // Ensure this import is correct
 import { CustomerContract } from '@model/CustomerContract'; // Ensure this module is correctly referenced
 import { Info } from '@pages/customer/detail/components/information/types';
@@ -22,17 +21,14 @@ export const useCustomerContractsQuery = (customerId: string) => {
       }
       return response.data as CustomerContract;
     },
-    staleTime: 1000 * 60 * 60,
-    gcTime: 1000 * 60 * 60,
   });
 };
 
 export const customerContractsTreeData = (customerId: string) => {
   const { data } = useCustomerContractsQuery(customerId);
-  return useMemo(() => {
-    if (!data) return null;
-    return mapToTree(data);
-  }, [customerId]);
+
+  if (!data) return null;
+  return mapToTree(data);
 };
 
 function mapToTree(data: CustomerContract) {
@@ -88,11 +84,6 @@ export const customerContractsInfoData = (customerId: string, contractId: string
   const selectedContract = data.contracts.find((contract) => contract.contractId === contractId);
   if (!selectedContract) return null;
   return mapToInfo(selectedContract);
-  // FIXME: useMemo 이용 시 데이터 변경 시 렌더링 안됨
-  // return useMemo(() => {
-  //     if(!selectedContract) return null;
-  //     return mapToInfo(selectedContract);
-  // }, [customerId, contractId]);
 };
 
 export function mapToInfo(data: ContractData): Info {

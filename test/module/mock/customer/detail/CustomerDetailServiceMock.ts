@@ -22,13 +22,13 @@ class CustomerDetailServiceMock {
         successOrNot: 'Y',
         statusCode: 'SUCCESS',
         data: {
-          customerId: '100000000001',
-          customerName: '김철수',
-          encryptedCustomerName: '김철수',
-          rrno: '781012-1658743',
-          encryptedRrno: '781012-1658743',
-          gender: 'M',
-          age: 46,
+          customerId: '100000000002',
+          customerName: '이영희',
+          encryptedCustomerName: '이영희',
+          rrno: '010724-4679321',
+          encryptedRrno: '010724-4679321',
+          gender: 'F',
+          age: 24,
           contractId: null,
         },
       },
@@ -60,18 +60,18 @@ class CustomerDetailServiceMock {
 }
 
 const successGetCustomerContracts = {
-  customerId: '100000000001',
+  customerId: '100000000002',
   contracts: [
     {
-      customerId: '100000000001',
-      contractId: '6872339294',
-      orderId: '1000000001',
+      customerId: '100000000002',
+      contractId: '9876543210',
+      orderId: '100000000002',
       contractDate: '2025-02-27T04:46:31.822+00:00',
-      phoneNumber: '010-12**-*678',
+      phoneNumber: '010-7777-5555',
       phoneNumberEncrypted: 'sz4/rHtHLULhFV06o+lg8A==',
       contractDetail: {
         contractId: '6872339294',
-        phoneNumber: '010-12**-*678',
+        phoneNumber: '010-7777-5555',
         phoneNumberEncrypted: 'sz4/rHtHLULhFV06o+lg8A==',
         contractDate: '2024-01-31',
         lobType: 'Mobile',

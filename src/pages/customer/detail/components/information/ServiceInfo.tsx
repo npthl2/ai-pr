@@ -10,6 +10,7 @@ import MaskingInfo from './MaskingInfo';
 import { DEFAULT_TABS } from '@constants/CommonConstant';
 import { SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
 import useCustomerStore from '@stores/CustomerStore';
+import useModifyServiceStore from '@stores/ModifyServiceStore';
 import { CONTRACT_SERVICE_TYPE_CODE } from '@pages/customer/detail/CustomerDetailConstant';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
 
@@ -86,6 +87,10 @@ const ServiceInfo: React.FC<ServiceInfoProps> = ({
   const serviceInfo = serviceInfoParam ?? defaultServiceInfo;
 
   const { paidCount, freeCount, totalValue } = calculateAddOnServices(serviceInfo.serviceList);
+
+  // ModifyServiceStore에서 필요한 함수들 가져오기
+  const { resetAll, createModifyServiceInfo } = useModifyServiceStore();
+
   const { selectedCustomerId, updateCustomer, customerTabs, setCustomerTabs, setActiveTab } =
     useCustomerStore();
   const { setSelectedContractId } = useCurrentServiceStore();
@@ -95,6 +100,14 @@ const ServiceInfo: React.FC<ServiceInfoProps> = ({
 
     const currentTabs = customerTabs[selectedCustomerId]?.tabs;
     if (!currentTabs) return;
+
+    // 모든 상태 초기화 - ServiceModification 컴포넌트가 처음부터 시작하도록
+    const contractTabId = selectedCustomerId; // 고객 ID를 계약 탭 ID로 사용
+
+    // 계약 탭 ID에 대한 스토어 정보 생성 후 초기화
+    createModifyServiceInfo(contractTabId);
+
+    resetAll(contractTabId);
 
     const existingTab = currentTabs.find((tab) => tab.label === targetMenu.name);
     const newTab = {
