@@ -1,7 +1,6 @@
 import { Typography, TableContainer, Table, Box, Switch } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AscIcon from '@mui/icons-material/ArrowDownward';
-import DescIcon from '@mui/icons-material/ArrowUpward';
 
 export const HighlightedTypography = styled(Typography)(({ theme }) => ({
   color: theme.palette.secondary.main,
@@ -14,8 +13,8 @@ export const SendHistoryBox = styled(Box)({
 });
 
 export const SendHistoryTableContainer = styled(TableContainer)(({ theme }) => ({
-  maxHeight: '362px',
-  minHeight: '362px',
+  maxHeight: '318px',
+  minHeight: '318px',
   overflowY: 'auto',
   position: 'relative',
   borderBottom: `1px solid ${theme.palette.grey[200]}`,
@@ -58,10 +57,6 @@ export const StyledAscIcon = styled(AscIcon)({
   marginBottom: '-1px',
 });
 
-export const StyledDescIcon = styled(DescIcon)({
-  marginTop: '-1px',
-  marginLeft: '8px',
-});
 
 export const SendHistoryTable = styled(Table)(({ theme }) => ({
   borderCollapse: 'separate',

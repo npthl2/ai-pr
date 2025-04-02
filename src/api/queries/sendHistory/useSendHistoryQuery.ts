@@ -24,10 +24,10 @@ export const useSendHistoryQuery = (
       if (
         response.data &&
         typeof response.data === 'object' &&
-        'content' in response.data &&
+        'sendHistories' in response.data &&
         'totalCount' in response.data
       ) {
-        return { content: response.data.content, totalCount: response.data.totalCount };
+        return { content: response.data.sendHistories, totalCount: response.data.totalCount };
       }
       return { content: [], totalCount: 0 };
     },

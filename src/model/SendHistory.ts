@@ -15,16 +15,16 @@ export interface SendHistoryRequestDto {
 }
 
 export interface SendHistoryResponseDto {
-  content: SendHistory[];
+  sendHistories: SendHistory[];
   totalCount: number;
 }
 
 export interface SendHistory {
   messageType: MessageType;
-  requestDate: string;
-  sendDate: string;
+  requestTime: string;
+  sentTime: string;
   message: string;
-  successYN: string;
+  successYn: string;
 }
 
 export interface SendHistoryResponse extends CommonResponse<SendHistoryResponseDto> {}

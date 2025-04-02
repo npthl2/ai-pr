@@ -2,7 +2,7 @@ import { Box, Typography, TableHead, TablePagination } from '@mui/material';
 import TableCell from '@components/Table/TableCell';
 import TableRow from '@components/Table/TableRow';
 import TableBody from '@components/Table/TableBody';
-import { useReactQuery } from '@hooks/useReactQuery';
+import { useSendHistoryQuery } from '@api/queries/sendHistory/useSendHistoryQuery';
 import Checkbox from '@components/Checkbox';
 import Tooltip from '@components/Tooltip';
 import {
@@ -18,23 +18,9 @@ import {
   CheckboxContainer,
   FilterContainer,
 } from './SendHistoryList.styled';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import useCustomerStore from '@stores/CustomerStore';
-import sendHistoryService from '@api/services/sendHistoryService';
-import { MessageType } from '@model/SendHistory';
-
-interface SendHistoryItem {
-  messageType: MessageType;
-  requestTime: string;
-  sentTime: string;
-  message: string;
-  successYn: string;
-}
-
-interface SendHistoryResponse {
-  sendHistories: SendHistoryItem[];
-  totalCount: number;
-}
+import { MessageType, SendHistory } from '@model/SendHistory';
 
 type SortOrder = 'asc' | 'desc' | null;
 type SortField = 'messageType' | 'requestDate' | 'sendDate' | 'success';
@@ -52,7 +38,11 @@ const SendHistoryList = () => {
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
-      setSortOrder((prev) => (prev === 'asc' ? 'desc' : prev === 'desc' ? null : 'asc'));
+      setSortOrder((prev) => {
+        if (prev === 'asc') return 'desc';
+        if (prev === 'desc') return null;
+        return 'asc';
+      });
       if (sortOrder === 'desc') {
         setSortField(null);
       }
@@ -65,29 +55,29 @@ const SendHistoryList = () => {
   const getSortIconStyle = (field: SortField) => {
     if (sortField !== field) return { opacity: 0.3 };
     if (sortOrder === null) return { opacity: 0.3 };
-    return { transform: sortOrder === 'desc' ? 'rotate(180deg)' : 'none' };
+    return { transform: sortOrder === 'asc' ? 'rotate(180deg)' : 'none' };
   };
 
   const columns = [
     {
       key: 'messageType',
       label: '구분',
-      render: (item: SendHistoryItem) => <Typography>{item.messageType}</Typography>,
+      render: (item: SendHistory) => <Typography>{item.messageType}</Typography>,
     },
     {
       key: 'requestDate',
       label: '요청일시',
-      render: (item: SendHistoryItem) => <Typography>{item.requestTime}</Typography>,
+      render: (item: SendHistory) => <Typography>{item.requestTime}</Typography>,
     },
     {
       key: 'sendDate',
       label: '발송일시',
-      render: (item: SendHistoryItem) => <Typography>{item.sentTime}</Typography>,
+      render: (item: SendHistory) => <Typography>{item.sentTime}</Typography>,
     },
     {
       key: 'message',
       label: '메시지',
-      render: (item: SendHistoryItem) => (
+      render: (item: SendHistory) => (
         <Tooltip sx={{ zIndex: 10000 }} title={item.message} placement='bottom' arrow>
           <Box sx={{ maxWidth: '100%' }}>
             <Typography
@@ -108,7 +98,7 @@ const SendHistoryList = () => {
     {
       key: 'success',
       label: '성공여부',
-      render: (item: SendHistoryItem) => <Typography>{item.successYn}</Typography>,
+      render: (item: SendHistory) => <Typography>{item.successYn}</Typography>,
     },
   ];
 
@@ -119,96 +109,63 @@ const SendHistoryList = () => {
     return MessageType.BOTH;
   };
 
-  const fetchSendHistory = async () => {
-    const response = await sendHistoryService.sendHistory({
-      customerId,
-      messageType: getMessageType(),
-      includeOnlySuccessYN: showSuccessOnly ? 'Y' : 'N',
-      page: page + 1,
-      size: rowsPerPage,
-    });
+  const { data: sendHistoryResponse } = useSendHistoryQuery(
+    customerId,
+    getMessageType(),
+    showSuccessOnly ? 'Y' : 'N',
+    page + 1,
+    rowsPerPage
+  );
 
-    if (response?.data && typeof response.data === 'object' && 'sendHistories' in response.data) {
-      const data = response.data as SendHistoryResponse;
-      let histories = data.sendHistories.map((item: SendHistoryItem) => ({
-        messageType: item.messageType,
-        requestTime: item.requestTime,
-        sentTime: item.sentTime,
-        message: item.message,
-        successYn: item.successYn,
-      }));
+  console.log('SendHistory Query Response:', sendHistoryResponse);
 
-      // Apply sorting if needed
-      if (sortField && sortOrder) {
-        histories = [...histories].sort((a, b) => {
-          let compareA: string;
-          let compareB: string;
-
-          switch (sortField) {
-            case 'messageType':
-              compareA = a.messageType;
-              compareB = b.messageType;
-              break;
-            case 'requestDate':
-              compareA = a.requestTime;
-              compareB = b.requestTime;
-              break;
-            case 'sendDate':
-              compareA = a.sentTime;
-              compareB = b.sentTime;
-              break;
-            case 'success':
-              compareA = a.successYn;
-              compareB = b.successYn;
-              break;
-            default:
-              return 0;
-          }
-
-          const result = compareA.localeCompare(compareB);
-          return sortOrder === 'asc' ? result : -result;
-        });
-      }
-
-      return histories;
+  const sortedData = useMemo(() => {
+    console.log('Response in sortedData:', sendHistoryResponse);
+    if (!sendHistoryResponse?.content) {
+      console.log('No histories found in response');
+      return [];
     }
-    return [];
-  };
+    
+    let histories = [...(sendHistoryResponse.content as SendHistory[])];
+    console.log('Histories:', histories);
 
-  const { data: totalCount = 0 } = useReactQuery({
-    queryKey: [
-      'sendHistory',
-      customerId,
-      getMessageType(),
-      showSuccessOnly ? 'Y' : 'N',
-      page,
-      rowsPerPage,
-      sortField || '',
-      sortOrder || '',
-    ],
-    queryFn: async () => {
-      const response = await sendHistoryService.sendHistory({
-        customerId,
-        messageType: getMessageType(),
-        includeOnlySuccessYN: showSuccessOnly ? 'Y' : 'N',
-        page: page + 1,
-        size: rowsPerPage,
+    if (sortField && sortOrder) {
+      histories.sort((a, b) => {
+        let compareA: string;
+        let compareB: string;
+
+        switch (sortField) {
+          case 'messageType':
+            compareA = a.messageType;
+            compareB = b.messageType;
+            break;
+          case 'requestDate':
+            compareA = a.requestTime;
+            compareB = b.requestTime;
+            break;
+          case 'sendDate':
+            compareA = a.sentTime;
+            compareB = b.sentTime;
+            break;
+          case 'success':
+            compareA = a.successYn;
+            compareB = b.successYn;
+            break;
+          default:
+            return 0;
+        }
+
+        const result = compareA.localeCompare(compareB);
+        return sortOrder === 'asc' ? result : -result;
       });
-      return typeof response.data === 'object' &&
-        response.data !== null &&
-        'totalCount' in response.data
-        ? response.data.totalCount
-        : 0;
-    },
-  });
+    }
+
+    return histories;
+  }, [sendHistoryResponse?.content, sortField, sortOrder]);
 
   useEffect(() => {
     setPage(0);
-  }, [showSuccessOnly]);
-
-  useEffect(() => {
-    setPage(0);
-  }, [smsChecked, emailChecked, rowsPerPage]);
+  }, [smsChecked, emailChecked, rowsPerPage, showSuccessOnly]);
 
   return (
     <SendHistoryBox>
@@ -286,18 +243,8 @@ const SendHistoryList = () => {
                 ))}
               </TableRow>
             </TableHead>
-            <TableBody<SendHistoryItem>
-              queryKey={[
-                'sendHistory',
-                customerId,
-                getMessageType(),
-                showSuccessOnly ? 'Y' : 'N',
-                page.toString(),
-                rowsPerPage.toString(),
-                sortField || '',
-                sortOrder || '',
-              ]}
-              queryFn={fetchSendHistory}
+            <TableBody<SendHistory> 
+              content={sortedData}
               columns={columns}
               emptyMessage='발송이력이 없습니다.'
             />
@@ -307,7 +254,7 @@ const SendHistoryList = () => {
           rowsPerPageOptions={[0, DEFAULT_ROWS_PER_PAGE]}
           component='div'
           page={page}
-          count={totalCount}
+          count={sendHistoryResponse?.totalCount || 0}
           rowsPerPage={rowsPerPage}
           onPageChange={(__, newPage) => setPage(newPage)}
           onRowsPerPageChange={(e) => {

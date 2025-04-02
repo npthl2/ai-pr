@@ -1,11 +1,9 @@
 import React from 'react';
-import { useReactQuery } from '@hooks/useReactQuery';
 import TableRow from './TableRow';
 import TableCell from './TableCell';
 
 interface TableBodyProps<T> {
-  queryKey: string[];
-  queryFn: () => Promise<T[]>;
+  content: T[];
   columns: {
     key: string;
     label: string;
@@ -15,41 +13,19 @@ interface TableBodyProps<T> {
 }
 
 function TableBody<T>({
-  queryKey,
-  queryFn,
+  content,
   columns,
   emptyMessage = '데이터가 없습니다.',
 }: TableBodyProps<T>) {
-  const { data, isLoading, isError } = useReactQuery({
-    queryKey,
-    queryFn,
-  });
+  // const { data, isLoading, isError } = useReactQuery({
+  //   queryKey: ['tableBody', columns, emptyMessage],
+  //   queryFn: () => Promise.resolve([]),
+  // });
 
-  if (isLoading) {
-    return (
-      <tbody>
-        <tr>
-          <td colSpan={columns.length} style={{ textAlign: 'center' }}>
-            로딩 중...
-          </td>
-        </tr>
-      </tbody>
-    );
-  }
+  console.log(content.length);
+  console.log(content[0]);
 
-  if (isError) {
-    return (
-      <tbody>
-        <tr>
-          <td colSpan={columns.length} style={{ textAlign: 'center' }}>
-            데이터를 불러오는데 실패했습니다.
-          </td>
-        </tr>
-      </tbody>
-    );
-  }
-
-  if (!data || data.length === 0) {
+  if (!content || content.length === 0) {
     return (
       <tbody>
         <tr>
@@ -63,7 +39,7 @@ function TableBody<T>({
 
   return (
     <tbody>
-      {data.map((item, index) => (
+      {content.map((item, index) => (
         <TableRow key={index}>
           {columns.map((column) => (
             <TableCell key={column.key}>
