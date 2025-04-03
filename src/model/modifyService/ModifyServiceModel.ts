@@ -120,4 +120,3 @@ export interface ServiceModificationRequest {
 export interface ServiceModificationResponseData {
   businessProcessId: string;
 }
-

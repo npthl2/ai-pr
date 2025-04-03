@@ -17,7 +17,11 @@ import {
   ModalConditionInputs,
 } from './constants/modalConstants';
 import { useServiceModificationMutation } from '@api/queries/modifyService/useServiceModificationMutation';
-import { AdditionalService, ServiceModificationRequest, ServiceModificationResponseData } from '@model/modifyService/ModifyServiceModel';
+import {
+  AdditionalService,
+  ServiceModificationRequest,
+  ServiceModificationResponseData,
+} from '@model/modifyService/ModifyServiceModel';
 import { CommonResponse } from '@model/common/CommonResponse';
 
 interface ServiceModifyProps {
@@ -31,7 +35,8 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
   const modifyServiceInfo = useModifyServiceStore((state) =>
     state.getModifyServiceInfo(contractTabId),
   );
-  const { resetAll, serviceModificationMounted, setModificationBusinessProcessId } = useModifyServiceStore();
+  const { resetAll, serviceModificationMounted, setModificationBusinessProcessId } =
+    useModifyServiceStore();
 
   // 계약 탭에 대한 정보가 없으면 기본값 제공
   const selectedService = modifyServiceInfo?.selectedService || null;
@@ -238,7 +243,11 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
 
     serviceModificationMutation.mutate(modificationInfo, {
       onSuccess: (response: CommonResponse<ServiceModificationResponseData>) => {
-        if (response.data && typeof response.data === 'object' && 'businessProcessId' in response.data) {
+        if (
+          response.data &&
+          typeof response.data === 'object' &&
+          'businessProcessId' in response.data
+        ) {
           const businessProcessId = response.data.businessProcessId;
           setModificationBusinessProcessId(contractTabId, businessProcessId);
 
@@ -363,4 +372,3 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
 };
 
 export default ServiceModify;
-

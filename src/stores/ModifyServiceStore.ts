@@ -74,7 +74,6 @@ export interface ModifyServiceState {
   ) => void;
   setRevertButtonClickedDate: (contractTabId: string, date: string | null) => void;
 
-
   // 서비스 변경 비즈니스 프로세스 ID 설정
   setModificationBusinessProcessId: (contractTabId: string, businessProcessId: string) => void;
 
