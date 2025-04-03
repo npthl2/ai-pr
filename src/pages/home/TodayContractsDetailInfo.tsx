@@ -9,13 +9,21 @@ import {
   ServiceItem,
 } from '@pages/customer/detail/components/information/types';
 
-interface NewSignupDetailInfoProps {
+interface TodayContractsDetailInfoProps {
   contractInfo: ContractItem | null;
   invoiceInfo: InvoiceItem | null;
   serviceInfo: ServiceItem | null;
 }
 
 const CELL_WIDTH = 200;
+
+// 통화 단위 변환 함수
+const formatCurrencyKRW = (value: number | string) => {
+  const numberValue = typeof value === 'number' ? value : Number(value);
+  if (isNaN(numberValue)) return '';
+
+  return numberValue.toLocaleString('ko-KR') + '원';
+};
 
 const calculateAddOnServices = (serviceList: ServiceItem['serviceList']) => {
   const addOnServices = serviceList.filter(
@@ -38,7 +46,7 @@ const calculateAddOnServices = (serviceList: ServiceItem['serviceList']) => {
   };
 };
 
-const NewSignupDetailInfo: React.FC<NewSignupDetailInfoProps> = ({
+const TodayContractsDetailInfo: React.FC<TodayContractsDetailInfoProps> = ({
   contractInfo,
   invoiceInfo,
   serviceInfo,
@@ -208,7 +216,8 @@ const NewSignupDetailInfo: React.FC<NewSignupDetailInfoProps> = ({
                   <Typography>총할인반환금</Typography>
                 </TableCell>
                 <TableCell sx={{ flex: 1 }}>
-                  {serviceInfo?.totalDiscountRefundAmount && serviceInfo.totalDiscountRefundAmount}
+                  {serviceInfo?.totalDiscountRefundAmount &&
+                    formatCurrencyKRW(serviceInfo.totalDiscountRefundAmount)}
                 </TableCell>
               </TableRow>
               <TableRow size='small' disableEffect={true}>
@@ -216,7 +225,7 @@ const NewSignupDetailInfo: React.FC<NewSignupDetailInfoProps> = ({
                   <Typography>잔여대금</Typography>
                 </TableCell>
                 <TableCell sx={{ flex: 1 }}>
-                  {serviceInfo?.remainingPayment && serviceInfo.remainingPayment}
+                  {serviceInfo?.remainingPayment && formatCurrencyKRW(serviceInfo.remainingPayment)}
                 </TableCell>
                 <TableCell variant='head' width={CELL_WIDTH}>
                   <Typography>잔여분납</Typography>
@@ -240,7 +249,7 @@ const NewSignupDetailInfo: React.FC<NewSignupDetailInfoProps> = ({
                           <Box key={index} sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
                             <span>{service.serviceName}</span>
                             <span>/</span>
-                            <span>service.serviceValue)</span>
+                            <span>{formatCurrencyKRW(service.serviceValue)}</span>
                           </Box>
                         ))}
                   </Box>
@@ -257,7 +266,7 @@ const NewSignupDetailInfo: React.FC<NewSignupDetailInfoProps> = ({
                         <span>유료: {paidCount},</span>
                         <span>무료: {freeCount}</span>
                         <span>/</span>
-                        <span>{totalValue}</span>
+                        <span>{formatCurrencyKRW(totalValue)}</span>
                       </>
                     )}
                   </Box>
@@ -277,4 +286,4 @@ const NewSignupDetailInfo: React.FC<NewSignupDetailInfoProps> = ({
   );
 };
 
-export default NewSignupDetailInfo;
+export default TodayContractsDetailInfo;
