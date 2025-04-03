@@ -74,6 +74,10 @@ export interface ModifyServiceState {
   ) => void;
   setRevertButtonClickedDate: (contractTabId: string, date: string | null) => void;
 
+
+  // 서비스 변경 비즈니스 프로세스 ID 설정
+  setModificationBusinessProcessId: (contractTabId: string, businessProcessId: string) => void;
+
   // 계약 탭 ID 생성 및 삭제
   createModifyServiceInfo: (contractTabId: string) => void;
   removeModifyServiceInfo: (contractTabId: string) => void;
@@ -508,6 +512,20 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
             ...serviceInfo,
             revertButtonClickedDate: date,
           },
+        },
+      };
+    });
+  },
+
+  setModificationBusinessProcessId: (contractTabId: string, businessProcessId: string) => {
+    set((state) => {
+      const serviceInfo = state.modifyServices[contractTabId];
+      if (!serviceInfo) return state;
+
+      return {
+        modifyServices: {
+          ...state.modifyServices,
+          [contractTabId]: { ...serviceInfo, businessProcessId },
         },
       };
     });

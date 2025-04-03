@@ -17,11 +17,12 @@ import {
   ModalConditionInputs,
 } from './constants/modalConstants';
 import { useServiceModificationMutation } from '@api/queries/modifyService/useServiceModificationMutation';
-import { AdditionalService } from '@model/modifyService/ModifyServiceModel';
+import { AdditionalService, ServiceModificationRequest, ServiceModificationResponseData } from '@model/modifyService/ModifyServiceModel';
+import { CommonResponse } from '@model/common/CommonResponse';
 
 interface ServiceModifyProps {
   // props 정의
-  setIsSaveRequested?: (isSaveRequested: boolean) => void;
+  setIsSaveRequested: (isSaveRequested: boolean) => void;
   contractTabId: string;
 }
 
@@ -30,7 +31,7 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
   const modifyServiceInfo = useModifyServiceStore((state) =>
     state.getModifyServiceInfo(contractTabId),
   );
-  const { resetAll, serviceModificationMounted } = useModifyServiceStore();
+  const { resetAll, serviceModificationMounted, setModificationBusinessProcessId } = useModifyServiceStore();
 
   // 계약 탭에 대한 정보가 없으면 기본값 제공
   const selectedService = modifyServiceInfo?.selectedService || null;
@@ -220,11 +221,10 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
       serviceValueType: service.serviceValueType || '',
     }));
 
-    // 요청 데이터 구성 및 API 호출
-    await serviceModificationMutation.mutateAsync({
+    const modificationInfo: ServiceModificationRequest = {
+      gTrId: '',
       customerId: selectedCustomerId || '',
       contractId: contractId || '',
-      // selectedService가 없을 경우 null 전달 (요금제 변경 없음)
       service: selectedService
         ? {
             serviceId: selectedService.serviceId,
@@ -233,9 +233,36 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
             serviceValueType: selectedService.serviceValueType,
           }
         : null,
-      // 빈 배열이라도 그대로 전달 (모든 부가서비스 제거를 의미)
       additionalServices: additionalServicesRequest,
+    };
+
+    serviceModificationMutation.mutate(modificationInfo, {
+      onSuccess: (response: CommonResponse<ServiceModificationResponseData>) => {
+        if (response.data && typeof response.data === 'object' && 'businessProcessId' in response.data) {
+          const businessProcessId = response.data.businessProcessId;
+          setModificationBusinessProcessId(contractTabId, businessProcessId);
+
+          setIsSaveRequested(true);
+        }
+      },
     });
+
+    // // 요청 데이터 구성 및 API 호출
+    // await serviceModificationMutation.mutateAsync({
+    //   customerId: selectedCustomerId || '',
+    //   contractId: contractId || '',
+    //   // selectedService가 없을 경우 null 전달 (요금제 변경 없음)
+    //   service: selectedService
+    //     ? {
+    //         serviceId: selectedService.serviceId,
+    //         serviceName: selectedService.serviceName,
+    //         serviceValue: selectedService.serviceValue,
+    //         serviceValueType: selectedService.serviceValueType,
+    //       }
+    //     : null,
+    //   // 빈 배열이라도 그대로 전달 (모든 부가서비스 제거를 의미)
+    //   additionalServices: additionalServicesRequest,
+    // });
 
     // 요청 성공 시
     if (setIsSaveRequested) {
@@ -336,3 +363,4 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
 };
 
 export default ServiceModify;
+
