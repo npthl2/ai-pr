@@ -17,7 +17,6 @@ function TableBody<T>({
   columns,
   emptyMessage = '데이터가 없습니다.',
 }: TableBodyProps<T>) {
-
   if (!content || content.length === 0) {
     return (
       <MuiTableBody>
