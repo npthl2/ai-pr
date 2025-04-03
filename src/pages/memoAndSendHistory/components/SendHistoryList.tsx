@@ -24,7 +24,7 @@ import useCustomerStore from '@stores/CustomerStore';
 import { MessageType, SendHistory } from '@model/SendHistory';
 
 type SortOrder = 'asc' | 'desc' | null;
-type SortField = 'messageType' | 'requestTime' | 'sendTime' | 'success';
+type SortField = 'messageType' | 'requestTime' | 'sendTime' | 'successYn';
 const DEFAULT_ROWS_PER_PAGE = 8;
 
 const SendHistoryList = () => {
@@ -97,7 +97,7 @@ const SendHistoryList = () => {
       ),
     },
     {
-      key: 'success',
+      key: 'successYn',
       label: '성공여부',
       render: (item: SendHistory) => <Typography>{item.successYn}</Typography>,
     },
@@ -143,7 +143,7 @@ const SendHistoryList = () => {
             compareA = a.sentTime;
             compareB = b.sentTime;
             break;
-          case 'success':
+          case 'successYn':
             compareA = a.successYn;
             compareB = b.successYn;
             break;
@@ -219,7 +219,7 @@ const SendHistoryList = () => {
                           ? '85px'
                           : column.key === 'requestTime' || column.key === 'sendTime'
                             ? '180px'
-                            : column.key === 'success'
+                            : column.key === 'successYn'
                               ? '110px'
                               : 'auto',
                     }}
@@ -243,6 +243,7 @@ const SendHistoryList = () => {
               content={sortedData}
               columns={columns}
               emptyMessage='발송이력이 없습니다.'
+              data-testid='send-history-list-table-body'
             />
           </SendHistoryTable>
         </SendHistoryTableContainer>
