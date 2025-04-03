@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import Carousel from 'react-material-ui-carousel';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import {
   WidgetContainer,
   HeaderContainer,
@@ -21,14 +22,17 @@ import {
   EmptyDescription,
   NoResultContainer,
   NoResultText,
+  StyledSlider,
+  ArrowButton,
 } from './NewSignupWidget.styled';
 import { useTodayContracts } from '@api/queries/dashboard/useTodayContracts';
 import CircularProgress from '@mui/material/CircularProgress';
 import NewSignupModal from './NewSignupModal';
 import { ContractData } from '@model/Contract';
-import { Grid } from '@mui/material';
 
-const CARD_WIDTH = 219;
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 const EMPTY_STATE_QUOTES = [
   {
     text: '성공은 우연이 아니다. 그것은 열심히 노력하고, 배움을 지속하며,\n결코 포기하지 않는 사람들에게만 찾아온다.',
@@ -52,10 +56,30 @@ const EMPTY_STATE_QUOTES = [
   },
 ];
 
+interface CustomArrowProps {
+  className?: string;
+  style?: React.CSSProperties;
+  onClick?: () => void;
+  show?: boolean;
+}
+
+const CustomNextArrow = ({ onClick, className, show = true }: CustomArrowProps) => (
+  <ArrowButton onClick={onClick} className={className} $isNext={true} $show={show}>
+    <ArrowForwardIosIcon sx={{ fontSize: '14px', color: '#05151F' }} />
+  </ArrowButton>
+);
+
+const CustomPrevArrow = ({ onClick, className }: CustomArrowProps) => (
+  <ArrowButton onClick={onClick} className={className} $isNext={false}>
+    <ArrowBackIosNewIcon sx={{ fontSize: '14px', color: '#05151F', marginLeft: '3px' }} />
+  </ArrowButton>
+);
+
 const NewSignupWidget = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSignupId, setSelectedSignupId] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [showRightArrow, setShowRightArrow] = useState(true);
   const { data: todayContracts, isLoading, error } = useTodayContracts();
 
   const handleSignupClick = (signupId: string) => {
@@ -70,6 +94,26 @@ const NewSignupWidget = () => {
   const getRandomQuote = () => {
     const randomIndex = Math.floor(Math.random() * EMPTY_STATE_QUOTES.length);
     return EMPTY_STATE_QUOTES[randomIndex];
+  };
+
+  const handleBeforeChange = () => {
+    console.log('handleBeforeChange');
+    const sliderElement = document.querySelector('.slick-slider');
+    const sliderTrack = document.querySelector('.slick-track');
+    if (!sliderElement || !sliderTrack) return;
+
+    const sliderRect = sliderElement.getBoundingClientRect();
+    const lastSlide = document.querySelector('.slick-slide:not(.slick-cloned):last-child');
+    if (!lastSlide) return;
+
+    const lastSlideRect = lastSlide.getBoundingClientRect();
+    const isLastSlideFullyVisible = lastSlideRect.right <= sliderRect.right;
+
+    console.log('lastSlideRect.right', lastSlideRect.right);
+    console.log('sliderRect.right', sliderRect.right);
+    console.log('isLastSlideFullyVisible', isLastSlideFullyVisible);
+
+    setShowRightArrow(!isLastSlideFullyVisible);
   };
 
   if (isLoading) {
@@ -114,63 +158,35 @@ const NewSignupWidget = () => {
       );
     }
 
-    const groupedSlides = [];
-    const itemsPerSlide = 4;
-
-    for (let i = 0; i <= filteredContracts.length - itemsPerSlide; i++) {
-      groupedSlides.push(filteredContracts.slice(i, i + itemsPerSlide));
-    }
-
     return (
-      <Carousel
-        animation='slide'
-        navButtonsAlwaysVisible={true}
-        autoPlay={false}
-        indicators={false}
-        cycleNavigation={false}
-        navButtonsProps={{
-          style: {
-            backgroundColor: 'white',
-            color: '#868F99',
-            border: '1px solid #E5E8EB',
-            borderRadius: '50%',
-            width: '40px',
-            height: '40px',
-            boxShadow: '0px 1px 3px rgba(16, 24, 40, 0.1)',
-          },
-        }}
+      <StyledSlider
+        variableWidth={true}
+        slidesToShow={1}
+        slidesToScroll={1}
+        centerMode={false}
+        arrows={true}
+        infinite={false}
+        beforeChange={handleBeforeChange}
+        nextArrow={<CustomNextArrow show={showRightArrow} />}
+        prevArrow={<CustomPrevArrow />}
       >
-        {groupedSlides.map((group, index) => (
-          <Grid container spacing={2} key={index} justifyContent='center'>
-            {group.map((contract: ContractData, i) => (
-              <Grid item xs={12 / itemsPerSlide} key={i}>
-                <div
-                  key={contract.contractId}
-                  style={{
-                    width: `${CARD_WIDTH}px`,
-                    flex: 'none',
-                  }}
-                >
-                  <SignupCard>
-                    <CardContent>
-                      <CustomerInfo>
-                        <CustomerName>{contract.invoiceDetail.paymentName}</CustomerName>
-                        <Divider />
-                        <ServiceName>
-                          {contract.contractDetail.serviceList[0]?.serviceName ?? '요금제 없음'}
-                        </ServiceName>
-                      </CustomerInfo>
-                    </CardContent>
-                    <DetailButton onClick={() => handleSignupClick(contract.contractId)}>
-                      상세 정보 보기 →
-                    </DetailButton>
-                  </SignupCard>
-                </div>
-              </Grid>
-            ))}
-          </Grid>
+        {filteredContracts.map((contract: ContractData) => (
+          <SignupCard key={contract.contractId}>
+            <CardContent>
+              <CustomerInfo>
+                <CustomerName>{contract.invoiceDetail.paymentName}</CustomerName>
+                <Divider />
+                <ServiceName>
+                  {contract.contractDetail.serviceList[0]?.serviceName ?? '요금제 없음'}
+                </ServiceName>
+              </CustomerInfo>
+            </CardContent>
+            <DetailButton onClick={() => handleSignupClick(contract.contractId)}>
+              상세 정보 보기 →
+            </DetailButton>
+          </SignupCard>
         ))}
-      </Carousel>
+      </StyledSlider>
     );
   };
 
