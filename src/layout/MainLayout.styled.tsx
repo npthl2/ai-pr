@@ -10,5 +10,4 @@ export const MainContainer = styled(Box)({
 
 export const MainContent = styled(Box)({
   flexGrow: 1,
-  overflow: 'auto',
 });
