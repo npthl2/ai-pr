@@ -7,7 +7,6 @@
 
 echo "Husky pre-commit Running!"
 
-echo "Commit message validation passed!"
 echo "Code format and ESLint"
 npm run lint
 npm run format
