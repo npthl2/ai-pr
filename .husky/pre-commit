@@ -19,23 +19,6 @@ fi
 
 echo "Branch name validation passed!"
 
-# Get commit message
-if [ -n "$1" ]; then
-    # If message is passed via file (git commit without -m)
-    COMMIT_MSG=$(cat "$1")
-else
-    # If message is passed via -m or -am option
-    COMMIT_MSG=$(git log -1 --pretty=%B)
-fi
-
-# Check commit message format
-#if ! echo "$COMMIT_MSG" | grep -qE '^KAN-[0-9]+[[:space:]].+$'; then
-#    echo "Error: Commit message must follow the format 'KAN-{number} {content}'"
-#    echo "Content can include Korean, English, numbers, and spaces"
-#    echo "Current commit message: $COMMIT_MSG"
-#    exit 1
-#fi
-
 echo "Commit message validation passed!"
 echo "Code format and ESLint"
 npm run lint
