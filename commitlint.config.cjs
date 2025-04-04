@@ -27,7 +27,7 @@ module.exports = {
               }
               return [
                 false,
-                '커밋 메시지가 올바른 형식이 아닙니다. 예: KAN-123 feat: 새 기능 추가',
+                '커밋 메시지가 올바른 형식이 아닙니다. 예: KAN-123: 새 기능 추가',
               ];
             },
             'ticket-empty': (parsed) => {
