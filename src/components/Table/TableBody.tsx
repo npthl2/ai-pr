@@ -2,13 +2,14 @@ import React from 'react';
 import TableRow from './TableRow';
 import TableCell from './TableCell';
 import { TableBody as MuiTableBody } from '@mui/material';
+interface Column<T> {
+  key: string;
+  label: string;
+  render?: (item: T) => React.ReactNode;
+}
 interface TableBodyProps<T> {
   content: T[];
-  columns: {
-    key: string;
-    label: string;
-    render?: (item: T) => React.ReactNode;
-  }[];
+  columns: Column<T>[];
   emptyMessage?: string;
 }
 
@@ -35,7 +36,7 @@ function TableBody<T>({
         <TableRow key={index}>
           {columns.map((column) => (
             <TableCell key={column.key}>
-              {column.render ? column.render(item) : (item as any)[column.key]}
+              {column.render ? column.render(item) : [column.key]}
             </TableCell>
           ))}
         </TableRow>
