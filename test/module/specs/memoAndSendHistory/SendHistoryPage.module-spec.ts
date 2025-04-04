@@ -3,7 +3,6 @@
 import SendHistoryPage from '../../../pages/memoAndSendHistory/SendHistoryPage';
 import SendHistoryServiceMock from '../../mock/memoAndSendHistory/SendHistoryServiceMock';
 import { mockAuthStore } from '../../../support/helpers/mockAuthStore';
-import BookmarkServiceMock from '../../mock/bookmark/BookmarkServiceMock';
 import { mockMemberStore } from '../../../support/helpers/mockMemberStore';
 import MemoHistoryPage from '../../../pages/memoAndSendHistory/MemoHistoryPage';
 import MemoHistoryServiceMock from '../../mock/memoAndSendHistory/MemoHistoryServiceMock';
@@ -11,6 +10,7 @@ import { CustomerSearchServiceMock } from '../../mock/customer/search/CustomerSe
 import CustomerDetailServiceMock from '../../mock/customer/detail/CustomerDetailServiceMock';
 import CustomerSearchTestPage from '../../../pages/customer/search/CustomerSearch';
 import { MessageType } from '../../../../src/model/SendHistory';
+import RegistrationStatusServiceMock from '../../mock/registration/RegistrationStatusServiceMock';
 
 
 describe('KAN-273 발송이력 조회를 위한 화면 진입', () => {
@@ -21,6 +21,8 @@ describe('KAN-273 발송이력 조회를 위한 화면 진입', () => {
   const customerSearch = new CustomerSearchTestPage();
   const customerSearchServiceMock = new CustomerSearchServiceMock();
   const customerDetailServiceMock = new CustomerDetailServiceMock();
+  const registrationStatusService = new RegistrationStatusServiceMock();
+  const USER_ID = 'user1';
 
   before(() => {
     // 초기 셋업
@@ -34,7 +36,7 @@ describe('KAN-273 발송이력 조회를 위한 화면 진입', () => {
     });
 
     memoService.successWhenGetHomeBookmark();
-
+    registrationStatusService.successWhenGetRegistrationStatus(USER_ID);
     customerSearch.visitCustomerSearch();
     customerSearch.getOpenModalButton().click();
     customerSearch.typeName('김철수');
@@ -69,8 +71,9 @@ describe('KAN-273 발송이력 조회를 위한 화면 진입', () => {
   });
 
   it('KAN-273-3-2 SMS체크박스를 해제하고 Email을 체크했을 때 - 발송이력이 Email만 조회되어 보인다', () => {
-    sendHistoryService.successWhenGetSendHistoryByMessageType(MessageType.EMAIL);
+    sendHistoryService.successWhenGetSendHistory();
     sendHistoryPage.clickEmailCheckbox();
+    sendHistoryService.successWhenGetSendHistoryByMessageType(MessageType.EMAIL);
     sendHistoryPage.clickSmsCheckbox();
     sendHistoryPage.assertSmsCheckboxUnchecked();
     sendHistoryPage.assertEmailCheckboxChecked();
