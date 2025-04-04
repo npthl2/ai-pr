@@ -42,8 +42,10 @@ export const StyledAscIcon = styled(AscIcon)({
   marginBottom: '-1px',
 });
 
-export const SendHistoryTable = styled(Table)(({ theme }) => ({
+export const SendHistoryTable = styled(Table)(() => ({
   width: '825px',
+  borderCollapse: 'separate',
+  borderSpacing: 0,
   '& .MuiTableCell-root': {
     borderBottom: 'none',
   },
@@ -63,7 +65,6 @@ export const SendHistoryTable = styled(Table)(({ theme }) => ({
   },
   '& .MuiTableBody-root': {
     '& .MuiTableRow-root': {
-      borderBottom: `1px solid ${theme.palette.grey[200]}`,
       '&:last-child': {
         borderBottom: 'none',
       },
