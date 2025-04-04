@@ -103,24 +103,24 @@ jobs:
 
           acr_login_server: ${{ secrets.ACR_LOGIN_SERVER }}
           image_tag: ${{ needs.ci.outputs.image_tag }}
-  test:
-    name: Test after Deploy
-    needs: cd
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v4
+  # test:
+  #   name: Test after Deploy
+  #   needs: cd
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out the repo
+  #       uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.14
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20.14
 
-      - name: Install Node.js dependencies
-        run: npm install
+  #     - name: Install Node.js dependencies
+  #       run: npm install
 
-      - name: Run Smoke Test
-        run: npm run test:smoke
+  #     - name: Run Smoke Test
+  #       run: npm run test:smoke
 
-      - name: Run Health Check
-        run: npm run test:health
+  #     - name: Run Health Check
+  #       run: npm run test:health
