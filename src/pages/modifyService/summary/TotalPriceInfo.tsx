@@ -19,7 +19,7 @@ interface TotalPriceInfoProps {
 const TotalPriceInfo = ({ totalBeforePrice, totalAfterPrice }: TotalPriceInfoProps) => {
   // 가격 차이
   const priceDifference = totalAfterPrice - totalBeforePrice;
-  
+
   return (
     <Container>
       <PriceChangeContainer>
@@ -28,7 +28,7 @@ const TotalPriceInfo = ({ totalBeforePrice, totalAfterPrice }: TotalPriceInfoPro
           {priceDifference.toLocaleString()}원
         </PriceDifferenceText>
       </PriceChangeContainer>
-      
+
       <PriceComparisonContainer>
         <PriceColumn>
           <PriceTitle>변경 전</PriceTitle>
@@ -36,11 +36,11 @@ const TotalPriceInfo = ({ totalBeforePrice, totalAfterPrice }: TotalPriceInfoPro
             <PriceText>월 {totalBeforePrice.toLocaleString()}원</PriceText>
           </Box>
         </PriceColumn>
-        
+
         <ArrowContainer>
           <ArrowForwardIcon sx={{ color: 'action.active' }} />
         </ArrowContainer>
-        
+
         <PriceColumn>
           <PriceTitle>변경 후</PriceTitle>
           <Box sx={{ display: 'flex', alignItems: 'baseline' }}>

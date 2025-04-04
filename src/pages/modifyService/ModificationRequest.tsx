@@ -1,4 +1,3 @@
-
 import useCustomerStore from '@stores/CustomerStore';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
@@ -68,17 +67,17 @@ const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
     0,
   );
   const planValue = selectedService?.serviceValue || 0;
-  
+
   // 현재 요금제 가격
   const currentService = getCurrentService?.(selectedCustomerId);
   const currentServiceValue = currentService?.serviceValue || 0;
-  
+
   // 현재 부가서비스 가격 합계
   const currentAdditionalServicesTotal = currentAdditionalServices.reduce(
-    (sum, service) => sum + (service.serviceValue || 0), 
-    0
+    (sum, service) => sum + (service.serviceValue || 0),
+    0,
   );
-  
+
   // 총 금액 (요금제 + 부가서비스)
   const totalBeforePrice = currentServiceValue + currentAdditionalServicesTotal;
   const totalAfterPrice = planValue + totalAdditionalServicesValue;
@@ -118,10 +117,7 @@ const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
           <PageTitle>상품 변경정보 요약</PageTitle>
         </TitleContainer>
         <SummaryContainer>
-          <TotalPriceInfo 
-            totalBeforePrice={totalBeforePrice}
-            totalAfterPrice={totalAfterPrice}
-          />
+          <TotalPriceInfo totalBeforePrice={totalBeforePrice} totalAfterPrice={totalAfterPrice} />
           <AdditionalServicesContainer>
             {/* 현재 서비스 정보 */}
             <AdditionalServicesInfo

@@ -1,14 +1,14 @@
-import { Box } from "@mui/material";
-import { Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import TableRow from "@components/Table/TableRow";
+import { Box } from '@mui/material';
+import { Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import TableRow from '@components/Table/TableRow';
 
 export const Container = styled(Box)(({ theme }) => ({
   width: '100%',
   backgroundColor: theme.palette.background.paper,
   overflow: 'hidden',
   paddingLeft: 40,
-  paddingRight: 40, 
+  paddingRight: 40,
   paddingTop: 16,
   paddingBottom: 24,
 }));
@@ -51,8 +51,8 @@ export const ServiceItem = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   padding: theme.spacing(1, 0),
   '&:first-of-type': {
-    paddingTop: 0
-  }
+    paddingTop: 0,
+  },
 }));
 
 export const TotalPriceSection = styled(Box)(({ theme }) => ({
@@ -61,7 +61,7 @@ export const TotalPriceSection = styled(Box)(({ theme }) => ({
   borderTop: `1px solid ${theme.palette.divider}`,
   display: 'flex',
   justifyContent: 'space-between',
-  alignItems: 'center'
+  alignItems: 'center',
 }));
 
 export const SectionTitle = styled(Typography)(({ theme }) => ({

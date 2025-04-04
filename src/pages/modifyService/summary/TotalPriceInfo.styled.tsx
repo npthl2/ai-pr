@@ -5,7 +5,7 @@ export const Container = styled(Box)(({ theme }) => ({
   width: '100%',
   padding: theme.spacing(2),
   backgroundColor: theme.palette.grey[50],
-  border: `1px solid ${theme.palette.divider}`, 
+  border: `1px solid ${theme.palette.divider}`,
   borderRadius: '8px 8px 0 0',
   display: 'flex',
   flexDirection: 'column',
@@ -59,4 +59,4 @@ export const ArrowContainer = styled(Box)({
 export const MonthlyText = styled(Typography)({
   fontSize: '24px',
   marginRight: '4px',
-}); 
+});

@@ -54,9 +54,7 @@ const AdditionalServicesInfo = ({
         {/* 테이블 헤더 - 고정 위치 */}
         <Table size='small' stickyHeader sx={{ tableLayout: 'fixed' }}>
           <TableHead>
-            <TableRowCustom
-              variant='head'
-            >
+            <TableRowCustom variant='head'>
               <TableCell sx={{ fontWeight: '600', color: 'text.secondary' }}>
                 부가서비스명
               </TableCell>

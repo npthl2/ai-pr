@@ -104,8 +104,6 @@ export const Typography = styled(MuiTypography)(({ theme }: { theme: Theme }) =>
   color: theme.palette.text.primary,
 }));
 
-
-
 export const PageTitle = styled(Typography)(({ theme }: { theme: Theme }) => ({
   fontWeight: 700,
   fontSize: 18,
@@ -137,6 +135,6 @@ export const AdditionalServicesContainer = styled(Box)(({ theme }) => ({
   alignItems: 'flex-start',
   justifyContent: 'space-between',
   width: '100%',
-  border: `1px solid ${theme.palette.divider}`, 
+  border: `1px solid ${theme.palette.divider}`,
   borderRadius: '0 0 8px 8px',
 }));
