@@ -31,6 +31,7 @@ export interface ModifyServiceInfo {
   initialIsServiceModifiable: boolean;
   initialPreviousService: Service | null;
   revertButtonClickedDate: string | null;
+  businessProcessId: string;
 }
 
 export interface ModifyServices {
@@ -100,6 +101,7 @@ const createDefaultServiceInfo = (): ModifyServiceInfo => ({
   initialPreviousService: null,
   revertButtonClickedDate: null,
   serviceModificationMounted: false,
+  businessProcessId: '',
 });
 
 const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({

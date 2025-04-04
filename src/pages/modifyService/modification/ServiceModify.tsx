@@ -190,6 +190,7 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
 
   // 모달 확인 핸들러
   const handleConfirmModal = async () => {
+    console.log('handleConfirmModal');
     // ModifyServiceStore에서 선택된 서비스 정보 가져오기
     const modifyServiceInfo = useModifyServiceStore.getState().getModifyServiceInfo(contractTabId);
     if (!modifyServiceInfo) {
@@ -255,28 +256,6 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
         }
       },
     });
-
-    // // 요청 데이터 구성 및 API 호출
-    // await serviceModificationMutation.mutateAsync({
-    //   customerId: selectedCustomerId || '',
-    //   contractId: contractId || '',
-    //   // selectedService가 없을 경우 null 전달 (요금제 변경 없음)
-    //   service: selectedService
-    //     ? {
-    //         serviceId: selectedService.serviceId,
-    //         serviceName: selectedService.serviceName,
-    //         serviceValue: selectedService.serviceValue,
-    //         serviceValueType: selectedService.serviceValueType,
-    //       }
-    //     : null,
-    //   // 빈 배열이라도 그대로 전달 (모든 부가서비스 제거를 의미)
-    //   additionalServices: additionalServicesRequest,
-    // });
-
-    // 요청 성공 시
-    if (setIsSaveRequested) {
-      setIsSaveRequested(true);
-    }
 
     // 모달 닫기
     handleCloseModal();
