@@ -32,7 +32,9 @@ const TotalPriceInfo = ({ totalBeforePrice, totalAfterPrice }: TotalPriceInfoPro
         <PriceColumn>
           <PriceTitle>변경 전</PriceTitle>
           <Box sx={{ display: 'flex', alignItems: 'baseline' }}>
-            <PriceText data-testid='total-before-price'>월 {totalBeforePrice.toLocaleString()}원</PriceText>
+            <PriceText data-testid='total-before-price'>
+              월 {totalBeforePrice.toLocaleString()}원
+            </PriceText>
           </Box>
         </PriceColumn>
 
@@ -43,7 +45,9 @@ const TotalPriceInfo = ({ totalBeforePrice, totalAfterPrice }: TotalPriceInfoPro
         <PriceColumn>
           <PriceTitle>변경 후</PriceTitle>
           <Box sx={{ display: 'flex', alignItems: 'baseline' }}>
-            <PriceText data-testid='total-after-price'>월 {totalAfterPrice.toLocaleString()}원</PriceText>
+            <PriceText data-testid='total-after-price'>
+              월 {totalAfterPrice.toLocaleString()}원
+            </PriceText>
           </Box>
         </PriceColumn>
       </PriceComparisonContainer>
