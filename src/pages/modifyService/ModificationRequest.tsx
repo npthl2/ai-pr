@@ -109,7 +109,7 @@ const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
   };
 
   return (
-    <ModificationRequestContainer>
+    <ModificationRequestContainer data-testid='modification-request'>
       <ContentContainer>
         <ModificationStatusMessage
           status={registrationData?.status as RegistrationStatusType}
