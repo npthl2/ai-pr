@@ -190,7 +190,6 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
 
   // 모달 확인 핸들러
   const handleConfirmModal = async () => {
-    console.log('handleConfirmModal');
     // ModifyServiceStore에서 선택된 서비스 정보 가져오기
     const modifyServiceInfo = useModifyServiceStore.getState().getModifyServiceInfo(contractTabId);
     if (!modifyServiceInfo) {
@@ -259,9 +258,6 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
 
     // 모달 닫기
     handleCloseModal();
-
-    // TODO 완료 페이지 개발 시 주석 해제
-    // removeModifyServiceInfo(contractTabId);
   };
 
   // 저장 버튼 비활성화 조건

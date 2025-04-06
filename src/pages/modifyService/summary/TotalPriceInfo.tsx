@@ -17,12 +17,7 @@ interface TotalPriceInfoProps {
 }
 
 const TotalPriceInfo = ({ totalBeforePrice, totalAfterPrice }: TotalPriceInfoProps) => {
-  // 가격 차이
   const priceDifference = totalAfterPrice - totalBeforePrice;
-
-  console.log('totalBeforePrice', totalBeforePrice);
-  console.log('totalAfterPrice', totalAfterPrice);
-  console.log('priceDifference', priceDifference);
 
   return (
     <Container>
