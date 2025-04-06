@@ -105,29 +105,24 @@ describe('KAN-26 상품 변경정보 요약', () => {
 
   describe('KAN-26-2 상품 변경 처리 결과 확인', () => {
     it('KAN-26-2-1 상품 변경 성공시 처리 완료 문구와 표시가 보인다', () => {
-      // 성공 상태로 API 응답 모킹
       registrationStatusService.successWhenGetRegistrationStatus(
         USER_ID,
-        REGISTRATION_STATUS.PENDING,
         REGISTRATION_STATUS.COMPLETED,
       );
 
       cy.wait(4000);
 
-      // 성공 문구 및 아이콘 확인
       page.assertSuccessStatusVisible();
     });
 
     it('KAN-26-2-2 상품 변경 실패시 처리 실패 문구와 사유가 보인다', () => {
       registrationStatusService.successWhenGetRegistrationStatus(
         USER_ID,
-        REGISTRATION_STATUS.PENDING,
         REGISTRATION_STATUS.FAILED,
       );
 
       cy.wait(4000);
 
-      // 실패 문구 및 아이콘 확인
       page.assertFailStatusVisible();
     });
   });
