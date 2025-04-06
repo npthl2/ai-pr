@@ -45,7 +45,9 @@ const ModificationStatusMessage = ({ status, customerName }: StatusMessageProps)
 
   return statusData ? (
     <StatusMessageContainer>
-      <StyledStatusMessage data-testid='modification-status-message'>{statusData.message}</StyledStatusMessage>
+      <StyledStatusMessage data-testid='modification-status-message'>
+        {statusData.message}
+      </StyledStatusMessage>
       {statusData.gif}
       {statusData.failureReason}
     </StatusMessageContainer>

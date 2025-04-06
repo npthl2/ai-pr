@@ -86,7 +86,9 @@ const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
   // 홈버튼 동작
   const setSelectedMainMenu = useMenuStore((state) => state.setSelectedMainMenu);
   const selectCustomer = useCustomerStore((state) => state.selectCustomer);
-  const removeModifyServiceInfoByContractId = useModifyServiceStore((state) => state.removeModifyServiceInfoByContractId);
+  const removeModifyServiceInfoByContractId = useModifyServiceStore(
+    (state) => state.removeModifyServiceInfoByContractId,
+  );
 
   const { reset } = useCustomerStore();
 
@@ -99,7 +101,7 @@ const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
 
     // 모든 고객 탭 닫기 (CustomerStore의 reset 함수 호출)
     reset();
-    
+
     // 계약 ID로 서비스 변경 정보 삭제 (businessProcessId 사용)
     if (businessProcessId) {
       removeModifyServiceInfoByContractId(businessProcessId);

@@ -142,25 +142,25 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
     set((state) => {
       // 계약 ID와 일치하는 계약 탭 ID 찾기
       const tabIdsToRemove: string[] = [];
-      
+
       // 모든 contractTabId에 대해 businessProcessId가 일치하는지 확인
       Object.entries(state.modifyServices).forEach(([tabId, info]) => {
         if (info.businessProcessId === contractId) {
           tabIdsToRemove.push(tabId);
         }
       });
-      
+
       // 일치하는 항목이 없으면 상태 변경 없음
       if (tabIdsToRemove.length === 0) {
         return state;
       }
-      
+
       // 찾은 계약 탭 ID들을 제거한 새 상태 생성
       const newModifyServices = { ...state.modifyServices };
-      tabIdsToRemove.forEach(tabId => {
+      tabIdsToRemove.forEach((tabId) => {
         delete newModifyServices[tabId];
       });
-      
+
       return { modifyServices: newModifyServices };
     });
   },
