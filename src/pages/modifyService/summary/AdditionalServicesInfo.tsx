@@ -19,12 +19,14 @@ interface AdditionalServicesInfoProps {
   title: string;
   mainServiceValue: number;
   additionalServices: AdditionalService[];
+  testId: string;
 }
 
 const AdditionalServicesInfo = ({
   title,
   mainServiceValue,
   additionalServices,
+  testId,
 }: AdditionalServicesInfoProps) => {
   const totalAdditionalValue = additionalServices.reduce(
     (sum, service) => sum + service.serviceValue,
@@ -36,11 +38,22 @@ const AdditionalServicesInfo = ({
       <ServiceSection>
         <Box sx={{ display: 'flex', alignItems: 'baseline' }}>
           <SectionTitle>요금제</SectionTitle>
-          <Typography variant='subtitle1' fontWeight='600' fontSize='14px' sx={{ ml: 2 }}>
+          <Typography
+            variant='subtitle1'
+            fontWeight='600'
+            fontSize='14px'
+            sx={{ ml: 2 }}
+            data-testid={`${testId}-name`}
+          >
             {title}
           </Typography>
         </Box>
-        <Typography variant='subtitle1' fontWeight='600' fontSize='14px'>
+        <Typography
+          variant='subtitle1'
+          fontWeight='600'
+          fontSize='14px'
+          data-testid={`${testId}-value`}
+        >
           {mainServiceValue.toLocaleString()}원
         </Typography>
       </ServiceSection>
@@ -70,7 +83,7 @@ const AdditionalServicesInfo = ({
         </Table>
 
         {/* 테이블 본문 - 스크롤 가능 */}
-        <ScrollableTableContainer>
+        <ScrollableTableContainer data-testid={`${testId}-additional-service-list`}>
           <Table size='small' sx={{ tableLayout: 'fixed' }}>
             <TableBody>
               {additionalServices.map((service, index) => (

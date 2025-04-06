@@ -129,6 +129,7 @@ const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
                 serviceName: service.serviceName,
                 serviceValue: service.serviceValue || 0,
               }))}
+              testId='before-services'
             />
             <Divider orientation='vertical' flexItem />
             {/* 변경될 서비스 정보 */}
@@ -139,6 +140,7 @@ const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
                 serviceName: service.serviceName,
                 serviceValue: service.serviceValue || 0,
               }))}
+              testId='after-services'
             />
           </AdditionalServicesContainer>
         </SummaryContainer>
@@ -147,7 +149,7 @@ const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
             variant='outlined'
             onClick={handleGoHome}
             size='small'
-            data-testid='go-home-button'
+            data-testid='go-home-button-in-modify-service'
           >
             홈으로 이동
           </Button>
