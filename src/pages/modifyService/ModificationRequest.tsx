@@ -94,6 +94,9 @@ const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
     (registration) => registration.businessProcessId === businessProcessId,
   );
 
+  console.log('totalBeforePrice', totalBeforePrice);
+  console.log('totalAfterPrice', totalAfterPrice);
+
   // 홈으로 이동
   const handleGoHome = () => {
     // 현재 선택된 고객 해제

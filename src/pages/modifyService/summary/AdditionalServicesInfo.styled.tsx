@@ -11,6 +11,7 @@ export const Container = styled(Box)(({ theme }) => ({
   paddingRight: 40,
   paddingTop: 16,
   paddingBottom: 24,
+  borderRadius: '0 0 8px 8px',
 }));
 
 export const ServiceSection = styled(Box)(() => ({

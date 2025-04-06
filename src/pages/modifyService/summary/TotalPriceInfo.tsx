@@ -20,6 +20,10 @@ const TotalPriceInfo = ({ totalBeforePrice, totalAfterPrice }: TotalPriceInfoPro
   // 가격 차이
   const priceDifference = totalAfterPrice - totalBeforePrice;
 
+  console.log('totalBeforePrice', totalBeforePrice);
+  console.log('totalAfterPrice', totalAfterPrice);
+  console.log('priceDifference', priceDifference);
+
   return (
     <Container>
       <PriceChangeContainer>
