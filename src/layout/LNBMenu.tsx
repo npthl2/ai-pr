@@ -145,7 +145,7 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
       };
 
       // 요금제/부가서비스 변경
-      if (!selectedCustomerId) {
+      if (!selectedCustomerId || selectedCustomerId?.startsWith('NEW_SUBSCRIPTION')) {
         setMoveTab(newTab);
         setCustomerSearchModal(true);
       } else {
