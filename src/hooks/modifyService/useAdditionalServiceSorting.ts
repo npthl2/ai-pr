@@ -64,7 +64,7 @@ export const useAdditionalServiceSorting = () => {
   const getSortIconProps = useCallback(
     (field: SortField, componentName?: string) => {
       const testId = componentName
-        ? `${componentName}-sort-by-${field === 'serviceName' ? 'name' : 'price'}`
+        ? `${componentName}sort-by-${field === 'serviceName' ? 'name' : 'price'}`
         : `sort-by-${field === 'serviceName' ? 'name' : 'price'}`;
 
       // 기본 스타일

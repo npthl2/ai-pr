@@ -143,7 +143,6 @@ const AdditionalServiceList = ({
     sortAdditionalServices,
     sortField,
     sortDirection,
-    sortAdditionalServices,
   ]);
 
   // 부가서비스 추가 핸들러
