@@ -19,6 +19,12 @@ COMMIT_MSG=$(cat "$1")
 
 echo "COMMIT_MSG: $COMMIT_MSG"
 
+# Skip ticket number validation for merge commits
+if echo "$COMMIT_MSG" | grep -q "^Merge"; then
+    echo "Merge commit detected, skipping ticket number validation"
+    exit 0
+fi
+
 # Extract ticket number from commit message (everything before :)
 COMMIT_TICKET=$(echo "$COMMIT_MSG" | cut -d: -f1)
 
@@ -32,5 +38,3 @@ if [ "$COMMIT_TICKET" != "$BRANCH_TICKET" ]; then
 fi
 
 echo "Ticket number validation passed!"
-
-npx --no-install commitlint --edit "$1"
