@@ -4,8 +4,8 @@ export interface SurveyResponseSearchRequestParams {
 }
 
 export interface SurveyResponseSearchResponse {
-  hasResponseYn: 'Y' | 'N';
-  totalResponses: number;
+  alreadyRespondedYn: 'Y' | 'N';
+  totalResponseCount: number;
 }
 
 export interface SurveyResponseRequest {
@@ -19,6 +19,6 @@ export function isSurveyResponseSearchResponse(
   return (
     typeof value === 'object' &&
     value !== null &&
-    ['hasResponseYn', 'totalResponses'].every((key) => key in value)
+    ['alreadyRespondedYn', 'totalResponseCount'].every((key) => key in value)
   );
 }

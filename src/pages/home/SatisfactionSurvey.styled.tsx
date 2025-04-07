@@ -10,15 +10,16 @@ export const SurveyCard = styled(Box)(({ completed }: { completed: 'Y' | 'N' | u
   padding: '20px 27px',
   position: 'relative',
 
-  cursor: completed === 'Y' ? 'default' : 'pointer',
   ...(completed && {
     backgroundImage:
       completed === 'Y'
         ? 'url(/images/satisfaction_survey_complete.png)'
         : 'url(/images/satisfaction_survey.png)',
+    cursor: completed === 'Y' ? 'default' : 'pointer',
+    backgroundSize: completed === 'Y' ? '40%' : '45%',
+    ...(completed === 'Y' && { '& .MuiSvgIcon-root': { display: 'none' } }),
   }),
   backgroundRepeat: 'no-repeat',
-  backgroundSize: completed === 'Y' ? '40%' : '45%',
   backgroundPosition: 'right bottom',
 }));
 
