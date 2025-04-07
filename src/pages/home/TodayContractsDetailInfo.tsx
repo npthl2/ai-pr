@@ -42,7 +42,7 @@ const calculateAddOnServices = (serviceList: ServiceItem['serviceList']) => {
   return {
     paidCount,
     freeCount,
-    totalValue: totalValue.toString(),
+    totalValue,
   };
 };
 

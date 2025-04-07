@@ -97,7 +97,6 @@ const NewSignupWidget = () => {
   };
 
   const handleBeforeChange = () => {
-    console.log('handleBeforeChange');
     const sliderElement = document.querySelector('.slick-slider');
     const sliderTrack = document.querySelector('.slick-track');
     if (!sliderElement || !sliderTrack) return;
@@ -108,10 +107,6 @@ const NewSignupWidget = () => {
 
     const lastSlideRect = lastSlide.getBoundingClientRect();
     const isLastSlideFullyVisible = lastSlideRect.right <= sliderRect.right;
-
-    console.log('lastSlideRect.right', lastSlideRect.right);
-    console.log('sliderRect.right', sliderRect.right);
-    console.log('isLastSlideFullyVisible', isLastSlideFullyVisible);
 
     setShowRightArrow(!isLastSlideFullyVisible);
   };

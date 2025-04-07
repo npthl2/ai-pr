@@ -1,4 +1,4 @@
-import { Box, IconButton, InputBase, styled, Typography, Card } from '@mui/material';
+import { Box, IconButton, InputBase, styled, Typography, Card, TextField } from '@mui/material';
 import Slider from 'react-slick';
 
 export const TodayContractsContainer = styled(Box)(() => ({
@@ -72,7 +72,7 @@ export const StyledSlider = styled(Slider)({
   },
   '& .slick-list': {
     margin: '0',
-    padding: '0 24px',
+    padding: '0',
     overflow: 'hidden',
   },
   '& .slick-slide': {
@@ -91,10 +91,10 @@ export const StyledSlider = styled(Slider)({
     },
   },
   '& .slick-prev': {
-    left: '8px',
+    left: '-18px',
   },
   '& .slick-next': {
-    right: '8px',
+    right: '-18px',
   },
   '& .slick-disabled': {
     opacity: 0,
@@ -221,6 +221,14 @@ export const NoResultText = styled(Typography)({
   textAlign: 'center',
 });
 
+export const StyledTextField = styled(TextField)(({ theme }) => ({
+  '& .MuiOutlinedInput-root': {
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: '#FFFFFF',
+    minHeight: '28px',
+  },
+}));
+
 export const ArrowButton = styled(IconButton)<{ $isNext?: boolean; $show?: boolean }>(
   ({ $isNext = false, $show = true }) => ({
     width: '36px',
@@ -228,7 +236,7 @@ export const ArrowButton = styled(IconButton)<{ $isNext?: boolean; $show?: boole
     minWidth: '36px',
     minHeight: '36px',
     position: 'absolute',
-    [!$isNext ? 'left' : 'right']: '8px',
+    [!$isNext ? 'left' : 'right']: '-18px',
     top: '50%',
     transform: 'translateY(-50%)',
     backgroundColor: '#FFFFFF',
