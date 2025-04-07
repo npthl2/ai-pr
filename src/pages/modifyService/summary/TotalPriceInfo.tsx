@@ -45,7 +45,7 @@ const TotalPriceInfo = ({ totalBeforePrice, totalAfterPrice }: TotalPriceInfoPro
         <PriceColumn>
           <PriceTitle>변경 후</PriceTitle>
           <Box sx={{ display: 'flex', alignItems: 'baseline' }}>
-            <PriceText data-testid='total-after-price'>
+            <PriceText isAfter data-testid='total-after-price'>
               월 {totalAfterPrice.toLocaleString()}원
             </PriceText>
           </Box>

@@ -3,6 +3,7 @@ import {
   PendingGifContainer,
   StatusMessage as StyledStatusMessage,
   CompletedGifContainer,
+  ErrorMessage,
 } from '@pages/modifyService/ModificationRequest.styled';
 import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants';
 
@@ -34,8 +35,8 @@ const ModificationStatusMessage = ({ status, customerName }: StatusMessageProps)
       gif: null, // 실패 시 GIF가 필요 없다면 null 처리
       failureReason: (
         <StyledStatusMessage>
-          실패사유: <span style={{ color: 'red' }}>동일한 회선으로</span>를
-          <span style={{ color: 'red' }}> 처리중인 변경 건</span>이 있습니다.
+          실패사유: <ErrorMessage>동일한 회선으로</ErrorMessage>를
+          <ErrorMessage> 처리중인 변경 건</ErrorMessage>이 있습니다.
         </StyledStatusMessage>
       ),
     },
