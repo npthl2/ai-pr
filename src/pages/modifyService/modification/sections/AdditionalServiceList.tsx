@@ -24,7 +24,9 @@ import {
   TextContainer,
 } from './AdditionalServiceList.styled';
 import { ArrowDownward } from '@mui/icons-material';
-import useAdditionalServiceSorting, { SortField } from '@hooks/modifyService/useAdditionalServiceSorting';
+import useAdditionalServiceSorting, {
+  SortField,
+} from '@hooks/modifyService/useAdditionalServiceSorting';
 
 // 필터링된 부가서비스 목록 아이템 타입
 interface FilteredServiceItem extends AdditionalService {

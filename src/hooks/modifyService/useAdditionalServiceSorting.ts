@@ -38,37 +38,42 @@ export const useAdditionalServiceSorting = () => {
   }, []);
 
   // 정렬 함수
-  const sortAdditionalServices = useCallback((services: AdditionalService[]) => {
-    if (!sortField || !sortDirection) {
-      return defaultSort(services);
-    }
-
-    return [...services].sort((a, b) => {
-      if (sortField === 'serviceName') {
-        const nameA = a.serviceName.toLowerCase();
-        const nameB = b.serviceName.toLowerCase();
-        return sortDirection === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
-      } else if (sortField === 'serviceValue') {
-        return sortDirection === 'asc' ? a.serviceValue - b.serviceValue : b.serviceValue - a.serviceValue;
+  const sortAdditionalServices = useCallback(
+    (services: AdditionalService[]) => {
+      if (!sortField || !sortDirection) {
+        return defaultSort(services);
       }
-      return 0;
-    });
-  }, [sortField, sortDirection, defaultSort]);
+
+      return [...services].sort((a, b) => {
+        if (sortField === 'serviceName') {
+          const nameA = a.serviceName.toLowerCase();
+          const nameB = b.serviceName.toLowerCase();
+          return sortDirection === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+        } else if (sortField === 'serviceValue') {
+          return sortDirection === 'asc'
+            ? a.serviceValue - b.serviceValue
+            : b.serviceValue - a.serviceValue;
+        }
+        return 0;
+      });
+    },
+    [sortField, sortDirection, defaultSort],
+  );
 
   // 정렬 아이콘 생성 함수 - JSX를 반환하지 않고 아이콘 Props를 반환하도록 수정
   const getSortIconProps = useCallback(
     (field: SortField, componentName?: string) => {
-      const testId = componentName 
+      const testId = componentName
         ? `${componentName}-sort-by-${field === 'serviceName' ? 'name' : 'price'}`
         : `sort-by-${field === 'serviceName' ? 'name' : 'price'}`;
-      
+
       // 기본 스타일
       const baseStyle = {
         verticalAlign: 'middle',
         marginLeft: '4px',
         fontSize: '16px',
       };
-      
+
       // 필드에 따른 스타일과 테스트 ID
       if (sortField !== field) {
         return {
@@ -76,7 +81,7 @@ export const useAdditionalServiceSorting = () => {
           testId: testId,
         };
       }
-      
+
       return {
         style: {
           ...baseStyle,
@@ -87,7 +92,7 @@ export const useAdditionalServiceSorting = () => {
     },
     [sortField, sortDirection],
   );
-  
+
   return {
     sortField,
     sortDirection,
