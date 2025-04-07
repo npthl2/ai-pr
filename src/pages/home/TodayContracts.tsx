@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 
-import { Typography, Box, Stack, CardContent, Divider } from '@mui/material';
+import { Stack, Divider } from '@mui/material';
 import { TitleWrapper, TitleBox } from './Home.styled';
 import {
   ServiceName,
@@ -16,7 +16,12 @@ import {
   DetailButton,
   ArrowButton,
   PhoneNumber,
-  SignupCardWrapper,
+  Title,
+  SearchContainer,
+  StyledTextField,
+  CardWrapper,
+  CardContent,
+  DetailInfo,
 } from './TodayContracts.styled';
 
 import { useTodayContracts } from '@api/queries/dashboard/useTodayContracts';
@@ -31,7 +36,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 import TodayContractsModal from './TodayContractsModal';
-import { StyledTextField } from '@pages/registration/sections/contract/ContractSectionComponent.styles';
+import { EMPTY_STATE_QUOTES } from './TodayContractsConstants';
 
 const TodayContracts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -80,29 +85,6 @@ const TodayContracts = () => {
     setShowRightArrow(!isLastSlideFullyVisible);
   };
 
-  const EMPTY_STATE_QUOTES = [
-    {
-      text: '성공은 우연이 아니다. 그것은 열심히 노력하고, 배움을 지속하며,\n결코 포기하지 않는 사람들에게만 찾아온다.',
-      author: '콜린 파일',
-    },
-    {
-      text: '어떤 일이든 할 수 있다고 믿으면 그 일을 할 수 있다.',
-      author: '테디 루즈벨트',
-    },
-    {
-      text: '오늘의 노력은 내일의 성취를 만든다.',
-      author: '토니 로빈스',
-    },
-    {
-      text: '성취는 작은 일들의 축적이다.',
-      author: '윌리엄 제임스',
-    },
-    {
-      text: '누구든지 원하는 것을 이루기 위해서는 끊임없이 도전해야 한다.',
-      author: '마이클 조던',
-    },
-  ];
-
   const randomQuote = useMemo(() => {
     const randomIndex = Math.floor(Math.random() * EMPTY_STATE_QUOTES.length);
     return EMPTY_STATE_QUOTES[randomIndex];
@@ -112,37 +94,42 @@ const TodayContracts = () => {
     contract.customerDetail.customerName.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
+  // 검색 조건이 변경될 때 마다 rerender 해서 arrow 표시가 적절하게 되어야 함
+  useEffect(() => {
+    handleAfterChange();
+  }, [searchQuery, filteredContracts]);
+
   return (
     <TodayContractsContainer>
       <TitleWrapper>
         <TitleBox>
-          <Typography variant='h2'>오늘의 신규가입</Typography>
-          <Typography variant='h2'>{todayContracts?.length}건</Typography>
+          <Title variant='h2'>오늘의 신규가입</Title>
+          <Title variant='h2'>{filteredContracts?.length}</Title>
         </TitleBox>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px', height: '32px' }}>
+        <SearchContainer>
           <StyledTextField
-            size='small'
+            size='medium'
             variant='outlined'
             placeholder='이름 검색'
             value={searchQuery}
             onChange={handleSearchChange}
-            endAdornment={<SearchIcon sx={{ color: '#868F99' }} />}
+            suffix={<SearchIcon sx={{ color: '#868F99' }} />}
           />
-        </Box>
+        </SearchContainer>
       </TitleWrapper>
 
       <Stack direction='row' spacing={2} height={'258px'}>
         {todayContracts?.length === 0 ? (
           <EmptyContainer>
-            <EmptyTitle>오늘 신규가입 건은 없습니다.</EmptyTitle>
-            <EmptyDescription>
+            <EmptyTitle variant='h3'>오늘 신규가입 건은 없습니다.</EmptyTitle>
+            <EmptyDescription variant='h5'>
               {randomQuote.text}
               <br></br>-{randomQuote.author}-
             </EmptyDescription>
           </EmptyContainer>
         ) : filteredContracts?.length === 0 ? (
           <NoResultContainer>
-            <NoResultText>조회 결과가 없습니다.</NoResultText>
+            <NoResultText variant='body1'>조회 결과가 없습니다.</NoResultText>
           </NoResultContainer>
         ) : (
           <StyledSlider
@@ -157,26 +144,31 @@ const TodayContracts = () => {
             prevArrow={<CustomPrevArrow />}
           >
             {filteredContracts?.map((contract: ContractDataWithCustomer) => (
-              <SignupCardWrapper
+              <CardWrapper
                 key={contract.contractId}
                 className={hoveredCardId === contract.contractId ? 'hover-active' : ''}
                 onMouseEnter={() => setHoveredCardId(contract.contractId)}
                 onMouseLeave={() => setHoveredCardId(null)}
               >
-                <CardContent sx={{ padding: '0px' }}>
+                <CardContent>
                   <CustomerInfo>
-                    <CustomerName>{contract.customerDetail.customerName}</CustomerName>
-                    <PhoneNumber>{contract.contractDetail.phoneNumber}</PhoneNumber>
+                    <CustomerName variant='h3'>{contract.customerDetail.customerName}</CustomerName>
+                    <PhoneNumber variant='h3'>{contract.contractDetail.phoneNumber}</PhoneNumber>
                     <Divider />
-                    <ServiceName>
+                    <ServiceName variant='h4'>
                       {contract.contractDetail.serviceList[0]?.serviceName ?? '요금제 없음'}
                     </ServiceName>
                   </CustomerInfo>
-                  <DetailButton onClick={() => handleSignupClick(contract.contractId)}>
-                    상세 정보 보기 →
-                  </DetailButton>
+                  <DetailInfo>
+                    <DetailButton
+                      variant='h5'
+                      onClick={() => handleSignupClick(contract.contractId)}
+                    >
+                      상세 정보 보기 →
+                    </DetailButton>
+                  </DetailInfo>
                 </CardContent>
-              </SignupCardWrapper>
+              </CardWrapper>
             ))}
           </StyledSlider>
         )}

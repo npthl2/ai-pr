@@ -1,4 +1,5 @@
-import { Box, IconButton, InputBase, styled, Typography, Card, TextField } from '@mui/material';
+import { Box, IconButton, styled, Typography, Card } from '@mui/material';
+import TextField from '@components/TextField';
 import Slider from 'react-slick';
 
 export const TodayContractsContainer = styled(Box)(() => ({
@@ -20,13 +21,9 @@ export const TitleContainer = styled(Box)({
   gap: '12px',
 });
 
-export const Title = styled(Typography)({
-  fontFamily: 'Pretendard',
-  fontWeight: 700,
-  fontSize: '20px',
-  lineHeight: '1.5em',
-  color: '#05151F',
-});
+export const Title = styled(Typography)(({ theme }) => ({
+  color: theme.palette.primary.main,
+}));
 
 export const SignupCount = styled(Typography)({
   fontFamily: 'Pretendard',
@@ -40,30 +37,23 @@ export const SearchContainer = styled(Box)({
   display: 'flex',
   alignItems: 'center',
   gap: '8px',
+  height: '32px',
+  width: '200px',
 });
 
-export const SearchInput = styled(InputBase)({
-  width: '200px',
-  height: '32px',
-  padding: '0 12px',
-  backgroundColor: '#FFFFFF',
-  border: '1px solid #D1D6DA',
-  borderRadius: '4px',
-  '& input': {
-    fontFamily: 'Pretendard',
-    fontWeight: 400,
-    fontSize: '14px',
-    lineHeight: '1.5em',
-    color: '#868F99',
-    '&::placeholder': {
-      color: '#868F99',
-      opacity: 1,
-    },
+export const StyledTextField = styled(TextField)(({ theme }) => ({
+  '& .MuiOutlinedInput-root': {
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: '#FFFFFF',
+    height: '100%',
+    width: '100%',
+    padding: '0 12px',
   },
-});
+}));
 
 export const StyledSlider = styled(Slider)({
   width: '100%',
+  maxHeight: '258px',
   position: 'relative',
   '& .slick-track': {
     display: 'flex',
@@ -102,62 +92,82 @@ export const StyledSlider = styled(Slider)({
   },
 });
 
+export const CardWrapper = styled(Card)({
+  width: '219px',
+  height: '100%',
+  borderRadius: '16px',
+  backgroundColor: '#FFFFFF',
+  boxShadow: 'none',
+  padding: '24px 32px',
+  transition: 'all 0.2s ease-in-out',
+  '&:hover, &.hover-active': {
+    backgroundColor: '#272E35',
+  },
+  display: 'flex',
+  justifyContent: 'space-between',
+});
+
+export const CardContent = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  padding: '0px',
+  gap: '16px',
+  height: '204px',
+});
+
 export const CustomerInfo = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
   gap: '8px',
-  height: '204px',
 });
 
-export const CustomerName = styled(Typography)({
+export const CustomerName = styled(Typography)(({ theme }) => ({
   fontFamily: 'Pretendard',
   fontWeight: 700,
   fontSize: '18px',
   lineHeight: '1.5em',
-  color: '#05151F',
+  color: theme.palette.text.primary,
   transition: 'color 0.2s ease-in-out',
   '.hover-active &': {
-    color: '#FFFFFF',
+    color: theme.palette.primary.contrastText,
   },
-});
+}));
 
-export const PhoneNumber = styled(Typography)({
-  fontFamily: 'Pretendard',
+export const PhoneNumber = styled(Typography)(({ theme }) => ({
   fontWeight: 700,
   fontSize: '18px',
   lineHeight: '1.5em',
-  color: '#05151F',
+  color: theme.palette.primary.main,
   transition: 'color 0.2s ease-in-out',
   '.hover-active &': {
-    color: '#FFFFFF',
+    color: theme.palette.primary.contrastText,
   },
-});
+}));
 
-export const ServiceName = styled(Typography)({
-  fontFamily: 'Pretendard',
+export const ServiceName = styled(Typography)(({ theme }) => ({
   fontWeight: 700,
   fontSize: '16px',
   lineHeight: '1.5em',
-  color: '#37434B',
+  color: theme.palette.primary.light,
   transition: 'color 0.2s ease-in-out',
   '.hover-active &': {
-    color: '#FFFFFF',
+    color: theme.palette.primary.contrastText,
   },
+}));
+
+export const DetailInfo = styled(Box)({
+  marginTop: 'auto',
+  alignSelf: 'flex-end',
 });
 
-export const DetailButton = styled(Typography)({
-  fontFamily: 'Pretendard',
-  fontWeight: 700,
-  fontSize: '14px',
-  lineHeight: '1.5em',
-  color: '#272E35',
-  alignSelf: 'flex-end',
+export const DetailButton = styled(Typography)(({ theme }) => ({
+  color: theme.palette.text.primary,
   cursor: 'pointer',
   transition: 'color 0.2s ease-in-out',
   '.hover-active &': {
-    color: '#FFFFFF',
+    color: theme.palette.primary.contrastText,
   },
-});
+}));
 
 export const Divider = styled(Box)({
   width: '100%',
@@ -182,24 +192,20 @@ export const EmptyContainer = styled(Box)({
   width: '100%',
 });
 
-export const EmptyTitle = styled(Typography)({
-  fontFamily: 'Pretendard',
-  fontWeight: 700,
-  fontSize: '18px',
-  lineHeight: '1.5em',
-  color: '#272E35',
+export const EmptyTitle = styled(Typography)(({ theme }) => ({
+  color: theme.palette.text.primary,
   textAlign: 'center',
-});
+}));
 
-export const EmptyDescription = styled(Typography)({
+export const EmptyDescription = styled(Typography)(({ theme }) => ({
   fontFamily: 'Pretendard',
   fontWeight: 700,
   fontSize: '14px',
   lineHeight: '1.5em',
-  color: '#6E7782',
+  color: theme.palette.text.secondary,
   textAlign: 'center',
   whiteSpace: 'pre-line',
-});
+}));
 
 export const NoResultContainer = styled(Box)({
   display: 'flex',
@@ -212,66 +218,38 @@ export const NoResultContainer = styled(Box)({
   width: '100%',
 });
 
-export const NoResultText = styled(Typography)({
-  fontFamily: 'Pretendard',
-  fontWeight: 400,
-  fontSize: '14px',
-  lineHeight: '1.5em',
-  color: '#000000',
+export const NoResultText = styled(Typography)(({ theme }) => ({
+  color: theme.palette.text.primary,
   textAlign: 'center',
-});
-
-export const StyledTextField = styled(TextField)(({ theme }) => ({
-  '& .MuiOutlinedInput-root': {
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: '#FFFFFF',
-    minHeight: '28px',
-  },
 }));
 
-export const ArrowButton = styled(IconButton)<{ $isNext?: boolean; $show?: boolean }>(
-  ({ $isNext = false, $show = true }) => ({
-    width: '36px',
-    height: '36px',
-    minWidth: '36px',
-    minHeight: '36px',
-    position: 'absolute',
-    [!$isNext ? 'left' : 'right']: '-18px',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    backgroundColor: '#FFFFFF',
-    border: '1px solid rgba(5, 21, 31, 0.5)',
-    borderRadius: '99px',
-    opacity: $show ? 1 : 0,
-    visibility: $show ? 'visible' : 'hidden',
-    transition: 'opacity 0.2s, visibility 0.2s',
-    padding: 0,
-    zIndex: 2,
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-    '&:hover': {
-      backgroundColor: '#FFFFFF',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-    },
-    '&.slick-disabled': {
-      display: 'none',
-      cursor: 'default',
-    },
-    '&:before': {
-      display: 'none',
-    },
-  }),
-);
-
-export const SignupCardWrapper = styled(Card)({
-  width: '219px',
-  minWidth: '219px',
-  height: '258px',
-  borderRadius: '8px',
+export const ArrowButton = styled(IconButton, {
+  shouldForwardProp: (prop) => prop !== '$isNext' && prop !== '$show',
+})<{ $isNext?: boolean; $show?: boolean }>(({ $isNext = false, $show = true }) => ({
+  width: '36px',
+  height: '36px',
+  minWidth: '36px',
+  minHeight: '36px',
+  position: 'absolute',
+  [!$isNext ? 'left' : 'right']: '-18px',
+  top: '50%',
+  transform: 'translateY(-50%)',
   backgroundColor: '#FFFFFF',
-  padding: '24px 32px',
-  transition: 'all 0.2s ease-in-out',
-  '&:hover, &.hover-active': {
-    backgroundColor: '#272E35',
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+  border: '1px solid rgba(5, 21, 31, 0.5)',
+  borderRadius: '99px',
+  opacity: $show ? 1 : 0,
+  visibility: $show ? 'visible' : 'hidden',
+  transition: 'opacity 0.2s, visibility 0.2s',
+  padding: 0,
+  zIndex: 2,
+  '&:hover': {
+    backgroundColor: '#FFFFFF',
   },
-});
+  '&.slick-disabled': {
+    display: 'none',
+    cursor: 'default',
+  },
+  '&:before': {
+    display: 'none',
+  },
+}));
