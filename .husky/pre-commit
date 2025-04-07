@@ -1,10 +1,12 @@
+#!/bin/sh
 # Unix/Linux/Mac의 경우
 # chmod +x .husky/pre-commit
 
 # Windows의 경우 (Git Bash 사용)
 # git update-index --chmod=+x .husky/pre-commit
 
-echo "Husky is Running!"
+echo "Husky pre-commit Running!"
+
 echo "Code format and ESLint"
 npm run lint
 npm run format
