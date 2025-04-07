@@ -10,6 +10,7 @@ import { ServiceSearchMock } from '../../mock/modifyService/search/ServiceSearch
 import RegistrationStatusServiceMock from '../../mock/registration/RegistrationStatusServiceMock';
 import CustomerSearchTestPage from '../../../pages/customer/search/CustomerSearch';
 import { REGISTRATION_STATUS } from '../../../../src/constants/RegistrationConstants';
+import { mockMemberStore } from '../../../support/helpers/mockMemberStore';
 
 describe('KAN-26 상품 변경정보 요약', () => {
   const page = new ModificationRequestPage();
@@ -32,6 +33,13 @@ describe('KAN-26 상품 변경정보 요약', () => {
   before(() => {
     // 인증 스토어 모킹
     mockAuthStore();
+    mockMemberStore({
+      memberInfo: {
+        memberId: 'user1',
+        memberName: 'user1',
+        authorities: ['ROLE_SEARCH_TEL_NO', 'ROLE_UNMASKING'],
+      },
+    });
   });
 
   beforeEach(() => {
@@ -107,6 +115,7 @@ describe('KAN-26 상품 변경정보 요약', () => {
     it('KAN-26-2-1 상품 변경 성공시 처리 완료 문구와 표시가 보인다', () => {
       registrationStatusService.successWhenGetRegistrationStatus(
         USER_ID,
+        REGISTRATION_STATUS.PENDING,
         REGISTRATION_STATUS.COMPLETED,
       );
 
@@ -118,6 +127,7 @@ describe('KAN-26 상품 변경정보 요약', () => {
     it('KAN-26-2-2 상품 변경 실패시 처리 실패 문구와 사유가 보인다', () => {
       registrationStatusService.successWhenGetRegistrationStatus(
         USER_ID,
+        REGISTRATION_STATUS.PENDING,
         REGISTRATION_STATUS.FAILED,
       );
 
