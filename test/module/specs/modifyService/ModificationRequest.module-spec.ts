@@ -53,7 +53,7 @@ describe('KAN-26 상품 변경정보 요약', () => {
     serviceSearchPage.visitHome();
     layoutPage.clickMenuButton();
     customerSearch.getOpenModalButton().click();
-    cy.wait(3000);
+    //cy.wait(3000);
     customerSearch.typePhoneNumber('01098765432');
     customerSearch.clickSearch();
 
@@ -110,7 +110,7 @@ describe('KAN-26 상품 변경정보 요약', () => {
         REGISTRATION_STATUS.COMPLETED,
       );
 
-      cy.wait(4000);
+      cy.wait(5000);
 
       page.assertSuccessStatusVisible();
     });
@@ -121,7 +121,7 @@ describe('KAN-26 상품 변경정보 요약', () => {
         REGISTRATION_STATUS.FAILED,
       );
 
-      cy.wait(4000);
+      cy.wait(5000);
 
       page.assertFailStatusVisible();
     });
