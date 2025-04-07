@@ -89,6 +89,7 @@ const NoticeModal = ({ noticeModalOpen, setNoticeModalOpen }: NoticeModalProps) 
       ...searchParams,
       keyword: searchKeyword,
     });
+    setExpandedNotice(false);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -108,6 +109,7 @@ const NoticeModal = ({ noticeModalOpen, setNoticeModalOpen }: NoticeModalProps) 
 
   const handleCloseModal = () => {
     setNoticeModalOpen(false);
+    setExpandedNotice(false);
   };
 
   const getCategoryText = (category: string) => {
@@ -123,7 +125,10 @@ const NoticeModal = ({ noticeModalOpen, setNoticeModalOpen }: NoticeModalProps) 
       <SearchContainer>
         <StyledSelect
           value={searchParams.category}
-          onChange={(e) => setSearchParams({ ...searchParams, category: e.target.value as string })}
+          onChange={(e) => {
+            setSearchParams({ ...searchParams, category: e.target.value as string });
+            setExpandedNotice(false);
+          }}
           size='small'
           MenuProps={selectMenuProps}
         >
