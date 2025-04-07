@@ -3,25 +3,41 @@ import { Typography, Box } from '@mui/material';
 import { useState } from 'react';
 import { Textarea } from './SurveyResponseModal.styled';
 import Rating from './Rating';
-
+import { useSatisfactionSurveyResponseMutation } from '@api/queries/satisfactionSurvey/useSatisfactionSurveyMutation';
+import useMemberStore from '@stores/MemberStore';
+import { useQueryClient } from '@tanstack/react-query';
 interface SurveyResponseModalProps {
   open: boolean;
   onClose: () => void;
 }
 
 export const SurveyResponseModal = ({ open, onClose }: SurveyResponseModalProps) => {
+  const memberId = useMemberStore((state) => state.memberInfo?.memberId);
   const [content, setContent] = useState<string>('');
   const [rating, setRating] = useState<number>(0);
+  const saveSurveyResponseMutation = useSatisfactionSurveyResponseMutation(memberId ?? '');
+  const queryClient = useQueryClient();
 
-  const handleConfirm = () => {
+  const initializeFormData = () => {
     setContent('');
     setRating(0);
-    onClose();
+  };
+
+  const handleConfirm = () => {
+    saveSurveyResponseMutation.mutate(
+      { score: rating, comment: content },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['satisfactionSurvey', memberId] });
+          initializeFormData();
+          onClose();
+        },
+      },
+    );
   };
 
   const handleClose = () => {
-    setContent('');
-    setRating(0);
+    initializeFormData();
     onClose();
   };
 

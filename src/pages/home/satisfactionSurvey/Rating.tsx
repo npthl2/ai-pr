@@ -23,7 +23,7 @@ const Rating = ({ value, max, onChange }: RatingProps) => {
       {Array.from({ length: max }, (_, index) => (
         <StarIconButton
           key={index}
-          onClick={(e) => {
+          onClick={(_e: React.MouseEvent) => {
             handleClick(index);
           }}
           onMouseEnter={() => setHoverValue(index + 1)}
