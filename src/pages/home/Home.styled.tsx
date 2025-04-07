@@ -24,8 +24,10 @@ export const ContentWrapper = styled(Box)({
   gap: '20px',
   display: 'flex',
   flexDirection: 'column',
-  width: '1528px',
   height: '899px',
+  margin: '0 auto',
+  maxWidth: '1528px',
+  width: '100%',
 });
 
 export const MainContent = styled(Box)({
@@ -37,11 +39,11 @@ export const MainContent = styled(Box)({
 export const ContentLayout = styled(Box)({
   display: 'flex',
   gap: '32px',
+  width: '100%',
 });
 
 export const LeftColumn = styled(Box)({
-  width: '1016px',
-  flexShrink: 0,
+  flex: 3,
   display: 'flex',
   flexDirection: 'column',
   gap: '32px',

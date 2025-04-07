@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
-type DialogSize = 'small' | 'medium' | 'medium-large' | 'large';
+type DialogSize = 'small' | 'medium' | 'medium-large' | 'large' | 'xlarge';
 
 interface DialogProps extends Omit<MuiDialogProps, 'content'> {
   size?: DialogSize;
@@ -33,6 +33,7 @@ const StyledDialog = styled(MuiDialog, { shouldForwardProp: (prop) => prop !== '
       medium: 600,
       'medium-large': 800,
       large: 1000,
+      xlarge: 1284,
     }[size],
   },
 }));
