@@ -61,7 +61,6 @@ describe('KAN-26 상품 변경정보 요약', () => {
     serviceSearchPage.visitHome();
     layoutPage.clickMenuButton();
     customerSearch.getOpenModalButton().click();
-    //cy.wait(3000);
     customerSearch.typePhoneNumber('01098765432');
     customerSearch.clickSearch();
 
