@@ -5,7 +5,7 @@ import { NoticeRequestParams, NoticeResponse } from '@model/Notice';
 const noticeService = {
   getNotices(conditions: NoticeRequestParams): Promise<CommonResponse<NoticeResponse>> {
     return baseService.get<NoticeResponse>(
-      '/stg-be/v1/notices',
+      '/adm-be/v1/notices',
       new URLSearchParams({
         category: conditions.category ?? '',
         keyword: conditions.keyword ?? '',
@@ -14,7 +14,7 @@ const noticeService = {
   },
 
   getNoticeSummary(): Promise<CommonResponse<NoticeResponse>> {
-    return baseService.get<NoticeResponse>('/stg-be/v1/notices/summary');
+    return baseService.get<NoticeResponse>('/adm-be/v1/notices/summary');
   },
 };
 
