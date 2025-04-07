@@ -1,0 +1,33 @@
+echo "Husky commit-msg Running!"
+
+# Get current branch name
+BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+
+# Check branch name format
+if ! echo "$BRANCH_NAME" | grep -qE '^(feature|bugfix)/KAN-[0-9]+-[a-zA-Z0-9-]+$'; then
+    echo "Error: Branch name must follow the format 'feature/KAN-{number}-{content}' or 'bugfix/KAN-{number}-{content}'"
+    echo "Current branch name: $BRANCH_NAME"
+    exit 1
+fi
+
+echo "Branch name validation passed!"
+
+COMMIT_MSG=$(cat "$1")
+
+echo "COMMIT_MSG: $COMMIT_MSG"
+
+# Extract ticket number from commit message (everything before :)
+COMMIT_TICKET=$(echo "$COMMIT_MSG" | cut -d: -f1)
+
+# Extract ticket number from branch name (from first / to second -)
+BRANCH_TICKET=$(echo "$BRANCH_NAME" | sed 's/^[^/]*\///' | cut -d- -f1-2)
+
+# Compare ticket numbers
+if [ "$COMMIT_TICKET" != "$BRANCH_TICKET" ]; then
+    echo "Error: Ticket number in commit message ($COMMIT_TICKET) does not match branch ticket number ($BRANCH_TICKET)"
+    exit 1
+fi
+
+echo "Ticket number validation passed!"
+
+npx --no-install commitlint --edit "$1"
