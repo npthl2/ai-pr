@@ -120,7 +120,7 @@ jobs:
         run: npm install
 
       - name: Run Smoke Test
-        run: npm run test:smoke
+        run: npm run test:smoke:develop
 
       - name: Run Health Check
-        run: npm run test:health
+        run: npm run test:health:develop
