@@ -2,7 +2,6 @@ import { Box, Typography, TableBody, TableHead, Table } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import PropTypes from 'prop-types';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import { AdditionalService } from '@model/modifyService/ModifyServiceModel';
 import TableRow from '@components/Table/TableRow';
@@ -25,6 +24,7 @@ import {
   TextContainer,
 } from './AdditionalServiceList.styled';
 import { ArrowDownward } from '@mui/icons-material';
+import useAdditionalServiceSorting, { SortField } from '@hooks/modifyService/useAdditionalServiceSorting';
 
 // 필터링된 부가서비스 목록 아이템 타입
 interface FilteredServiceItem extends AdditionalService {
@@ -40,21 +40,6 @@ interface AdditionalServiceListProps {
   contractTabId: string;
 }
 
-// 정렬 방향 타입 정의
-type SortDirection = 'asc' | 'desc' | null;
-
-// 정렬 필드 타입 정의
-type SortField = 'serviceName' | 'serviceValue' | null;
-
-/**
- * 부가서비스 목록 컴포넌트
- * 최신출시순으로 정렬된 부가서비스 목록을 보여주고 추가 기능을 제공합니다.
- *
- * @param props - 컴포넌트 props
- * @param props.additionalServices - 부가서비스 목록 배열
- * @param props._contractTabId - 계약 탭 ID (내부에서 사용)
- * @param props.contractTabId - 계약 탭 ID (PropTypes 검증용)
- */
 const AdditionalServiceList = ({
   additionalServices,
   _contractTabId,
@@ -63,9 +48,8 @@ const AdditionalServiceList = ({
   const [searchKeyword, setSearchKeyword] = useState('');
   const [debouncedSearchKeyword, setDebouncedSearchKeyword] = useState('');
 
-  // 정렬 상태
-  const [sortField, setSortField] = useState<SortField>(null);
-  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+  const { sortField, sortDirection, handleSort, getSortIconProps, sortAdditionalServices } =
+    useAdditionalServiceSorting();
 
   // Zustand 스토어에서 필요한 함수와 데이터 가져오기
   const { addAdditionalService } = useModifyServiceStore();
@@ -90,26 +74,6 @@ const AdditionalServiceList = ({
 
     return () => clearTimeout(timer);
   }, [searchKeyword]);
-
-  // 정렬 핸들러
-  const handleSort = useCallback(
-    (field: SortField) => {
-      if (sortField === field) {
-        // 같은 필드를 다시 클릭하면 정렬 방향 토글
-        setSortDirection(
-          sortDirection === 'asc' ? 'desc' : sortDirection === 'desc' ? null : 'asc',
-        );
-        if (sortDirection === 'desc') {
-          setSortField(null);
-        }
-      } else {
-        // 다른 필드를 클릭하면 해당 필드 오름차순 정렬
-        setSortField(field);
-        setSortDirection('asc');
-      }
-    },
-    [sortField, sortDirection],
-  );
 
   // 검색어나 부가서비스 목록이 변경될 때마다 필터링된 목록 업데이트
   useEffect(() => {
@@ -150,28 +114,7 @@ const AdditionalServiceList = ({
 
         return include;
       })
-      // 정렬 적용
-      .sort((a, b) => {
-        // 정렬 필드와 방향이 설정된 경우 적용
-        if (sortField && sortDirection) {
-          if (sortField === 'serviceName') {
-            const nameA = a.serviceName.toLowerCase();
-            const nameB = b.serviceName.toLowerCase();
-            return sortDirection === 'asc'
-              ? nameA.localeCompare(nameB)
-              : nameB.localeCompare(nameA);
-          } else if (sortField === 'serviceValue') {
-            return sortDirection === 'asc'
-              ? a.serviceValue - b.serviceValue
-              : b.serviceValue - a.serviceValue;
-          }
-        }
 
-        // 기본 정렬 (최신출시순)
-        if (!a.releaseDate) return -1;
-        if (!b.releaseDate) return 1;
-        return new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime();
-      })
       // 추가 정보 매핑
       .map((service) => {
         return {
@@ -185,15 +128,20 @@ const AdditionalServiceList = ({
         };
       });
 
-    setFilteredServices(filtered);
+    // 정렬 적용
+    const sortedServices = sortAdditionalServices(filtered);
+
+    setFilteredServices(sortedServices);
   }, [
     debouncedSearchKeyword,
     additionalServices,
     selectedAdditionalServices,
     currentAdditionalServices,
     removedCurrentAdditionalServices,
+    sortAdditionalServices,
     sortField,
     sortDirection,
+    sortAdditionalServices,
   ]);
 
   // 부가서비스 추가 핸들러
@@ -226,25 +174,8 @@ const AdditionalServiceList = ({
 
   // 정렬 아이콘 렌더링 함수
   const renderSortIcon = (field: SortField) => {
-    if (sortField !== field) {
-      return (
-        <ArrowDownward
-          sx={{ verticalAlign: 'middle', marginLeft: '4px', fontSize: '16px', opacity: 0.3 }}
-          data-testid={field === 'serviceName' ? 'sort-by-name' : 'sort-by-price'}
-        />
-      );
-    }
-    return (
-      <ArrowDownward
-        sx={{
-          verticalAlign: 'middle',
-          marginLeft: '4px',
-          fontSize: '16px',
-          transform: sortDirection === 'desc' ? 'rotate(180deg)' : 'none',
-        }}
-        data-testid={field === 'serviceName' ? 'sort-by-name' : 'sort-by-price'}
-      />
-    );
+    const iconProps = getSortIconProps(field);
+    return <ArrowDownward sx={iconProps.style} data-testid={iconProps.testId} />;
   };
 
   // 렌더링 테이블 컨텐츠 메모이제이션
@@ -386,12 +317,6 @@ const AdditionalServiceList = ({
       </ListContainer>
     </RootContainer>
   );
-};
-
-// PropTypes 정의
-AdditionalServiceList.propTypes = {
-  additionalServices: PropTypes.array.isRequired,
-  contractTabId: PropTypes.string.isRequired,
 };
 
 export default AdditionalServiceList;
