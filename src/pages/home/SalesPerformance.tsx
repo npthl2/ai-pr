@@ -5,15 +5,32 @@ import {
   SalesPerformanceLayout,
   SalesPerformanceWrapper,
   SignupStatsContainer,
-  SignupStatsBox,
-  SignupStatsHeader,
   Divider,
   SurveyContainer,
   ChartContainer,
 } from './SalesPerformance.styled';
 import SatisfactionSurvey from './SatisfactionSurvey';
+import MonthlyChart from './performance/MonthlyChart';
+import { useDailyWeeklyStatisticsQuery } from '@api/queries/home/useDashboardQuery';
+import { useEffect } from 'react';
+import useMemberStore from '@stores/MemberStore';
+import StatsBox from './performance/StatsBox';
 
 const SalesPerformance = () => {
+  // MemberStore에서 memberId 가져오기
+  const memberInfo = useMemberStore((state) => state.memberInfo);
+  const memberId = memberInfo?.memberId || '';
+
+  // 일간/주간 통계 데이터 가져오기
+  const { data: dailyWeeklyData, refetch } = useDailyWeeklyStatisticsQuery(memberId);
+
+  // 컴포넌트 마운트 시 데이터 가져오기
+  useEffect(() => {
+    if (memberId) {
+      refetch();
+    }
+  }, [memberId, refetch]);
+
   return (
     <SalesPerformanceContainer>
       <TitleWrapper>
@@ -24,34 +41,24 @@ const SalesPerformance = () => {
       <SalesPerformanceLayout>
         <SalesPerformanceWrapper>
           <SignupStatsContainer>
-            <SignupStatsBox>
-              <SignupStatsHeader>
-                <Typography sx={{ color: '#6E7782', fontWeight: 700, fontSize: 16 }}>
-                  오늘 가입 건수
-                </Typography>
-                <Typography sx={{ color: '#6E7782', fontSize: 12 }}>2025-03-17</Typography>
-              </SignupStatsHeader>
-              <Typography sx={{ fontSize: 28, textAlign: 'right' }}>7건</Typography>
-            </SignupStatsBox>
+            <StatsBox
+              title='오늘 가입 건수'
+              date={dailyWeeklyData?.today || ''}
+              count={dailyWeeklyData?.contractCountToday || 0}
+            />
             <Divider />
-            <SignupStatsBox>
-              <SignupStatsHeader>
-                <Typography sx={{ color: '#6E7782', fontWeight: 700, fontSize: 16 }}>
-                  이번주 가입 건수
-                </Typography>
-                <Typography sx={{ color: '#6E7782', fontSize: 12 }}>
-                  2025-03-16 ~ 2025-03-22
-                </Typography>
-              </SignupStatsHeader>
-              <Typography sx={{ fontSize: 28, textAlign: 'right' }}>100건</Typography>
-            </SignupStatsBox>
+            <StatsBox
+              title='이번주 가입 건수'
+              date={`${dailyWeeklyData?.weekStart || ''} ~ ${dailyWeeklyData?.weekEnd || ''}`}
+              count={dailyWeeklyData?.contractCountThisWeek || 0}
+            />
           </SignupStatsContainer>
           <SurveyContainer>
             <SatisfactionSurvey />
           </SurveyContainer>
         </SalesPerformanceWrapper>
         <ChartContainer>
-          <Typography variant='h2'>차트</Typography>
+          <MonthlyChart />
         </ChartContainer>
       </SalesPerformanceLayout>
     </SalesPerformanceContainer>

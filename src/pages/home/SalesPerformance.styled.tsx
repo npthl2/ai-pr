@@ -40,22 +40,23 @@ export const SignupStatsHeader = styled(Box)(() => ({
   gap: '4px',
 }));
 
-export const Divider = styled(Box)(() => ({
+export const Divider = styled(Box)(({ theme }) => ({
   width: '1px',
-  height: '56px',
-  backgroundColor: 'rgba(112, 121, 142, 0.16)',
+  height: '100%',
+  backgroundColor: theme.palette.divider,
+  alignSelf: 'stretch',
 }));
 
-export const SurveyContainer = styled(Box)(() => ({
-  backgroundColor: '#F7F9FA',
+export const SurveyContainer = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
   padding: '24px 24px 12px 0',
   marginTop: '12px',
   borderTopRightRadius: '16px',
 }));
 
-export const ChartContainer = styled(Box)(() => ({
+export const ChartContainer = styled(Box)(({ theme }) => ({
   flex: 1,
-  backgroundColor: '#ffffff',
+  backgroundColor: theme.palette.common.white,
   borderTopRightRadius: '16px',
   borderBottomRightRadius: '16px',
   borderBottomLeftRadius: '16px',
