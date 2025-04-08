@@ -28,6 +28,7 @@ import {
   CreateCustomerResponse,
 } from '@model/Customer';
 import { isValid, parse } from 'date-fns';
+import { v4 as uuidv4 } from 'uuid';
 
 interface CustomerDialogProps {
   isOpen: boolean;
@@ -127,6 +128,7 @@ const CustomerDialog = ({
             customerName: customer.name,
             rrno: customer.rrno,
             customerNameVerificationHistoryId: authResponse.customerNameVerificationHistoryId,
+            gTrId: `GTR_${uuidv4()}`,
           };
 
           createCustomerMutation.mutate(createCustomerParams, {

@@ -136,15 +136,6 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
     setModalState((prev) => ({ ...prev, open: false }));
   };
 
-  // // 저장 완료 상태가 되면 모달 닫기
-  // useEffect(() => {
-  //   if (isSaveRequested) {
-  //     setServiceModifiable(contractTabId, true);
-  //   }
-  // }, [isSaveRequested, setServiceModifiable, contractTabId]);
-
-  // 저장 요청 상태일 때 변경 요청 컴포넌트 렌더링
-
   const selectedContractId = useCurrentServiceStore(
     (state) => state.selectedContractIds[selectedCustomerId] || '',
   );
