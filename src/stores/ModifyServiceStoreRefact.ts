@@ -472,7 +472,6 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
     get().updateHasChanges(customerId, contractId);
   },
 
-
   // Develop Merge
   // // 계약 탭 ID별 정보 삭제
   // removeModifyServiceInfo: (customerId: string) => {
