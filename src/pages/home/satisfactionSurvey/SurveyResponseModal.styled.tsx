@@ -1,4 +1,4 @@
-import { TextareaAutosize, styled } from '@mui/material';
+import { TextareaAutosize, Typography, styled } from '@mui/material';
 
 export const Textarea = styled(TextareaAutosize)(({ theme }) => ({
   width: '100%',
@@ -7,4 +7,15 @@ export const Textarea = styled(TextareaAutosize)(({ theme }) => ({
   borderRadius: '4px',
   padding: '7px 12px',
   '&:focus': { outlineColor: theme.palette.primary.main },
+
+  fontWeight: '400',
+  fontSize: '14px',
+  lineHeight: '150%',
+  letterSpacing: '0px',
+  verticalAlign: 'middle',
+  color: theme.palette.text.primary,
+}));
+
+export const PrimaryTypography = styled(Typography)(({ theme }) => ({
+  color: theme.palette.text.primary,
 }));

@@ -31,11 +31,10 @@ const Rating = ({ value, max, onChange }: RatingProps) => {
           data-testid={`rating-star-${index + 1}`}
         >
           {value >= index + 1 ? (
-            <FavoriteIcon fillColor={amber[600]} size='small' />
+            <FavoriteIcon fillColor={amber[600]} />
           ) : (
             <FavoriteIcon
               borderColor={theme.palette.action.active}
-              size='small'
               {...(hoverValue >= index + 1 && { fillColor: amber[600], opacity: 0.5 })}
             />
           )}

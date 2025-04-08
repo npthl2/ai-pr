@@ -1,7 +1,7 @@
 import Dialog from '@components/Dialog';
-import { Typography, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import { useState } from 'react';
-import { Textarea } from './SurveyResponseModal.styled';
+import { Textarea, PrimaryTypography } from './SurveyResponseModal.styled';
 import Rating from './Rating';
 import { useSatisfactionSurveyResponseMutation } from '@api/queries/satisfactionSurvey/useSatisfactionSurveyMutation';
 import useMemberStore from '@stores/MemberStore';
@@ -47,7 +47,7 @@ export const SurveyResponseModal = ({ open, onClose }: SurveyResponseModalProps)
       title='시스템 만족도 평가(최대 54자)'
       content={
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <Typography variant='body1'>시스템 사용이 만족스러웠나요?</Typography>
+          <PrimaryTypography variant='body1'>시스템 사용이 만족스러웠나요?</PrimaryTypography>
           <Rating value={rating} max={5} onChange={(value) => setRating(value)} />
           <Textarea
             minRows={2}

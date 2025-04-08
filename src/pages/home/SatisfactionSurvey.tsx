@@ -1,9 +1,11 @@
-import { Typography, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import {
   SurveyCard,
   Container,
   StyledRightIcon,
   SecondaryTypography,
+  PrimaryMainTypography,
+  PrimaryTypography,
 } from './SatisfactionSurvey.styled';
 import { useState } from 'react';
 import { SurveyResponseModal } from './satisfactionSurvey/SurveyResponseModal';
@@ -33,12 +35,14 @@ const SatisfactionSurvey = () => {
   return (
     <SurveyCard
       completed={surveyResponseStatus?.alreadyRespondedYn}
-      onClick={surveyResponseStatus?.alreadyRespondedYn === 'Y' ? undefined : handleCardClick}
+      onClick={surveyResponseStatus?.alreadyRespondedYn === 'N' ? handleCardClick : undefined}
       data-testid='satisfaction-survey-card'
     >
       <Container>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Typography variant='h2'>{currentSurveyPeriod.month}월 시스템 만족도 조사</Typography>
+          <PrimaryMainTypography variant='h2'>
+            {currentSurveyPeriod.month}월 시스템 만족도 조사
+          </PrimaryMainTypography>
           <StyledRightIcon />
         </Box>
         <SecondaryTypography variant='body1'>
@@ -47,9 +51,9 @@ const SatisfactionSurvey = () => {
             : '소중한 의견을 남겨주세요.'}
         </SecondaryTypography>
       </Container>
-      <Typography variant='body1' sx={{ position: 'absolute', top: '108px', left: '27px' }}>
+      <PrimaryTypography variant='body1' sx={{ position: 'absolute', top: '108px', left: '27px' }}>
         {surveyResponseStatus?.totalResponseCount ?? ''}명 참여완료!
-      </Typography>
+      </PrimaryTypography>
       <SurveyResponseModal
         open={isOpen}
         onClose={() => {
