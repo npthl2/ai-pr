@@ -50,7 +50,6 @@ const ServiceModification = () => {
   const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
   const customerTabs = useCustomerStore((state) => state.customerTabs);
 
-
   const selectedContractId = useCurrentServiceStore(
     (state) => state.selectedContractIds[selectedCustomerId] || '',
   );
@@ -75,9 +74,19 @@ const ServiceModification = () => {
 
   // 요금제 변경 가능 여부와 현재 서비스 정보 설정
   useEffect(() => {
-    if (!isLoading && selectedCustomerId && selectedContractId && modifiableData && isServiceModificationTabActive) {
+    if (
+      !isLoading &&
+      selectedCustomerId &&
+      selectedContractId &&
+      modifiableData &&
+      isServiceModificationTabActive
+    ) {
       setServiceModifiable(selectedCustomerId, selectedContractId, modifiableData.isModifiable);
-      setIsRollbackAvailable(selectedCustomerId, selectedContractId, modifiableData.isRollbackAvailable || false);
+      setIsRollbackAvailable(
+        selectedCustomerId,
+        selectedContractId,
+        modifiableData.isRollbackAvailable || false,
+      );
 
       if (modifiableData.isRollbackAvailable && modifiableData.previousService) {
         const prevService: Service = {
@@ -89,7 +98,8 @@ const ServiceModification = () => {
         };
         setPreviousService(selectedCustomerId, selectedContractId, prevService);
         setInitialStates(
-          selectedCustomerId, selectedContractId,
+          selectedCustomerId,
+          selectedContractId,
           true,
           modifiableData.isModifiable,
           prevService,
@@ -97,7 +107,8 @@ const ServiceModification = () => {
       } else {
         setPreviousService(selectedCustomerId, selectedContractId, null);
         setInitialStates(
-          selectedCustomerId, selectedContractId,
+          selectedCustomerId,
+          selectedContractId,
           false,
           modifiableData.isModifiable,
           null,
@@ -114,7 +125,7 @@ const ServiceModification = () => {
   }, [
     isLoading,
     modifiableData,
-    selectedCustomerId, 
+    selectedCustomerId,
     selectedContractId,
     setServiceModifiable,
     setIsRollbackAvailable,
@@ -128,8 +139,6 @@ const ServiceModification = () => {
   const handleCloseModal = () => {
     setModalState((prev) => ({ ...prev, open: false }));
   };
-
-
 
   if (isSaveRequested) {
     return <ModificationRequest contractTabId={selectedContractId} />;
