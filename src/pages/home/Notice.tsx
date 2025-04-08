@@ -36,25 +36,29 @@ const Notice = ({ setNoticeModalOpen }: NoticeProps) => {
   };
 
   return (
-    <NoticeContainer>
-      <NoticePaper onClick={handleNoticeClick}>
+    <NoticeContainer data-testid='notice-container'>
+      <NoticePaper data-testid='notice-paper' onClick={handleNoticeClick}>
         {notices && Array.isArray(notices) ? (
           <>
             <NoticeContentStack direction='row' spacing={2} alignItems='center'>
-              <Typography variant='h5'>
+              <Typography variant='h5' data-testid='notice-category'>
                 {`📣 ${getCategoryText(notices[currentNoticeIndex].category)}`}
               </Typography>
 
               <NoticeTitleTypography>
-                <Typography variant='body1'>{notices[currentNoticeIndex].title}</Typography>
+                <Typography variant='body1' data-testid='notice-title'>
+                  {notices[currentNoticeIndex].title}
+                </Typography>
               </NoticeTitleTypography>
             </NoticeContentStack>
-            <Typography variant='body1'>
+            <Typography variant='body1' data-testid='notice-date'>
               {dayjs(notices[currentNoticeIndex].lastUpdateDatetime).format('YYYY-MM-DD')}
             </Typography>
           </>
         ) : (
-          <Typography variant='body1'>등록된 공지가 없습니다.</Typography>
+          <Typography variant='body1' data-testid='no-notices'>
+            등록된 공지가 없습니다.
+          </Typography>
         )}
       </NoticePaper>
     </NoticeContainer>

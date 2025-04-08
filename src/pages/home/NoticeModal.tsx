@@ -124,6 +124,7 @@ const NoticeModal = ({ noticeModalOpen, setNoticeModalOpen }: NoticeModalProps) 
     <ContentContainer ref={containerRef} hasNotices={hasNotices(notices)}>
       <SearchContainer>
         <StyledSelect
+          data-testid='category-select'
           value={searchParams.category}
           onChange={(e) => {
             setSearchParams({ ...searchParams, category: e.target.value as string });
@@ -149,13 +150,14 @@ const NoticeModal = ({ noticeModalOpen, setNoticeModalOpen }: NoticeModalProps) 
           className={isSearchActive ? 'active' : ''}
         >
           <StyledTextField
+            data-testid='search-input'
             size='small'
             placeholder='검색어 입력'
             value={searchKeyword}
             onChange={(value) => setSearchKeyword(value)}
             onKeyDown={handleKeyDown}
           />
-          <StyledIconButton type='button' onClick={handleSearchKeyword}>
+          <StyledIconButton data-testid='search-button' type='button' onClick={handleSearchKeyword}>
             <SearchIcon />
           </StyledIconButton>
         </SearchPaper>
@@ -169,11 +171,12 @@ const NoticeModal = ({ noticeModalOpen, setNoticeModalOpen }: NoticeModalProps) 
         <Typography variant='body1'>작성자</Typography>
       </HeaderGrid>
 
-      <Box>
+      <Box data-testid='notice-list'>
         {hasNotices(notices) ? (
           notices.map((notice) => (
             <StyledAccordion
               key={notice.noticeId}
+              data-testid={`notice-${notice.noticeId}`}
               ref={(el) => {
                 noticeRefs.current[notice.noticeId] = el;
               }}
@@ -184,20 +187,24 @@ const NoticeModal = ({ noticeModalOpen, setNoticeModalOpen }: NoticeModalProps) 
                 expandIcon={<ExpandMoreIcon sx={{ color: `${theme.palette.action.active}` }} />}
               >
                 <Box sx={{ width: 24 }} />
-                <Typography variant='body1'>{getCategoryText(notice.category)}</Typography>
-                <Typography variant='body1'>{notice.title}</Typography>
-                <Typography variant='body1'>
+                <Typography data-testid='notice-category' variant='body1'>
+                  {getCategoryText(notice.category)}
+                </Typography>
+                <Typography data-testid='notice-title' variant='body1'>
+                  {notice.title}
+                </Typography>
+                <Typography data-testid='notice-date' variant='body1'>
                   {dayjs(notice.lastUpdateDatetime).format('YYYY-MM-DD HH:mm:ss')}
                 </Typography>
                 <Typography variant='body1'>{notice.author}</Typography>
               </StyledAccordionSummary>
-              <AccordionDetailsContent>
+              <AccordionDetailsContent data-testid='notice-content'>
                 <Typography variant='body1'>{notice.content}</Typography>
               </AccordionDetailsContent>
             </StyledAccordion>
           ))
         ) : (
-          <NoResultBox>
+          <NoResultBox data-testid='no-results'>
             <Typography variant='body1'>조회 결과가 없습니다.</Typography>
           </NoResultBox>
         )}
@@ -212,6 +219,7 @@ const NoticeModal = ({ noticeModalOpen, setNoticeModalOpen }: NoticeModalProps) 
       content={NoticeContent}
       closeLabel='닫기'
       onClose={handleCloseModal}
+      hasHeaderCloseIcon={false}
       size='xlarge'
       sx={DialogStyle}
     />

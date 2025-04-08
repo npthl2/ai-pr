@@ -24,9 +24,12 @@ const Home = () => {
   return (
     <HomeContainer>
       <ContentWrapper>
-        <Typography variant='h1'>
+        <Typography variant='h1' data-testid='welcome-message'>
           {memberInfo && (
-            <UserName>{`${memberInfo.memberName} ${memberInfo.classOfPosition}님, `}</UserName>
+            <UserName data-testid='user-name'>
+              {`${memberInfo.memberName} `}
+              {memberInfo.classOfPosition}님
+            </UserName>
           )}
           오늘도 좋은 하루 보내세요 🙌
         </Typography>
@@ -37,16 +40,16 @@ const Home = () => {
           <ContentLayout>
             <LeftColumn>
               {/* 오늘의 신규가입 */}
-              <TodayContracts />
+              <TodayContracts data-testid='today-contracts' />
               {/* 내 실적 */}
-              <SalesPerformance />
+              <SalesPerformance data-testid='sales-performance' />
             </LeftColumn>
 
             <RightColumn>
               {/* 프로모션 */}
-              <Promotion />
+              <Promotion data-testid='promotion' />
               {/* 새로나온 요금제/부가서비스 */}
-              <NewServices />
+              <NewServices data-testid='new-services' />
             </RightColumn>
           </ContentLayout>
         </MainContent>
