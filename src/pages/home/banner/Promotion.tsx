@@ -41,6 +41,7 @@ const Promotion = () => {
           flexDirection: 'column',
           gap: '8px',
         }}
+        data-testid='promotion-banner'
       />
 
       <PromotionDialog open={isDialogOpen} onClose={handleCloseDialog} />

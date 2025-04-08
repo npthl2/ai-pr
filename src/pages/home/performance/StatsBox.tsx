@@ -13,7 +13,7 @@ const StatsBox = ({ title, date, count, unit = '건' }: StatsBoxProps) => {
   const theme = useTheme();
 
   return (
-    <SignupStatsBox>
+    <SignupStatsBox data-testid={`${title}-box`}>
       <SignupStatsHeader>
         <Typography variant='h4' sx={{ color: theme.palette.text.secondary }}>
           {title}
@@ -22,7 +22,10 @@ const StatsBox = ({ title, date, count, unit = '건' }: StatsBoxProps) => {
           {date}
         </Typography>
       </SignupStatsHeader>
-      <Typography sx={{ fontSize: 28, textAlign: 'right' }}>{`${count}${unit}`}</Typography>
+      <Typography
+        sx={{ fontSize: 28, textAlign: 'right' }}
+        data-testid={`${title}-count`}
+      >{`${count}${unit}`}</Typography>
     </SignupStatsBox>
   );
 };

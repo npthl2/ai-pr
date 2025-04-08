@@ -51,6 +51,7 @@ const SalesPerformance = () => {
               title='이번주 가입 건수'
               date={`${dailyWeeklyData?.weekStart || ''} ~ ${dailyWeeklyData?.weekEnd || ''}`}
               count={dailyWeeklyData?.contractCountThisWeek || 0}
+              data-testid='this-week-new-registration-count'
             />
           </SignupStatsContainer>
           <SurveyContainer>

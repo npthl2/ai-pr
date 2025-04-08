@@ -27,6 +27,7 @@ const PromotionDialog = ({ open, onClose }: PromotionDialogProps) => {
         },
       }}
       disablePortal={false}
+      data-testid='promotion-dialog'
     />
   );
 };

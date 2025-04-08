@@ -70,13 +70,17 @@ const MonthlyChart = () => {
             월별 실적 추이
           </Typography>
           <TooltipContainer>
-            <TooltipText>{tooltipMessage}</TooltipText>
+            <TooltipText data-testid='monthly-chart-tooltip'>{tooltipMessage}</TooltipText>
           </TooltipContainer>
         </Box>
       </ChartTitleContainer>
 
       <ResponsiveContainer width='100%' height={231}>
-        <AreaChart data={chartData} margin={{ top: 20, right: 30, left: 10, bottom: 25 }}>
+        <AreaChart
+          data={chartData}
+          margin={{ top: 20, right: 30, left: 10, bottom: 25 }}
+          data-testid='monthly-chart'
+        >
           <defs>
             <linearGradient id='colorValue' x1='0' y1='0' x2='0' y2='1'>
               <stop offset='5%' stopColor={theme.palette.text.primary} stopOpacity={0.8} />
@@ -114,7 +118,7 @@ const MonthlyChart = () => {
             content={({ active, payload, label }) => {
               if (active && payload && payload.length) {
                 return (
-                  <TooltipContainer arrow='false'>
+                  <TooltipContainer arrow='false' data-testid='monthly-chart-hover-tooltip'>
                     <TooltipText>
                       {label}: {payload[0].value}건
                     </TooltipText>

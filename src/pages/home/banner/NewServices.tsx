@@ -45,6 +45,7 @@ const NewServices = () => {
             height: '100%',
           },
         }}
+        data-testid='new-services-slider'
       >
         <Slider ref={sliderRef} {...settings}>
           {slideImages.map((imageSrc, index) => (
@@ -57,6 +58,7 @@ const NewServices = () => {
                   height: '309px',
                   objectFit: 'contain',
                 }}
+                data-testid={`new-services-slider-image-${index}`}
               />
             </div>
           ))}
@@ -84,6 +86,7 @@ const NewServices = () => {
                   activeSlide === index ? theme.palette.primary.main : theme.palette.grey[300],
                 cursor: 'pointer',
               })}
+              data-testid={`new-services-slider-dot-${index}`}
             />
           ))}
         </Box>
