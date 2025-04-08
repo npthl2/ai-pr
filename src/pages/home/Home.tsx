@@ -40,16 +40,16 @@ const Home = () => {
           <ContentLayout>
             <LeftColumn>
               {/* 오늘의 신규가입 */}
-              <TodayContracts data-testid='today-contracts' />
+              <TodayContracts />
               {/* 내 실적 */}
-              <SalesPerformance data-testid='sales-performance' />
+              <SalesPerformance />
             </LeftColumn>
 
             <RightColumn>
               {/* 프로모션 */}
-              <Promotion data-testid='promotion' />
+              <Promotion />
               {/* 새로나온 요금제/부가서비스 */}
-              <NewServices data-testid='new-services' />
+              <NewServices />
             </RightColumn>
           </ContentLayout>
         </MainContent>
