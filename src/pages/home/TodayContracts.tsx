@@ -95,6 +95,12 @@ const TodayContracts = () => {
     return EMPTY_STATE_QUOTES[randomIndex];
   }, []);
 
+  useEffect(() => {
+    if (todayContracts) {
+      setFilteredContracts(todayContracts);
+    }
+  }, [todayContracts]);
+
   // 검색 조건이 변경될 때 마다 rerender 해서 arrow 표시가 적절하게 되어야 함
   useEffect(() => {
     // 카드가 먼저 렌더되어야 해서 timer 적용
