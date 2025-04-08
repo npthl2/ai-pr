@@ -34,6 +34,7 @@ const SatisfactionSurvey = () => {
     <SurveyCard
       completed={surveyResponseStatus?.alreadyRespondedYn}
       onClick={surveyResponseStatus?.alreadyRespondedYn === 'Y' ? undefined : handleCardClick}
+      data-testid='satisfaction-survey-card'
     >
       <Container>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

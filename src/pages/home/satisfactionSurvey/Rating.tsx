@@ -19,7 +19,7 @@ const Rating = ({ value, max, onChange }: RatingProps) => {
   };
 
   return (
-    <RatingContainer>
+    <RatingContainer data-testid='component-rating'>
       {Array.from({ length: max }, (_, index) => (
         <StarIconButton
           key={index}
@@ -28,6 +28,7 @@ const Rating = ({ value, max, onChange }: RatingProps) => {
           }}
           onMouseEnter={() => setHoverValue(index + 1)}
           onMouseLeave={() => setHoverValue(0)}
+          data-testid={`rating-star-${index + 1}`}
         >
           {value >= index + 1 ? (
             <FavoriteIcon fillColor={amber[600]} size='small' />

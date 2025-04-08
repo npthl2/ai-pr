@@ -12,7 +12,7 @@ interface SurveyResponseModalProps {
 }
 
 export const SurveyResponseModal = ({ open, onClose }: SurveyResponseModalProps) => {
-  const memberId = useMemberStore((state) => state.memberInfo?.memberId);
+  const memberId = useMemberStore((state) => state.memberInfo?.memberId) ?? '';
   const [content, setContent] = useState<string>('');
   const [rating, setRating] = useState<number>(0);
   const saveSurveyResponseMutation = useSatisfactionSurveyResponseMutation(memberId ?? '');
@@ -58,6 +58,7 @@ export const SurveyResponseModal = ({ open, onClose }: SurveyResponseModalProps)
             onChange={(e) => {
               setContent(e.target.value);
             }}
+            data-testid='satisfaction-survey-comment'
           />
         </Box>
       }
@@ -66,6 +67,7 @@ export const SurveyResponseModal = ({ open, onClose }: SurveyResponseModalProps)
       onClose={handleClose}
       onConfirm={handleConfirm}
       isConfirmDisabled={rating === 0 || content.length === 0}
+      data-testid='satisfaction-survey-modal'
     />
   );
 };
