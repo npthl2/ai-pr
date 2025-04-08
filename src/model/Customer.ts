@@ -44,6 +44,7 @@ export interface CreateCustomerRequestParams {
   customerName: string;
   rrno: string;
   customerNameVerificationHistoryId: number;
+  gTrId: string;
 }
 
 export interface CreateCustomerResponse {
