@@ -22,7 +22,7 @@ const Home = () => {
   const memberInfo = useMemberStore((state) => state.memberInfo);
 
   return (
-    <HomeContainer>
+    <HomeContainer data-testid='home-content'>
       <ContentWrapper>
         <Typography variant='h1'>
           {memberInfo && (
