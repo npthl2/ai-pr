@@ -43,14 +43,21 @@ const TodayContracts = () => {
   const [showRightArrow, setShowRightArrow] = useState(true);
   const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
   const { data: todayContracts } = useTodayContracts();
+  const [filteredContracts, setFilteredContracts] = useState(todayContracts);
+  const [sliderKey, setSliderKey] = useState(0);
 
   const handleSignupClick = (contractId: string) => {
     setSelectedContractId(contractId);
     setIsModalOpen(true);
   };
 
-  const handleSearchChange = (value: string) => {
-    setSearchQuery(value);
+  const handleSearchClick = (value: string) => {
+    const filtered = todayContracts?.filter((contract) =>
+      contract.customerDetail.customerName.toLowerCase().includes(value.toLowerCase()),
+    );
+    setFilteredContracts(filtered);
+    // 검색조건 변경 시 강제 리마운트(슬라이더 인덱스 초기화)
+    setSliderKey(sliderKey + 1);
   };
 
   const CustomNextArrow = ({
@@ -88,14 +95,15 @@ const TodayContracts = () => {
     return EMPTY_STATE_QUOTES[randomIndex];
   }, []);
 
-  const filteredContracts = todayContracts?.filter((contract) =>
-    contract.customerDetail.customerName.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
-
   // 검색 조건이 변경될 때 마다 rerender 해서 arrow 표시가 적절하게 되어야 함
   useEffect(() => {
-    handleAfterChange();
-  }, [searchQuery, filteredContracts]);
+    // 카드가 먼저 렌더되어야 해서 timer 적용
+    const timer = setTimeout(() => {
+      handleAfterChange();
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [filteredContracts]);
 
   return (
     <TodayContractsContainer>
@@ -110,8 +118,13 @@ const TodayContracts = () => {
             variant='outlined'
             placeholder='이름 검색'
             value={searchQuery}
-            onChange={handleSearchChange}
-            suffix={<SearchIcon sx={{ color: '#868F99' }} />}
+            onChange={setSearchQuery}
+            suffix={
+              <SearchIcon
+                sx={{ color: '#868F99' }}
+                onClick={() => handleSearchClick(searchQuery)}
+              />
+            }
           />
         </SearchContainer>
       </TitleWrapper>
@@ -131,6 +144,7 @@ const TodayContracts = () => {
           </EmptyContractContainer>
         ) : (
           <StyledSlider
+            key={sliderKey}
             variableWidth={true}
             slidesToShow={1}
             slidesToScroll={1}
