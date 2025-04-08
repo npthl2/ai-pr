@@ -13,7 +13,7 @@ export const useSatisfactionSurveyResponseQuery = (
 ) => {
   return useReactQuery({
     queryKey: ['satisfactionSurvey', memberId],
-    queryFn: () => satisfactionSurveyService.getSurveyResponse(memberId, data),
+    queryFn: () => satisfactionSurveyService.getSurveyResponse(data),
     select: (data: CommonResponse<SurveyResponseSearchResponse>) => {
       if (isSurveyResponseSearchResponse(data.data)) {
         return data.data;

@@ -8,17 +8,16 @@ import {
 
 const satisfactionSurveyService = {
   getSurveyResponse(
-    memberId: string,
     data: SurveyResponseSearchRequestParams,
   ): Promise<CommonResponse<SurveyResponseSearchResponse>> {
     const queryString = new URLSearchParams(Object.entries(data)).toString();
     return baseService.get<SurveyResponseSearchResponse>(
-      `/adm-be/v1/survey/satisfaction/${memberId}/response?${queryString}`,
+      `/adm-be/v1/survey/satisfaction/response?${queryString}`,
     );
   },
-  saveSurveyResponse(memberId: string, data: SurveyResponseRequest): Promise<CommonResponse<null>> {
+  saveSurveyResponse(data: SurveyResponseRequest): Promise<CommonResponse<null>> {
     return baseService.post<null, SurveyResponseRequest>(
-      `/adm-be/v1/survey/satisfaction/${memberId}/response`,
+      `/adm-be/v1/survey/satisfaction/response`,
       data,
     );
   },

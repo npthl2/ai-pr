@@ -5,21 +5,21 @@ const completedSurveyResponse = { alreadyRespondedYn: 'Y', totalResponseCount: 1
 
 class SatisfactionSurveyServiceMock {
   successWhenGetSurveyResponse() {
-    cy.intercept('GET', '**/v1/survey/satisfaction/*/response?**', {
+    cy.intercept('GET', '**/v1/survey/satisfaction/response?**', {
       statusCode: 200,
       body: { successOrNot: 'Y', statusCode: 'SUCCESS', data: surveyResponse },
     }).as('getSurveyResponse');
   }
 
   successWhenGetCompletedSurveyResponse() {
-    cy.intercept('GET', '**/v1/survey/satisfaction/*/response?**', {
+    cy.intercept('GET', '**/v1/survey/satisfaction/response?**', {
       statusCode: 200,
       body: { successOrNot: 'Y', statusCode: 'SUCCESS', data: completedSurveyResponse },
     }).as('getCompletedSurveyResponse');
   }
 
   successWhenSaveSurveyResponse() {
-    cy.intercept('POST', '**/v1/survey/satisfaction/*/response', {
+    cy.intercept('POST', '**/v1/survey/satisfaction/response', {
       statusCode: 200,
       body: { successOrNot: 'Y', statusCode: 'SUCCESS', data: null },
     });

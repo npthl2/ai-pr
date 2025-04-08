@@ -15,7 +15,7 @@ export const SurveyResponseModal = ({ open, onClose }: SurveyResponseModalProps)
   const memberId = useMemberStore((state) => state.memberInfo?.memberId) ?? '';
   const [content, setContent] = useState<string>('');
   const [rating, setRating] = useState<number>(0);
-  const saveSurveyResponseMutation = useSatisfactionSurveyResponseMutation(memberId ?? '');
+  const saveSurveyResponseMutation = useSatisfactionSurveyResponseMutation();
   const queryClient = useQueryClient();
 
   const initializeFormData = () => {
