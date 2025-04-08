@@ -12,7 +12,7 @@ import ServiceModify from './modification/ServiceModify';
 import ServiceModificationBlockModal from './modification/components/ServiceModificationBlockModal';
 import { ServiceModificationModalType } from './modification/constants/modalConstants';
 import useCustomerStore from '@stores/CustomerStore';
-import useModifyServiceStore from '@stores/ModifyServiceStore';
+import useModifyServiceStore from '@stores/ModifyServiceStoreRefact';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import { TabInfo } from '@constants/CommonConstant';
 import {
@@ -23,12 +23,8 @@ import ModificationRequest from './ModificationRequest';
 import LineInformation from './search/LineInformation';
 import ConcurrentService from './search/CurrentService';
 
-interface NewContractProps {
-  contractTabId: string;
-}
-
 // 서비스 변경 메인 컴포넌트
-const ServiceModification = ({ contractTabId }: NewContractProps) => {
+const ServiceModification = () => {
   // 저장 요청 상태 관리
   const [isSaveRequested, setIsSaveRequested] = useState(false);
 
@@ -54,15 +50,17 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
   const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
   const customerTabs = useCustomerStore((state) => state.customerTabs);
 
-  // CurrentServiceStore에서 contractId 가져오기
-  const contractId = useCurrentServiceStore(
+
+  const selectedContractId = useCurrentServiceStore(
     (state) => state.selectedContractIds[selectedCustomerId] || '',
   );
 
   // 컴포넌트 마운트 시 상태 초기화
   useEffect(() => {
-    createModifyServiceInfo(contractTabId);
-  }, [createModifyServiceInfo, contractTabId]);
+    if (selectedCustomerId && selectedContractId) {
+      createModifyServiceInfo(selectedCustomerId, selectedContractId);
+    }
+  }, [createModifyServiceInfo, selectedCustomerId, selectedContractId]);
 
   // 현재 활성화된 탭이 ServiceModification 탭인지 확인
   const isServiceModificationTabActive = (() => {
@@ -73,13 +71,13 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
   })();
 
   // 요금제 변경 가능 여부 확인 API 호출
-  const { data: modifiableData, isLoading } = useCheckServiceModifiableQuery(contractId);
+  const { data: modifiableData, isLoading } = useCheckServiceModifiableQuery(selectedContractId);
 
   // 요금제 변경 가능 여부와 현재 서비스 정보 설정
   useEffect(() => {
-    if (!isLoading && contractId && modifiableData && isServiceModificationTabActive) {
-      setServiceModifiable(contractTabId, modifiableData.isModifiable);
-      setIsRollbackAvailable(contractTabId, modifiableData.isRollbackAvailable || false);
+    if (!isLoading && selectedCustomerId && selectedContractId && modifiableData && isServiceModificationTabActive) {
+      setServiceModifiable(selectedCustomerId, selectedContractId, modifiableData.isModifiable);
+      setIsRollbackAvailable(selectedCustomerId, selectedContractId, modifiableData.isRollbackAvailable || false);
 
       if (modifiableData.isRollbackAvailable && modifiableData.previousService) {
         const prevService: Service = {
@@ -89,18 +87,18 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
           serviceValueType: modifiableData.previousService.serviceValueType || '원정액',
           releaseDate: '',
         };
-        setPreviousService(contractTabId, prevService);
+        setPreviousService(selectedCustomerId, selectedContractId, prevService);
         setInitialStates(
-          contractTabId,
-          modifiableData.isRollbackAvailable || false,
+          selectedCustomerId, selectedContractId,
+          true,
           modifiableData.isModifiable,
           prevService,
         );
       } else {
-        setPreviousService(contractTabId, null);
+        setPreviousService(selectedCustomerId, selectedContractId, null);
         setInitialStates(
-          contractTabId,
-          modifiableData.isRollbackAvailable || false,
+          selectedCustomerId, selectedContractId,
+          false,
           modifiableData.isModifiable,
           null,
         );
@@ -116,14 +114,14 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
   }, [
     isLoading,
     modifiableData,
-    contractId,
+    selectedCustomerId, 
+    selectedContractId,
     setServiceModifiable,
     setIsRollbackAvailable,
     setPreviousService,
     setInitialStates,
     isServiceModificationTabActive,
     isSaveRequested,
-    contractTabId,
   ]);
 
   // 모달 닫기 핸들러
@@ -131,12 +129,10 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
     setModalState((prev) => ({ ...prev, open: false }));
   };
 
-  const selectedContractId = useCurrentServiceStore(
-    (state) => state.selectedContractIds[selectedCustomerId] || '',
-  );
+
 
   if (isSaveRequested) {
-    return <ModificationRequest contractTabId={contractTabId} />;
+    return <ModificationRequest contractTabId={selectedContractId} />;
   }
 
   return (
@@ -163,7 +159,7 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
               {/* 새로운 서비스 선택 */}
               <NewServiceContainer>
                 <ServiceModify
-                  contractTabId={contractTabId}
+                  contractTabId={selectedContractId}
                   setIsSaveRequested={setIsSaveRequested}
                 />
               </NewServiceContainer>
@@ -171,7 +167,7 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
                 open={modalState.open}
                 type={modalState.type}
                 onClose={handleCloseModal}
-                contractTabId={contractTabId}
+                contractTabId={selectedContractId}
               />
             </ServicesContainer>
           )}

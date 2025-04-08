@@ -160,7 +160,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
                     height: '100%',
                   }}
                 >
-                  <ServiceModification contractTabId={customerId} />
+                  <ServiceModification />
                 </Box>
               )}
             </>

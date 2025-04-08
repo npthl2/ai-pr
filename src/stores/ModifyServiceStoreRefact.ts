@@ -643,7 +643,7 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
 
 // 개발 환경에서만 디버깅 도구 연결
 if (import.meta.env.DEV) {
-  mountStoreDevtool('ModifyService Store', useModifyServiceStore);
+  mountStoreDevtool('ModifyService Store Refact', useModifyServiceStore);
 }
 
 export default useModifyServiceStore;
