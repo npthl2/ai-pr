@@ -46,7 +46,6 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
     setServiceModifiable,
     setIsRollbackAvailable,
     setPreviousService,
-    setServiceModificationMounted,
     setInitialStates,
     createModifyServiceInfo,
   } = useModifyServiceStore();
@@ -62,12 +61,8 @@ const ServiceModification = ({ contractTabId }: NewContractProps) => {
 
   // 컴포넌트 마운트 시 상태 초기화
   useEffect(() => {
-    setServiceModificationMounted(true);
     createModifyServiceInfo(contractTabId);
-    return () => {
-      setServiceModificationMounted(false);
-    };
-  }, [setServiceModificationMounted, createModifyServiceInfo, contractTabId]);
+  }, [createModifyServiceInfo, contractTabId]);
 
   // 현재 활성화된 탭이 ServiceModification 탭인지 확인
   const isServiceModificationTabActive = (() => {
