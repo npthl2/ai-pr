@@ -1,4 +1,4 @@
-import { Box, styled, Typography as MuiTypography, Theme } from '@mui/material';
+import { Box, styled, Theme, Typography } from '@mui/material';
 
 export const ModificationRequestContainer = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -99,10 +99,6 @@ export const ButtonContainer = styled(Box)({
   gap: 16,
   marginTop: 40,
 });
-
-export const Typography = styled(MuiTypography)(({ theme }: { theme: Theme }) => ({
-  color: theme.palette.text.primary,
-}));
 
 export const PageTitle = styled(Typography)(({ theme }: { theme: Theme }) => ({
   fontWeight: 700,
