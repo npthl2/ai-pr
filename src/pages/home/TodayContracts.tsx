@@ -35,19 +35,19 @@ import { CustomArrowProps } from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-import TodayContractsModal from './TodayContractsModal';
+import TodayContractsModal from './todayContracts/TodayContractsModal';
 import { EMPTY_STATE_QUOTES } from './TodayContractsConstants';
 
 const TodayContracts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedSignupId, setSelectedSignupId] = useState<string>('');
+  const [selectedContractId, setSelectedContractId] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
   const [showRightArrow, setShowRightArrow] = useState(true);
   const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
   const { data: todayContracts } = useTodayContracts();
 
-  const handleSignupClick = (signupId: string) => {
-    setSelectedSignupId(signupId);
+  const handleSignupClick = (contractId: string) => {
+    setSelectedContractId(contractId);
     setIsModalOpen(true);
   };
 
@@ -177,7 +177,7 @@ const TodayContracts = () => {
       <TodayContractsModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        signupId={selectedSignupId}
+        contractId={selectedContractId}
       />
     </TodayContractsContainer>
   );
