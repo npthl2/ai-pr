@@ -13,12 +13,12 @@ const satisfactionSurveyService = {
   ): Promise<CommonResponse<SurveyResponseSearchResponse>> {
     const queryString = new URLSearchParams(Object.entries(data)).toString();
     return baseService.get<SurveyResponseSearchResponse>(
-      `/adm-be/v1/survey/system-satisfaction/response/${memberId}?${queryString}`,
+      `/adm-be/v1/survey/satisfaction/${memberId}/response?${queryString}`,
     );
   },
   saveSurveyResponse(memberId: string, data: SurveyResponseRequest): Promise<CommonResponse<null>> {
     return baseService.post<null, SurveyResponseRequest>(
-      `/adm-be/v1/survey/system-satisfaction/response/${memberId}`,
+      `/adm-be/v1/survey/satisfaction/${memberId}/response`,
       data,
     );
   },
