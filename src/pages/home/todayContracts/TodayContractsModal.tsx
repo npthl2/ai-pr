@@ -26,6 +26,7 @@ const TodayContractsModal = ({ open, onClose, contractId }: TodayContractsModalP
           <TodayContractsDetailInfo contractData={contractData} />
         </ContentContainer>
       }
+      data-testid='today-contracts-detail-dialog'
     />
   );
 };

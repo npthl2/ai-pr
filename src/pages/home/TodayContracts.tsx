@@ -66,13 +66,13 @@ const TodayContracts = () => {
     show = true,
   }: CustomArrowProps & { show?: boolean }) => (
     <ArrowButton onClick={onClick} className={className} $isNext={true} $show={show}>
-      <ArrowForwardIosIcon sx={{ fontSize: '14px', color: '#05151F' }} />
+      <ArrowForwardIosIcon sx={{ fontSize: '14px', color: '#05151F' }} data-testid='next-arrow' />
     </ArrowButton>
   );
 
   const CustomPrevArrow = ({ onClick, className }: CustomArrowProps) => (
     <ArrowButton onClick={onClick} className={className} $isNext={false}>
-      <ArrowBackIosNewIcon sx={{ fontSize: '14px', color: '#05151F' }} />
+      <ArrowBackIosNewIcon sx={{ fontSize: '14px', color: '#05151F' }} data-testid='prev-arrow' />
     </ArrowButton>
   );
 
@@ -116,7 +116,9 @@ const TodayContracts = () => {
       <TitleWrapper>
         <TitleBox>
           <Title variant='h2'>오늘의 신규가입</Title>
-          <Title variant='h2'>{filteredContracts?.length}</Title>
+          <Title variant='h2' data-testid='total-contracts'>
+            {filteredContracts?.length}
+          </Title>
         </TitleBox>
         <SearchContainer>
           <StyledTextField
@@ -129,8 +131,10 @@ const TodayContracts = () => {
               <SearchIcon
                 sx={{ color: '#868F99' }}
                 onClick={() => handleSearchClick(searchQuery)}
+                data-testid='search-icon'
               />
             }
+            data-testid='search-input'
           />
         </SearchContainer>
       </TitleWrapper>
@@ -139,7 +143,7 @@ const TodayContracts = () => {
         {todayContracts?.length === 0 ? (
           <EmptyContractContainer>
             <EmptyContractText variant='h3'>오늘 신규가입 건은 없습니다.</EmptyContractText>
-            <EmptyDescription variant='h5'>
+            <EmptyDescription variant='h5' data-testid='quote-text'>
               {randomQuote.text}
               <br></br>-{randomQuote.author}-
             </EmptyDescription>
@@ -161,12 +165,13 @@ const TodayContracts = () => {
             nextArrow={<CustomNextArrow show={showRightArrow} />}
             prevArrow={<CustomPrevArrow />}
           >
-            {filteredContracts?.map((contract: ContractDataWithCustomer) => (
+            {filteredContracts?.map((contract: ContractDataWithCustomer, index: number) => (
               <CardWrapper
                 key={contract.contractId}
                 className={hoveredCardId === contract.contractId ? 'hover-active' : ''}
                 onMouseEnter={() => setHoveredCardId(contract.contractId)}
                 onMouseLeave={() => setHoveredCardId(null)}
+                data-testid={`card-${index}`}
               >
                 <CardContent>
                   <CustomerInfo>
@@ -181,6 +186,7 @@ const TodayContracts = () => {
                     <DetailButton
                       variant='h5'
                       onClick={() => handleSignupClick(contract.contractId)}
+                      data-testid={`card-detail-info-${index}`}
                     >
                       상세 정보 보기 →
                     </DetailButton>

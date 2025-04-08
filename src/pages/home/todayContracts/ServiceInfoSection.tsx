@@ -56,7 +56,9 @@ const ServiceInfoSection: React.FC<ServiceInfoSectionProps> = ({ serviceInfo }) 
 
   return (
     <SectionContainer>
-      <Typography variant='h3'>상세정보</Typography>
+      <Typography variant='h3' data-testid='service-info-title'>
+        상세정보
+      </Typography>
       <StyledTableContainer>
         <StyledTable>
           {renderSharedColGroup()}

@@ -18,7 +18,9 @@ interface ContractInfoSectionProps {
 const ContractInfoSection: React.FC<ContractInfoSectionProps> = ({ contractInfo }) => (
   <SectionContainer>
     <SectionTitleContainer>
-      <Typography variant='h3'>계약정보</Typography>
+      <Typography variant='h3' data-testid='contract-info-title'>
+        계약정보
+      </Typography>
       {contractInfo?.contractId && (
         <SubtitleContainer>
           <Typography variant='body2' color='text.secondary'>

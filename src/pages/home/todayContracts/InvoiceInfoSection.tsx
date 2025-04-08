@@ -18,7 +18,9 @@ interface InvoiceInfoSectionProps {
 const InvoiceInfoSection: React.FC<InvoiceInfoSectionProps> = ({ invoiceInfo }) => (
   <SectionContainer>
     <SectionTitleContainer>
-      <Typography variant='h3'>납부정보</Typography>
+      <Typography variant='h3' data-testid='invoice-info-title'>
+        납부정보
+      </Typography>
       {invoiceInfo?.paymentId && (
         <SubtitleContainer>
           <Typography variant='body2' color='text.secondary'>
