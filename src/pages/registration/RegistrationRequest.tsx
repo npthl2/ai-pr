@@ -53,6 +53,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
     isRegistrationRequestMounted: true,
     businessProcessId,
   });
+
   const registrationData = data?.registrations.find(
     (registration) => registration.businessProcessId === businessProcessId,
   );
