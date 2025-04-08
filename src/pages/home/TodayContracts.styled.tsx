@@ -2,44 +2,36 @@ import { Box, IconButton, styled, Typography, Card } from '@mui/material';
 import TextField from '@components/TextField';
 import Slider from 'react-slick';
 
-export const TodayContractsContainer = styled(Box)(() => ({
+export const TodayContractsContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: '12px',
+  gap: theme.spacing(1.5),
 }));
 
-export const HeaderContainer = styled(Box)({
+export const HeaderContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  gap: '32px',
-});
+  gap: theme.spacing(4),
+}));
 
-export const TitleContainer = styled(Box)({
+export const TitleContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: '12px',
-});
+  gap: theme.spacing(1.5),
+}));
 
 export const Title = styled(Typography)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-export const SignupCount = styled(Typography)({
-  fontFamily: 'Pretendard',
-  fontWeight: 700,
-  fontSize: '20px',
-  lineHeight: '1.5em',
-  color: '#05151F',
-});
-
-export const SearchContainer = styled(Box)({
+export const SearchContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: '8px',
+  gap: theme.spacing(1),
   height: '32px',
   width: '200px',
-});
+}));
 
 export const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
@@ -99,7 +91,6 @@ export const CardWrapper = styled(Card)({
   backgroundColor: '#FFFFFF',
   boxShadow: 'none',
   padding: '24px 32px',
-  transition: 'all 0.2s ease-in-out',
   '&:hover, &.hover-active': {
     backgroundColor: '#272E35',
   },
@@ -107,49 +98,38 @@ export const CardWrapper = styled(Card)({
   justifyContent: 'space-between',
 });
 
-export const CardContent = styled(Box)({
+export const CardContent = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   padding: '0px',
-  gap: '16px',
+  gap: theme.spacing(2),
   height: '204px',
-});
+  '&:hover, &.hover-active': {
+    backgroundColor: '#272E35',
+  },
+}));
 
-export const CustomerInfo = styled(Box)({
+export const CustomerInfo = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: '8px',
-});
+  gap: theme.spacing(1),
+}));
 
 export const CustomerName = styled(Typography)(({ theme }) => ({
-  fontFamily: 'Pretendard',
-  fontWeight: 700,
-  fontSize: '18px',
-  lineHeight: '1.5em',
-  color: theme.palette.text.primary,
-  transition: 'color 0.2s ease-in-out',
   '.hover-active &': {
     color: theme.palette.primary.contrastText,
   },
 }));
 
 export const PhoneNumber = styled(Typography)(({ theme }) => ({
-  fontWeight: 700,
-  fontSize: '18px',
-  lineHeight: '1.5em',
   color: theme.palette.primary.main,
-  transition: 'color 0.2s ease-in-out',
   '.hover-active &': {
     color: theme.palette.primary.contrastText,
   },
 }));
 
 export const ServiceName = styled(Typography)(({ theme }) => ({
-  fontWeight: 700,
-  fontSize: '16px',
-  lineHeight: '1.5em',
   color: theme.palette.primary.light,
-  transition: 'color 0.2s ease-in-out',
   '.hover-active &': {
     color: theme.palette.primary.contrastText,
   },
@@ -161,9 +141,7 @@ export const DetailInfo = styled(Box)({
 });
 
 export const DetailButton = styled(Typography)(({ theme }) => ({
-  color: theme.palette.text.primary,
   cursor: 'pointer',
-  transition: 'color 0.2s ease-in-out',
   '.hover-active &': {
     color: theme.palette.primary.contrastText,
   },
@@ -173,54 +151,32 @@ export const Divider = styled(Box)({
   width: '100%',
   height: '1px',
   backgroundColor: '#E5E8EB',
-  transition: 'all 0.2s ease-in-out',
   '.hover-active &': {
     backgroundColor: '#FFFFFF',
   },
 });
 
-export const EmptyContainer = styled(Box)({
+export const EmptyContractContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  gap: '24px',
+  gap: theme.spacing(1),
   height: '258px',
   backgroundColor: 'rgba(255, 255, 255, 0.5)',
   border: '1px dashed rgba(112, 121, 142, 0.16)',
   borderRadius: '16px',
   width: '100%',
-});
+}));
 
-export const EmptyTitle = styled(Typography)(({ theme }) => ({
-  color: theme.palette.text.primary,
+export const EmptyContractText = styled(Typography)(({}) => ({
   textAlign: 'center',
 }));
 
 export const EmptyDescription = styled(Typography)(({ theme }) => ({
-  fontFamily: 'Pretendard',
-  fontWeight: 700,
-  fontSize: '14px',
-  lineHeight: '1.5em',
   color: theme.palette.text.secondary,
   textAlign: 'center',
   whiteSpace: 'pre-line',
-}));
-
-export const NoResultContainer = styled(Box)({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  height: '258px',
-  backgroundColor: 'rgba(255, 255, 255, 0.5)',
-  border: '1px dashed rgba(112, 121, 142, 0.16)',
-  borderRadius: '16px',
-  width: '100%',
-});
-
-export const NoResultText = styled(Typography)(({ theme }) => ({
-  color: theme.palette.text.primary,
-  textAlign: 'center',
 }));
 
 export const ArrowButton = styled(IconButton, {

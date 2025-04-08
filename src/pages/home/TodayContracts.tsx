@@ -7,10 +7,8 @@ import {
   CustomerName,
   CustomerInfo,
   TodayContractsContainer,
-  NoResultText,
-  NoResultContainer,
-  EmptyContainer,
-  EmptyTitle,
+  EmptyContractContainer,
+  EmptyContractText,
   EmptyDescription,
   StyledSlider,
   DetailButton,
@@ -120,17 +118,17 @@ const TodayContracts = () => {
 
       <Stack direction='row' spacing={2} height={'258px'}>
         {todayContracts?.length === 0 ? (
-          <EmptyContainer>
-            <EmptyTitle variant='h3'>오늘 신규가입 건은 없습니다.</EmptyTitle>
+          <EmptyContractContainer>
+            <EmptyContractText variant='h3'>오늘 신규가입 건은 없습니다.</EmptyContractText>
             <EmptyDescription variant='h5'>
               {randomQuote.text}
               <br></br>-{randomQuote.author}-
             </EmptyDescription>
-          </EmptyContainer>
+          </EmptyContractContainer>
         ) : filteredContracts?.length === 0 ? (
-          <NoResultContainer>
-            <NoResultText variant='body1'>조회 결과가 없습니다.</NoResultText>
-          </NoResultContainer>
+          <EmptyContractContainer>
+            <EmptyContractText variant='body1'>조회 결과가 없습니다.</EmptyContractText>
+          </EmptyContractContainer>
         ) : (
           <StyledSlider
             variableWidth={true}
