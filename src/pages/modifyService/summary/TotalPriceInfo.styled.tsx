@@ -45,10 +45,11 @@ export const PriceTitle = styled(Typography)(({ theme }) => ({
   fontWeight: 400,
 }));
 
+// TODO fontWeight, size 설정 불필요, variant 확인 및 설정
 export const PriceText = styled(Typography)<{ isAfter?: boolean }>(({ theme, isAfter }) => ({
   fontSize: '18px',
   fontWeight: 700,
-  color: isAfter ? theme.palette.info.main : theme.palette.primary.main,
+  color: isAfter ? theme.palette.info.main : theme.palette.text.primary,
 }));
 
 export const ArrowContainer = styled(Box)({

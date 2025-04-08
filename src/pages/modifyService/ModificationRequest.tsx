@@ -57,6 +57,7 @@ const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
   );
 
   // 최종 부가서비스 목록 (제거된 항목 제외, 추가된 항목 포함)
+  // TODO 부모 컴포넌트에서 계산 한 내역을 store에 저장하고 바로 사용함으로서 로직 제거 가능
   const afterAdditionalServices = [...currentServicesToKeep, ...selectedAdditionalServices];
 
   const afterServiceValue = selectedService?.serviceValue || beforeService?.serviceValue || 0;

@@ -13,8 +13,10 @@ interface StatusMessageProps {
   failReason?: string;
 }
 
+// TODO 컴포넌트 공통으로 사용 할 수 있도록 변경
 const ModificationStatusMessage = ({ status, customerName }: StatusMessageProps) => {
   // 이미지 경로 정의
+  // TODO 컴포넌트 밖으로 꺼내기
   const pendingGifPath = '/images/Registration-Progressing.gif';
   const completedGifPath = '/images/Registration-Completed.gif';
 
