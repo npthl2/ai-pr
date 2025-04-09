@@ -54,7 +54,8 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
   // 고객 나이 확인
   const { customers, isCustomer } = useCustomerStore();
   const selectedCustomer = customers.find((customer) => customer.id === selectedCustomerId);
-  const customerAge = selectedCustomer && isCustomer(selectedCustomer) ? Number(selectedCustomer.age) : 0;
+  const customerAge =
+    selectedCustomer && isCustomer(selectedCustomer) ? Number(selectedCustomer.age) : 0;
 
   // 현재 서비스 ID 확인
   const currentService =
@@ -267,9 +268,7 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
 
       {/* 2. 부가서비스 목록 영역 */}
       <Section>
-        <AdditionalServiceList
-          additionalServices={additionalServices}
-        />
+        <AdditionalServiceList additionalServices={additionalServices} />
       </Section>
 
       {/* 3. 선택된 부가서비스 영역 */}
