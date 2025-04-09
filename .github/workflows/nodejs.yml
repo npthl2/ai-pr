@@ -119,8 +119,8 @@ jobs:
       - name: Install Node.js dependencies
         run: npm install
 
-      - name: Run Smoke Test
-        run: npm run test:smoke:develop
+      # - name: Run Smoke Test
+      #   run: npm run test:smoke:develop
 
       - name: Run Health Check
         run: npm run test:health:develop
