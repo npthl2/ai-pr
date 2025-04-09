@@ -11,7 +11,6 @@ describe('[KAN-327-3] 내 실적', () => {
 
   beforeEach(() => {
     performanceServiceMock.homeBookmark();
-    performanceServiceMock.getDailyWeeklyContractCount();
   });
   before(() => {
     mockAuthStore({
@@ -28,9 +27,10 @@ describe('[KAN-327-3] 내 실적', () => {
   });
 
   it('[KAN-327-3-1] Home화면에서 내실적의 오늘 가입건수가 보여야한다', () => {
-    performancePage.visitHome();
     performanceServiceMock.getDailyWeeklyContractCount();
+    performancePage.visitHome();
     performancePage.getTodayNewRegistrationBox().should('be.visible');
+    cy.wait(500);
     performancePage
       .getTodayNewRegistrationCount()
       .invoke('text')

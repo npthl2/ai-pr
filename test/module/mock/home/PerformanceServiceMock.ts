@@ -15,6 +15,13 @@ export class PerformanceServiceMock {
     });
   }
 
+  getRegistrationStatus() {
+    cy.intercept('GET', '**/v1/registration-common/status', {
+      statusCode: 200,
+      body: { successOrNot: 'N', statusCode: 'FAIL', data: '회원 정보를 찾을 수 없습니다.' },
+    });
+  }
+
   getDailyWeeklyContractCount() {
     cy.intercept('GET', '**/v1/dashboard/statistics/contracts/daily-weekly', {
       statusCode: 200,
