@@ -76,7 +76,7 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
   const [debouncedSearchKeyword, setDebouncedSearchKeyword] = useState('');
 
   // 검색어로 필터링된 부가서비스 목록 상태
-  const [filteredServices, setFilteredServices] = useState<FilteredAdditionalService[]>([]);
+  const [filteredAdditionalServices, setFilteredAdditionalServices] = useState<FilteredAdditionalService[]>([]);
 
   // 검색어 변경 핸들러
   const handleSearchChange = useCallback((value: string) => {
@@ -94,61 +94,64 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
 
   // 검색어나 부가서비스 목록이 변경될 때마다 필터링된 목록 업데이트
   useEffect(() => {
-    if (!additionalServices.length) return;
+    if (!additionalServices.length) {
+      setFilteredAdditionalServices([]);
+      return;
+    }
 
     // 이미 선택된 부가서비스 ID 목록
-    const selectedServiceIds = selectedAdditionalServices.map((service) => service.serviceId);
+    const selectedAdditionalServiceIds = selectedAdditionalServices.map((AdditionalService) => AdditionalService.serviceId);
 
     // 현재 사용 중인 부가서비스 ID 목록
-    const currentServiceIds = currentAdditionalServices.map((service) => service.serviceId);
+    const currentAdditionalServiceIds = currentAdditionalServices.map((AdditionalService) => AdditionalService.serviceId);
 
     // 모든 제외할 서비스 ID 목록 (현재 사용중이면서 제거되지 않은 것 + 이미 선택된 것)
-    const excludedServiceIds = [...selectedServiceIds, ...currentServiceIds];
+    const excludedAdditionalServiceIds = [...selectedAdditionalServiceIds, ...currentAdditionalServiceIds];
 
     // 필터링할 서비스 목록 (API에서 가져온 서비스 + 제거된 현재 서비스)
-    const allServices = [...additionalServices, ...removedCurrentAdditionalServices];
+    const allAdditionalServices = [...additionalServices, ...removedCurrentAdditionalServices];
 
     // 중복 서비스 ID 추적을 위한 Set
-    const processedServiceIds = new Set<string>();
+    const processedAdditionalServiceIds = new Set<string>();
 
     // 제외되지 않은 서비스 중 검색어에 맞는 서비스만 필터링
-    const filtered = allServices
-      .filter((service) => {
+    const filtered = allAdditionalServices
+      .filter((additionalService) => {
         // 이미 처리된 서비스는 제외 (중복 방지)
-        if (processedServiceIds.has(service.serviceId)) {
+        if (processedAdditionalServiceIds.has(additionalService.serviceId)) {
           return false;
         }
 
         // 검색어와 제외 조건 적용
         const include =
-          !excludedServiceIds.includes(service.serviceId) &&
-          service.serviceName.toLowerCase().includes(debouncedSearchKeyword.toLowerCase());
+          !excludedAdditionalServiceIds.includes(additionalService.serviceId) &&
+          additionalService.serviceName.toLowerCase().includes(debouncedSearchKeyword.trim().toLowerCase());
 
         // 포함된다면 ID 추적에 추가
         if (include) {
-          processedServiceIds.add(service.serviceId);
+          processedAdditionalServiceIds.add(additionalService.serviceId);
         }
 
         return include;
       })
 
       // 추가 정보 매핑
-      .map((service) => {
+      .map((additionalService) => {
         return {
-          ...service,
-          isRemovedCurrentService: removedCurrentAdditionalServices.some(
-            (removed) => removed.serviceId === service.serviceId,
+          ...additionalService,
+          isRemovedCurrentAdditionalService: removedCurrentAdditionalServices.some(
+            (removed) => removed.serviceId === additionalService.serviceId,
           ),
           // 백엔드에서 받은 값 사용
-          isAgeRestricted: service.hasAgeRestriction || false,
-          isExclusive: service.exclusive || false,
+          isAgeRestricted: additionalService.hasAgeRestriction || false,
+          isExclusive: additionalService.exclusive || false,
         };
       });
 
     // 정렬 적용
-    const sortedServices = sortAdditionalServices(filtered);
+    const sortedAdditionalServices = sortAdditionalServices(filtered);
 
-    setFilteredServices(sortedServices);
+    setFilteredAdditionalServices(sortedAdditionalServices);
   }, [
     debouncedSearchKeyword,
     additionalServices,
@@ -164,7 +167,6 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
   const handleAddAdditionalService = useCallback(
     (additionalService: AdditionalService, isAgeRestricted: boolean) => {
       if (isAgeRestricted) {
-        // 나이 제한으로 추가할 수 없는 경우 처리
         return;
       }
       addAdditionalService(selectedCustomerId, selectedContractId, additionalService);
@@ -188,12 +190,12 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
 
   // 렌더링 테이블 컨텐츠 메모이제이션
   const tableContent = useMemo(() => {
-    return filteredServices.map((service) => {
-      const isRestricted = service.isAgeRestricted || service.isExclusive || false;
+    return filteredAdditionalServices.map((additionalService) => {
+      const isRestricted = additionalService.isAgeRestricted || additionalService.isExclusive || false;
 
       return (
         <TableRow
-          key={service.serviceId}
+          key={additionalService.serviceId}
           hover
           sx={isRestricted ? { backgroundColor: '#ffebee' } : {}}
           data-testid='additional-service-list'
@@ -212,20 +214,20 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
               <Box display='flex' alignItems='left'>
                 <TextContainer>
                   {isRestricted && (
-                    <Tooltip title={getRestrictionMessage(service)} arrow placement='bottom'>
-                      <EllipsisTypography data-testid={`service-name-${service.serviceId}`}>
-                        {service.serviceName}
+                    <Tooltip title={getRestrictionMessage(additionalService)} arrow placement='bottom'>
+                      <EllipsisTypography data-testid={`service-name-${additionalService.serviceId}`}>
+                        {additionalService.serviceName}
                       </EllipsisTypography>
                     </Tooltip>
                   )}
-                  {!isRestricted && <EllipsisTypography>{service.serviceName}</EllipsisTypography>}
+                  {!isRestricted && <EllipsisTypography>{additionalService.serviceName}</EllipsisTypography>}
                 </TextContainer>
               </Box>
             </Box>
           </TableCell>
 
           <TableCell align='right' sx={{ width: '150px' }}>
-            <Typography>{service.serviceValue.toLocaleString()}</Typography>
+            <Typography>{additionalService.serviceValue.toLocaleString()}</Typography>
           </TableCell>
           <StyledTableBlankCell width='95px'>
             <AddButton
@@ -233,7 +235,7 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
               size='small'
               iconComponent={<AddIcon />}
               iconPosition='right'
-              onClick={() => handleAddAdditionalService(service, isRestricted)}
+              onClick={() => handleAddAdditionalService(additionalService, isRestricted)}
               disabled={isRestricted}
               data-testid='add-button'
             >
@@ -243,14 +245,14 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
         </TableRow>
       );
     });
-  }, [filteredServices, handleAddAdditionalService, getRestrictionMessage]);
+  }, [filteredAdditionalServices, handleAddAdditionalService, getRestrictionMessage]);
 
   return (
     <RootContainer>
       <HeaderContainer>
         <TitleSection>
           <TitleTypography variant='subtitle1'>부가서비스 목록</TitleTypography>
-          <CountTypography>{filteredServices.length}</CountTypography>
+          <CountTypography>{filteredAdditionalServices.length}</CountTypography>
         </TitleSection>
 
         <Box sx={{ display: 'flex', alignItems: 'center' }} data-testid='additional-service-search'>
@@ -299,7 +301,7 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
           <Table>
             <TableBody>
               {tableContent}
-              {filteredServices.length === 0 && (
+              {filteredAdditionalServices.length === 0 && (
                 <TableRow sx={{ border: 'none' }}>
                   <TableCell
                     colSpan={4}
