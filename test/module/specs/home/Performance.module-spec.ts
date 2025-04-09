@@ -56,6 +56,7 @@ describe('[KAN-327-3] 내 실적', () => {
 
   it('[KAN-327-3-4] 월별 실적 추이 차트(이번달 > 지난달) 툴팁 메세지가 보여야한다', () => {
     performanceServiceMock.getMonthlyContractCountIncrease();
+    performancePage.visitHome();
     performancePage
       .getMonthlyChartTooltip()
       .should('be.visible')
