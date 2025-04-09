@@ -25,7 +25,7 @@ describe('[KAN-326] 오늘의 신규가입 위젯 테스트', () => {
     todayContracts.getCardsGreaterThan(0);
   });
 
-  it('[KAN-326-2] 4개 이상의 카드가 생성되면 화살표가 표시되어야 한다', () => {
+  it('[KAN-326-2] 4개 초과의 카드가 생성되면 화살표가 표시되어야 한다', () => {
     todayContracts.getCardsGreaterThan(4);
     todayContracts.getArrow();
   });
