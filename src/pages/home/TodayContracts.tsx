@@ -171,9 +171,8 @@ const TodayContracts = () => {
                 className={hoveredCardId === contract.contractId ? 'hover-active' : ''}
                 onMouseEnter={() => setHoveredCardId(contract.contractId)}
                 onMouseLeave={() => setHoveredCardId(null)}
-                data-testid={`card-${index}`}
               >
-                <CardContent>
+                <CardContent data-testid={`card-content-${index}`}>
                   <CustomerInfo>
                     <CustomerName variant='h3'>{contract.customerDetail.customerName}</CustomerName>
                     <PhoneNumber variant='h3'>{contract.contractDetail.phoneNumber}</PhoneNumber>

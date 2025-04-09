@@ -12,7 +12,7 @@ class TodayContracts {
   }
 
   getCardsGreaterThan(number: number) {
-    cy.get('[data-testid^="card-"]').should('have.length.greaterThan', number);
+    cy.get('[data-testid^="card-content-"]').should('have.length.greaterThan', number);
   }
 
   getQuote() {
@@ -25,6 +25,24 @@ class TodayContracts {
 
   clickArrow() {
     cy.get('[data-testid="next-arrow"]').click();
+  }
+
+  getFirstVisibleCard() {
+    return cy.get('[data-testid^="card-content-"]:visible').first();
+  }
+
+  getVisibleCards() {
+    return cy.get('[data-testid^="card-content-"]:visible');
+  }
+
+  getVisibleCardsCount() {
+    return cy.get('[data-testid^="card-content-"]:visible').then(($cards) => {
+      return $cards.length;
+    });
+  }
+
+  getBackArrow() {
+    return cy.get('[data-testid="prev-arrow"]');
   }
 
   clickSearch(input: string) {
