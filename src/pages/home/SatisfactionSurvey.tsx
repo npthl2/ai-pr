@@ -20,9 +20,9 @@ const SatisfactionSurvey = () => {
     month: today.getMonth() + 1,
   };
 
-  const memberId = useMemberStore((state) => state.memberInfo?.memberId);
+  const memberId = useMemberStore((state) => state.memberInfo?.memberId) ?? '';
   const { data: surveyResponseStatus } = useSatisfactionSurveyResponseQuery(
-    memberId ?? '',
+    memberId,
     currentSurveyPeriod,
   );
   const [isOpen, setIsOpen] = useState(false);

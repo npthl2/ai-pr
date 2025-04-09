@@ -14,18 +14,18 @@ interface SurveyResponseModalProps {
 export const SurveyResponseModal = ({ open, onClose }: SurveyResponseModalProps) => {
   const memberId = useMemberStore((state) => state.memberInfo?.memberId) ?? '';
   const [content, setContent] = useState<string>('');
-  const [rating, setRating] = useState<number>(0);
+  const [score, setScore] = useState<number>(0);
   const saveSurveyResponseMutation = useSatisfactionSurveyResponseMutation();
   const queryClient = useQueryClient();
 
   const initializeFormData = () => {
     setContent('');
-    setRating(0);
+    setScore(0);
   };
 
   const handleConfirm = () => {
     saveSurveyResponseMutation.mutate(
-      { score: rating, comment: content },
+      { score, comment: content },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ['satisfactionSurvey', memberId] });
@@ -48,7 +48,7 @@ export const SurveyResponseModal = ({ open, onClose }: SurveyResponseModalProps)
       content={
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <PrimaryTypography variant='body1'>시스템 사용이 만족스러웠나요?</PrimaryTypography>
-          <Rating value={rating} max={5} onChange={(value) => setRating(value)} />
+          <Rating value={score} max={5} onChange={(value) => setScore(value)} />
           <Textarea
             minRows={2}
             maxRows={2}
@@ -66,7 +66,7 @@ export const SurveyResponseModal = ({ open, onClose }: SurveyResponseModalProps)
       confirmLabel='평가완료'
       onClose={handleClose}
       onConfirm={handleConfirm}
-      isConfirmDisabled={rating === 0 || content.length === 0}
+      isConfirmDisabled={score === 0 || content.length === 0}
       data-testid='satisfaction-survey-modal'
     />
   );
