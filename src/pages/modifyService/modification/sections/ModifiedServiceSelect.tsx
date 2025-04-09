@@ -225,9 +225,7 @@ const ModifiedServiceSelect = () => {
     <RootContainer>
       <ServiceRowContainer>
         <LeftSectionContainer>
-          <TitleTypography variant='subtitle1'>
-            변경할 요금제
-          </TitleTypography>
+          <TitleTypography variant='subtitle1'>변경할 요금제</TitleTypography>
           <AutocompleteContainer>
             <Autocomplete
               fullWidth
