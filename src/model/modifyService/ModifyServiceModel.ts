@@ -120,3 +120,13 @@ export interface ServiceModificationRequest {
 export interface ServiceModificationResponseData {
   businessProcessId: string;
 }
+
+
+// 타입 정의: 서비스 플랜(요금제) 데이터 구조
+// 선택 가능한 서비스 항목의 데이터 형식을 정의합니다.
+export interface ServicePlan {
+  id: string; // 서비스 ID
+  name: string; // 서비스 이름 (표시용)
+  price: number; // 서비스 가격
+  releaseDate: string; // 출시일 (최신출시순 정렬을 위한 필드)
+}

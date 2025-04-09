@@ -1,7 +1,7 @@
 // src/pages/modifyService/modification/ServiceModify.tsx
 import { Box, Button } from '@mui/material';
 import { useState } from 'react';
-import SelectService from './sections/ModifiedServiceSelect';
+import ModifiedServiceSelect from './sections/ModifiedServiceSelect';
 import AdditionalServiceList from './sections/AdditionalServiceList';
 import useModifyServiceStore from '@stores/ModifyServiceStoreRefact';
 import useCustomerStore from '@stores/CustomerStore';
@@ -23,6 +23,7 @@ import {
   ServiceModificationResponseData,
 } from '@model/modifyService/ModifyServiceModel';
 import { CommonResponse } from '@model/common/CommonResponse';
+import useToastStore from '@stores/ToastStore';
 
 interface ServiceModifyProps {
   setIsSaveRequested: (isSaveRequested: boolean) => void;
@@ -35,8 +36,7 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
     (state) => state.selectedContractIds[selectedCustomerId] || '',
   );
 
-  const { resetAll, serviceModificationMounted, setModificationBusinessProcessId } =
-    useModifyServiceStore();
+  const { resetAll, setModificationBusinessProcessId } = useModifyServiceStore();
 
   const modifyServiceInfo = useModifyServiceStore((state) =>
     state.getModifyServiceInfo(selectedCustomerId, selectedContractId),
@@ -50,10 +50,6 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
   const removedCurrentAdditionalServices =
     modifyServiceInfo?.removedCurrentAdditionalServices || [];
 
-  // 서비스 변경 요청 mutation 사용
-  const serviceModificationMutation = useServiceModificationMutation();
-
-  // TODO 자식 컴포넌트로 내려도 될듯?
   // 부가서비스 목록 조회 API 호출
   // 고객 나이 확인
   const customers = useCustomerStore((state) => state.customers);
@@ -61,18 +57,18 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
   const customerAge = selectedCustomer
     ? 'age' in selectedCustomer
       ? Number(selectedCustomer.age)
-      : null
-    : null;
+      : 0
+    : 0;
 
   // 현재 서비스 ID 확인
-  const getCurrentService = useCurrentServiceStore((state) => state.getCurrentService);
-  const currentService = getCurrentService?.(selectedCustomerId || '') || null;
+  const currentService =
+    useCurrentServiceStore((state) => state.getCurrentService(selectedCustomerId)) || null;
   const currentServiceId = selectedService?.serviceId || currentService?.serviceId || '';
 
   const { data: additionalServices = [] } = useAdditionalServicesWithExclusiveQuery(
-    customerAge || 0,
+    customerAge,
     currentServiceId,
-    serviceModificationMounted,
+    true,
   );
 
   // 변경사항이 있는지 확인
@@ -80,12 +76,6 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
     !!selectedService ||
     selectedAdditionalServices.length > 0 ||
     removedCurrentAdditionalServices.length > 0;
-
-  // 저장 버튼 비활성화 조건
-  const isSaveDisabled = !hasChanges;
-
-  // 변경사항이 없는 경우 초기화 버튼 비활성화
-  const isResetDisabled = !hasChanges;
 
   // 모달 상태 관리
   const [modalState, setModalState] = useState<{
@@ -98,7 +88,7 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
     type: ServiceModificationModalType.CONFIRM_CHANGE,
   });
 
-  // 모달 표시 함수
+  // 조건에 따른 모달 화면 관리
   const showModal = (
     type: ServiceModificationModalType,
     data: {
@@ -187,19 +177,14 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
     }
   };
 
+  // 서비스 변경 요청 mutation 사용
+  const serviceModificationMutation = useServiceModificationMutation();
+
   // 모달 확인 핸들러
-  const handleConfirmModal = async () => {
+  const handleConfirmModal = () => {
     if (!modifyServiceInfo) {
       return;
     }
-
-    // 선택된 서비스 및 부가서비스 정보 추출
-    const {
-      selectedService,
-      selectedAdditionalServices,
-      currentAdditionalServices,
-      removedCurrentAdditionalServices,
-    } = modifyServiceInfo;
 
     // 부가서비스 배열 생성 (선택된 부가서비스와 유지할 현재 부가서비스)
     // 제거된 현재 부가서비스는 제외해야 함
@@ -242,7 +227,16 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
           typeof response.data === 'object' &&
           'businessProcessId' in response.data
         ) {
-          const businessProcessId = response.data.businessProcessId;
+          const businessProcessId = response.data?.businessProcessId;
+
+          if (!businessProcessId) {
+            const { openToast } = useToastStore();
+            openToast('businessProcessId 저장을 완료할 수 없습니다. 다시 시도해 주세요.');
+
+            // 저장 상태 진입 안 함
+            return;
+          }
+
           setModificationBusinessProcessId(
             selectedCustomerId,
             selectedContractId,
@@ -272,7 +266,7 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
     <Container>
       {/* 1. 요금제 선택 영역 */}
       <Section>
-        <SelectService contractTabId={selectedCustomerId} />
+        <ModifiedServiceSelect />
       </Section>
 
       {/* 2. 부가서비스 목록 영역 */}
@@ -322,7 +316,7 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
             <Button
               variant='outlined'
               onClick={handleReset}
-              disabled={isResetDisabled}
+              disabled={!hasChanges}
               data-testid='reset-button'
             >
               초기화
@@ -330,7 +324,7 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
             <Button
               variant='contained'
               onClick={handleSave}
-              disabled={isSaveDisabled}
+              disabled={!hasChanges}
               data-testid='save-button'
             >
               저장
