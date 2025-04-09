@@ -1,61 +1,66 @@
-import { Typography, Box, Card } from '@mui/material';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { Box } from '@mui/material';
+import {
+  SurveyCard,
+  Container,
+  StyledRightIcon,
+  SecondaryTypography,
+  PrimaryMainTypography,
+  PrimaryTypography,
+} from './SatisfactionSurvey.styled';
+import { useState } from 'react';
+import { SurveyResponseModal } from './satisfactionSurvey/SurveyResponseModal';
+import { useSatisfactionSurveyResponseQuery } from '@api/queries/satisfactionSurvey/useSatisfactionSurveyQuery';
+import useMemberStore from '@stores/MemberStore';
+import { SurveyResponseSearchRequestParams } from '@model/SatisfactionSurvey';
 
 const SatisfactionSurvey = () => {
-  return (
-    <Card
-      sx={{
-        width: '411px',
-        height: '138px',
-        bgcolor: '#ECEFF1',
-        borderRadius: 3,
-        p: '24px 32px',
-      }}
-    >
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Typography
-            variant='h6'
-            sx={{
-              fontFamily: 'Pretendard',
-              fontSize: '20px',
-              fontWeight: 700,
-              color: '#05151F',
-              lineHeight: 1.5,
-            }}
-          >
-            3월 시스템 만족도 조사
-          </Typography>
-          <ChevronRightIcon sx={{ color: '#FFFFFF' }} />
-        </Box>
-        <Typography
-          variant='body2'
-          sx={{
-            fontFamily: 'Pretendard',
-            fontSize: '14px',
-            fontWeight: 400,
-            color: '#6E7782',
-            lineHeight: 1.5,
-          }}
-        >
-          소중한 의견을 남겨주세요.
-        </Typography>
-      </Box>
+  const today = new Date();
+  const currentSurveyPeriod: SurveyResponseSearchRequestParams = {
+    year: today.getFullYear(),
+    month: today.getMonth() + 1,
+  };
 
-      <Typography
-        variant='body2'
-        sx={{
-          fontFamily: 'Pretendard',
-          fontSize: '14px',
-          fontWeight: 400,
-          color: '#272E35',
-          lineHeight: 1.5,
-          mt: '36px',
+  const memberId = useMemberStore((state) => state.memberInfo?.memberId) ?? '';
+  const { data: surveyResponseStatus } = useSatisfactionSurveyResponseQuery(
+    memberId,
+    currentSurveyPeriod,
+  );
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleCardClick = (_e: React.MouseEvent) => {
+    if (isOpen) return;
+    setIsOpen(true);
+  };
+
+  return (
+    <SurveyCard
+      completed={surveyResponseStatus?.alreadyRespondedYn}
+      onClick={surveyResponseStatus?.alreadyRespondedYn === 'N' ? handleCardClick : undefined}
+      data-testid='satisfaction-survey-card'
+    >
+      <Container>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <PrimaryMainTypography variant='h2'>
+            {currentSurveyPeriod.month}월 시스템 만족도 조사
+          </PrimaryMainTypography>
+          <StyledRightIcon />
+        </Box>
+        <SecondaryTypography variant='body1'>
+          {surveyResponseStatus?.alreadyRespondedYn === 'Y'
+            ? '참여해주셔서 감사합니다:)'
+            : '소중한 의견을 남겨주세요.'}
+        </SecondaryTypography>
+      </Container>
+      <PrimaryTypography variant='body1' sx={{ position: 'absolute', top: '108px', left: '27px' }}>
+        {surveyResponseStatus?.totalResponseCount ?? ''}명 참여완료!
+      </PrimaryTypography>
+      <SurveyResponseModal
+        open={isOpen}
+        onClose={() => {
+          setIsOpen(false);
         }}
-      >
-        32명 참여완료!
-      </Typography>
-    </Card>
+      />
+    </SurveyCard>
   );
 };
 
