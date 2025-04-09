@@ -243,7 +243,11 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
           'businessProcessId' in response.data
         ) {
           const businessProcessId = response.data.businessProcessId;
-          setModificationBusinessProcessId(selectedCustomerId, selectedContractId, businessProcessId);
+          setModificationBusinessProcessId(
+            selectedCustomerId,
+            selectedContractId,
+            businessProcessId,
+          );
 
           setIsSaveRequested(true);
         }

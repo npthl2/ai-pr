@@ -166,9 +166,7 @@ const ServiceModification = () => {
 
               {/* 새로운 서비스 선택 */}
               <NewServiceContainer>
-                <ServiceModify
-                  setIsSaveRequested={setIsSaveRequested}
-                />
+                <ServiceModify setIsSaveRequested={setIsSaveRequested} />
               </NewServiceContainer>
               <ServiceModificationBlockModal
                 open={modalState.open}

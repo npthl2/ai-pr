@@ -68,7 +68,7 @@ const ServiceModificationModal: React.FC<ServiceModificationModalProps> = ({
   serviceName,
   additionalServicesCount,
   onClose,
-  onConfirm
+  onConfirm,
 }) => {
   const modalConfig = ServiceModificationModalConfig[type];
 
@@ -103,7 +103,7 @@ const ServiceModificationModal: React.FC<ServiceModificationModalProps> = ({
               serviceName,
               additionalServicesCount,
               onClose,
-              onConfirm
+              onConfirm,
             })}
           </Typography>
         </Box>
