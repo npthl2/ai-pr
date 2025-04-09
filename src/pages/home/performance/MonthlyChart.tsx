@@ -28,6 +28,50 @@ const TOOLTIP_MESSAGES = {
   EQUAL: '계속해서 좋은 실적 기대할게요. 화이팅:)',
 };
 
+// 월 이름 약어
+const monthNames = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
+// 기본 월별 데이터 생성
+const getDefaultMonthlyData = (): MonthlyResponseDto[] => {
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth(); // 0-11
+
+  // 최근 12개월 데이터 생성 (현재 월 포함)
+  const monthlyData: MonthlyResponseDto[] = [];
+
+  for (let i = 0; i < 12; i++) {
+    // i개월 전의 날짜 계산
+    const targetDate = new Date(currentYear, currentMonth - i, 1);
+    const targetYear = targetDate.getFullYear();
+    const targetMonth = targetDate.getMonth(); // 0-11
+
+    // YYYY-MM 형식
+    const monthStr = `${targetYear}-${String(targetMonth + 1).padStart(2, '0')}`;
+
+    monthlyData.push({
+      month: monthStr,
+      monthName: monthNames[targetMonth],
+      count: 0,
+    });
+  }
+
+  return monthlyData;
+};
+
 const MonthlyChart = () => {
   const theme = useTheme();
 
@@ -35,13 +79,19 @@ const MonthlyChart = () => {
   const memberInfo = useMemberStore((state) => state.memberInfo);
   const memberId = memberInfo?.memberId || '';
 
-  const { data: monthlyData } = useMonthlyStatisticsQuery(memberId);
+  const { data: monthlyData, isError } = useMonthlyStatisticsQuery(memberId);
   const [chartData, setChartData] = useState<MonthlyResponseDto[]>([]);
   // 툴팁 메시지 상태
   const [tooltipMessage, setTooltipMessage] = useState(TOOLTIP_MESSAGES.INCREASED);
+  const [tooltipActive, setTooltipActive] = useState(false);
 
   // 데이터가 변경될 때만 차트 데이터 갱신
   useEffect(() => {
+    if (isError) {
+      setTooltipActive(false);
+      setChartData(getDefaultMonthlyData());
+    }
+
     if (monthlyData) {
       // 최근 2개월 데이터 비교하여 메시지 설정
       if (monthlyData.length >= 2) {
@@ -58,9 +108,10 @@ const MonthlyChart = () => {
         }
       }
 
+      setTooltipActive(true);
       setChartData(monthlyData);
     }
-  }, [monthlyData]);
+  }, [monthlyData, isError]);
 
   return (
     <ChartWrapper>
@@ -69,9 +120,11 @@ const MonthlyChart = () => {
           <Typography variant='h4' sx={{ color: theme.palette.text.secondary }}>
             월별 실적 추이
           </Typography>
-          <TooltipContainer>
-            <TooltipText data-testid='monthly-chart-tooltip'>{tooltipMessage}</TooltipText>
-          </TooltipContainer>
+          {tooltipActive && (
+            <TooltipContainer>
+              <TooltipText data-testid='monthly-chart-tooltip'>{tooltipMessage}</TooltipText>
+            </TooltipContainer>
+          )}
         </Box>
       </ChartTitleContainer>
 
