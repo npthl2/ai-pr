@@ -1,6 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-
-import { Stack, Divider } from '@mui/material';
+import { Divider } from '@mui/material';
 import { TitleWrapper, TitleBox } from './Home.styled';
 import {
   ServiceName,
@@ -20,19 +19,17 @@ import {
   CardWrapper,
   CardContent,
   DetailInfo,
+  ContractsStack,
+  arrowIconStyle,
 } from './TodayContracts.styled';
-
 import { useTodayContracts } from '@api/queries/dashboard/useTodayContracts';
-
 import SearchIcon from '@mui/icons-material/Search';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { ContractDataWithCustomer } from '@model/CustomerContract';
-
 import { CustomArrowProps } from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-
 import TodayContractsModal from './todayContracts/TodayContractsModal';
 import { EMPTY_STATE_QUOTES } from './TodayContractsConstants';
 
@@ -43,53 +40,10 @@ const TodayContracts = () => {
   const [showRightArrow, setShowRightArrow] = useState(true);
   const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
   const { data: todayContracts } = useTodayContracts();
-  const [filteredContracts, setFilteredContracts] = useState(todayContracts);
+  const [filteredContracts, setFilteredContracts] = useState<ContractDataWithCustomer[]>([]);
   const [sliderKey, setSliderKey] = useState(0);
 
-  const handleSignupClick = (contractId: string) => {
-    setSelectedContractId(contractId);
-    setIsModalOpen(true);
-  };
-
-  const handleSearchClick = (value: string) => {
-    const filtered = todayContracts?.filter((contract) =>
-      contract.customerDetail.customerName.toLowerCase().includes(value.toLowerCase()),
-    );
-    setFilteredContracts(filtered);
-    // 검색조건 변경 시 강제 리마운트(슬라이더 인덱스 초기화)
-    setSliderKey(sliderKey + 1);
-  };
-
-  const CustomNextArrow = ({
-    onClick,
-    className,
-    show = true,
-  }: CustomArrowProps & { show?: boolean }) => (
-    <ArrowButton onClick={onClick} className={className} $isNext={true} $show={show}>
-      <ArrowForwardIosIcon sx={{ fontSize: '14px', color: '#05151F' }} data-testid='next-arrow' />
-    </ArrowButton>
-  );
-
-  const CustomPrevArrow = ({ onClick, className }: CustomArrowProps) => (
-    <ArrowButton onClick={onClick} className={className} $isNext={false}>
-      <ArrowBackIosNewIcon sx={{ fontSize: '14px', color: '#05151F' }} data-testid='prev-arrow' />
-    </ArrowButton>
-  );
-
-  const handleAfterChange = () => {
-    const sliderElement = document.querySelector('.slick-slider');
-    const sliderTrack = document.querySelector('.slick-track');
-    if (!sliderElement || !sliderTrack) return;
-
-    const sliderRect = sliderElement.getBoundingClientRect();
-    const lastSlide = document.querySelector('.slick-slide:not(.slick-cloned):last-child');
-    if (!lastSlide) return;
-
-    const lastSlideRect = lastSlide.getBoundingClientRect();
-    const isLastSlideFullyVisible = lastSlideRect.right <= sliderRect.right;
-    setShowRightArrow(!isLastSlideFullyVisible);
-  };
-
+  // 랜덤 명언 가져오기
   const randomQuote = useMemo(() => {
     const randomIndex = Math.floor(Math.random() * EMPTY_STATE_QUOTES.length);
     return EMPTY_STATE_QUOTES[randomIndex];
@@ -110,6 +64,51 @@ const TodayContracts = () => {
 
     return () => clearTimeout(timer);
   }, [filteredContracts]);
+
+  const handleDetailInfoClick = (contractId: string) => {
+    setSelectedContractId(contractId);
+    setIsModalOpen(true);
+  };
+
+  const handleSearchClick = (value: string) => {
+    const filtered =
+      todayContracts?.filter((contract) => contract.customerDetail.customerName.includes(value)) ??
+      [];
+    setFilteredContracts(filtered);
+    // 검색조건 변경 시 강제 리마운트
+    setSliderKey(sliderKey + 1);
+  };
+
+  // 슬라이더 끝에 도달했을 때 오른쪽 화살표 표시 없애기
+  const handleAfterChange = () => {
+    const sliderElement = document.querySelector('.slick-slider');
+    const sliderTrack = document.querySelector('.slick-track');
+    if (!sliderElement || !sliderTrack) return;
+
+    const sliderRect = sliderElement.getBoundingClientRect();
+    const lastSlide = document.querySelector('.slick-slide:not(.slick-cloned):last-child');
+    if (!lastSlide) return;
+
+    const lastSlideRect = lastSlide.getBoundingClientRect();
+    const isLastSlideFullyVisible = lastSlideRect.right <= sliderRect.right;
+    setShowRightArrow(!isLastSlideFullyVisible);
+  };
+
+  const CustomPrevArrow = ({ onClick, className }: CustomArrowProps) => (
+    <ArrowButton onClick={onClick} className={className} $isNext={false}>
+      <ArrowBackIosNewIcon sx={arrowIconStyle} data-testid='prev-arrow' />
+    </ArrowButton>
+  );
+
+  const CustomNextArrow = ({
+    onClick,
+    className,
+    show = true,
+  }: CustomArrowProps & { show?: boolean }) => (
+    <ArrowButton onClick={onClick} className={className} $isNext={true} $show={show}>
+      <ArrowForwardIosIcon sx={arrowIconStyle} data-testid='next-arrow' />
+    </ArrowButton>
+  );
 
   return (
     <TodayContractsContainer>
@@ -139,7 +138,7 @@ const TodayContracts = () => {
         </SearchContainer>
       </TitleWrapper>
 
-      <Stack direction='row' spacing={2} height={'258px'}>
+      <ContractsStack>
         {todayContracts?.length === 0 ? (
           <EmptyContractContainer>
             <EmptyContractText variant='h3'>오늘 신규가입 건은 없습니다.</EmptyContractText>
@@ -184,7 +183,7 @@ const TodayContracts = () => {
                   <DetailInfo>
                     <DetailButton
                       variant='h5'
-                      onClick={() => handleSignupClick(contract.contractId)}
+                      onClick={() => handleDetailInfoClick(contract.contractId)}
                       data-testid={`card-detail-info-${index}`}
                     >
                       상세 정보 보기 →
@@ -195,7 +194,7 @@ const TodayContracts = () => {
             ))}
           </StyledSlider>
         )}
-      </Stack>
+      </ContractsStack>
 
       <TodayContractsModal
         open={isModalOpen}

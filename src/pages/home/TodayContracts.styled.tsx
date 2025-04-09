@@ -1,6 +1,8 @@
 import { Box, IconButton, styled, Typography, Card } from '@mui/material';
+import { SxProps } from '@mui/system';
 import TextField from '@components/TextField';
 import Slider from 'react-slick';
+import { Stack } from '@mui/material';
 
 export const TodayContractsContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -209,3 +211,14 @@ export const ArrowButton = styled(IconButton, {
     display: 'none',
   },
 }));
+
+export const ContractsStack = styled(Stack)(({}) => ({
+  height: '258px',
+  flexDirection: 'row',
+}));
+
+export const arrowIconStyle: SxProps = {
+  width: '16px',
+  height: '16px',
+  color: '#05151F',
+};
