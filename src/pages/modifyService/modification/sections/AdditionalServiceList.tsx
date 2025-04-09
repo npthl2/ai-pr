@@ -2,7 +2,7 @@ import { Box, Typography, TableBody, TableHead, Table } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import useModifyServiceStore from '@stores/ModifyServiceStore';
+import useModifyServiceStore from '@stores/ModifyServiceStoreRefact';
 import { AdditionalService } from '@model/modifyService/ModifyServiceModel';
 import TableRow from '@components/Table/TableRow';
 import TableCell from '@components/Table/TableCell';
@@ -27,9 +27,11 @@ import { ArrowDownward } from '@mui/icons-material';
 import useAdditionalServiceSorting, {
   SortField,
 } from '@hooks/modifyService/useAdditionalServiceSorting';
+import useCustomerStore from '@stores/CustomerStore';
+import useCurrentServiceStore from '@stores/CurrentServiceStore';
 
 // 필터링된 부가서비스 목록 아이템 타입
-interface FilteredServiceItem extends AdditionalService {
+interface FilteredAdditionalService extends AdditionalService {
   isRemovedCurrentService?: boolean;
   isAgeRestricted?: boolean;
   isExclusive?: boolean;
@@ -38,25 +40,19 @@ interface FilteredServiceItem extends AdditionalService {
 // 컴포넌트 props 타입 정의
 interface AdditionalServiceListProps {
   additionalServices: AdditionalService[];
-  _contractTabId: string;
-  contractTabId: string;
 }
 
-const AdditionalServiceList = ({
-  additionalServices,
-  _contractTabId,
-}: AdditionalServiceListProps) => {
-  // 검색어 상태
-  const [searchKeyword, setSearchKeyword] = useState('');
-  const [debouncedSearchKeyword, setDebouncedSearchKeyword] = useState('');
-
-  const { sortField, sortDirection, handleSort, getSortIconProps, sortAdditionalServices } =
-    useAdditionalServiceSorting();
+const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProps) => {
+  // 스토어에서 필요한 정보 가져오기
+  const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
+  const selectedContractId = useCurrentServiceStore(
+    (state) => state.selectedContractIds[selectedCustomerId] || '',
+  );
 
   // Zustand 스토어에서 필요한 함수와 데이터 가져오기
   const { addAdditionalService } = useModifyServiceStore();
   const modifyServiceInfo = useModifyServiceStore((state) =>
-    state.getModifyServiceInfo(_contractTabId),
+    state.getModifyServiceInfo(selectedCustomerId, selectedContractId),
   );
 
   // 계약 탭에 대한 정보가 없으면 기본값 제공
@@ -65,8 +61,27 @@ const AdditionalServiceList = ({
   const removedCurrentAdditionalServices =
     modifyServiceInfo?.removedCurrentAdditionalServices || [];
 
+  // 정렬 기능
+  const { sortField, sortDirection, handleSort, getSortIconProps, sortAdditionalServices } =
+    useAdditionalServiceSorting();
+
+  // 정렬 아이콘 렌더링 함수
+  const renderSortIcon = (field: SortField) => {
+    const iconProps = getSortIconProps(field);
+    return <ArrowDownward sx={iconProps.style} data-testid={iconProps.testId} />;
+  };
+
+  // 검색어 상태
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [debouncedSearchKeyword, setDebouncedSearchKeyword] = useState('');
+
   // 검색어로 필터링된 부가서비스 목록 상태
-  const [filteredServices, setFilteredServices] = useState<FilteredServiceItem[]>([]);
+  const [filteredServices, setFilteredServices] = useState<FilteredAdditionalService[]>([]);
+
+  // 검색어 변경 핸들러
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchKeyword(value);
+  }, []);
 
   // 검색어 디바운싱 처리
   useEffect(() => {
@@ -146,38 +161,30 @@ const AdditionalServiceList = ({
   ]);
 
   // 부가서비스 추가 핸들러
-  const handleAddService = useCallback(
-    (service: AdditionalService, isAgeRestricted: boolean) => {
+  const handleAddAdditionalService = useCallback(
+    (additionalService: AdditionalService, isAgeRestricted: boolean) => {
       if (isAgeRestricted) {
         // 나이 제한으로 추가할 수 없는 경우 처리
         return;
       }
-      addAdditionalService(_contractTabId, service);
+      addAdditionalService(selectedCustomerId, selectedContractId, additionalService);
     },
-    [addAdditionalService, _contractTabId],
+    [addAdditionalService, selectedCustomerId, selectedContractId],
   );
 
-  // 검색어 변경 핸들러
-  const handleSearchChange = useCallback((value: string) => {
-    setSearchKeyword(value);
-  }, []);
-
   // 나이 제한 메시지 생성 함수
-  const getRestrictionMessage = useCallback((_service: FilteredServiceItem) => {
-    if (_service.isAgeRestricted) {
-      return '나이 제한으로 인해 가입이 불가능합니다.';
-    }
-    if (_service.isExclusive) {
-      return '요금제 제한으로 인해 가입이 불가능합니다.';
-    }
-    return '';
-  }, []);
-
-  // 정렬 아이콘 렌더링 함수
-  const renderSortIcon = (field: SortField) => {
-    const iconProps = getSortIconProps(field);
-    return <ArrowDownward sx={iconProps.style} data-testid={iconProps.testId} />;
-  };
+  const getRestrictionMessage = useCallback(
+    (filteredAdditionalService: FilteredAdditionalService) => {
+      if (filteredAdditionalService.isAgeRestricted) {
+        return '나이 제한으로 인해 가입이 불가능합니다.';
+      }
+      if (filteredAdditionalService.isExclusive) {
+        return '요금제 제한으로 인해 가입이 불가능합니다.';
+      }
+      return '';
+    },
+    [],
+  );
 
   // 렌더링 테이블 컨텐츠 메모이제이션
   const tableContent = useMemo(() => {
@@ -226,7 +233,7 @@ const AdditionalServiceList = ({
               size='small'
               iconComponent={<AddIcon />}
               iconPosition='right'
-              onClick={() => handleAddService(service, isRestricted)}
+              onClick={() => handleAddAdditionalService(service, isRestricted)}
               disabled={isRestricted}
               data-testid='add-button'
             >
@@ -236,7 +243,7 @@ const AdditionalServiceList = ({
         </TableRow>
       );
     });
-  }, [filteredServices, handleAddService, getRestrictionMessage]);
+  }, [filteredServices, handleAddAdditionalService, getRestrictionMessage]);
 
   return (
     <RootContainer>

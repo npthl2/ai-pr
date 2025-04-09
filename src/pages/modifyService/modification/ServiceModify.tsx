@@ -52,13 +52,9 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
 
   // 부가서비스 목록 조회 API 호출
   // 고객 나이 확인
-  const customers = useCustomerStore((state) => state.customers);
+  const { customers, isCustomer } = useCustomerStore();
   const selectedCustomer = customers.find((customer) => customer.id === selectedCustomerId);
-  const customerAge = selectedCustomer
-    ? 'age' in selectedCustomer
-      ? Number(selectedCustomer.age)
-      : 0
-    : 0;
+  const customerAge = selectedCustomer && isCustomer(selectedCustomer) ? Number(selectedCustomer.age) : 0;
 
   // 현재 서비스 ID 확인
   const currentService =
@@ -273,8 +269,6 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
       <Section>
         <AdditionalServiceList
           additionalServices={additionalServices}
-          _contractTabId={selectedCustomerId}
-          contractTabId={selectedCustomerId}
         />
       </Section>
 

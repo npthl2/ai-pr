@@ -47,14 +47,11 @@ const ModifiedServiceSelect = () => {
   );
 
   // Zustand 스토어에서 필요한 함수 가져오기
-  const { setSelectedService, revertToPreviousService, setRevertButtonClickedDate } =
+  const { getModifyServiceInfo, setSelectedService, revertToPreviousService, setRevertButtonClickedDate } =
     useModifyServiceStore();
 
-  const modifyServiceInfo = useModifyServiceStore((state) =>
-    state.getModifyServiceInfo(selectedCustomerId, selectedContractId),
-  );
-
   // 계약 탭에 대한 정보가 없으면 기본값 제공
+  const modifyServiceInfo = getModifyServiceInfo(selectedCustomerId, selectedContractId);
   const selectedService = modifyServiceInfo?.selectedService || null;
   const isServiceModifiable = modifyServiceInfo?.isServiceModifiable || false;
   const previousService = modifyServiceInfo?.previousService || null;
@@ -74,13 +71,9 @@ const ModifiedServiceSelect = () => {
   }));
 
   // 고객 나이 확인
-  const customers = useCustomerStore((state) => state.customers);
+  const { customers, isCustomer } = useCustomerStore();
   const selectedCustomer = customers.find((customer) => customer.id === selectedCustomerId);
-  const customerAge = selectedCustomer
-    ? 'age' in selectedCustomer
-      ? String(selectedCustomer.age)
-      : ''
-    : '';
+  const customerAge = selectedCustomer && isCustomer(selectedCustomer) ? String(selectedCustomer.age) : '';
 
   // 나이 제한을 위한 상태 관리
   const [serviceAgeCheckParams, setServiceAgeCheckParams] = useState<{
@@ -144,12 +137,9 @@ const ModifiedServiceSelect = () => {
   // 나이 제한 확인 결과 처리
   useEffect(() => {
     if (ageRestrictionData && tempSelectedService) {
-      // 타입 확인 및 안전한 처리
-      const data = ageRestrictionData;
-
       // 실제 ServiceAgeCheckResponse 타입으로 처리
-      if ('isAvailable' in data) {
-        if (data.isAvailable) {
+      if ('isAvailable' in ageRestrictionData) {
+        if (ageRestrictionData.isAvailable) {
           if (tempSelectedService.serviceId === previousService?.serviceId) {
             revertToPreviousService(selectedCustomerId, selectedContractId);
           } else {
