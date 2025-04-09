@@ -115,7 +115,7 @@ const ServiceModification = () => {
         );
       }
 
-      if (!modifiableData.isModifiable && !isSaveRequested) {
+      if (!modifiableData.isModifiable) {
         setModalState({
           open: true,
           type: ServiceModificationModalType.MONTHLY_RESTRICTION,
@@ -132,7 +132,6 @@ const ServiceModification = () => {
     setPreviousService,
     setInitialStates,
     isServiceModificationTabActive,
-    isSaveRequested,
   ]);
 
   // 모달 닫기 핸들러
@@ -141,7 +140,7 @@ const ServiceModification = () => {
   };
 
   if (isSaveRequested) {
-    return <ModificationRequest contractTabId={selectedContractId} />;
+    return <ModificationRequest contractTabId={selectedCustomerId} />;
   }
 
   return (
@@ -168,7 +167,6 @@ const ServiceModification = () => {
               {/* 새로운 서비스 선택 */}
               <NewServiceContainer>
                 <ServiceModify
-                  contractTabId={selectedContractId}
                   setIsSaveRequested={setIsSaveRequested}
                 />
               </NewServiceContainer>
@@ -176,7 +174,6 @@ const ServiceModification = () => {
                 open={modalState.open}
                 type={modalState.type}
                 onClose={handleCloseModal}
-                contractTabId={selectedContractId}
               />
             </ServicesContainer>
           )}

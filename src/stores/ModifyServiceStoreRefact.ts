@@ -68,6 +68,11 @@ export interface ModifyServiceState {
   setSelectedService: (customerId: string, contractId: string, service: Service | null) => void; // 완료
   revertToPreviousService: (customerId: string, contractId: string) => void; // 완료
   setRevertButtonClickedDate: (customerId: string, contractId: string, date: string | null) => void; // 완료
+  setModificationBusinessProcessId: (
+    customerId: string,
+    contractId: string,
+    businessProcessId: string,
+  ) => void;
 
   // AdditionalServiceList.tsx 사용
   restoreCurrentAdditionalService: (
@@ -373,6 +378,30 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
             [contractId]: {
               ...serviceInfoByContractId,
               revertButtonClickedDate: date,
+            },
+          },
+        },
+      };
+    });
+  },
+
+  setModificationBusinessProcessId: (
+    customerId: string,
+    contractId: string,
+    businessProcessId: string,
+  ) => {
+    set((state) => {
+      const serviceInfoByContractId = getContractInfo(state, customerId, contractId);
+      if (!serviceInfoByContractId) return state;
+
+      return {
+        modifyServices: {
+          ...state.modifyServices,
+          [customerId]: {
+            ...state.modifyServices[customerId],
+            [contractId]: {
+              ...serviceInfoByContractId,
+              businessProcessId,
             },
           },
         },

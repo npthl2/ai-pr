@@ -3,7 +3,7 @@ import { Box, Button } from '@mui/material';
 import { useState } from 'react';
 import SelectService from './sections/ModifiedServiceSelect';
 import AdditionalServiceList from './sections/AdditionalServiceList';
-import useModifyServiceStore from '@stores/ModifyServiceStore';
+import useModifyServiceStore from '@stores/ModifyServiceStoreRefact';
 import useCustomerStore from '@stores/CustomerStore';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import { useAdditionalServicesWithExclusiveQuery } from '@api/queries/modifyService/useModifyServiceQuery';
@@ -25,18 +25,22 @@ import {
 import { CommonResponse } from '@model/common/CommonResponse';
 
 interface ServiceModifyProps {
-  // props 정의
   setIsSaveRequested: (isSaveRequested: boolean) => void;
-  contractTabId: string;
 }
 
-const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps) => {
+const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
   // 스토어에서 필요한 정보 가져오기
-  const modifyServiceInfo = useModifyServiceStore((state) =>
-    state.getModifyServiceInfo(contractTabId),
+  const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
+  const selectedContractId = useCurrentServiceStore(
+    (state) => state.selectedContractIds[selectedCustomerId] || '',
   );
+
   const { resetAll, serviceModificationMounted, setModificationBusinessProcessId } =
     useModifyServiceStore();
+
+  const modifyServiceInfo = useModifyServiceStore((state) =>
+    state.getModifyServiceInfo(selectedCustomerId, selectedContractId),
+  );
 
   // 계약 탭에 대한 정보가 없으면 기본값 제공
   const selectedService = modifyServiceInfo?.selectedService || null;
@@ -46,36 +50,42 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
   const removedCurrentAdditionalServices =
     modifyServiceInfo?.removedCurrentAdditionalServices || [];
 
-  // CustomerStore에서 현재 선택된 고객 정보 가져오기
-  const { customers, selectedCustomerId } = useCustomerStore();
-
-  // CurrentServiceStore에서 초기 서비스 정보 가져오기
-  const getCurrentService = useCurrentServiceStore((state) => state.getCurrentService);
-  const currentService = getCurrentService?.(selectedCustomerId || '') || null;
-  const contractId = currentService?.contractId || '';
-
   // 서비스 변경 요청 mutation 사용
   const serviceModificationMutation = useServiceModificationMutation();
 
-  // 현재 선택된 고객 찾기 - 단순 find 연산으로 변경
+  // TODO 자식 컴포넌트로 내려도 될듯?
+  // 부가서비스 목록 조회 API 호출
+  // 고객 나이 확인
+  const customers = useCustomerStore((state) => state.customers);
   const selectedCustomer = customers.find((customer) => customer.id === selectedCustomerId);
-
-  // 현재 고객의 나이 - 단순 계산으로 변경
   const customerAge = selectedCustomer
     ? 'age' in selectedCustomer
       ? Number(selectedCustomer.age)
       : null
     : null;
 
-  // 현재 사용할 서비스 ID (선택된 서비스 또는 현재 서비스) - 단순 계산으로 변경
+  // 현재 서비스 ID 확인
+  const getCurrentService = useCurrentServiceStore((state) => state.getCurrentService);
+  const currentService = getCurrentService?.(selectedCustomerId || '') || null;
   const currentServiceId = selectedService?.serviceId || currentService?.serviceId || '';
 
-  // 부가서비스 목록 조회 API 호출
   const { data: additionalServices = [] } = useAdditionalServicesWithExclusiveQuery(
     customerAge || 0,
     currentServiceId,
     serviceModificationMounted,
   );
+
+  // 변경사항이 있는지 확인
+  const hasChanges =
+    !!selectedService ||
+    selectedAdditionalServices.length > 0 ||
+    removedCurrentAdditionalServices.length > 0;
+
+  // 저장 버튼 비활성화 조건
+  const isSaveDisabled = !hasChanges;
+
+  // 변경사항이 없는 경우 초기화 버튼 비활성화
+  const isResetDisabled = !hasChanges;
 
   // 모달 상태 관리
   const [modalState, setModalState] = useState<{
@@ -88,11 +98,20 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
     type: ServiceModificationModalType.CONFIRM_CHANGE,
   });
 
-  // 변경사항이 있는지 확인
-  const hasChanges =
-    selectedService !== null ||
-    selectedAdditionalServices.length > 0 ||
-    removedCurrentAdditionalServices.length > 0;
+  // 모달 표시 함수
+  const showModal = (
+    type: ServiceModificationModalType,
+    data: {
+      serviceName?: string;
+      additionalServicesCount?: number;
+    } = {},
+  ) => {
+    setModalState({
+      open: true,
+      type,
+      ...data,
+    });
+  };
 
   // 서비스 제한 상태 확인 함수
   const checkServiceRestrictions = (services: AdditionalService[]) => {
@@ -114,21 +133,6 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
 
     // 년/월/일 전체를 비교
     return today.toDateString() !== revertDate.toDateString();
-  };
-
-  // 모달 표시 함수
-  const showModal = (
-    type: ServiceModificationModalType,
-    data: {
-      serviceName?: string;
-      additionalServicesCount?: number;
-    } = {},
-  ) => {
-    setModalState({
-      open: true,
-      type,
-      ...data,
-    });
   };
 
   // 저장 버튼 클릭 시 호출되는 핸들러
@@ -157,7 +161,7 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
             : undefined,
         };
 
-        // 부가서비스만 제거된 경우 (allAdditionalServices.length가 0이고 removedCurrentAdditionalServices.length > 0)
+        // 부가서비스만 제거된 경우 (모든 부가서비스 제거)
         if (
           modalType === ServiceModificationModalType.CONFIRM_ADDITIONAL_SERVICES_CHANGE &&
           allAdditionalServices.length === 0 &&
@@ -174,7 +178,7 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
       }
     }
 
-    // 어떤 모달 조건에도 해당하지 않지만 변경사항이 있는 경우 (부가서비스 제거만 있는 경우)
+    // 부가서비스만 제거된 경우
     if (removedCurrentAdditionalServices.length > 0) {
       showModal(ServiceModificationModalType.CONFIRM_ADDITIONAL_SERVICES_CHANGE, {
         additionalServicesCount:
@@ -183,21 +187,11 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
     }
   };
 
-  // 모달 닫기 핸들러
-  const handleCloseModal = () => {
-    setModalState((prev) => ({ ...prev, open: false }));
-  };
-
   // 모달 확인 핸들러
   const handleConfirmModal = async () => {
-    // ModifyServiceStore에서 선택된 서비스 정보 가져오기
-    const modifyServiceInfo = useModifyServiceStore.getState().getModifyServiceInfo(contractTabId);
     if (!modifyServiceInfo) {
       return;
     }
-
-    // CustomerStore에서 고객 ID 가져오기
-    const selectedCustomerId = useCustomerStore.getState().selectedCustomerId;
 
     // 선택된 서비스 및 부가서비스 정보 추출
     const {
@@ -229,7 +223,7 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
     const modificationInfo: ServiceModificationRequest = {
       gTrId: '',
       customerId: selectedCustomerId || '',
-      contractId: contractId || '',
+      contractId: selectedContractId || '',
       service: selectedService
         ? {
             serviceId: selectedService.serviceId,
@@ -249,7 +243,7 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
           'businessProcessId' in response.data
         ) {
           const businessProcessId = response.data.businessProcessId;
-          setModificationBusinessProcessId(contractTabId, businessProcessId);
+          setModificationBusinessProcessId(selectedCustomerId, selectedContractId, businessProcessId);
 
           setIsSaveRequested(true);
         }
@@ -260,30 +254,29 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
     handleCloseModal();
   };
 
-  // 저장 버튼 비활성화 조건
-  const isSaveDisabled = !hasChanges;
+  // 모달 닫기 핸들러
+  const handleCloseModal = () => {
+    setModalState((prev) => ({ ...prev, open: false }));
+  };
 
   // 초기화 버튼 클릭 시 호출되는 핸들러
   const handleReset = () => {
-    resetAll(contractTabId);
+    resetAll(selectedCustomerId, selectedContractId);
   };
-
-  // 변경사항이 없는 경우 초기화 버튼 비활성화
-  const isResetDisabled = !hasChanges;
 
   return (
     <Container>
       {/* 1. 요금제 선택 영역 */}
       <Section>
-        <SelectService contractTabId={contractTabId} />
+        <SelectService contractTabId={selectedCustomerId} />
       </Section>
 
       {/* 2. 부가서비스 목록 영역 */}
       <Section>
         <AdditionalServiceList
           additionalServices={additionalServices}
-          _contractTabId={contractTabId}
-          contractTabId={contractTabId}
+          _contractTabId={selectedCustomerId}
+          contractTabId={selectedCustomerId}
         />
       </Section>
 
@@ -291,7 +284,7 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
       <Section>
         <SelectedAdditionalServiceList
           additionalServices={additionalServices}
-          contractTabId={contractTabId}
+          contractTabId={selectedCustomerId}
         />
       </Section>
 
@@ -303,7 +296,6 @@ const ServiceModify = ({ setIsSaveRequested, contractTabId }: ServiceModifyProps
         additionalServicesCount={modalState.additionalServicesCount}
         onClose={handleCloseModal}
         onConfirm={handleConfirmModal}
-        contractTabId={contractTabId}
       />
 
       {/* 버튼 영역 */}
