@@ -76,7 +76,9 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
   const [debouncedSearchKeyword, setDebouncedSearchKeyword] = useState('');
 
   // 검색어로 필터링된 부가서비스 목록 상태
-  const [filteredAdditionalServices, setFilteredAdditionalServices] = useState<FilteredAdditionalService[]>([]);
+  const [filteredAdditionalServices, setFilteredAdditionalServices] = useState<
+    FilteredAdditionalService[]
+  >([]);
 
   // 검색어 변경 핸들러
   const handleSearchChange = useCallback((value: string) => {
@@ -100,13 +102,20 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
     }
 
     // 이미 선택된 부가서비스 ID 목록
-    const selectedAdditionalServiceIds = selectedAdditionalServices.map((AdditionalService) => AdditionalService.serviceId);
+    const selectedAdditionalServiceIds = selectedAdditionalServices.map(
+      (AdditionalService) => AdditionalService.serviceId,
+    );
 
     // 현재 사용 중인 부가서비스 ID 목록
-    const currentAdditionalServiceIds = currentAdditionalServices.map((AdditionalService) => AdditionalService.serviceId);
+    const currentAdditionalServiceIds = currentAdditionalServices.map(
+      (AdditionalService) => AdditionalService.serviceId,
+    );
 
     // 모든 제외할 서비스 ID 목록 (현재 사용중이면서 제거되지 않은 것 + 이미 선택된 것)
-    const excludedAdditionalServiceIds = [...selectedAdditionalServiceIds, ...currentAdditionalServiceIds];
+    const excludedAdditionalServiceIds = [
+      ...selectedAdditionalServiceIds,
+      ...currentAdditionalServiceIds,
+    ];
 
     // 필터링할 서비스 목록 (API에서 가져온 서비스 + 제거된 현재 서비스)
     const allAdditionalServices = [...additionalServices, ...removedCurrentAdditionalServices];
@@ -125,7 +134,9 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
         // 검색어와 제외 조건 적용
         const include =
           !excludedAdditionalServiceIds.includes(additionalService.serviceId) &&
-          additionalService.serviceName.toLowerCase().includes(debouncedSearchKeyword.trim().toLowerCase());
+          additionalService.serviceName
+            .toLowerCase()
+            .includes(debouncedSearchKeyword.trim().toLowerCase());
 
         // 포함된다면 ID 추적에 추가
         if (include) {
@@ -191,7 +202,8 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
   // 렌더링 테이블 컨텐츠 메모이제이션
   const tableContent = useMemo(() => {
     return filteredAdditionalServices.map((additionalService) => {
-      const isRestricted = additionalService.isAgeRestricted || additionalService.isExclusive || false;
+      const isRestricted =
+        additionalService.isAgeRestricted || additionalService.isExclusive || false;
 
       return (
         <TableRow
@@ -214,13 +226,21 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
               <Box display='flex' alignItems='left'>
                 <TextContainer>
                   {isRestricted && (
-                    <Tooltip title={getRestrictionMessage(additionalService)} arrow placement='bottom'>
-                      <EllipsisTypography data-testid={`service-name-${additionalService.serviceId}`}>
+                    <Tooltip
+                      title={getRestrictionMessage(additionalService)}
+                      arrow
+                      placement='bottom'
+                    >
+                      <EllipsisTypography
+                        data-testid={`service-name-${additionalService.serviceId}`}
+                      >
                         {additionalService.serviceName}
                       </EllipsisTypography>
                     </Tooltip>
                   )}
-                  {!isRestricted && <EllipsisTypography>{additionalService.serviceName}</EllipsisTypography>}
+                  {!isRestricted && (
+                    <EllipsisTypography>{additionalService.serviceName}</EllipsisTypography>
+                  )}
                 </TextContainer>
               </Box>
             </Box>
