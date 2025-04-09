@@ -1,21 +1,26 @@
-import LoginPage from '../../../pages/auth/LoginPage';
 import TodayContractsMock from '../../mock/home/TodayContractsMock';
 import TodayContracts from '../../../pages/home/TodayContracts';
+import { mockMemberStore } from '../../../support/helpers/mockMemberStore';
+import { mockAuthStore } from '../../../support/helpers/mockAuthStore';
 
 describe('[KAN-326] 오늘의 신규가입 위젯 테스트', () => {
-  const loginPage = new LoginPage();
   const todayContractsMock = new TodayContractsMock();
   const todayContracts = new TodayContracts();
 
   const loginAndRedirectToHome = () => {
-    loginPage.visitLoginPage();
-    loginPage.inputId('user1');
-    loginPage.inputPw('new1234');
-    loginPage.clickLoginButton();
-    loginPage.assertRedirectedToHome();
+    mockAuthStore();
+    mockMemberStore({
+      memberInfo: {
+        memberId: 'user1',
+        memberName: 'user1',
+        authorities: [''],
+      },
+    });
+    todayContracts.visit();
   };
 
   before(() => {
+    todayContractsMock.successWhenGetTodayContracts();
     loginAndRedirectToHome();
   });
 
@@ -76,8 +81,8 @@ describe('[KAN-326] 오늘의 신규가입 위젯 테스트', () => {
   });
 
   it('[KAN-326-6] 계약이 없는 경우 명언이 표시되어야 한다', () => {
-    loginAndRedirectToHome();
     todayContractsMock.successWhenTodayContractsEmpty();
+    loginAndRedirectToHome();
     todayContracts.getQuote();
   });
 });
