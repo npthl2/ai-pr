@@ -133,6 +133,11 @@ const TodayContracts = () => {
                 data-testid='search-icon'
               />
             }
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSearchClick(searchQuery);
+              }
+            }}
             data-testid='search-input'
           />
         </SearchContainer>
