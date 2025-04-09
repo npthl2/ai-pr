@@ -19,7 +19,13 @@ import useMemberStore from '@stores/MemberStore';
 
 const Home = () => {
   const [noticeModalOpen, setNoticeModalOpen] = useState(false);
+  const [currentNoticeId, setCurrentNoticeId] = useState<string | null>(null);
   const memberInfo = useMemberStore((state) => state.memberInfo);
+
+  const handleNoticeClick = (noticeId: string) => {
+    setCurrentNoticeId(noticeId);
+    setNoticeModalOpen(true);
+  };
 
   return (
     <HomeContainer data-testid='home-content'>
@@ -35,7 +41,7 @@ const Home = () => {
         </Typography>
 
         <MainContent>
-          <Notice setNoticeModalOpen={setNoticeModalOpen} />
+          <Notice onNoticeClick={handleNoticeClick} />
 
           <ContentLayout>
             <LeftColumn>
@@ -54,7 +60,11 @@ const Home = () => {
           </ContentLayout>
         </MainContent>
 
-        <NoticeModal noticeModalOpen={noticeModalOpen} setNoticeModalOpen={setNoticeModalOpen} />
+        <NoticeModal
+          noticeModalOpen={noticeModalOpen}
+          setNoticeModalOpen={setNoticeModalOpen}
+          initialNoticeId={currentNoticeId}
+        />
       </ContentWrapper>
     </HomeContainer>
   );

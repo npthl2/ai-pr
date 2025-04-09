@@ -25,11 +25,16 @@ import {
 interface NoticeModalProps {
   noticeModalOpen: boolean;
   setNoticeModalOpen: (open: boolean) => void;
+  initialNoticeId: string | null;
 }
 
-const NoticeModal = ({ noticeModalOpen, setNoticeModalOpen }: NoticeModalProps) => {
+const NoticeModal = ({
+  noticeModalOpen,
+  setNoticeModalOpen,
+  initialNoticeId,
+}: NoticeModalProps) => {
   const theme = useTheme();
-  const [expandedNotice, setExpandedNotice] = useState<string | false>(false);
+  const [expandedNotice, setExpandedNotice] = useState<string | false>(initialNoticeId || false);
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [scrollTarget, setScrollTarget] = useState<string | null>(null);
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -75,12 +80,20 @@ const NoticeModal = ({ noticeModalOpen, setNoticeModalOpen }: NoticeModalProps) 
   }, [scrollTarget]);
 
   useEffect(() => {
+    if (noticeModalOpen && initialNoticeId) {
+      setExpandedNotice(initialNoticeId);
+      setScrollTarget(initialNoticeId);
+    }
+  }, [noticeModalOpen, initialNoticeId]);
+
+  useEffect(() => {
     if (!noticeModalOpen) {
       setSearchKeyword('');
       setSearchParams({
         keyword: '',
         category: '전체',
       });
+      setExpandedNotice(false);
     }
   }, [noticeModalOpen]);
 

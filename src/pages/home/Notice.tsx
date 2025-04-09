@@ -11,15 +11,17 @@ import {
 } from './Notice.styled';
 
 interface NoticeProps {
-  setNoticeModalOpen: (open: boolean) => void;
+  onNoticeClick: (noticeId: string) => void;
 }
 
-const Notice = ({ setNoticeModalOpen }: NoticeProps) => {
+const Notice = ({ onNoticeClick }: NoticeProps) => {
   const [currentNoticeIndex, setCurrentNoticeIndex] = useState(0);
   const { data: notices } = useNoticeSummaryQuery();
 
   const handleNoticeClick = () => {
-    setNoticeModalOpen(true);
+    if (notices && Array.isArray(notices) && notices.length > 0) {
+      onNoticeClick(notices[currentNoticeIndex].noticeId);
+    }
   };
 
   useEffect(() => {
