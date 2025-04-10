@@ -1,4 +1,5 @@
 import { Box, IconButton, styled, Typography, Card } from '@mui/material';
+import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import TextField from '@components/TextField';
 import Slider from 'react-slick';
@@ -38,7 +39,7 @@ export const SearchContainer = styled(Box)(({ theme }) => ({
 export const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: theme.palette.background.paper,
     height: '100%',
     width: '100%',
     padding: '0 12px',
@@ -86,19 +87,19 @@ export const StyledSlider = styled(Slider)({
   },
 });
 
-export const CardWrapper = styled(Card)({
+export const CardWrapper = styled(Card)(({ theme }) => ({
   width: '219px',
   height: '100%',
   borderRadius: '16px',
-  backgroundColor: '#FFFFFF',
+  backgroundColor: theme.palette.primary.contrastText,
   boxShadow: 'none',
   padding: '24px 32px',
   '&:hover, &.hover-active': {
-    backgroundColor: '#272E35',
+    backgroundColor: theme.palette.grey[900],
   },
   display: 'flex',
   justifyContent: 'space-between',
-});
+}));
 
 export const CardContent = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -107,7 +108,7 @@ export const CardContent = styled(Box)(({ theme }) => ({
   gap: theme.spacing(2),
   height: '204px',
   '&:hover, &.hover-active': {
-    backgroundColor: '#272E35',
+    backgroundColor: theme.palette.grey[900],
   },
 }));
 
@@ -149,14 +150,11 @@ export const DetailButton = styled(Typography)(({ theme }) => ({
   },
 }));
 
-export const Divider = styled(Box)({
+export const Divider = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '1px',
-  backgroundColor: '#E5E8EB',
-  '.hover-active &': {
-    backgroundColor: '#FFFFFF',
-  },
-});
+  backgroundColor: theme.palette.grey[100],
+}));
 
 export const EmptyContractContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -183,7 +181,7 @@ export const EmptyDescription = styled(Typography)(({ theme }) => ({
 
 export const ArrowButton = styled(IconButton, {
   shouldForwardProp: (prop) => prop !== '$isNext' && prop !== '$show',
-})<{ $isNext?: boolean; $show?: boolean }>(({ $isNext = false, $show = true }) => ({
+})<{ $isNext?: boolean; $show?: boolean }>(({ $isNext = false, $show = true, theme }) => ({
   width: '36px',
   height: '36px',
   minWidth: '36px',
@@ -192,7 +190,7 @@ export const ArrowButton = styled(IconButton, {
   [!$isNext ? 'left' : 'right']: '-18px',
   top: '50%',
   transform: 'translateY(-50%)',
-  backgroundColor: '#FFFFFF',
+  backgroundColor: theme.palette.primary.contrastText,
   border: '1px solid rgba(5, 21, 31, 0.5)',
   borderRadius: '99px',
   opacity: $show ? 1 : 0,
@@ -201,7 +199,7 @@ export const ArrowButton = styled(IconButton, {
   padding: 0,
   zIndex: 2,
   '&:hover': {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: theme.palette.primary.contrastText,
   },
   '&.slick-disabled': {
     display: 'none',
@@ -217,8 +215,8 @@ export const ContractsStack = styled(Stack)(({}) => ({
   flexDirection: 'row',
 }));
 
-export const arrowIconStyle: SxProps = {
+export const arrowIconStyle: SxProps<Theme> = {
   width: '16px',
   height: '16px',
-  color: '#05151F',
+  color: (theme) => theme.palette.primary.main,
 };
