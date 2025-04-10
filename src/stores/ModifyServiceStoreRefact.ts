@@ -31,6 +31,7 @@ export interface ModifyServiceInfo {
   initialIsServiceModifiable: boolean;
   initialPreviousService: Service | null;
   revertButtonClickedDate: string | null;
+  businessProcessId: string;
 }
 
 export interface ModifyServices {
@@ -128,6 +129,7 @@ const createDefaultServiceInfo = (): ModifyServiceInfo => ({
   initialPreviousService: null,
   revertButtonClickedDate: null,
   serviceModificationMounted: false,
+  businessProcessId: '',
 });
 
 // 변경 여부 체크
@@ -640,18 +642,14 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
   // 계약 단위 정보 삭제
   removeModifyServiceInfo: (customerId: string, contractId: string) => {
     set((state) => {
-      const serviceInfoByCustomerId = state.modifyServices[customerId];
-      if (!serviceInfoByCustomerId || !serviceInfoByCustomerId[contractId]) return state;
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { [contractId]: _, ...restContracts } = serviceInfoByCustomerId;
-
-      return {
-        modifyServices: {
-          ...state.modifyServices,
-          [customerId]: restContracts,
-        },
-      };
+      const updated = { ...state.modifyServices };
+      if (updated[customerId]) {
+        delete updated[customerId][contractId];
+        if (Object.keys(updated[customerId]).length === 0) {
+          delete updated[customerId];
+        }
+      }
+      return { modifyServices: updated };
     });
   },
 

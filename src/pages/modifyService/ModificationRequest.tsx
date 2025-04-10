@@ -1,5 +1,5 @@
 import useCustomerStore from '@stores/CustomerStore';
-import useModifyServiceStore from '@stores/ModifyServiceStore';
+import useModifyServiceStore from '@stores/ModifyServiceStoreRefact';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import {
   ModificationRequestContainer,
@@ -20,16 +20,13 @@ import AdditionalServicesInfo from './summary/AdditionalServicesInfo';
 import TotalPriceInfo from './summary/TotalPriceInfo';
 import { Divider } from '@mui/material';
 
-interface ModificationRequestProps {
-  contractTabId: string;
-}
-
-const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
+const ModificationRequest = () => {
   // 변경 전 서비스 정보 가져오기
-  const getCurrentService = useCurrentServiceStore((state) => state.getCurrentService);
   const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
-
-  const beforeService = getCurrentService?.(selectedCustomerId);
+  const selectedContractId = useCurrentServiceStore(
+    (state) => state.selectedContractIds[selectedCustomerId] || '',
+  );
+  const beforeService = useCurrentServiceStore((state) => state.getCurrentService(selectedCustomerId)) || null;
   const beforeAdditionalServices = beforeService?.additionalService || [];
 
   const beforeServiceValue = beforeService?.serviceValue || 0;
@@ -40,7 +37,7 @@ const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
 
   // 변경 후 서비스 정보 가져오기
   const getModifyServiceInfo = useModifyServiceStore((state) => state.getModifyServiceInfo);
-  const afterService = getModifyServiceInfo(selectedCustomerId);
+  const afterService = getModifyServiceInfo(selectedCustomerId, selectedContractId);
 
   const selectedService = afterService?.selectedService;
 
@@ -71,9 +68,7 @@ const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
   const totalAfterPrice = afterServiceValue + afterAdditionalServicesValue;
 
   // 상태 체크
-  const businessProcessId = useModifyServiceStore(
-    (state) => state.modifyServices[contractTabId]?.businessProcessId,
-  );
+  const businessProcessId = afterService?.businessProcessId;
 
   const { data } = useRegistrationStatus({
     isRegistrationRequestMounted: true,
@@ -87,8 +82,8 @@ const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
   // 홈버튼 동작
   const setSelectedMainMenu = useMenuStore((state) => state.setSelectedMainMenu);
   const selectCustomer = useCustomerStore((state) => state.selectCustomer);
-  const removeModifyServiceInfoByContractId = useModifyServiceStore(
-    (state) => state.removeModifyServiceInfoByContractId,
+  const removeModifyServiceInfo = useModifyServiceStore(
+    (state) => state.removeModifyServiceInfo,
   );
 
   const { reset } = useCustomerStore();
@@ -103,10 +98,7 @@ const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
     // 모든 고객 탭 닫기 (CustomerStore의 reset 함수 호출)
     reset();
 
-    // 계약 ID로 서비스 변경 정보 삭제 (businessProcessId 사용)
-    if (businessProcessId) {
-      removeModifyServiceInfoByContractId(businessProcessId);
-    }
+    removeModifyServiceInfo(selectedContractId, selectedContractId);
   };
 
   return (

@@ -182,9 +182,7 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
     if (!modifyServiceInfo) {
       return;
     }
-
-    // 부가서비스 배열 생성 (선택된 부가서비스와 유지할 현재 부가서비스)
-    // 제거된 현재 부가서비스는 제외해야 함
+    
     const currentServicesToKeep = currentAdditionalServices.filter(
       (currentService) =>
         !removedCurrentAdditionalServices.some(
