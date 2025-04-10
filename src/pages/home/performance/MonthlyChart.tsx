@@ -4,7 +4,6 @@ import {
   Area,
   XAxis,
   YAxis,
-  CartesianGrid,
   ResponsiveContainer,
   Tooltip as RechartsTooltip,
 } from 'recharts';
@@ -140,31 +139,40 @@ const MonthlyChart = () => {
               <stop offset='95%' stopColor={theme.palette.text.primary} stopOpacity={0.1} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray='3 3' vertical={false} stroke={theme.palette.divider} />
           <XAxis
             dataKey='monthName'
             axisLine={false}
             tickLine={false}
             tick={{
-              fontSize: 12,
-              fontFamily: 'Roboto',
-              fontWeight: 400,
+              fontSize: theme.typography.caption.fontSize,
+              fontFamily: theme.typography.fontFamily,
+              fontWeight: theme.typography.caption.fontWeight,
               textAnchor: 'middle',
               fill: theme.palette.text.secondary,
             }}
             dy={10}
           />
           <YAxis
-            domain={[0, 'auto']}
+            domain={[0, (dataMax: number) => Math.ceil(dataMax / 5) * 5]}
             axisLine={false}
             tickLine={false}
+            interval={0}
             tick={{
-              fontSize: 12,
-              fontFamily: 'Roboto',
-              fontWeight: 400,
+              fontSize: theme.typography.caption.fontSize,
+              fontFamily: theme.typography.fontFamily,
+              fontWeight: theme.typography.caption.fontWeight,
               textAnchor: 'end',
               fill: theme.palette.text.secondary,
             }}
+            ticks={Array.from(
+              {
+                length:
+                  Math.ceil(
+                    (chartData.length ? Math.max(...chartData.map((d) => d.count)) : 0) / 5,
+                  ) + 1,
+              },
+              (_, i) => i * 5,
+            )}
             width={30}
           />
           <RechartsTooltip
