@@ -1,6 +1,6 @@
 import { Typography, TableBody, TableHead, Box, Table } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import useModifyServiceStore from '@stores/ModifyServiceStoreRefact';
+import useModifyServiceStore from '@stores/ModifyServiceStore';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import { AdditionalService } from '@model/modifyService/ModifyServiceModel';
 import { useCallback, useEffect, useMemo, useState } from 'react';

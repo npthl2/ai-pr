@@ -3,7 +3,7 @@ import { Box, Button } from '@mui/material';
 import { useState } from 'react';
 import ModifiedServiceSelect from './sections/ModifiedServiceSelect';
 import AdditionalServiceList from './sections/AdditionalServiceList';
-import useModifyServiceStore from '@stores/ModifyServiceStoreRefact';
+import useModifyServiceStore from '@stores/ModifyServiceStore';
 import useCustomerStore from '@stores/CustomerStore';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import { useAdditionalServicesWithExclusiveQuery } from '@api/queries/modifyService/useModifyServiceQuery';

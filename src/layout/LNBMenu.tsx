@@ -26,6 +26,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Work } from '@model/Customer';
 import { useRegistration } from '@hooks/useRegistration';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
+import useModifyServiceStore from '@stores/ModifyServiceStore';
 
 interface LNBMenuProps {
   selectedMenu?: string | null;
@@ -63,6 +64,7 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
     setMoveTab,
   } = useCustomerStore();
   const { deleteCustomerServiceData } = useCurrentServiceStore();
+  const { removeModifyServiceInfoByCustomerId } = useModifyServiceStore();
 
   const { handleBookmarkClick } = useBookmark();
   const { handleRemoveAllRegistrationInfo } = useRegistration();
@@ -201,6 +203,7 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
     removeCustomer(id);
     handleRemoveAllRegistrationInfo(id);
     deleteCustomerServiceData(id);
+    removeModifyServiceInfoByCustomerId(id);
   };
 
   return (

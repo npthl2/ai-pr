@@ -2,7 +2,7 @@ import { Box, Typography, TableBody, TableHead, Table } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import useModifyServiceStore from '@stores/ModifyServiceStoreRefact';
+import useModifyServiceStore from '@stores/ModifyServiceStore';
 import { AdditionalService } from '@model/modifyService/ModifyServiceModel';
 import TableRow from '@components/Table/TableRow';
 import TableCell from '@components/Table/TableCell';

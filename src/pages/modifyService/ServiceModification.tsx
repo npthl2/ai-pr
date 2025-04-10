@@ -12,7 +12,7 @@ import ServiceModify from './modification/ServiceModify';
 import ServiceModificationBlockModal from './modification/components/ServiceModificationBlockModal';
 import { ServiceModificationModalType } from './modification/constants/modalConstants';
 import useCustomerStore from '@stores/CustomerStore';
-import useModifyServiceStore from '@stores/ModifyServiceStoreRefact';
+import useModifyServiceStore from '@stores/ModifyServiceStore';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import { TabInfo } from '@constants/CommonConstant';
 import {

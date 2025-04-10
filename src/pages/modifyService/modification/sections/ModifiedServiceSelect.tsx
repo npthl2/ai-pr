@@ -10,7 +10,7 @@ import {
   useCheckServiceAgeRestrictionQuery,
 } from '@api/queries/modifyService/useModifyServiceQuery';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
-import useModifyServiceStore from '@stores/ModifyServiceStoreRefact';
+import useModifyServiceStore from '@stores/ModifyServiceStore';
 import useCustomerStore from '@stores/CustomerStore';
 import Autocomplete from '@components/Autocomplete';
 // import Tooltip from '@components/Tooltip';

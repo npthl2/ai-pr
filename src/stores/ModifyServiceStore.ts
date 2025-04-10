@@ -35,53 +35,80 @@ export interface ModifyServiceInfo {
 }
 
 export interface ModifyServices {
-  [contractTabId: string]: ModifyServiceInfo;
+  [customerId: string]: {
+    [contractId: string]: ModifyServiceInfo;
+  };
 }
 
 export interface ModifyServiceState {
-  // 서비스 객체
   modifyServices: ModifyServices;
-
-  // 기타 전역 상태
   serviceModificationMounted: boolean;
 
-  // 계약 탭 ID별 정보 조회
-  getModifyServiceInfo: (contractTabId: string) => ModifyServiceInfo | undefined;
-
-  // 선택된 서비스 관련 액션
-  setSelectedService: (contractTabId: string, service: Service | null) => void;
-
-  // 부가서비스 관련 액션
-  addAdditionalService: (contractTabId: string, service: AdditionalService) => void;
-  removeAdditionalService: (contractTabId: string, serviceId: string) => void;
-  removeCurrentAdditionalService: (contractTabId: string, service: AdditionalService) => void;
-  restoreCurrentAdditionalService: (contractTabId: string, service: AdditionalService) => void;
-  setCurrentAdditionalServices: (contractTabId: string, services: AdditionalService[]) => void;
-
-  // 기타 액션
-  resetAll: (contractTabId: string) => void;
-  setServiceModifiable: (contractTabId: string, isModifiable: boolean) => void;
-  setPreviousService: (contractTabId: string, service: Service | null) => void;
-  setIsRollbackAvailable: (contractTabId: string, isRollbackAvailable: boolean) => void;
-  revertToPreviousService: (contractTabId: string) => void;
-  setHasRestrictedServices: (contractTabId: string, hasRestricted: boolean) => void;
-  setServiceModificationMounted: (isMounted: boolean) => void;
-  updateHasChanges: (contractTabId: string) => void;
+  // 상태 설정
   setInitialStates: (
-    contractTabId: string,
+    customerId: string,
+    contractId: string,
     isRollbackAvailable: boolean,
     isServiceModifiable: boolean,
     previousService: Service | null,
   ) => void;
-  setRevertButtonClickedDate: (contractTabId: string, date: string | null) => void;
+  setIsRollbackAvailable: (
+    customerId: string,
+    contractId: string,
+    isRollbackAvailable: boolean,
+  ) => void;
+  setServiceModifiable: (customerId: string, contractId: string, isModifiable: boolean) => void;
+  setPreviousService: (customerId: string, contractId: string, service: Service | null) => void;
 
-  // 서비스 변경 비즈니스 프로세스 ID 설정
-  setModificationBusinessProcessId: (contractTabId: string, businessProcessId: string) => void;
+  // 생성/조회/공통
+  createModifyServiceInfo: (customerId: string, contractId: string) => void; // 완료
+  getModifyServiceInfo: (customerId: string, contractId: string) => ModifyServiceInfo | undefined; // 완료
+  updateHasChanges: (customerId: string, contractId: string) => void; // 완료
 
-  // 계약 탭 ID 생성 및 삭제
-  createModifyServiceInfo: (contractTabId: string) => void;
-  removeModifyServiceInfo: (contractTabId: string) => void;
-  removeModifyServiceInfoByContractId: (contractId: string) => void;
+  // ModifiedServiceSelect.tsx 사용
+  setSelectedService: (customerId: string, contractId: string, service: Service | null) => void; // 완료
+  revertToPreviousService: (customerId: string, contractId: string) => void; // 완료
+  setRevertButtonClickedDate: (customerId: string, contractId: string, date: string | null) => void; // 완료
+  setModificationBusinessProcessId: (
+    customerId: string,
+    contractId: string,
+    businessProcessId: string,
+  ) => void;
+
+  // AdditionalServiceList.tsx 사용
+  restoreCurrentAdditionalService: (
+    customerId: string,
+    contractId: string,
+    service: AdditionalService,
+  ) => void; // 완료
+  addAdditionalService: (
+    customerId: string,
+    contractId: string,
+    service: AdditionalService,
+  ) => void; // 완료
+
+  // SelectedAdditionalServiceList.tsx 사용
+  setHasRestrictedServices: (
+    customerId: string,
+    contractId: string,
+    hasRestricted: boolean,
+  ) => void; // 완료
+  setCurrentAdditionalServices: (
+    customerId: string,
+    contractId: string,
+    services: AdditionalService[],
+  ) => void; // 완료
+  removeCurrentAdditionalService: (
+    customerId: string,
+    contractId: string,
+    service: AdditionalService,
+  ) => void; // 완료
+  removeAdditionalService: (customerId: string, contractId: string, serviceId: string) => void; // 완료
+
+  // 초기화 및 스토어 삭제
+  resetAll: (customerId: string, contractId: string) => void;
+  removeModifyServiceInfo: (customerId: string, contractId: string) => void;
+  removeModifyServiceInfoByCustomerId: (customerId: string) => void;
   clearAllModifyServiceInfo: () => void;
 }
 
@@ -105,284 +132,73 @@ const createDefaultServiceInfo = (): ModifyServiceInfo => ({
   businessProcessId: '',
 });
 
+// 변경 여부 체크
+const checkHasChanges = (serviceInfo: ModifyServiceInfo): boolean => {
+  const {
+    selectedService,
+    selectedAdditionalServices,
+    initialCurrentAdditionalServices,
+    currentAdditionalServices,
+    removedCurrentAdditionalServices,
+  } = serviceInfo;
+
+  const hasServiceChange = selectedService !== null;
+  const hasSelectedServicesChange = selectedAdditionalServices.length > 0;
+  const hasRemovedServicesChange = removedCurrentAdditionalServices.length > 0;
+
+  const hasCurrentServicesChange =
+    initialCurrentAdditionalServices.length !== currentAdditionalServices.length ||
+    !initialCurrentAdditionalServices.every((initialService) =>
+      currentAdditionalServices.some(
+        (currentService) => currentService.serviceId === initialService.serviceId,
+      ),
+    );
+
+  return (
+    hasServiceChange ||
+    hasSelectedServicesChange ||
+    hasRemovedServicesChange ||
+    hasCurrentServicesChange
+  );
+};
+
+// 계약 정보 확인 공통 정의
+const getContractInfo = (
+  state: ModifyServiceState,
+  customerId: string,
+  contractId: string,
+): ModifyServiceInfo | undefined => {
+  return state.modifyServices[customerId]?.[contractId];
+};
+
 const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
   // 초기 상태
   modifyServices: {},
   serviceModificationMounted: false,
 
-  // 계약 탭 ID별 정보 조회
-  getModifyServiceInfo: (contractTabId: string) => {
-    return get().modifyServices[contractTabId];
-  },
-
-  // 계약 탭 ID별 정보 생성
-  createModifyServiceInfo: (contractTabId: string) => {
-    const exists = get().modifyServices[contractTabId];
-    if (exists) return;
-
-    set((state) => ({
-      modifyServices: {
-        ...state.modifyServices,
-        [contractTabId]: createDefaultServiceInfo(),
-      },
-    }));
-  },
-
-  // 계약 탭 ID별 정보 삭제
-  removeModifyServiceInfo: (contractTabId: string) => {
+  // 초기 상태 설정
+  setInitialStates: (
+    customerId: string,
+    contractId: string,
+    isRollbackAvailable: boolean,
+    isServiceModifiable: boolean,
+    previousService: Service | null,
+  ) => {
     set((state) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { [contractTabId]: _, ...rest } = state.modifyServices;
-      return { modifyServices: rest };
-    });
-  },
-
-  // 특정 계약 ID에 대한 서비스 정보 삭제
-  removeModifyServiceInfoByContractId: (contractId: string) => {
-    set((state) => {
-      // 계약 ID와 일치하는 계약 탭 ID 찾기
-      const tabIdsToRemove: string[] = [];
-
-      // 모든 contractTabId에 대해 businessProcessId가 일치하는지 확인
-      Object.entries(state.modifyServices).forEach(([tabId, info]) => {
-        if (info.businessProcessId === contractId) {
-          tabIdsToRemove.push(tabId);
-        }
-      });
-
-      // 일치하는 항목이 없으면 상태 변경 없음
-      if (tabIdsToRemove.length === 0) {
-        return state;
-      }
-
-      // 찾은 계약 탭 ID들을 제거한 새 상태 생성
-      const newModifyServices = { ...state.modifyServices };
-      tabIdsToRemove.forEach((tabId) => {
-        delete newModifyServices[tabId];
-      });
-
-      return { modifyServices: newModifyServices };
-    });
-  },
-
-  // 모든 정보 초기화
-  clearAllModifyServiceInfo: () => {
-    set({ modifyServices: {} });
-  },
-
-  // 선택된 서비스 설정
-  setSelectedService: (contractTabId: string, service: Service | null) => {
-    set((state) => {
-      const serviceInfo = state.modifyServices[contractTabId];
-      if (!serviceInfo) return state;
+      const serviceInfoByContractId = getContractInfo(state, customerId, contractId);
+      if (!serviceInfoByContractId) return state;
 
       return {
         modifyServices: {
           ...state.modifyServices,
-          [contractTabId]: {
-            ...serviceInfo,
-            selectedService: service,
-          },
-        },
-      };
-    });
-
-    get().updateHasChanges(contractTabId);
-  },
-
-  // 부가서비스 추가
-  addAdditionalService: (contractTabId: string, service: AdditionalService) => {
-    const serviceInfo = get().modifyServices[contractTabId];
-    if (!serviceInfo) return;
-
-    // 제거된 현재 부가서비스인지 확인
-    const isRemovedCurrentService = serviceInfo.removedCurrentAdditionalServices.some(
-      (item) => item.serviceId === service.serviceId,
-    );
-
-    if (isRemovedCurrentService) {
-      // 제거된 현재 부가서비스인 경우 복구
-      return get().restoreCurrentAdditionalService(contractTabId, service);
-    }
-
-    // 이미 선택된 서비스인지 확인
-    const exists = serviceInfo.selectedAdditionalServices.some(
-      (item) => item.serviceId === service.serviceId,
-    );
-
-    // 선택되지 않은 경우에만 추가
-    if (!exists) {
-      set((state) => {
-        const currentInfo = state.modifyServices[contractTabId];
-        if (!currentInfo) return state;
-
-        return {
-          modifyServices: {
-            ...state.modifyServices,
-            [contractTabId]: {
-              ...currentInfo,
-              selectedAdditionalServices: [...currentInfo.selectedAdditionalServices, service],
+          [customerId]: {
+            ...state.modifyServices[customerId],
+            [contractId]: {
+              ...serviceInfoByContractId,
+              initialIsRollbackAvailable: isRollbackAvailable,
+              initialIsServiceModifiable: isServiceModifiable,
+              initialPreviousService: previousService,
             },
-          },
-        };
-      });
-
-      get().updateHasChanges(contractTabId);
-    }
-  },
-
-  // 선택된 부가서비스 제거
-  removeAdditionalService: (contractTabId: string, serviceId: string) => {
-    set((state) => {
-      const serviceInfo = state.modifyServices[contractTabId];
-      if (!serviceInfo) return state;
-
-      return {
-        modifyServices: {
-          ...state.modifyServices,
-          [contractTabId]: {
-            ...serviceInfo,
-            selectedAdditionalServices: serviceInfo.selectedAdditionalServices.filter(
-              (service) => service.serviceId !== serviceId,
-            ),
-          },
-        },
-      };
-    });
-
-    get().updateHasChanges(contractTabId);
-  },
-
-  // 현재 부가서비스 제거
-  removeCurrentAdditionalService: (contractTabId: string, service: AdditionalService) => {
-    set((state) => {
-      const serviceInfo = state.modifyServices[contractTabId];
-      if (!serviceInfo) return state;
-
-      return {
-        modifyServices: {
-          ...state.modifyServices,
-          [contractTabId]: {
-            ...serviceInfo,
-            currentAdditionalServices: serviceInfo.currentAdditionalServices.filter(
-              (item) => item.serviceId !== service.serviceId,
-            ),
-            removedCurrentAdditionalServices: [
-              ...serviceInfo.removedCurrentAdditionalServices,
-              service,
-            ],
-          },
-        },
-      };
-    });
-
-    get().updateHasChanges(contractTabId);
-  },
-
-  // 제거된 현재 부가서비스 복구
-  restoreCurrentAdditionalService: (contractTabId: string, service: AdditionalService) => {
-    set((state) => {
-      const serviceInfo = state.modifyServices[contractTabId];
-      if (!serviceInfo) return state;
-
-      return {
-        modifyServices: {
-          ...state.modifyServices,
-          [contractTabId]: {
-            ...serviceInfo,
-            currentAdditionalServices: [...serviceInfo.currentAdditionalServices, service],
-            removedCurrentAdditionalServices: serviceInfo.removedCurrentAdditionalServices.filter(
-              (item) => item.serviceId !== service.serviceId,
-            ),
-          },
-        },
-      };
-    });
-
-    get().updateHasChanges(contractTabId);
-  },
-
-  // 현재 부가서비스 설정
-  setCurrentAdditionalServices: (contractTabId: string, services: AdditionalService[]) => {
-    set((state) => {
-      const serviceInfo = state.modifyServices[contractTabId];
-      if (!serviceInfo) return state;
-
-      return {
-        modifyServices: {
-          ...state.modifyServices,
-          [contractTabId]: {
-            ...serviceInfo,
-            currentAdditionalServices: services,
-            removedCurrentAdditionalServices: [],
-            initialCurrentAdditionalServices: [...services],
-          },
-        },
-      };
-    });
-
-    get().updateHasChanges(contractTabId);
-  },
-
-  // 모든 설정 초기화
-  resetAll: (contractTabId: string) => {
-    const serviceInfo = get().modifyServices[contractTabId];
-    if (!serviceInfo) return;
-
-    set((state) => {
-      const currentInfo = state.modifyServices[contractTabId];
-      if (!currentInfo) return state;
-
-      return {
-        modifyServices: {
-          ...state.modifyServices,
-          [contractTabId]: {
-            ...currentInfo,
-            selectedService: null,
-            selectedAdditionalServices: [],
-            currentAdditionalServices: [...currentInfo.initialCurrentAdditionalServices],
-            removedCurrentAdditionalServices: [],
-            hasRestrictedServices: false,
-            hasChanges: false,
-            isRollbackAvailable: currentInfo.initialIsRollbackAvailable,
-            isServiceModifiable: currentInfo.initialIsServiceModifiable,
-            previousService: currentInfo.initialPreviousService,
-          },
-        },
-      };
-    });
-  },
-
-  // 서비스 변경 가능 여부 설정
-  setServiceModifiable: (contractTabId: string, isModifiable: boolean) => {
-    set((state) => {
-      const serviceInfo = state.modifyServices[contractTabId];
-      if (!serviceInfo) return state;
-
-      return {
-        modifyServices: {
-          ...state.modifyServices,
-          [contractTabId]: {
-            ...serviceInfo,
-            isServiceModifiable: isModifiable,
-          },
-        },
-      };
-    });
-  },
-
-  // 이전 서비스 설정
-  setPreviousService: (contractTabId: string, service: Service | null) => {
-    set((state) => {
-      const serviceInfo = state.modifyServices[contractTabId];
-      if (!serviceInfo) return state;
-
-      return {
-        modifyServices: {
-          ...state.modifyServices,
-          [contractTabId]: {
-            ...serviceInfo,
-            previousService: service,
           },
         },
       };
@@ -390,175 +206,465 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
   },
 
   // 롤백 가능 여부 설정
-  setIsRollbackAvailable: (contractTabId: string, isRollbackAvailable: boolean) => {
+  setIsRollbackAvailable: (
+    customerId: string,
+    contractId: string,
+    isRollbackAvailable: boolean,
+  ) => {
     set((state) => {
-      const serviceInfo = state.modifyServices[contractTabId];
-      if (!serviceInfo) return state;
+      const serviceInfoByContractId = getContractInfo(state, customerId, contractId);
+      if (!serviceInfoByContractId) return state;
 
       return {
         modifyServices: {
           ...state.modifyServices,
-          [contractTabId]: {
-            ...serviceInfo,
-            isRollbackAvailable,
+          [customerId]: {
+            ...state.modifyServices[customerId],
+            [contractId]: {
+              ...serviceInfoByContractId,
+              isRollbackAvailable,
+            },
           },
         },
       };
     });
   },
 
-  // 이전 서비스로 되돌리기
-  revertToPreviousService: (contractTabId: string) => {
-    const serviceInfo = get().modifyServices[contractTabId];
-    if (!serviceInfo || !serviceInfo.previousService) return;
-
+  // 서비스 변경 가능 여부 설정
+  setServiceModifiable: (customerId: string, contractId: string, isModifiable: boolean) => {
     set((state) => {
-      const currentInfo = state.modifyServices[contractTabId];
-      if (!currentInfo) return state;
+      const serviceInfoByContractId = getContractInfo(state, customerId, contractId);
+      if (!serviceInfoByContractId) return state;
 
       return {
         modifyServices: {
           ...state.modifyServices,
-          [contractTabId]: {
-            ...currentInfo,
-            selectedService: currentInfo.previousService,
-            isRollbackAvailable: false,
-            selectedAdditionalServices: [],
-          },
-        },
-      };
-    });
-
-    get().updateHasChanges(contractTabId);
-  },
-
-  // 제한된 서비스 있음 여부 설정
-  setHasRestrictedServices: (contractTabId: string, hasRestricted: boolean) => {
-    set((state) => {
-      const serviceInfo = state.modifyServices[contractTabId];
-      if (!serviceInfo) return state;
-
-      return {
-        modifyServices: {
-          ...state.modifyServices,
-          [contractTabId]: {
-            ...serviceInfo,
-            hasRestrictedServices: hasRestricted,
+          [customerId]: {
+            ...state.modifyServices[customerId],
+            [contractId]: {
+              ...serviceInfoByContractId,
+              isServiceModifiable: isModifiable,
+            },
           },
         },
       };
     });
   },
 
-  // 서비스 수정 마운트 여부 설정 (전역)
-  setServiceModificationMounted: (isMounted: boolean) => {
-    set({ serviceModificationMounted: isMounted });
+  // 이전 서비스 설정
+  setPreviousService: (customerId: string, contractId: string, service: Service | null) => {
+    set((state) => {
+      const serviceInfoByContractId = getContractInfo(state, customerId, contractId);
+      if (!serviceInfoByContractId) return state;
+
+      return {
+        modifyServices: {
+          ...state.modifyServices,
+          [customerId]: {
+            ...state.modifyServices[customerId],
+            [contractId]: {
+              ...serviceInfoByContractId,
+              previousService: service,
+            },
+          },
+        },
+      };
+    });
+  },
+
+  // 계약 ID 별 정보 생성
+  createModifyServiceInfo: (customerId: string, contractId: string) => {
+    set((state) => {
+      const contractInfoByCustomerId = state.modifyServices[customerId] || {};
+      // 이미 해당 계약 ID가 존재하면 아무 작업도 하지 않습니다.
+      if (contractInfoByCustomerId[contractId]) return {};
+      return {
+        modifyServices: {
+          ...state.modifyServices,
+          [customerId]: {
+            ...contractInfoByCustomerId,
+            [contractId]: createDefaultServiceInfo(),
+          },
+        },
+      };
+    });
+  },
+
+  // 계약 탭 ID별 정보 조회
+  getModifyServiceInfo: (customerId: string, contractId: string) => {
+    return get().modifyServices[customerId]?.[contractId];
   },
 
   // 변경사항 있음 여부 업데이트
-  updateHasChanges: (contractTabId: string) => {
-    const serviceInfo = get().modifyServices[contractTabId];
-    if (!serviceInfo) return;
-
-    const {
-      selectedService,
-      selectedAdditionalServices,
-      initialCurrentAdditionalServices,
-      currentAdditionalServices,
-      removedCurrentAdditionalServices,
-    } = serviceInfo;
-
-    // 변경 사항이 있는지 확인
-    const hasServiceChange = selectedService !== null;
-    const hasSelectedServicesChange = selectedAdditionalServices.length > 0;
-    const hasRemovedServicesChange = removedCurrentAdditionalServices.length > 0;
-
-    // 현재 부가서비스와 초기 부가서비스 비교
-    const hasCurrentServicesChange =
-      initialCurrentAdditionalServices.length !== currentAdditionalServices.length ||
-      !initialCurrentAdditionalServices.every((initialService) =>
-        currentAdditionalServices.some(
-          (currentService) => currentService.serviceId === initialService.serviceId,
-        ),
-      );
-
-    const hasAnyChanges =
-      hasServiceChange ||
-      hasSelectedServicesChange ||
-      hasRemovedServicesChange ||
-      hasCurrentServicesChange;
-
+  updateHasChanges: (customerId: string, contractId: string) => {
     set((state) => {
-      const currentInfo = state.modifyServices[contractTabId];
-      if (!currentInfo) return state;
+      const serviceInfoByContractId = getContractInfo(state, customerId, contractId);
+      if (!serviceInfoByContractId) return state;
+
+      const hasAnyChanges = checkHasChanges(serviceInfoByContractId);
 
       return {
         modifyServices: {
           ...state.modifyServices,
-          [contractTabId]: {
-            ...currentInfo,
-            hasChanges: hasAnyChanges,
+          [customerId]: {
+            ...state.modifyServices[customerId],
+            [contractId]: {
+              ...serviceInfoByContractId,
+              hasChanges: hasAnyChanges,
+            },
           },
         },
       };
     });
   },
 
-  // 초기 상태 설정
-  setInitialStates: (
-    contractTabId: string,
-    isRollbackAvailable: boolean,
-    isServiceModifiable: boolean,
-    previousService: Service | null,
-  ) => {
+  // 선택된 서비스 설정
+  setSelectedService: (customerId: string, contractId: string, service: Service | null) => {
     set((state) => {
-      const serviceInfo = state.modifyServices[contractTabId];
-      if (!serviceInfo) return state;
+      const serviceInfoByContractId = getContractInfo(state, customerId, contractId);
+      if (!serviceInfoByContractId) return state;
 
       return {
         modifyServices: {
           ...state.modifyServices,
-          [contractTabId]: {
-            ...serviceInfo,
-            initialIsRollbackAvailable: isRollbackAvailable,
-            initialIsServiceModifiable: isServiceModifiable,
-            initialPreviousService: previousService,
+          [customerId]: {
+            ...state.modifyServices[customerId],
+            [contractId]: {
+              ...serviceInfoByContractId,
+              selectedService: service,
+            },
           },
         },
       };
     });
+
+    get().updateHasChanges(customerId, contractId);
+  },
+
+  // 이전 서비스로 되돌리기
+  revertToPreviousService: (customerId: string, contractId: string) => {
+    set((state) => {
+      const serviceInfoByContractId = getContractInfo(state, customerId, contractId);
+      if (!serviceInfoByContractId) return state;
+
+      return {
+        modifyServices: {
+          ...state.modifyServices,
+          [customerId]: {
+            ...state.modifyServices[customerId],
+            [contractId]: {
+              ...serviceInfoByContractId,
+              selectedService: serviceInfoByContractId.previousService,
+              isRollbackAvailable: false,
+              selectedAdditionalServices: [],
+            },
+          },
+        },
+      };
+    });
+
+    get().updateHasChanges(customerId, contractId);
   },
 
   // 롤백 버튼 클릭 날짜 설정
-  setRevertButtonClickedDate: (contractTabId: string, date: string | null) => {
+  setRevertButtonClickedDate: (customerId: string, contractId: string, date: string | null) => {
     set((state) => {
-      const serviceInfo = state.modifyServices[contractTabId];
-      if (!serviceInfo) return state;
+      const serviceInfoByContractId = getContractInfo(state, customerId, contractId);
+      if (!serviceInfoByContractId) return state;
 
       return {
         modifyServices: {
           ...state.modifyServices,
-          [contractTabId]: {
-            ...serviceInfo,
-            revertButtonClickedDate: date,
+          [customerId]: {
+            ...state.modifyServices[customerId],
+            [contractId]: {
+              ...serviceInfoByContractId,
+              revertButtonClickedDate: date,
+            },
           },
         },
       };
     });
   },
 
-  setModificationBusinessProcessId: (contractTabId: string, businessProcessId: string) => {
+  setModificationBusinessProcessId: (
+    customerId: string,
+    contractId: string,
+    businessProcessId: string,
+  ) => {
     set((state) => {
-      const serviceInfo = state.modifyServices[contractTabId];
-      if (!serviceInfo) return state;
+      const serviceInfoByContractId = getContractInfo(state, customerId, contractId);
+      if (!serviceInfoByContractId) return state;
 
       return {
         modifyServices: {
           ...state.modifyServices,
-          [contractTabId]: { ...serviceInfo, businessProcessId },
+          [customerId]: {
+            ...state.modifyServices[customerId],
+            [contractId]: {
+              ...serviceInfoByContractId,
+              businessProcessId,
+            },
+          },
         },
       };
     });
+  },
+
+  // 제거된 현재 부가서비스 복구
+  restoreCurrentAdditionalService: (
+    customerId: string,
+    contractId: string,
+    service: AdditionalService,
+  ) => {
+    set((state) => {
+      const serviceInfoByContractId = getContractInfo(state, customerId, contractId);
+      if (!serviceInfoByContractId) return state;
+
+      return {
+        modifyServices: {
+          ...state.modifyServices,
+          [customerId]: {
+            ...state.modifyServices[customerId],
+            [contractId]: {
+              ...serviceInfoByContractId,
+              currentAdditionalServices: [
+                ...serviceInfoByContractId.currentAdditionalServices,
+                service,
+              ],
+              removedCurrentAdditionalServices:
+                serviceInfoByContractId.removedCurrentAdditionalServices.filter(
+                  (item) => item.serviceId !== service.serviceId,
+                ),
+            },
+          },
+        },
+      };
+    });
+
+    get().updateHasChanges(customerId, contractId);
+  },
+
+  // 부가서비스 추가
+  addAdditionalService: (customerId: string, contractId: string, service: AdditionalService) => {
+    const currentServiceInfo = get().getModifyServiceInfo(customerId, contractId);
+    if (!currentServiceInfo) return;
+
+    // 제거된 현재 부가서비스인지 확인
+    const isRemovedCurrentService = currentServiceInfo.removedCurrentAdditionalServices.some(
+      (item) => item.serviceId === service.serviceId,
+    );
+
+    if (isRemovedCurrentService) {
+      // 제거된 현재 부가서비스인 경우 복구
+      return get().restoreCurrentAdditionalService(customerId, contractId, service);
+    }
+
+    // 이미 선택된 서비스인지 확인
+    const exists = currentServiceInfo.selectedAdditionalServices.some(
+      (item) => item.serviceId === service.serviceId,
+    );
+
+    // 선택되지 않은 경우에만 추가
+    if (!exists) {
+      set((state) => {
+        const serviceInfoByContractId = getContractInfo(state, customerId, contractId);
+        if (!serviceInfoByContractId) return state;
+
+        return {
+          modifyServices: {
+            ...state.modifyServices,
+            [customerId]: {
+              ...state.modifyServices[customerId],
+              [contractId]: {
+                ...serviceInfoByContractId,
+                selectedAdditionalServices: [
+                  ...serviceInfoByContractId.selectedAdditionalServices,
+                  service,
+                ],
+              },
+            },
+          },
+        };
+      });
+
+      get().updateHasChanges(customerId, contractId);
+    }
+  },
+
+  // 제한된 서비스 있음 여부 설정
+  setHasRestrictedServices: (customerId: string, contractId: string, hasRestricted: boolean) => {
+    set((state) => {
+      const serviceInfoByContractId = getContractInfo(state, customerId, contractId);
+      if (!serviceInfoByContractId) return state;
+
+      return {
+        modifyServices: {
+          ...state.modifyServices,
+          [customerId]: {
+            ...state.modifyServices[customerId],
+            [contractId]: {
+              ...serviceInfoByContractId,
+              hasRestrictedServices: hasRestricted,
+            },
+          },
+        },
+      };
+    });
+  },
+
+  // 현재 부가서비스 설정
+  setCurrentAdditionalServices: (
+    customerId: string,
+    contractId: string,
+    services: AdditionalService[],
+  ) => {
+    set((state) => {
+      const serviceInfoByContractId = getContractInfo(state, customerId, contractId);
+      if (!serviceInfoByContractId) return state;
+
+      return {
+        modifyServices: {
+          ...state.modifyServices,
+          [customerId]: {
+            ...state.modifyServices[customerId],
+            [contractId]: {
+              ...serviceInfoByContractId,
+              currentAdditionalServices: services,
+              removedCurrentAdditionalServices: [],
+              initialCurrentAdditionalServices: [...services],
+            },
+          },
+        },
+      };
+    });
+
+    get().updateHasChanges(customerId, contractId);
+  },
+
+  // 현재 부가서비스 제거
+  removeCurrentAdditionalService: (
+    customerId: string,
+    contractId: string,
+    service: AdditionalService,
+  ) => {
+    set((state) => {
+      const serviceInfoByContractId = getContractInfo(state, customerId, contractId);
+      if (!serviceInfoByContractId) return state;
+
+      const alreadyRemoved = serviceInfoByContractId.removedCurrentAdditionalServices.some(
+        (item) => item.serviceId === service.serviceId,
+      );
+      if (alreadyRemoved) return state;
+
+      return {
+        modifyServices: {
+          ...state.modifyServices,
+          [customerId]: {
+            ...state.modifyServices[customerId],
+            [contractId]: {
+              ...serviceInfoByContractId,
+              currentAdditionalServices: serviceInfoByContractId.currentAdditionalServices.filter(
+                (item) => item.serviceId !== service.serviceId,
+              ),
+              removedCurrentAdditionalServices: [
+                ...serviceInfoByContractId.removedCurrentAdditionalServices,
+                service,
+              ],
+            },
+          },
+        },
+      };
+    });
+
+    get().updateHasChanges(customerId, contractId);
+  },
+
+  // 선택된 부가서비스 제거
+  removeAdditionalService: (customerId: string, contractId: string, serviceId: string) => {
+    set((state) => {
+      const serviceInfoByContractId = getContractInfo(state, customerId, contractId);
+      if (!serviceInfoByContractId) return state;
+
+      return {
+        modifyServices: {
+          ...state.modifyServices,
+          [customerId]: {
+            ...state.modifyServices[customerId],
+            [contractId]: {
+              ...serviceInfoByContractId,
+              selectedAdditionalServices: serviceInfoByContractId.selectedAdditionalServices.filter(
+                (service) => service.serviceId !== serviceId,
+              ),
+            },
+          },
+        },
+      };
+    });
+
+    get().updateHasChanges(customerId, contractId);
+  },
+
+  // 모든 설정 초기화
+  resetAll: (customerId: string, contractId: string) => {
+    const currentServiceInfo = get().getModifyServiceInfo(customerId, contractId);
+    if (!currentServiceInfo) return;
+
+    set((state) => {
+      const serviceInfoByContractId = getContractInfo(state, customerId, contractId);
+      if (!serviceInfoByContractId) return state;
+
+      return {
+        modifyServices: {
+          ...state.modifyServices,
+          [customerId]: {
+            ...state.modifyServices[customerId],
+            [contractId]: {
+              ...serviceInfoByContractId,
+              selectedService: null,
+              selectedAdditionalServices: [],
+              currentAdditionalServices: [
+                ...serviceInfoByContractId.initialCurrentAdditionalServices,
+              ],
+              removedCurrentAdditionalServices: [],
+              hasRestrictedServices: false,
+              hasChanges: false,
+              isRollbackAvailable: serviceInfoByContractId.initialIsRollbackAvailable,
+              isServiceModifiable: serviceInfoByContractId.initialIsServiceModifiable,
+              previousService: serviceInfoByContractId.initialPreviousService,
+            },
+          },
+        },
+      };
+    });
+  },
+
+  // 계약 단위 정보 삭제
+  removeModifyServiceInfo: (customerId: string, contractId: string) => {
+    set((state) => {
+      const updated = { ...state.modifyServices };
+      if (updated[customerId]) {
+        delete updated[customerId][contractId];
+        if (Object.keys(updated[customerId]).length === 0) {
+          delete updated[customerId];
+        }
+      }
+      return { modifyServices: updated };
+    });
+  },
+
+  // 고객 단위 변경 정보 삭제
+  removeModifyServiceInfoByCustomerId: (customerId: string) => {
+    set((state) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { [customerId]: _, ...rest } = state.modifyServices;
+      return { modifyServices: rest };
+    });
+  },
+
+  // 모든 정보 초기화
+  clearAllModifyServiceInfo: () => {
+    set({ modifyServices: {} });
   },
 }));
 

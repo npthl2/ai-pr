@@ -1,5 +1,5 @@
 import useCustomerStore from '@stores/CustomerStore';
-import useModifyServiceStore from '@stores/ModifyServiceStoreRefact';
+import useModifyServiceStore from '@stores/ModifyServiceStore';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import {
   ModificationRequestContainer,
@@ -84,6 +84,7 @@ const ModificationRequest = () => {
   const setSelectedMainMenu = useMenuStore((state) => state.setSelectedMainMenu);
   const selectCustomer = useCustomerStore((state) => state.selectCustomer);
   const removeModifyServiceInfo = useModifyServiceStore((state) => state.removeModifyServiceInfo);
+  const { deleteCustomerServiceData } = useCurrentServiceStore();
 
   const { reset } = useCustomerStore();
 
@@ -97,7 +98,8 @@ const ModificationRequest = () => {
     // 모든 고객 탭 닫기 (CustomerStore의 reset 함수 호출)
     reset();
 
-    removeModifyServiceInfo(selectedContractId, selectedContractId);
+    deleteCustomerServiceData(selectedCustomerId);
+    removeModifyServiceInfo(selectedCustomerId, selectedContractId);
   };
 
   return (
