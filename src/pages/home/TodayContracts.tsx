@@ -32,14 +32,17 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import TodayContractsModal from './todayContracts/TodayContractsModal';
 import { EMPTY_STATE_QUOTES } from './TodayContractsConstants';
+import useMemberStore from '@stores/MemberStore';
 
 const TodayContracts = () => {
+  const memberInfo = useMemberStore((state) => state.memberInfo);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedContractId, setSelectedContractId] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
   const [showRightArrow, setShowRightArrow] = useState(true);
   const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
-  const { data: todayContracts } = useTodayContracts();
+  const { data: todayContracts } = useTodayContracts(memberInfo?.memberId || '');
   const [filteredContracts, setFilteredContracts] = useState<ContractDataWithCustomer[]>([]);
   const [sliderKey, setSliderKey] = useState(0);
 

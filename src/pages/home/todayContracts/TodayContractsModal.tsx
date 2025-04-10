@@ -2,6 +2,7 @@ import { ContentContainer, StyledDialog } from './TodayContractsModal.styled';
 import { useTodayContracts } from '@api/queries/dashboard/useTodayContracts';
 import TodayContractsDetailInfo from './TodayContractsDetailInfo';
 import { mapToInfo } from '@api/queries/customerDetail/useCustomerDetail';
+import useMemberStore from '@stores/MemberStore';
 
 interface TodayContractsModalProps {
   open: boolean;
@@ -10,7 +11,8 @@ interface TodayContractsModalProps {
 }
 
 const TodayContractsModal = ({ open, onClose, contractId }: TodayContractsModalProps) => {
-  const { data: todayContracts } = useTodayContracts();
+  const memberInfo = useMemberStore((state) => state.memberInfo);
+  const { data: todayContracts } = useTodayContracts(memberInfo?.memberId || '');
   const selectedContract = todayContracts?.find((contract) => contract.contractId === contractId);
   const contractData = selectedContract ? mapToInfo(selectedContract) : null;
 
