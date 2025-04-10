@@ -1,3 +1,5 @@
+export const SLIDES_TO_SHOW = 4;
+
 export const EMPTY_STATE_QUOTES = [
   {
     text: '성공은 우연이 아니다. 그것은 열심히 노력하고, 배움을 지속하며,\n결코 포기하지 않는 사람들에게만 찾아온다.',

@@ -31,7 +31,7 @@ import { CustomArrowProps } from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import TodayContractsModal from './todayContracts/TodayContractsModal';
-import { EMPTY_STATE_QUOTES } from './TodayContractsConstants';
+import { EMPTY_STATE_QUOTES, SLIDES_TO_SHOW } from './TodayContractsConstants';
 import useMemberStore from '@stores/MemberStore';
 
 const TodayContracts = () => {
@@ -60,12 +60,7 @@ const TodayContracts = () => {
 
   // 검색 조건이 변경될 때 마다 rerender 해서 arrow 표시가 적절하게 되어야 함
   useEffect(() => {
-    // 카드가 먼저 렌더되어야 해서 timer 적용
-    const timer = setTimeout(() => {
-      handleAfterChange();
-    }, 0);
-
-    return () => clearTimeout(timer);
+    handleAfterChange(0);
   }, [filteredContracts]);
 
   const handleDetailInfoClick = (contractId: string) => {
@@ -83,18 +78,13 @@ const TodayContracts = () => {
   };
 
   // 슬라이더 끝에 도달했을 때 오른쪽 화살표 표시 없애기
-  const handleAfterChange = () => {
-    const sliderElement = document.querySelector('.slick-slider');
-    const sliderTrack = document.querySelector('.slick-track');
-    if (!sliderElement || !sliderTrack) return;
+  const handleAfterChange = (currentSlide: number) => {
+    const slideNow = currentSlide ?? 0;
+    const totalSlides = filteredContracts.length;
 
-    const sliderRect = sliderElement.getBoundingClientRect();
-    const lastSlide = document.querySelector('.slick-slide:not(.slick-cloned):last-child');
-    if (!lastSlide) return;
-
-    const lastSlideRect = lastSlide.getBoundingClientRect();
-    const isLastSlideFullyVisible = lastSlideRect.right <= sliderRect.right;
-    setShowRightArrow(!isLastSlideFullyVisible);
+    // 마지막 슬라이드가 보이는지 여부 계산(width 계산 없다는 전제 하)
+    const isLastSlideVisible = slideNow + SLIDES_TO_SHOW >= totalSlides;
+    setShowRightArrow(!isLastSlideVisible);
   };
 
   const CustomPrevArrow = ({ onClick, className }: CustomArrowProps) => (
@@ -168,7 +158,8 @@ const TodayContracts = () => {
             centerMode={false}
             arrows={true}
             infinite={false}
-            afterChange={handleAfterChange}
+            afterChange={(currentSlide) => handleAfterChange(currentSlide)}
+            initialSlide={0}
             nextArrow={<CustomNextArrow show={showRightArrow} />}
             prevArrow={<CustomPrevArrow />}
           >
