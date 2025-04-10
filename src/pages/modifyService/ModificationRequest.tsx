@@ -26,7 +26,8 @@ const ModificationRequest = () => {
   const selectedContractId = useCurrentServiceStore(
     (state) => state.selectedContractIds[selectedCustomerId] || '',
   );
-  const beforeService = useCurrentServiceStore((state) => state.getCurrentService(selectedCustomerId)) || null;
+  const beforeService =
+    useCurrentServiceStore((state) => state.getCurrentService(selectedCustomerId)) || null;
   const beforeAdditionalServices = beforeService?.additionalService || [];
 
   const beforeServiceValue = beforeService?.serviceValue || 0;
@@ -82,9 +83,7 @@ const ModificationRequest = () => {
   // 홈버튼 동작
   const setSelectedMainMenu = useMenuStore((state) => state.setSelectedMainMenu);
   const selectCustomer = useCustomerStore((state) => state.selectCustomer);
-  const removeModifyServiceInfo = useModifyServiceStore(
-    (state) => state.removeModifyServiceInfo,
-  );
+  const removeModifyServiceInfo = useModifyServiceStore((state) => state.removeModifyServiceInfo);
 
   const { reset } = useCustomerStore();
 

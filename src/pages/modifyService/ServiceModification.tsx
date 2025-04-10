@@ -140,7 +140,7 @@ const ServiceModification = () => {
   };
 
   if (isSaveRequested) {
-    return <ModificationRequest/>;
+    return <ModificationRequest />;
   }
 
   return (

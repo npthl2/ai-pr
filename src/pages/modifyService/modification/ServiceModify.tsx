@@ -182,7 +182,7 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
     if (!modifyServiceInfo) {
       return;
     }
-    
+
     const currentServicesToKeep = currentAdditionalServices.filter(
       (currentService) =>
         !removedCurrentAdditionalServices.some(
