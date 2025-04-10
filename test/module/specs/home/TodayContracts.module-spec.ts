@@ -2,10 +2,13 @@ import TodayContractsMock from '../../mock/home/TodayContractsMock';
 import TodayContracts from '../../../pages/home/TodayContracts';
 import { mockMemberStore } from '../../../support/helpers/mockMemberStore';
 import { mockAuthStore } from '../../../support/helpers/mockAuthStore';
-
+import BookmarkServiceMock from '../../mock/bookmark/BookmarkServiceMock';
+import RegistrationStatusServiceMock from '../../mock/registration/RegistrationStatusServiceMock';
 describe('[KAN-326] 오늘의 신규가입 위젯 테스트', () => {
   const todayContractsMock = new TodayContractsMock();
   const todayContracts = new TodayContracts();
+  const bookmarkService = new BookmarkServiceMock();
+  const registrationStatusService = new RegistrationStatusServiceMock();
 
   const loginAndRedirectToHome = () => {
     mockAuthStore();
@@ -13,9 +16,13 @@ describe('[KAN-326] 오늘의 신규가입 위젯 테스트', () => {
       memberInfo: {
         memberId: 'user1',
         memberName: 'user1',
-        authorities: [''],
+        authorities: ['ROLE_ADMIN'],
       },
     });
+
+    bookmarkService.successWhenGetBookmarkList();
+    registrationStatusService.successWhenGetRegistrationStatus('user2');
+
     todayContracts.visit();
   };
 
