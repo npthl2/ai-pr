@@ -47,8 +47,8 @@ export const Divider = styled(Box)(({ theme }) => ({
   alignSelf: 'stretch',
 }));
 
-export const SurveyContainer = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
+export const SurveyContainer = styled(Box)(() => ({
+  backgroundColor: '#F7F9FA',
   padding: '24px 24px 12px 0',
   marginTop: '12px',
   borderTopRightRadius: '16px',
