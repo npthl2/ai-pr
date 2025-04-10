@@ -3,8 +3,10 @@ import axiosInstance from '../axios';
 import { CommonResponse } from '@model/common/CommonResponse';
 
 const baseService = {
-  async get<T>(endpoint: string): Promise<CommonResponse<T>> {
-    const response: AxiosResponse<CommonResponse<T>> = await axiosInstance.get(endpoint);
+  async get<T>(endpoint: string, params?: URLSearchParams): Promise<CommonResponse<T>> {
+    const response: AxiosResponse<CommonResponse<T>> = await axiosInstance.get(endpoint, {
+      params: params,
+    });
     return response.data;
   },
 
