@@ -71,7 +71,6 @@ const NewServices = () => {
             right: '25px',
             display: 'flex',
             gap: '8px',
-            zIndex: 1,
           }}
         >
           {slideImages.map((_, index) => (
