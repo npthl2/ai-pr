@@ -34,7 +34,7 @@ const Home = () => {
           {memberInfo && (
             <UserName data-testid='user-name'>
               {`${memberInfo.memberName} `}
-              {memberInfo.classOfPosition}님
+              {`${memberInfo.classOfPosition}님, `}
             </UserName>
           )}
           오늘도 좋은 하루 보내세요 🙌
