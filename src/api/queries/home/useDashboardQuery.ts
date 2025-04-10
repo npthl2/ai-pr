@@ -8,7 +8,7 @@ export const DASHBOARD_QUERY_KEYS = {
 
 // cache times
 const TEN_MINUTE_CACHE_TIME = 10 * 60 * 1000; // 10 minutes for daily/weekly stats
-const ONE_DAY_CACHE_TIME = 24 * 60 * 60 * 1000; // 1 day for monthly stats
+const SIX_HOURS_CACHE_TIME = 6 * 60 * 60 * 1000; // 6 hours for monthly stats
 
 export const useDailyWeeklyStatisticsQuery = (memberId: string) => {
   return useQuery({
@@ -41,6 +41,6 @@ export const useMonthlyStatisticsQuery = (memberId: string) => {
       return response.data;
     },
 
-    staleTime: ONE_DAY_CACHE_TIME,
+    staleTime: SIX_HOURS_CACHE_TIME,
   });
 };

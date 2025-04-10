@@ -49,7 +49,7 @@ const NewServices = () => {
       >
         <Slider ref={sliderRef} {...settings}>
           {slideImages.map((imageSrc, index) => (
-            <div key={index}>
+            <Box key={index} sx={{ outline: 'none' }}>
               <img
                 src={imageSrc}
                 alt={`서비스 이미지 ${index + 1}`}
@@ -60,7 +60,7 @@ const NewServices = () => {
                 }}
                 data-testid={`new-services-slider-image-${index}`}
               />
-            </div>
+            </Box>
           ))}
         </Slider>
 

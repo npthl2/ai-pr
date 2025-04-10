@@ -153,7 +153,7 @@ const MonthlyChart = () => {
             dy={10}
           />
           <YAxis
-            domain={[0, (dataMax: number) => Math.ceil(dataMax / 5) * 5]}
+            domain={[0, (dataMax: number) => (dataMax === 0 ? 5 : Math.ceil(dataMax / 5) * 5)]}
             axisLine={false}
             tickLine={false}
             interval={0}
@@ -164,15 +164,19 @@ const MonthlyChart = () => {
               textAnchor: 'end',
               fill: theme.palette.text.secondary,
             }}
-            ticks={Array.from(
-              {
-                length:
-                  Math.ceil(
-                    (chartData.length ? Math.max(...chartData.map((d) => d.count)) : 0) / 5,
-                  ) + 1,
-              },
-              (_, i) => i * 5,
-            )}
+            ticks={
+              chartData.length && Math.max(...chartData.map((d) => d.count)) > 0
+                ? Array.from(
+                    {
+                      length:
+                        Math.ceil(
+                          (chartData.length ? Math.max(...chartData.map((d) => d.count)) : 0) / 5,
+                        ) + 1,
+                    },
+                    (_, i) => i * 5,
+                  )
+                : [0, 5]
+            }
             width={30}
           />
           <RechartsTooltip
