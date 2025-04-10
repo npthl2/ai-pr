@@ -179,36 +179,36 @@ export const EmptyDescription = styled(Typography)(({ theme }) => ({
   whiteSpace: 'pre-line',
 }));
 
-export const ArrowButton = styled(IconButton, {
-  shouldForwardProp: (prop) => prop !== '$isNext' && prop !== '$show',
-})<{ $isNext?: boolean; $show?: boolean }>(({ $isNext = false, $show = true, theme }) => ({
-  width: '36px',
-  height: '36px',
-  minWidth: '36px',
-  minHeight: '36px',
-  position: 'absolute',
-  [!$isNext ? 'left' : 'right']: '-18px',
-  top: '50%',
-  transform: 'translateY(-50%)',
-  backgroundColor: theme.palette.primary.contrastText,
-  border: '1px solid rgba(5, 21, 31, 0.5)',
-  borderRadius: '99px',
-  opacity: $show ? 1 : 0,
-  visibility: $show ? 'visible' : 'hidden',
-  transition: 'opacity 0.2s, visibility 0.2s',
-  padding: 0,
-  zIndex: 2,
-  '&:hover': {
+export const ArrowButton = styled(IconButton)<{ $isNext?: boolean; $show?: boolean }>(
+  ({ $isNext = false, $show = true, theme }) => ({
+    width: '36px',
+    height: '36px',
+    minWidth: '36px',
+    minHeight: '36px',
+    position: 'absolute',
+    [!$isNext ? 'left' : 'right']: '-18px',
+    top: '50%',
+    transform: 'translateY(-50%)',
     backgroundColor: theme.palette.primary.contrastText,
-  },
-  '&.slick-disabled': {
-    display: 'none',
-    cursor: 'default',
-  },
-  '&:before': {
-    display: 'none',
-  },
-}));
+    border: '1px solid rgba(5, 21, 31, 0.5)',
+    borderRadius: '99px',
+    opacity: $show ? 1 : 0,
+    visibility: $show ? 'visible' : 'hidden',
+    transition: 'opacity 0.2s, visibility 0.2s',
+    padding: 0,
+    zIndex: 2,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.contrastText,
+    },
+    '&.slick-disabled': {
+      display: 'none',
+      cursor: 'default',
+    },
+    '&:before': {
+      display: 'none',
+    },
+  }),
+);
 
 export const ContractsStack = styled(Stack)(({}) => ({
   height: '258px',
