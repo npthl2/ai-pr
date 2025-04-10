@@ -50,10 +50,8 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
   );
 
   // Zustand 스토어에서 필요한 함수와 데이터 가져오기
-  const { addAdditionalService } = useModifyServiceStore();
-  const modifyServiceInfo = useModifyServiceStore((state) =>
-    state.getModifyServiceInfo(selectedCustomerId, selectedContractId),
-  );
+  const { addAdditionalService, getModifyServiceInfo } = useModifyServiceStore();
+  const modifyServiceInfo = getModifyServiceInfo(selectedCustomerId, selectedContractId);
 
   // 계약 탭에 대한 정보가 없으면 기본값 제공
   const selectedAdditionalServices = modifyServiceInfo?.selectedAdditionalServices || [];

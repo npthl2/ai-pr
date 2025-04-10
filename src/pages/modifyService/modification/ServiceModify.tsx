@@ -275,7 +275,6 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
       <Section>
         <SelectedAdditionalServiceList
           additionalServices={additionalServices}
-          contractTabId={selectedCustomerId}
         />
       </Section>
 
