@@ -283,7 +283,7 @@ const SelectedAdditionalServiceList = ({
               <StyledTableHeaderCell onClick={() => handleSort('serviceName')}>
                 <Typography>
                   부가서비스명
-                  {renderSortIcon('serviceName', 'selected-additional-service-')}
+                  {renderSortIcon('serviceName', 'selected-additional-service-list-')}
                 </Typography>
               </StyledTableHeaderCell>
               <StyledTableHeaderCell
@@ -293,7 +293,7 @@ const SelectedAdditionalServiceList = ({
               >
                 <Typography>
                   요금 (원)
-                  {renderSortIcon('serviceValue', 'selected-additional-service-')}
+                  {renderSortIcon('serviceValue', 'selected-additional-service-list-')}
                 </Typography>
               </StyledTableHeaderCell>
               <StyledTableBlankCell width='100px'></StyledTableBlankCell>
