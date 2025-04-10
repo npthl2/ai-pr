@@ -23,9 +23,11 @@ export const renderServiceInfo = ({ serviceInfo }: { serviceInfo: ServiceItem | 
 
   return serviceInfo.serviceList
     .filter((service) => service.serviceType === CONTRACT_SERVICE_TYPE_CODE)
-    .map((service) =>
-      renderInfoList([service.serviceName, formatCurrencyKRW(service.serviceValue)]),
-    );
+    .map((service, index) => (
+      <React.Fragment key={`service-${index}`}>
+        {renderInfoList([service.serviceName, formatCurrencyKRW(service.serviceValue)])}
+      </React.Fragment>
+    ));
 };
 
 export const calculateAdditionalServices = (serviceList: Service[]) => {
