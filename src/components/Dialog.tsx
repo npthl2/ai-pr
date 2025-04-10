@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
-type DialogSize = 'small' | 'medium' | 'medium-large' | 'large';
+type DialogSize = 'small' | 'medium' | 'medium-large' | 'large' | 'xlarge';
 
 interface DialogProps extends Omit<MuiDialogProps, 'content'> {
   size?: DialogSize;
@@ -20,6 +20,7 @@ interface DialogProps extends Omit<MuiDialogProps, 'content'> {
   confirmLabel?: string;
   confirmIcon?: React.ReactNode;
   isConfirmDisabled?: boolean;
+  hasHeaderCloseIcon?: boolean;
   onClose: () => void;
   onConfirm?: () => void;
 }
@@ -33,6 +34,7 @@ const StyledDialog = styled(MuiDialog, { shouldForwardProp: (prop) => prop !== '
       medium: 600,
       'medium-large': 800,
       large: 1000,
+      xlarge: 1284,
     }[size],
   },
 }));
@@ -71,6 +73,7 @@ const Dialog = ({
   onClose,
   onConfirm,
   isConfirmDisabled = false,
+  hasHeaderCloseIcon = true,
   ...props
 }: DialogProps) => {
   return (
@@ -83,9 +86,11 @@ const Dialog = ({
         >
           {title}
         </Typography>
-        <StyledIconButton onClick={onClose}>
-          <CloseIcon />
-        </StyledIconButton>
+        {hasHeaderCloseIcon && (
+          <StyledIconButton onClick={onClose}>
+            <CloseIcon />
+          </StyledIconButton>
+        )}
       </StyledDialogTitle>
       <StyledDialogContent data-testid='component-dialog-content'>{content}</StyledDialogContent>
       <StyledDialogActions>
