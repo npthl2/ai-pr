@@ -6,6 +6,7 @@ export const StyledDialog = styled(Dialog)({
   '& .MuiDialog-paper': {
     width: '1384px',
   },
+  zIndex: '1600 !important',
 });
 
 export const ContentContainer = styled(Box)({

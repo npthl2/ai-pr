@@ -161,7 +161,7 @@ export const EmptyContractContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  gap: theme.spacing(1),
+  gap: theme.spacing(3),
   height: '258px',
   backgroundColor: 'rgba(255, 255, 255, 0.5)',
   border: '1px dashed rgba(112, 121, 142, 0.16)',

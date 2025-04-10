@@ -147,13 +147,13 @@ const TodayContracts = () => {
       </TitleWrapper>
 
       <ContractsStack>
-        {!todayContracts || todayContracts?.length === 0 ? (
+        {!todayContracts?.length ? (
           <EmptyContractContainer>
             <EmptyContractText variant='h3'>오늘 신규가입 건은 없습니다.</EmptyContractText>
             <EmptyDescription variant='h5' data-testid='quote-text'>
               {randomQuote.text}
-              <br></br>-{randomQuote.author}-
             </EmptyDescription>
+            <EmptyDescription variant='h5'>-{randomQuote.author}-</EmptyDescription>
           </EmptyContractContainer>
         ) : filteredContracts?.length === 0 ? (
           <EmptyContractContainer>
