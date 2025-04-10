@@ -273,9 +273,7 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
 
       {/* 3. 선택된 부가서비스 영역 */}
       <Section>
-        <SelectedAdditionalServiceList
-          additionalServices={additionalServices}
-        />
+        <SelectedAdditionalServiceList additionalServices={additionalServices} />
       </Section>
 
       {/* 모달 컴포넌트 */}

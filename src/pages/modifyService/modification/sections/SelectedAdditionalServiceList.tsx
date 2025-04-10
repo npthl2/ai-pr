@@ -96,17 +96,26 @@ const SelectedAdditionalServiceList = ({
   };
 
   // 전체 서비스 목록 상태
-  const [allSelectedAdditionalServices, setAllSelectedAdditionalServices] = useState<AdditionalService[]>([]);
+  const [allSelectedAdditionalServices, setAllSelectedAdditionalServices] = useState<
+    AdditionalService[]
+  >([]);
 
   // CurrentServiceStore의 AdditionalService 데이터 보정
-  const mapToModifyAdditionalServices = (currentAdditionalServices: AdditionalService[]): AdditionalService[] => {
+  const mapToModifyAdditionalServices = (
+    currentAdditionalServices: AdditionalService[],
+  ): AdditionalService[] => {
     return currentAdditionalServices.map((currentAdditionalService) => {
-      const filteredAdditionalServices = additionalServices.find((s) => s.serviceId === currentAdditionalService.serviceId);
+      const filteredAdditionalServices = additionalServices.find(
+        (s) => s.serviceId === currentAdditionalService.serviceId,
+      );
       return {
         ...currentAdditionalService,
         serviceValueType: filteredAdditionalServices?.serviceValueType || '유료',
         exclusiveServiceIds: filteredAdditionalServices?.exclusiveServiceIds || [],
-        releaseDate: filteredAdditionalServices?.releaseDate || filteredAdditionalServices?.validStartDateTime || '',
+        releaseDate:
+          filteredAdditionalServices?.releaseDate ||
+          filteredAdditionalServices?.validStartDateTime ||
+          '',
       };
     });
   };
@@ -139,7 +148,10 @@ const SelectedAdditionalServiceList = ({
   // 상태 변경시 서비스 목록 업데이트 (정렬 포함)
   useEffect(() => {
     // 모든 서비스 합치기 (현재 사용중 유지 + 새로 선택된 서비스)
-    let allSelectedAdditionalServices = [...currentAdditionalServices, ...selectedAdditionalServices];
+    let allSelectedAdditionalServices = [
+      ...currentAdditionalServices,
+      ...selectedAdditionalServices,
+    ];
 
     const sortedSelectedAdditionalServices = sortAdditionalServices(allSelectedAdditionalServices);
 
@@ -161,7 +173,11 @@ const SelectedAdditionalServiceList = ({
         removeCurrentAdditionalService(selectedCustomerId, selectedContractId, additionalService);
       } else {
         // 새로 추가한 서비스 삭제
-        removeAdditionalService(selectedCustomerId, selectedContractId, additionalService.serviceId);
+        removeAdditionalService(
+          selectedCustomerId,
+          selectedContractId,
+          additionalService.serviceId,
+        );
       }
     },
     [
@@ -185,16 +201,19 @@ const SelectedAdditionalServiceList = ({
         {allSelectedAdditionalServices.map((additionalService) => {
           // 현재 사용중인 서비스인지 확인
           const isCurrentAdditionalService = currentAdditionalServices.some(
-            (currentAdditionalService) => currentAdditionalService.serviceId === additionalService.serviceId,
+            (currentAdditionalService) =>
+              currentAdditionalService.serviceId === additionalService.serviceId,
           );
 
           // API에서 받아온 부가서비스 목록에서 해당 서비스 찾기
           const apiAdditionalService = additionalServices.find(
-            (apiAdditionalService) => apiAdditionalService.serviceId === additionalService.serviceId,
+            (apiAdditionalService) =>
+              apiAdditionalService.serviceId === additionalService.serviceId,
           );
 
           // 제한 여부 확인 (나이 제한 또는 베타 서비스)
-          const isRestricted = apiAdditionalService?.hasAgeRestriction || apiAdditionalService?.exclusive || false;
+          const isRestricted =
+            apiAdditionalService?.hasAgeRestriction || apiAdditionalService?.exclusive || false;
 
           return (
             <TableRow
@@ -237,7 +256,12 @@ const SelectedAdditionalServiceList = ({
         })}
       </>
     ),
-    [allSelectedAdditionalServices, currentAdditionalServices, handleRemoveService, additionalServices],
+    [
+      allSelectedAdditionalServices,
+      currentAdditionalServices,
+      handleRemoveService,
+      additionalServices,
+    ],
   );
 
   return (
