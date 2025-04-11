@@ -10,7 +10,10 @@ import MaskingInfo from './MaskingInfo';
 import { DEFAULT_TABS } from '@constants/CommonConstant';
 import { SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
 import useCustomerStore from '@stores/CustomerStore';
-import { CONTRACT_SERVICE_TYPE_CODE } from '@pages/customer/detail/CustomerDetailConstant';
+import {
+  CONTRACT_SERVICE_TYPE_CODE,
+  CONTRACT_STATUS_CODE_USE,
+} from '@pages/customer/detail/CustomerDetailConstant';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
 
 interface ServiceInfoProps {
@@ -133,7 +136,7 @@ const ServiceInfo: React.FC<ServiceInfoProps> = ({
         <Typography variant='h3' sx={{ height: 27, gap: 16 }}>
           상세정보
         </Typography>
-        {contractStatus !== '해지' && (
+        {contractStatus === CONTRACT_STATUS_CODE_USE && (
           <Button
             variant='outlined'
             size='small'

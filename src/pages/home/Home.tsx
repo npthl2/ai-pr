@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Typography } from '@mui/material';
 import Notice from './Notice';
 import NoticeModal from './NoticeModal';
-import NewServices from './NewServices';
+import NewServices from './banner/NewServices';
 import SalesPerformance from './SalesPerformance';
-import Promotion from './Promotion';
+import Promotion from './banner/Promotion';
 import TodayContracts from './TodayContracts';
 import {
   ContentLayout,
@@ -34,7 +34,7 @@ const Home = () => {
           {memberInfo && (
             <UserName data-testid='user-name'>
               {`${memberInfo.memberName} `}
-              {memberInfo.classOfPosition}님
+              {`${memberInfo.classOfPosition}님, `}
             </UserName>
           )}
           오늘도 좋은 하루 보내세요 🙌
