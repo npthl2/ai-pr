@@ -82,7 +82,7 @@ describe('[KAN-326] 오늘의 신규가입 위젯 테스트', () => {
   });
 
   it('[KAN-326-5] 카드를 클릭하면 상세 정보 모달이 표시되어야 한다', () => {
-    todayContracts.clickDetailInfo(0);
+    todayContracts.clickDetailInfo();
     todayContracts.getDialog();
     todayContracts.getDialogDetails();
   });

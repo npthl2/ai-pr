@@ -50,7 +50,7 @@ class TodayContracts {
     cy.get('[data-testid="search-icon"]').click();
   }
 
-  clickDetailInfo(index: number) {
+  clickDetailInfo() {
     cy.get('[data-testid^="card-detail-info-"]').first().click();
   }
 
