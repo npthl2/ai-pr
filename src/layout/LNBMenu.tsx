@@ -64,7 +64,8 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
     setMoveTab,
   } = useCustomerStore();
   const { deleteCustomerServiceData } = useCurrentServiceStore();
-  const { removeModifyServiceInfoByCustomerId, removeRequestedModificationInfoByCustomerId } = useModifyServiceStore();
+  const { removeModifyServiceInfoByCustomerId, removeRequestedModificationInfoByCustomerId } =
+    useModifyServiceStore();
 
   const { handleBookmarkClick } = useBookmark();
   const { handleRemoveAllRegistrationInfo } = useRegistration();
