@@ -75,7 +75,7 @@ const ModificationRequest = () => {
   // 홈버튼 동작
   const setSelectedMainMenu = useMenuStore((state) => state.setSelectedMainMenu);
   const selectCustomer = useCustomerStore((state) => state.selectCustomer);
-  const removeModifyServiceInfo = useModifyServiceStore((state) => state.removeModifyServiceInfo);
+  const { removeModifyServiceInfo, removeRequestedModificationInfo} = useModifyServiceStore();
   const { deleteCustomerServiceData } = useCurrentServiceStore();
 
   const { reset } = useCustomerStore();
@@ -92,6 +92,7 @@ const ModificationRequest = () => {
 
     deleteCustomerServiceData(selectedCustomerId);
     removeModifyServiceInfo(selectedCustomerId, selectedContractId);
+    removeRequestedModificationInfo(selectedCustomerId, selectedContractId);
   };
 
   return (
