@@ -36,6 +36,8 @@ const ModificationRequest = () => {
     0,
   );
 
+  // 변경 후 서비스 가져오기
+
   // 변경 후 서비스 정보 가져오기
   const getModifyServiceInfo = useModifyServiceStore((state) => state.getModifyServiceInfo);
   const afterService = getModifyServiceInfo(selectedCustomerId, selectedContractId);

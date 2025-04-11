@@ -40,7 +40,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
   const { menuItems } = useMenuStore();
   const { handleBookmarkClick } = useBookmark();
   const { handleRemoveAllRegistrationInfo } = useRegistration();
-  const { deleteCustomerServiceData, resetAllData } = useCurrentServiceStore();
+  const { deleteCustomerServiceData } = useCurrentServiceStore();
   const { removeModifyServiceInfoByCustomerId } = useModifyServiceStore();
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
@@ -75,7 +75,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
     if (customerId) {
       removeCustomer(customerId);
       handleRemoveAllRegistrationInfo(customerId);
-      resetAllData();
+      deleteCustomerServiceData(customerId);
     }
   };
 

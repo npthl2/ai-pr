@@ -1,7 +1,10 @@
 import { mountStoreDevtool } from 'simple-zustand-devtools';
 import { create } from 'zustand';
 import { Service } from '@api/queries/modifyService/useModifyServiceQuery';
-import { AdditionalService } from '@model/modifyService/ModifyServiceModel';
+import {
+  AdditionalService,
+  ServiceModificationRequest,
+} from '@model/modifyService/ModifyServiceModel';
 
 export interface ModifyServiceInfo {
   // 선택된 서비스 (요금제)
@@ -40,8 +43,14 @@ export interface ModifyServices {
   };
 }
 
+export interface RequestedModificationInfo {
+  [customerId: string]: {
+    [contractId: string]: ServiceModificationRequest;
+  };
+}
 export interface ModifyServiceState {
   modifyServices: ModifyServices;
+  requestedModificationInfo: RequestedModificationInfo;
   serviceModificationMounted: boolean;
 
   // 상태 설정
@@ -69,11 +78,19 @@ export interface ModifyServiceState {
   setSelectedService: (customerId: string, contractId: string, service: Service | null) => void; // 완료
   revertToPreviousService: (customerId: string, contractId: string) => void; // 완료
   setRevertButtonClickedDate: (customerId: string, contractId: string, date: string | null) => void; // 완료
+
+  // ServiceModify.tsx 사용
   setModificationBusinessProcessId: (
     customerId: string,
     contractId: string,
     businessProcessId: string,
   ) => void;
+  setRequestedModificationInfo: (
+    customerId: string,
+    contractId: string,
+    request: ServiceModificationRequest,
+  ) => void;
+  getRequestedModificationInfo: (customerId: string, contractId: string) => ServiceModificationRequest | undefined; // 완료
 
   // AdditionalServiceList.tsx 사용
   restoreCurrentAdditionalService: (
@@ -174,6 +191,7 @@ const getContractInfo = (
 const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
   // 초기 상태
   modifyServices: {},
+  requestedModificationInfo: {},
   serviceModificationMounted: false,
 
   // 초기 상태 설정
@@ -409,6 +427,28 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
         },
       };
     });
+  },
+
+  // 요청 결과 저장
+  setRequestedModificationInfo: (
+    customerId: string,
+    contractId: string,
+    request: ServiceModificationRequest,
+  ) => {
+    set((state) => ({
+      requestedModificationInfo: {
+        ...state.requestedModificationInfo,
+        [customerId]: {
+          ...(state.requestedModificationInfo?.[customerId] || {}),
+          [contractId]: request,
+        },
+      },
+    }));
+  },
+
+  // 계약 탭 ID별 정보 조회
+  getRequestedModificationInfo: (customerId: string, contractId: string) => {
+    return get().requestedModificationInfo[customerId]?.[contractId];
   },
 
   // 제거된 현재 부가서비스 복구
