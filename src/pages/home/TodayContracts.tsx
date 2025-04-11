@@ -21,9 +21,9 @@ import {
   DetailInfo,
   ContractsStack,
   arrowIconStyle,
+  StyledSearchIcon,
 } from './TodayContracts.styled';
 import { useTodayContracts } from '@api/queries/dashboard/useTodayContracts';
-import SearchIcon from '@mui/icons-material/Search';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { ContractDataWithCustomer } from '@model/CustomerContract';
@@ -33,6 +33,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import TodayContractsModal from './todayContracts/TodayContractsModal';
 import { EMPTY_STATE_QUOTES, SLIDES_TO_SHOW } from './TodayContractsConstants';
 import useMemberStore from '@stores/MemberStore';
+import { CONTRACT_SERVICE_TYPE_CODE } from '@pages/customer/detail/CustomerDetailConstant';
 
 const TodayContracts = () => {
   const memberInfo = useMemberStore((state) => state.memberInfo);
@@ -120,8 +121,7 @@ const TodayContracts = () => {
             value={searchQuery}
             onChange={setSearchQuery}
             suffix={
-              <SearchIcon
-                sx={{ color: '#868F99' }}
+              <StyledSearchIcon
                 onClick={() => handleSearchClick(searchQuery)}
                 data-testid='search-icon'
               />
@@ -169,6 +169,7 @@ const TodayContracts = () => {
                 className={hoveredCardId === contract.contractId ? 'hover-active' : ''}
                 onMouseEnter={() => setHoveredCardId(contract.contractId)}
                 onMouseLeave={() => setHoveredCardId(null)}
+                onClick={() => handleDetailInfoClick(contract.contractId)}
               >
                 <CardContent data-testid={`card-content-${index}`}>
                   <CustomerInfo>
@@ -176,15 +177,13 @@ const TodayContracts = () => {
                     <PhoneNumber variant='h3'>{contract.contractDetail.phoneNumber}</PhoneNumber>
                     <Divider />
                     <ServiceName variant='h4'>
-                      {contract.contractDetail.serviceList[0]?.serviceName ?? '요금제 없음'}
+                      {contract.contractDetail.serviceList.find(
+                        (service) => service.serviceType === CONTRACT_SERVICE_TYPE_CODE,
+                      )?.serviceName ?? '요금제 없음'}
                     </ServiceName>
                   </CustomerInfo>
                   <DetailInfo>
-                    <DetailButton
-                      variant='h5'
-                      onClick={() => handleDetailInfoClick(contract.contractId)}
-                      data-testid={`card-detail-info-${index}`}
-                    >
+                    <DetailButton variant='h5' data-testid={`card-detail-info-${index}`}>
                       상세 정보 보기 →
                     </DetailButton>
                   </DetailInfo>

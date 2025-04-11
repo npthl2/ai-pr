@@ -1,4 +1,5 @@
 import { Box, IconButton, styled, Typography, Card } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import TextField from '@components/TextField';
@@ -44,6 +45,11 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '100%',
     padding: '0 12px',
   },
+}));
+
+export const StyledSearchIcon = styled(SearchIcon)(({ theme }) => ({
+  color: theme.palette.action.active,
+  cursor: 'pointer',
 }));
 
 export const StyledSlider = styled(Slider)({
@@ -99,6 +105,7 @@ export const CardWrapper = styled(Card)(({ theme }) => ({
   },
   display: 'flex',
   justifyContent: 'space-between',
+  cursor: 'pointer',
 }));
 
 export const CardContent = styled(Box)(({ theme }) => ({
@@ -144,7 +151,6 @@ export const DetailInfo = styled(Box)({
 });
 
 export const DetailButton = styled(Typography)(({ theme }) => ({
-  cursor: 'pointer',
   '.hover-active &': {
     color: theme.palette.primary.contrastText,
   },
