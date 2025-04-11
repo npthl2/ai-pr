@@ -23,6 +23,7 @@ const TodayContractsModal = ({ open, onClose, contractId }: TodayContractsModalP
       closeLabel='확인'
       title='고객 상세 정보'
       maxWidth={false}
+      hasHeaderCloseIcon={false}
       content={
         <ContentContainer>
           <TodayContractsDetailInfo contractData={contractData} />
