@@ -128,7 +128,9 @@ export interface ModifyServiceState {
   // 초기화 및 스토어 삭제
   resetAll: (customerId: string, contractId: string) => void;
   removeModifyServiceInfo: (customerId: string, contractId: string) => void;
+  removeRequestedModificationInfo: (customerId: string, contractId: string) => void;
   removeModifyServiceInfoByCustomerId: (customerId: string) => void;
+  removeRequestedModificationInfoByCustomerId: (customerId: string) => void;
   clearAllModifyServiceInfo: () => void;
 }
 
@@ -696,12 +698,34 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
     });
   },
 
+  removeRequestedModificationInfo: (customerId: string, contractId: string) => {
+    set((state) => {
+      const updated = { ...state.requestedModificationInfo };
+      if (updated[customerId]) {
+        delete updated[customerId][contractId];
+        if (Object.keys(updated[customerId]).length === 0) {
+          delete updated[customerId];
+        }
+      }
+      return { requestedModificationInfo: updated };
+    });
+  },
+
   // 고객 단위 변경 정보 삭제
   removeModifyServiceInfoByCustomerId: (customerId: string) => {
     set((state) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { [customerId]: _, ...rest } = state.modifyServices;
       return { modifyServices: rest };
+    });
+  },
+
+  // 고객 단위 변경 정보 삭제
+  removeRequestedModificationInfoByCustomerId: (customerId: string) => {
+    set((state) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { [customerId]: _, ...rest } = state.requestedModificationInfo;
+      return { requestedModificationInfo: rest };
     });
   },
 

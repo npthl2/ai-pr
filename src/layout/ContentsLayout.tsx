@@ -41,7 +41,8 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
   const { handleBookmarkClick } = useBookmark();
   const { handleRemoveAllRegistrationInfo } = useRegistration();
   const { deleteCustomerServiceData } = useCurrentServiceStore();
-  const { removeModifyServiceInfoByCustomerId } = useModifyServiceStore();
+  const { removeModifyServiceInfoByCustomerId, removeRequestedModificationInfoByCustomerId } =
+    useModifyServiceStore();
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     if (customerId) {
@@ -66,6 +67,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
         } else if (tabToClose.label === TabInfo.SERVICE_MODIFICATION.label) {
           deleteCustomerServiceData(customerId);
           removeModifyServiceInfoByCustomerId(customerId);
+          removeRequestedModificationInfoByCustomerId(customerId);
         }
       }
     }
@@ -77,6 +79,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
       handleRemoveAllRegistrationInfo(customerId);
       deleteCustomerServiceData(customerId);
       removeModifyServiceInfoByCustomerId(customerId);
+      removeRequestedModificationInfoByCustomerId(customerId);
     }
   };
 
