@@ -36,7 +36,8 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
     (state) => state.selectedContractIds[selectedCustomerId] || '',
   );
 
-  const { resetAll, setModificationBusinessProcessId, setRequestedModificationInfo } = useModifyServiceStore();
+  const { resetAll, setModificationBusinessProcessId, setRequestedModificationInfo } =
+    useModifyServiceStore();
 
   const modifyServiceInfo = useModifyServiceStore((state) =>
     state.getModifyServiceInfo(selectedCustomerId, selectedContractId),
@@ -237,11 +238,7 @@ const ServiceModify = ({ setIsSaveRequested }: ServiceModifyProps) => {
             selectedContractId,
             businessProcessId,
           );
-          setRequestedModificationInfo(
-            selectedCustomerId,
-            selectedContractId,
-            modificationInfo,
-          );
+          setRequestedModificationInfo(selectedCustomerId, selectedContractId, modificationInfo);
 
           setIsSaveRequested(true);
         }

@@ -90,7 +90,10 @@ export interface ModifyServiceState {
     contractId: string,
     request: ServiceModificationRequest,
   ) => void;
-  getRequestedModificationInfo: (customerId: string, contractId: string) => ServiceModificationRequest | undefined; // 완료
+  getRequestedModificationInfo: (
+    customerId: string,
+    contractId: string,
+  ) => ServiceModificationRequest | undefined; // 완료
 
   // AdditionalServiceList.tsx 사용
   restoreCurrentAdditionalService: (

@@ -76,6 +76,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
       removeCustomer(customerId);
       handleRemoveAllRegistrationInfo(customerId);
       deleteCustomerServiceData(customerId);
+      removeModifyServiceInfoByCustomerId(customerId);
     }
   };
 
