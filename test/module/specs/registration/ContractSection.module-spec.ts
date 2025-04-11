@@ -16,7 +16,6 @@ describe('KAN-38 가입정보 확인', () => {
   const invoiceSectionPage = new InvoiceSectionPage();
   const invoiceSectionService = new InvoiceSectionServiceMock();
 
-
   before(() => {
     // 초기 셋업
     mockAuthStore();
@@ -88,9 +87,10 @@ describe('KAN-38 가입정보 확인', () => {
 
   it('KAN-38-3 번호 선택 시 번호채번 버튼 옆에 해당 번호가 기재된다', () => {
     service.successWhenClaimAvailablePhoneNumber();
-    page.selectAvailablePhoneNumber(0);
-    page.clickConfirmAvailablePhoneNumberButton();
-    page.assertSelectedPhoneNumberToBeVisible('010-2345-0010');
+    page.selectAvailablePhoneNumber(0).then((phoneNumber) => {
+      page.clickConfirmAvailablePhoneNumberButton();
+      page.assertSelectedPhoneNumberToBeVisible(phoneNumber);
+    });
   });
 
   it('KAN-38-4 SIM은 숫자형태 13자리로 입력 가능하다', () => {

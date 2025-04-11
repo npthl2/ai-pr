@@ -25,9 +25,9 @@ import {
   FormRowSectionPlan,
   FormRowSectionDevice,
 } from './ContractSectionComponent.styles';
-import useCustomerStore from '@stores/CustomerStore';
 import registrationContractService from '@api/services/registrationContractService';
 import { PhoneNumber, Service, AdditionalService } from './types';
+import useRegistrationCustomerStore from '@stores/registration/RegistrationCustomerStore';
 
 const defaultService: Service = {
   serviceId: '',
@@ -51,8 +51,6 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     updateRegistarationContractValidationFlag,
     getRegistarationContractValidationFlag,
   } = useRegistrationContractStore();
-
-  const [customerId, setCustomerId] = useState<string>('');
 
   const [subscriptionType] = useState<string>('신규가입');
   const [sellType, setSellType] = useState<string>('신규폰');
@@ -78,7 +76,10 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
     servicePlan: { state: 'inactive', helperText: '' },
   });
 
-  const currentCustomerId = useCustomerStore((state) => state.selectedCustomerId);
+  const { getRegistrationCustomerInfo } = useRegistrationCustomerStore();
+  const customerInfo = getRegistrationCustomerInfo(contractTabId);
+  const currentCustomerId = customerInfo?.customerId ?? '';
+
   const validationFlag = getRegistarationContractValidationFlag(contractTabId);
 
   const phoneNumberInputRef = useRef<HTMLInputElement>(null);
@@ -88,7 +89,6 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
 
   useEffect(() => {
     // store 정보 생성
-    setCustomerId(currentCustomerId ?? '');
     addRegistrationContractInfo(contractTabId, {
       subscriptionType,
       sellType,
@@ -538,7 +538,7 @@ const ContractSectionComponent: React.FC<ContractSectionComponentProps> = ({
           onClose={handlePhoneNumberModalClose}
           onSelect={handlePhoneNumberSelect}
           lastFourDigits={phoneNumberLastFour}
-          customerId={customerId}
+          customerId={currentCustomerId}
         />
 
         <ServiceSelectModal
