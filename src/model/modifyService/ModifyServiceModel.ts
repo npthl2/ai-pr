@@ -90,6 +90,9 @@ export interface ServiceAgeCheckResponse {
  */
 export interface ServiceRequest {
   serviceId: string;
+  serviceName: string;
+  serviceValue: number;
+  serviceValueType: string;
 }
 
 /**
@@ -106,7 +109,7 @@ export interface ServiceModificationRequest {
   customerId: string;
   contractId: string;
   service?: ServiceRequest | null;
-  additionalServices?: ServiceRequest[];
+  additionalServices: ServiceRequest[];
 }
 
 /**

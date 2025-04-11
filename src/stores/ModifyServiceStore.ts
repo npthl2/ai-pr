@@ -31,6 +31,7 @@ export interface ModifyServiceInfo {
   initialIsServiceModifiable: boolean;
   initialPreviousService: Service | null;
   revertButtonClickedDate: string | null;
+  businessProcessId: string;
 }
 
 export interface ModifyServices {
@@ -74,9 +75,13 @@ export interface ModifyServiceState {
   ) => void;
   setRevertButtonClickedDate: (contractTabId: string, date: string | null) => void;
 
+  // 서비스 변경 비즈니스 프로세스 ID 설정
+  setModificationBusinessProcessId: (contractTabId: string, businessProcessId: string) => void;
+
   // 계약 탭 ID 생성 및 삭제
   createModifyServiceInfo: (contractTabId: string) => void;
   removeModifyServiceInfo: (contractTabId: string) => void;
+  removeModifyServiceInfoByContractId: (contractId: string) => void;
   clearAllModifyServiceInfo: () => void;
 }
 
@@ -97,6 +102,7 @@ const createDefaultServiceInfo = (): ModifyServiceInfo => ({
   initialPreviousService: null,
   revertButtonClickedDate: null,
   serviceModificationMounted: false,
+  businessProcessId: '',
 });
 
 const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
@@ -128,6 +134,34 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { [contractTabId]: _, ...rest } = state.modifyServices;
       return { modifyServices: rest };
+    });
+  },
+
+  // 특정 계약 ID에 대한 서비스 정보 삭제
+  removeModifyServiceInfoByContractId: (contractId: string) => {
+    set((state) => {
+      // 계약 ID와 일치하는 계약 탭 ID 찾기
+      const tabIdsToRemove: string[] = [];
+
+      // 모든 contractTabId에 대해 businessProcessId가 일치하는지 확인
+      Object.entries(state.modifyServices).forEach(([tabId, info]) => {
+        if (info.businessProcessId === contractId) {
+          tabIdsToRemove.push(tabId);
+        }
+      });
+
+      // 일치하는 항목이 없으면 상태 변경 없음
+      if (tabIdsToRemove.length === 0) {
+        return state;
+      }
+
+      // 찾은 계약 탭 ID들을 제거한 새 상태 생성
+      const newModifyServices = { ...state.modifyServices };
+      tabIdsToRemove.forEach((tabId) => {
+        delete newModifyServices[tabId];
+      });
+
+      return { modifyServices: newModifyServices };
     });
   },
 
@@ -508,6 +542,20 @@ const useModifyServiceStore = create<ModifyServiceState>((set, get) => ({
             ...serviceInfo,
             revertButtonClickedDate: date,
           },
+        },
+      };
+    });
+  },
+
+  setModificationBusinessProcessId: (contractTabId: string, businessProcessId: string) => {
+    set((state) => {
+      const serviceInfo = state.modifyServices[contractTabId];
+      if (!serviceInfo) return state;
+
+      return {
+        modifyServices: {
+          ...state.modifyServices,
+          [contractTabId]: { ...serviceInfo, businessProcessId },
         },
       };
     });

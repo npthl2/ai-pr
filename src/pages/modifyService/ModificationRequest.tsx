@@ -1,33 +1,52 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Typography, CircularProgress, Divider, Paper } from '@mui/material';
 import useCustomerStore from '@stores/CustomerStore';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
+import {
+  ModificationRequestContainer,
+  ContentContainer,
+  SummaryContainer,
+  PageTitle,
+  TitleContainer,
+  ButtonContainer,
+} from './ModificationRequest.styled';
+import { RegistrationStatusType } from '@constants/RegistrationConstants';
+import ModificationStatusMessage from './modification/components/ModificationStatusMessage';
+import { useRegistrationStatus } from '@hooks/useRegistrationStatus';
+import Button from '@components/Button';
+import useMenuStore from '@stores/MenuStore';
+import { MainMenu } from '@constants/CommonConstant';
+import { AdditionalServicesContainer } from './ModificationRequest.styled';
+import AdditionalServicesInfo from './summary/AdditionalServicesInfo';
+import TotalPriceInfo from './summary/TotalPriceInfo';
+import { Divider } from '@mui/material';
 
 interface ModificationRequestProps {
   contractTabId: string;
 }
 
-const ModificationRequest: React.FC<ModificationRequestProps> = ({ contractTabId }) => {
-  // 스토어에서 필요한 정보 가져오기
+const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
+  // 변경 전 서비스 정보 가져오기
   const getCurrentService = useCurrentServiceStore((state) => state.getCurrentService);
-
-  const modifyServiceInfo = useModifyServiceStore((state) =>
-    state.getModifyServiceInfo(contractTabId),
-  );
-  const { removeModifyServiceInfo } = useModifyServiceStore();
   const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
-  const customers = useCustomerStore((state) => state.customers);
-  const selectedCustomer = customers.find((c) => c.id === selectedCustomerId);
 
-  const contractId = getCurrentService?.(selectedCustomerId)?.contractId || '';
+  const beforeService = getCurrentService?.(selectedCustomerId);
+  const beforeAdditionalServices = beforeService?.additionalService || [];
 
-  // 요청 정보 가져오기
-  const selectedService = modifyServiceInfo?.selectedService;
-  const currentAdditionalServices = modifyServiceInfo?.currentAdditionalServices || [];
-  const selectedAdditionalServices = modifyServiceInfo?.selectedAdditionalServices || [];
-  const removedCurrentAdditionalServices =
-    modifyServiceInfo?.removedCurrentAdditionalServices || [];
+  const beforeServiceValue = beforeService?.serviceValue || 0;
+  const beforeAdditionalServicesValue = beforeAdditionalServices.reduce(
+    (sum, service) => sum + (service.serviceValue || 0),
+    0,
+  );
+
+  // 변경 후 서비스 정보 가져오기
+  const getModifyServiceInfo = useModifyServiceStore((state) => state.getModifyServiceInfo);
+  const afterService = getModifyServiceInfo(selectedCustomerId);
+
+  const selectedService = afterService?.selectedService;
+
+  const currentAdditionalServices = afterService?.currentAdditionalServices || [];
+  const selectedAdditionalServices = afterService?.selectedAdditionalServices || [];
+  const removedCurrentAdditionalServices = afterService?.removedCurrentAdditionalServices || [];
 
   // 제거된 부가서비스를 제외한 유지할 현재 부가서비스
   const currentServicesToKeep = currentAdditionalServices.filter(
@@ -38,241 +57,106 @@ const ModificationRequest: React.FC<ModificationRequestProps> = ({ contractTabId
   );
 
   // 최종 부가서비스 목록 (제거된 항목 제외, 추가된 항목 포함)
-  const additionalServices = [...currentServicesToKeep, ...selectedAdditionalServices];
+  // TODO 부모 컴포넌트에서 계산 한 내역을 store에 저장하고 바로 사용함으로서 로직 제거 가능
+  const afterAdditionalServices = [...currentServicesToKeep, ...selectedAdditionalServices];
 
-  // 요금제 변경 요약 계산
-  const totalAdditionalServicesValue = additionalServices.reduce(
+  const afterServiceValue = selectedService?.serviceValue || beforeService?.serviceValue || 0;
+  const afterAdditionalServicesValue = afterAdditionalServices.reduce(
     (sum, service) => sum + (service.serviceValue || 0),
     0,
   );
-  const planValue = selectedService?.serviceValue || 0;
-  const totalValue = planValue + totalAdditionalServicesValue;
 
-  // 화면 로드를 위한 상태 관리
-  const [isLoading, setIsLoading] = useState(true);
+  // 총 금액 (요금제 + 부가서비스)
+  const totalBeforePrice = beforeServiceValue + beforeAdditionalServicesValue;
+  const totalAfterPrice = afterServiceValue + afterAdditionalServicesValue;
 
-  useEffect(() => {
-    // 화면 전환 애니메이션을 위한 타이머
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+  // 상태 체크
+  const businessProcessId = useModifyServiceStore(
+    (state) => state.modifyServices[contractTabId]?.businessProcessId,
+  );
 
-    return () => clearTimeout(timer);
-  }, []);
+  const { data } = useRegistrationStatus({
+    isRegistrationRequestMounted: true,
+    businessProcessId,
+  });
 
-  // TODO 완료 페이지 개발 시 삭제 필요
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      removeModifyServiceInfo(contractTabId);
-    }, 7000);
+  const registrationData = data?.registrations.find(
+    (registration) => registration.businessProcessId === businessProcessId,
+  );
 
-    return () => clearTimeout(timer);
-  }, [contractTabId]);
+  // 홈버튼 동작
+  const setSelectedMainMenu = useMenuStore((state) => state.setSelectedMainMenu);
+  const selectCustomer = useCustomerStore((state) => state.selectCustomer);
+  const removeModifyServiceInfoByContractId = useModifyServiceStore(
+    (state) => state.removeModifyServiceInfoByContractId,
+  );
+
+  const { reset } = useCustomerStore();
+
+  const handleGoHome = () => {
+    // 현재 선택된 고객 해제
+    selectCustomer('');
+
+    // 메인 메뉴를 홈으로 설정
+    setSelectedMainMenu(MainMenu.HOME);
+
+    // 모든 고객 탭 닫기 (CustomerStore의 reset 함수 호출)
+    reset();
+
+    // 계약 ID로 서비스 변경 정보 삭제 (businessProcessId 사용)
+    if (businessProcessId) {
+      removeModifyServiceInfoByContractId(businessProcessId);
+    }
+  };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        p: 3,
-        backgroundColor: (theme) => theme.palette.background.paper,
-      }}
-      data-testid='modification-request'
-    >
-      <Paper
-        elevation={1}
-        sx={{
-          backgroundColor: (theme) => theme.palette.common.white,
-          p: 3,
-          borderRadius: 1,
-          mb: 2,
-        }}
-      >
-        <Typography variant='h5' sx={{ mb: 3, fontWeight: 'bold' }}>
-          요금제/부가서비스 변경 요청
-        </Typography>
-
-        {isLoading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
-            <CircularProgress />
-            <Typography variant='body1' sx={{ ml: 2 }}>
-              처리 결과를 확인하는 중...
-            </Typography>
-          </Box>
-        ) : (
-          <>
-            <Box sx={{ mb: 4 }}>
-              <Typography
-                variant='h6'
-                sx={{
-                  mb: 2,
-                  color: 'success.main',
-                  fontWeight: 'bold',
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                처리중입니다.
-              </Typography>
-
-              <Divider sx={{ mb: 2 }} />
-
-              <Typography variant='subtitle1' sx={{ fontWeight: 'bold', mb: 2 }}>
-                고객 정보
-              </Typography>
-
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 3 }}>
-                <Box sx={{ display: 'flex' }}>
-                  <Typography variant='body1' sx={{ width: 120, color: 'text.secondary' }}>
-                    고객명
-                  </Typography>
-                  <Typography variant='body1' sx={{ fontWeight: 'medium' }}>
-                    {selectedCustomer?.name || '정보 없음'}
-                  </Typography>
-                </Box>
-                <Box sx={{ display: 'flex' }}>
-                  <Typography variant='body1' sx={{ width: 120, color: 'text.secondary' }}>
-                    고객 ID
-                  </Typography>
-                  <Typography variant='body1' sx={{ fontWeight: 'medium' }}>
-                    {selectedCustomerId || '정보 없음'}
-                  </Typography>
-                </Box>
-                <Box sx={{ display: 'flex' }}>
-                  <Typography variant='body1' sx={{ width: 120, color: 'text.secondary' }}>
-                    계약 ID
-                  </Typography>
-                  <Typography variant='body1' sx={{ fontWeight: 'medium' }}>
-                    {contractId || '정보 없음'}
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Divider sx={{ mb: 2 }} />
-
-              <Typography variant='subtitle1' sx={{ fontWeight: 'bold', mb: 2 }}>
-                변경된 서비스 정보
-              </Typography>
-
-              {selectedService ? (
-                <Box sx={{ mb: 2 }}>
-                  <Typography variant='body1' sx={{ fontWeight: 'medium', mb: 1 }}>
-                    요금제
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      p: 1,
-                      bgcolor: 'grey.50',
-                      borderRadius: 1,
-                    }}
-                  >
-                    <Typography variant='body1'>{selectedService.serviceName}</Typography>
-                    <Typography variant='body1' sx={{ fontWeight: 'bold' }}>
-                      {selectedService.serviceValue.toLocaleString()}원
-                    </Typography>
-                  </Box>
-                </Box>
-              ) : (
-                <Box sx={{ mb: 2 }}>
-                  <Typography variant='body1' sx={{ fontWeight: 'medium', mb: 1 }}>
-                    요금제
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      p: 1,
-                      bgcolor: 'grey.50',
-                      borderRadius: 1,
-                    }}
-                  >
-                    <Typography
-                      variant='body2'
-                      sx={{ color: 'text.secondary', fontStyle: 'italic' }}
-                    >
-                      요금제 변경 없음
-                    </Typography>
-                  </Box>
-                </Box>
-              )}
-
-              <Box sx={{ mb: 3 }}>
-                <Typography variant='body1' sx={{ fontWeight: 'medium', mb: 1 }}>
-                  부가서비스{' '}
-                  {additionalServices.length > 0 ? `(${additionalServices.length}개)` : ''}
-                </Typography>
-
-                {additionalServices.length > 0 ? (
-                  additionalServices.map((service) => (
-                    <Box
-                      key={service.serviceId}
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        p: 1,
-                        mb: 0.5,
-                        bgcolor: 'grey.50',
-                        borderRadius: 1,
-                      }}
-                    >
-                      <Typography variant='body2'>{service.serviceName}</Typography>
-                      <Typography variant='body2'>
-                        {service.serviceValue.toLocaleString()}원
-                      </Typography>
-                    </Box>
-                  ))
-                ) : (
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      p: 1,
-                      bgcolor: 'grey.50',
-                      borderRadius: 1,
-                    }}
-                  >
-                    <Typography
-                      variant='body2'
-                      sx={{ color: 'text.secondary', fontStyle: 'italic' }}
-                    >
-                      {removedCurrentAdditionalServices.length > 0
-                        ? `모든 부가서비스가 제거되었습니다 (${removedCurrentAdditionalServices.length}개)`
-                        : '선택된 부가서비스 없음'}
-                    </Typography>
-                  </Box>
-                )}
-              </Box>
-
-              <Divider sx={{ mb: 2 }} />
-
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  p: 2,
-                  bgcolor: 'primary.light',
-                  color: 'primary.contrastText',
-                  borderRadius: 1,
-                }}
-              >
-                <Typography variant='h6'>총 금액</Typography>
-                <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-                  {totalValue.toLocaleString()}원
-                </Typography>
-              </Box>
-            </Box>
-
-            <Typography variant='body2' sx={{ color: 'text.secondary', mt: 2 }}>
-              • 요금제/부가서비스 변경은 즉시 적용되며, 일할 계산됩니다.
-              <br />• 변경된 서비스는 다음 달 청구서에 반영됩니다.
-            </Typography>
-          </>
-        )}
-      </Paper>
-    </Box>
+    <ModificationRequestContainer data-testid='modification-request'>
+      <ContentContainer>
+        <ModificationStatusMessage
+          status={registrationData?.status as RegistrationStatusType}
+          customerName={registrationData?.customerName || ''}
+        />
+        <TitleContainer>
+          <PageTitle>상품 변경정보 요약</PageTitle>
+        </TitleContainer>
+        <SummaryContainer>
+          <TotalPriceInfo totalBeforePrice={totalBeforePrice} totalAfterPrice={totalAfterPrice} />
+          <AdditionalServicesContainer>
+            {/* 현재 서비스 정보 */}
+            <AdditionalServicesInfo
+              title={beforeService?.serviceName || '이전 서비스'}
+              mainServiceValue={beforeServiceValue}
+              additionalServices={beforeAdditionalServices.map((service) => ({
+                serviceName: service.serviceName,
+                serviceValue: service.serviceValue || 0,
+              }))}
+              testId='before-services'
+            />
+            <Divider orientation='vertical' flexItem />
+            {/* 변경될 서비스 정보 */}
+            <AdditionalServicesInfo
+              title={selectedService?.serviceName || beforeService?.serviceName || ''}
+              mainServiceValue={selectedService?.serviceValue || beforeService?.serviceValue || 0}
+              additionalServices={afterAdditionalServices.map((service) => ({
+                serviceName: service.serviceName,
+                serviceValue: service.serviceValue || 0,
+              }))}
+              testId='after-services'
+            />
+          </AdditionalServicesContainer>
+        </SummaryContainer>
+        <ButtonContainer>
+          <Button
+            variant='outlined'
+            onClick={handleGoHome}
+            size='small'
+            data-testid='go-home-button-in-modify-service'
+          >
+            홈으로 이동
+          </Button>
+        </ButtonContainer>
+      </ContentContainer>
+    </ModificationRequestContainer>
   );
 };
 

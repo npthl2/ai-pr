@@ -4,9 +4,16 @@ interface CustomIconProps extends SvgIconProps {
   fillColor?: string;
   borderColor?: string;
   size?: 'small' | 'medium' | 'large';
+  opacity?: number;
 }
 
-const FavoriteIcon = ({ fillColor, borderColor, size = 'medium', ...props }: CustomIconProps) => {
+const FavoriteIcon = ({
+  fillColor,
+  borderColor,
+  size = 'medium',
+  opacity = 1,
+  ...props
+}: CustomIconProps) => {
   const theme = useTheme();
 
   const sizeMap = {
@@ -33,6 +40,7 @@ const FavoriteIcon = ({ fillColor, borderColor, size = 'medium', ...props }: Cus
             stroke={fillColor ? fillColor : (borderColor ?? theme.palette.primary.main)}
             strokeWidth='2'
             strokeLinejoin='round'
+            opacity={opacity}
           />
         </g>
         <defs>
