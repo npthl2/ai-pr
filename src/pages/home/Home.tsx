@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Typography } from '@mui/material';
 import Notice from './Notice';
 import NoticeModal from './NoticeModal';
-import NewServices from './NewServices';
+import NewServices from './banner/NewServices';
 import SalesPerformance from './SalesPerformance';
-import Promotion from './Promotion';
+import Promotion from './banner/Promotion';
 import TodayContracts from './TodayContracts';
 import {
   ContentLayout,
