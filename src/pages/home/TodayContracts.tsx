@@ -1,24 +1,15 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Divider } from '@mui/material';
 import { TitleWrapper, TitleBox } from './Home.styled';
 import {
-  ServiceName,
-  CustomerName,
-  CustomerInfo,
   TodayContractsContainer,
   EmptyContractContainer,
   EmptyContractText,
   EmptyDescription,
   StyledSlider,
-  DetailButton,
   ArrowButton,
-  PhoneNumber,
   Title,
   SearchContainer,
   StyledTextField,
-  CardWrapper,
-  CardContent,
-  DetailInfo,
   ContractsStack,
   arrowIconStyle,
   StyledSearchIcon,
@@ -33,7 +24,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import TodayContractsModal from './todayContracts/TodayContractsModal';
 import { EMPTY_STATE_QUOTES, SLIDES_TO_SHOW } from './TodayContractsConstants';
 import useMemberStore from '@stores/MemberStore';
-import { CONTRACT_SERVICE_TYPE_CODE } from '@pages/customer/detail/CustomerDetailConstant';
+import ContractCard from './todayContracts/ContractCard';
 
 const TodayContracts = () => {
   const memberInfo = useMemberStore((state) => state.memberInfo);
@@ -42,7 +33,6 @@ const TodayContracts = () => {
   const [selectedContractId, setSelectedContractId] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
   const [showRightArrow, setShowRightArrow] = useState(true);
-  const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
   const { data: todayContracts } = useTodayContracts(memberInfo?.memberId || '');
   const [filteredContracts, setFilteredContracts] = useState<ContractDataWithCustomer[]>([]);
   const [sliderKey, setSliderKey] = useState(0);
@@ -163,32 +153,12 @@ const TodayContracts = () => {
             nextArrow={<CustomNextArrow show={showRightArrow} />}
             prevArrow={<CustomPrevArrow />}
           >
-            {filteredContracts?.map((contract: ContractDataWithCustomer, index: number) => (
-              <CardWrapper
+            {filteredContracts?.map((contract: ContractDataWithCustomer) => (
+              <ContractCard
                 key={contract.contractId}
-                className={hoveredCardId === contract.contractId ? 'hover-active' : ''}
-                onMouseEnter={() => setHoveredCardId(contract.contractId)}
-                onMouseLeave={() => setHoveredCardId(null)}
-                onClick={() => handleDetailInfoClick(contract.contractId)}
-              >
-                <CardContent data-testid={`card-content-${index}`}>
-                  <CustomerInfo>
-                    <CustomerName variant='h3'>{contract.customerDetail.customerName}</CustomerName>
-                    <PhoneNumber variant='h3'>{contract.contractDetail.phoneNumber}</PhoneNumber>
-                    <Divider />
-                    <ServiceName variant='h4'>
-                      {contract.contractDetail.serviceList.find(
-                        (service) => service.serviceType === CONTRACT_SERVICE_TYPE_CODE,
-                      )?.serviceName ?? '요금제 없음'}
-                    </ServiceName>
-                  </CustomerInfo>
-                  <DetailInfo>
-                    <DetailButton variant='h5' data-testid={`card-detail-info-${index}`}>
-                      상세 정보 보기 →
-                    </DetailButton>
-                  </DetailInfo>
-                </CardContent>
-              </CardWrapper>
+                contract={contract}
+                onDetailClick={handleDetailInfoClick}
+              />
             ))}
           </StyledSlider>
         )}

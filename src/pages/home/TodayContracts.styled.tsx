@@ -1,4 +1,4 @@
-import { Box, IconButton, styled, Typography, Card } from '@mui/material';
+import { Box, IconButton, styled, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
@@ -92,75 +92,6 @@ export const StyledSlider = styled(Slider)({
     cursor: 'default',
   },
 });
-
-export const CardWrapper = styled(Card)(({ theme }) => ({
-  width: '219px',
-  height: '100%',
-  borderRadius: '16px',
-  backgroundColor: theme.palette.primary.contrastText,
-  boxShadow: 'none',
-  padding: '24px 32px',
-  '&:hover, &.hover-active': {
-    backgroundColor: theme.palette.grey[900],
-  },
-  display: 'flex',
-  justifyContent: 'space-between',
-  cursor: 'pointer',
-}));
-
-export const CardContent = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  padding: '0px',
-  gap: theme.spacing(2),
-  height: '204px',
-  '&:hover, &.hover-active': {
-    backgroundColor: theme.palette.grey[900],
-  },
-}));
-
-export const CustomerInfo = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing(1),
-}));
-
-export const CustomerName = styled(Typography)(({ theme }) => ({
-  '.hover-active &': {
-    color: theme.palette.primary.contrastText,
-  },
-}));
-
-export const PhoneNumber = styled(Typography)(({ theme }) => ({
-  color: theme.palette.primary.main,
-  '.hover-active &': {
-    color: theme.palette.primary.contrastText,
-  },
-}));
-
-export const ServiceName = styled(Typography)(({ theme }) => ({
-  color: theme.palette.primary.light,
-  '.hover-active &': {
-    color: theme.palette.primary.contrastText,
-  },
-}));
-
-export const DetailInfo = styled(Box)({
-  marginTop: 'auto',
-  alignSelf: 'flex-end',
-});
-
-export const DetailButton = styled(Typography)(({ theme }) => ({
-  '.hover-active &': {
-    color: theme.palette.primary.contrastText,
-  },
-}));
-
-export const Divider = styled(Box)(({ theme }) => ({
-  width: '100%',
-  height: '1px',
-  backgroundColor: theme.palette.grey[100],
-}));
 
 export const EmptyContractContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
