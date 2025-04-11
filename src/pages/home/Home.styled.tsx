@@ -44,6 +44,8 @@ export const ContentLayout = styled(Box)({
 
 export const LeftColumn = styled(Box)({
   flex: 3,
+  minWidth: '0px',
+  width: '100%',
   display: 'flex',
   flexDirection: 'column',
   gap: '32px',

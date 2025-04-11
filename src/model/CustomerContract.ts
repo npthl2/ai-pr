@@ -1,3 +1,5 @@
+import { ContractData } from './Contract';
+
 export interface CustomerContract {
   customerId: string;
   contracts: {
@@ -71,7 +73,14 @@ export interface CustomerContract {
   }[];
 }
 
-// Board 타입가드 함수 추가
+// customerContract 타입가드 함수 추가
 export function isCustomerContract(value: unknown): value is CustomerContract {
   return typeof value === 'object' && value !== null && 'customerId' in value;
+}
+
+export interface ContractDataWithCustomer extends ContractData {
+  customerDetail: {
+    customerId: string;
+    customerName: string;
+  };
 }
