@@ -158,7 +158,9 @@ const PhoneNumberSelectModal: React.FC<PhoneNumberSelectModalProps> = ({
                       <Typography variant='body1'>{phoneNumber.statusCode}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant='body1'>{phoneNumber.phoneNumber}</Typography>
+                      <Typography variant='body1' data-testid={`phone-number-text-${index}`}>
+                        {phoneNumber.phoneNumber}
+                      </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant='body1'>{phoneNumber.phoneNumberProvider}</Typography>
