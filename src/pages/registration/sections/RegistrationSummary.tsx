@@ -115,11 +115,15 @@ const ContractSummary = ({
             <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.INVOICE]}</Typography>
             <SummaryItem>
               <ItemLabel>납부고객명</ItemLabel>
-              <ItemValue data-testid='invoice-summary-recipient-input'>{invoiceInfo?.paymentName}</ItemValue>
+              <ItemValue data-testid='invoice-summary-recipient-input'>
+                {invoiceInfo?.paymentName}
+              </ItemValue>
             </SummaryItem>
             <SummaryItem>
               <ItemLabel>납부방법</ItemLabel>
-              <ItemValue data-testid='invoice-summary-payment-method-input'>{invoiceInfo?.paymentMethod}</ItemValue>
+              <ItemValue data-testid='invoice-summary-payment-method-input'>
+                {invoiceInfo?.paymentMethod}
+              </ItemValue>
             </SummaryItem>
           </Box>
           <Divider />
@@ -215,7 +219,10 @@ const ContractSummary = ({
             </SummaryItem>
             <SummaryItem>
               <ItemLabel>월 할부금</ItemLabel>
-              <ItemValue sx={{ fontWeight: 900 }} data-testid='device-summary-monthly-payment-price'>
+              <ItemValue
+                sx={{ fontWeight: 900 }}
+                data-testid='device-summary-monthly-payment-price'
+              >
                 {deviceInfo?.monthlyInstallmentPrice
                   ? `${deviceInfo.monthlyInstallmentPrice.toLocaleString()}원`
                   : '-'}
