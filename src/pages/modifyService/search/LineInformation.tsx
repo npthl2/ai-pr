@@ -240,7 +240,7 @@ const LineInformation = () => {
         open={showChangeBlockedDialog}
         title='요금제변경 불가 알림'
         content='요금제 변경은 월 1회만 가능합니다. \n현재 당월에는 변경이 불가능하니, 다음 달에 다시 시도해 주세요.'
-        onClose={()=>setShowChangeBlockedDialog(false)}
+        onClose={() => setShowChangeBlockedDialog(false)}
         data-testid='service-search-change-blocked-dialog'
       />
 
