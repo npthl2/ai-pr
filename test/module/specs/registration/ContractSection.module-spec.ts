@@ -78,8 +78,7 @@ describe('KAN-38 가입정보 확인', () => {
   });
 
   it('KAN-38-2 번호채번 모달을 누르면 선점가능한 번호 리스트가 보인다', () => {
-    // 왜 안함?
-    service.successWhenGetAvailablePhoneNumber('0010', 'NEW_SUBSCRIPTION0');
+    service.successWhenGetAvailablePhoneNumber('0010', 'C-3000000000');
     page.clickSelectPhoneNumberButton();
     page.assertComponentToBeVisible('select-phone-number-modal');
     page.assertAvailablePhoneNumberListed();

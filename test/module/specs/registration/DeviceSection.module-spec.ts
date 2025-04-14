@@ -80,7 +80,7 @@ describe('KAN-40 신규가입 - 단말기 결제 정보 입력', () => {
     contractSectionPage.focusOnEndPhoneNumber();
     contractSectionPage.typeEndPhoneNumberInputField('0010');
     contractSectionPage.focusOutEndPhoneNumber();
-    registrationContractService.successWhenGetAvailablePhoneNumber('0010', 'NEW_SUBSCRIPTION0');
+    registrationContractService.successWhenGetAvailablePhoneNumber('0010', 'C-3000000000');
     contractSectionPage.clickSelectPhoneNumberButton();
     registrationContractService.successWhenClaimAvailablePhoneNumber();
     contractSectionPage.selectAvailablePhoneNumber(0);
