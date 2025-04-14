@@ -64,6 +64,7 @@ class ContractSectionPage {
 
   selectAvailablePhoneNumber(index: number) {
     cy.get(`[data-testid="phone-number-radio-${index}"]`).click();
+    return cy.get(`[data-testid="phone-number-text-${index}"]`).invoke('text');
   }
 
   clickConfirmAvailablePhoneNumberButton() {

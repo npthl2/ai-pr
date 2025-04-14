@@ -99,7 +99,7 @@ describe('KAN-39 가입정보 요약 테스트', () => {
     contractSectionPage.focusOnEndPhoneNumber();
     contractSectionPage.typeEndPhoneNumberInputField('0010');
     contractSectionPage.focusOutEndPhoneNumber();
-    registrationContractService.successWhenGetAvailablePhoneNumber('0010', 'NEW_SUBSCRIPTION0');
+    registrationContractService.successWhenGetAvailablePhoneNumber('0010', 'C-3000000000');
     contractSectionPage.clickSelectPhoneNumberButton();
     registrationContractService.successWhenClaimAvailablePhoneNumber();
     contractSectionPage.selectAvailablePhoneNumber(0);
