@@ -186,7 +186,6 @@ const LineInformation = () => {
           '요금제 변경은 월 1회만 가능합니다. \n 현재 당월에는 변경이 불가능하니, 다음 달에 다시 시도해 주세요.'
         }
         onClose={() => setShowChangeBlockedDialog(false)}
-        data-testid='service-search-change-blocked-dialog'
       />
 
       <Typography variant='h3' sx={{ mr: 2, fontWeight: 700, fontSize: '1.1rem' }}>
