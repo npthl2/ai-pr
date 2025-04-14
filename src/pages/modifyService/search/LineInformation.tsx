@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 import { LineInfoDetailsContainer, ServiceLabel, ServiceValue } from './LineInformation.styled';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import useCustomerStore from '@stores/CustomerStore';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import ContractServiceList from './ContractServiceList';
 import ContractServiceDialog from './ContractServiceDialog';
 import { useCustomerContractQuery } from '@api/queries/contract/useCustomerContractQuery';
@@ -12,11 +12,7 @@ import { CustomerContract } from '@model/Contract';
 import Unmasking from '@pages/unmasking/Unmasking';
 import useMemberStore from '@stores/MemberStore';
 import { Customer } from '@model/Customer';
-import useModifyServiceStore from '@stores/ModifyServiceStore';
-import {
-  Service,
-  useCheckServiceModifiableQuery,
-} from '@api/queries/modifyService/useModifyServiceQuery';
+import { useCheckModifiable } from '@hooks/modifyService/useCheckModifiable';
 
 interface MaskedTarget {
   maskingType: string;
@@ -75,9 +71,6 @@ const LineInformation = () => {
         (contract) => contract.contractId === state.selectedContractIds[selectedCustomerId],
       ) || null,
   );
-
-  const { setServiceModifiable, setIsRollbackAvailable, setPreviousService, setInitialStates } =
-    useModifyServiceStore();
 
   // 현재 활성화된 탭 정보 가져오기
   const customerTabs = useCustomerStore(
@@ -165,67 +158,17 @@ const LineInformation = () => {
     (state) => state.selectedContractIds[selectedCustomerId] || '',
   );
 
-  // 요금제 변경 가능 여부 확인 API 호출
-  const { data: modifiableData, isLoading } = useCheckServiceModifiableQuery(selectedContractId);
+  const handleBlocked = useCallback(() => {
+    setShowChangeBlockedDialog(true);
+  }, []);
 
-  // 요금제 변경 가능 여부와 현재 서비스 정보 설정
-  useEffect(() => {
-    if (
-      !isLoading &&
-      selectedCustomerId &&
-      selectedContractId &&
-      modifiableData &&
-      isServiceModificationTabActive
-    ) {
-      setServiceModifiable(selectedCustomerId, selectedContractId, modifiableData.isModifiable);
-      setIsRollbackAvailable(
-        selectedCustomerId,
-        selectedContractId,
-        modifiableData.isRollbackAvailable || false,
-      );
-
-      if (modifiableData.isRollbackAvailable && modifiableData.previousService) {
-        const prevService: Service = {
-          serviceId: modifiableData.previousService.serviceId,
-          serviceName: modifiableData.previousService.serviceName || '이전 요금제',
-          serviceValue: modifiableData.previousService.serviceValue || 0,
-          serviceValueType: modifiableData.previousService.serviceValueType || '원정액',
-          releaseDate: '',
-        };
-        setPreviousService(selectedCustomerId, selectedContractId, prevService);
-        setInitialStates(
-          selectedCustomerId,
-          selectedContractId,
-          true,
-          modifiableData.isModifiable,
-          prevService,
-        );
-      } else {
-        setPreviousService(selectedCustomerId, selectedContractId, null);
-        setInitialStates(
-          selectedCustomerId,
-          selectedContractId,
-          false,
-          modifiableData.isModifiable,
-          null,
-        );
-      }
-
-      if (!modifiableData.isModifiable) {
-        setShowChangeBlockedDialog(true);
-      }
-    }
-  }, [
-    isLoading,
-    modifiableData,
+  // 커스텀 훅 호출
+  useCheckModifiable(
     selectedCustomerId,
     selectedContractId,
-    setServiceModifiable,
-    setIsRollbackAvailable,
-    setPreviousService,
-    setInitialStates,
     isServiceModificationTabActive,
-  ]);
+    handleBlocked,
+  );
 
   return (
     <>
@@ -239,7 +182,7 @@ const LineInformation = () => {
       <ContractServiceDialog
         open={showChangeBlockedDialog}
         title='요금제변경 불가 알림'
-        content='요금제 변경은 월 1회만 가능합니다. \n현재 당월에는 변경이 불가능하니, 다음 달에 다시 시도해 주세요.'
+        content={'요금제 변경은 월 1회만 가능합니다. \n 현재 당월에는 변경이 불가능하니, 다음 달에 다시 시도해 주세요.'}
         onClose={() => setShowChangeBlockedDialog(false)}
         data-testid='service-search-change-blocked-dialog'
       />
