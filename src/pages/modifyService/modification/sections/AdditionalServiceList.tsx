@@ -101,12 +101,12 @@ const AdditionalServiceList = ({ additionalServices }: AdditionalServiceListProp
 
     // 이미 선택된 부가서비스 ID 목록
     const selectedAdditionalServiceIds = selectedAdditionalServices.map(
-      (AdditionalService) => AdditionalService.serviceId,
+      (additionalService) => additionalService.serviceId,
     );
 
     // 현재 사용 중인 부가서비스 ID 목록
     const currentAdditionalServiceIds = currentAdditionalServices.map(
-      (AdditionalService) => AdditionalService.serviceId,
+      (additionalService) => additionalService.serviceId,
     );
 
     // 모든 제외할 서비스 ID 목록 (현재 사용중이면서 제거되지 않은 것 + 이미 선택된 것)
