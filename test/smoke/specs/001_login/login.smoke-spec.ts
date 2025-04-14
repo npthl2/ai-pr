@@ -3,7 +3,7 @@ import LoginPage from '../../pages/LoginPage';
 describe('001. 로그인 시나리오 테스트', () => {
     const page = new LoginPage();
 
-    beforeEach(() => {
+    before(() => {
         page.visitLoginPage();
     });
 

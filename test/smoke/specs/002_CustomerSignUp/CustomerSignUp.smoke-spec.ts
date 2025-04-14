@@ -1,4 +1,5 @@
 import CustomerSignUpPage from '../../pages/CustomerSignUpPage';
+import LoginPage from '../../pages/LoginPage';
 
 const MENU_NAME = 'menu-button';
 const REGISTRATION_BUTTON_NAME = 'menu-item-신규가입';
@@ -48,6 +49,14 @@ const REGISTRATION_SAVE_BUTTON_NAME = 'save-button';
 
 describe('002. 신규고객 생성 시나리오 테스트', () => {
     const page = new CustomerSignUpPage();
+    const loginPage = new LoginPage();
+
+    before(() => {
+        loginPage.visitLoginPage();
+        loginPage.inputId('smoketestagent');
+        loginPage.inputPw('smoke1q2w3e4r');
+        loginPage.clickLoginButton();
+    });
 
     it('LNB 메뉴에서 신규 가입 버튼을 클릭해서 신규가입 화면으로 이동한다.', () => {
         page.visit();
@@ -132,7 +141,7 @@ describe('002. 신규고객 생성 시나리오 테스트', () => {
         page.clickComponent(REGISTRATION_SAVE_BUTTON_NAME);
         page.assertRegistrationPending();
     });
-    
+
     /*
     it('가입처리 완료 됐을 때 안내 문구 변경 및 토스트 메시지가 표시된다.', () => {
         page.clickCustomerSectionButton('가입처리');
