@@ -8,6 +8,11 @@ class ModifyServicePage {
     cy.get('[data-testid="service-modification-block-modal"]').should('be.visible');
   }
 
+  // 다이얼로 로그가 보이는지 확인
+  assertDialogVisible() {
+    cy.get('[data-testid="service-search-change-blocked-dialog"]').should('be.visible');
+  }
+
   // 모달 내용 확인
   assertModalContentVisible(content: string) {
     cy.get('[data-testid="service-modification-modal-message"]')
@@ -15,9 +20,19 @@ class ModifyServicePage {
       .should('be.visible');
   }
 
+  // 다이얼로그 내용 확인
+  assertDialogContentVisible(content: string) {
+    cy.get('[data-testid="component-dialog-content"]').contains(content).should('be.visible');
+  }
+
   // 모달에서 확인 버튼 클릭
   clickModalConfirmButton() {
     cy.get('[data-testid="modal-confirm-button"]').click();
+  }
+
+  // 다이얼로그에서 확인 버튼 클릭
+  clickDialogConfirmButton() {
+    cy.get('[data-testid="component-dialog-close-button"]').click();
   }
 
   // 모달에서 취소 버튼 클릭

@@ -17,6 +17,7 @@ const ContractServiceDialog = ({ open, title, content, onClose }: ContractServic
       onClose={onClose}
       size='small'
       disableRestoreFocus
+      data-testid='service-search-change-blocked-dialog'
       sx={{
         '& .MuiDialog-paper': {
           height: '190px',
