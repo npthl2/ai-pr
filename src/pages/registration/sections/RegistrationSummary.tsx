@@ -115,11 +115,11 @@ const ContractSummary = ({
             <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.INVOICE]}</Typography>
             <SummaryItem>
               <ItemLabel>납부고객명</ItemLabel>
-              <ItemValue>{invoiceInfo?.paymentName}</ItemValue>
+              <ItemValue data-testid='invoice-summary-recipient-input'>{invoiceInfo?.paymentName}</ItemValue>
             </SummaryItem>
             <SummaryItem>
               <ItemLabel>납부방법</ItemLabel>
-              <ItemValue>{invoiceInfo?.paymentMethod}</ItemValue>
+              <ItemValue data-testid='invoice-summary-payment-method-input'>{invoiceInfo?.paymentMethod}</ItemValue>
             </SummaryItem>
           </Box>
           <Divider />
@@ -128,7 +128,7 @@ const ContractSummary = ({
             <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.SALES]}</Typography>
             <SummaryItem>
               <ItemLabel>판매채널정보</ItemLabel>
-              <ItemValue>
+              <ItemValue data-testid='sales-summary-sales-department-input'>
                 {completedSections.includes(SECTION_IDS.SALES) ? salesInfo?.salesDepartment : ''}
               </ItemValue>
             </SummaryItem>
@@ -139,7 +139,7 @@ const ContractSummary = ({
             <Typography variant='h4'>{SECTION_TITLES[SECTION_IDS.CONTRACT]}</Typography>
             <SummaryItem>
               <ItemLabel>개통요금제</ItemLabel>
-              <ItemValue>
+              <ItemValue data-testid='contract-summary-service-input'>
                 {completedSections.includes(SECTION_IDS.CONTRACT)
                   ? contractInfo?.service?.serviceName
                   : ''}
@@ -166,7 +166,7 @@ const ContractSummary = ({
             <Divider />
             <SummaryItem>
               <ItemLabel>출고가</ItemLabel>
-              <ItemValue sx={{ fontWeight: 900 }}>
+              <ItemValue sx={{ fontWeight: 900 }} data-testid='device-summary-sales-price'>
                 {deviceInfo?.deviceSalesPrice
                   ? `${deviceInfo.deviceSalesPrice.toLocaleString()}원`
                   : '-'}
@@ -174,7 +174,7 @@ const ContractSummary = ({
             </SummaryItem>
             <SummaryItem>
               <ItemLabel>공시지원금</ItemLabel>
-              <ItemValue>
+              <ItemValue data-testid='device-summary-discount-price'>
                 {deviceInfo?.deviceDiscountPrice
                   ? `${deviceInfo.deviceDiscountPrice.toLocaleString()}원`
                   : '-'}
@@ -191,7 +191,7 @@ const ContractSummary = ({
             <Divider />
             <SummaryItem>
               <ItemLabel>할부원금</ItemLabel>
-              <ItemValue>
+              <ItemValue data-testid='device-summary-installment-price'>
                 {deviceInfo?.deviceInstallmentAmount
                   ? `${deviceInfo.deviceInstallmentAmount.toLocaleString()}원`
                   : '-'}
@@ -199,7 +199,7 @@ const ContractSummary = ({
             </SummaryItem>
             <SummaryItem>
               <ItemLabel>총 할부수수료</ItemLabel>
-              <ItemValue>
+              <ItemValue data-testid='device-summary-installment-fee'>
                 {deviceInfo?.deviceInstallmentFee
                   ? `${deviceInfo.deviceInstallmentFee.toLocaleString()}원`
                   : '-'}
@@ -207,7 +207,7 @@ const ContractSummary = ({
             </SummaryItem>
             <SummaryItem>
               <ItemLabel>총금액</ItemLabel>
-              <ItemValue>
+              <ItemValue data-testid='device-summary-total-price'>
                 {deviceInfo?.deviceTotalPrice
                   ? `${deviceInfo.deviceTotalPrice.toLocaleString()}원`
                   : '-'}
@@ -215,7 +215,7 @@ const ContractSummary = ({
             </SummaryItem>
             <SummaryItem>
               <ItemLabel>월 할부금</ItemLabel>
-              <ItemValue sx={{ fontWeight: 900 }}>
+              <ItemValue sx={{ fontWeight: 900 }} data-testid='device-summary-monthly-payment-price'>
                 {deviceInfo?.monthlyInstallmentPrice
                   ? `${deviceInfo.monthlyInstallmentPrice.toLocaleString()}원`
                   : '-'}

@@ -1,18 +1,18 @@
-import LoginPage from '../../../pages/auth/LoginPage';
+import LoginPage from '../../pages/LoginPage';
 
-describe('로그인 시나리오 테스트', () => {
-    const loginPage = new LoginPage();
+describe('001. 로그인 시나리오 테스트', () => {
+    const page = new LoginPage();
 
     beforeEach(() => {
-        loginPage.visitLoginPage();
+        page.visitLoginPage();
     });
 
     it('관리자 로그인 시 홈 화면으로 이동하고 로그인한 유저 정보가 보여야 한다', () => {
-        loginPage.inputId('smoketestagent');
-        loginPage.inputPw('smoke1q2w3e4r');
-        loginPage.clickLoginButton();
+        page.inputId('smoketestagent');
+        page.inputPw('smoke1q2w3e4r');
+        page.clickLoginButton();
 
-        loginPage.assertRedirectedToHome();
-        loginPage.assertUserInfoDisplayed('스대리점', '점장');
+        page.assertRedirectedToHome();
+        page.assertUserInfoDisplayed('스대리점', '점장');
     });
 });
