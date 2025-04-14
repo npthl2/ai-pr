@@ -12,6 +12,11 @@ import { CustomerContract } from '@model/Contract';
 import Unmasking from '@pages/unmasking/Unmasking';
 import useMemberStore from '@stores/MemberStore';
 import { Customer } from '@model/Customer';
+import useModifyServiceStore from '@stores/ModifyServiceStore';
+import {
+  Service,
+  useCheckServiceModifiableQuery,
+} from '@api/queries/modifyService/useModifyServiceQuery';
 
 interface MaskedTarget {
   maskingType: string;
@@ -50,6 +55,7 @@ const LineInformation = () => {
 
   const [isServiceListOpen, setIsServiceListOpen] = useState(false);
   const [showNoContractDialog, setShowNoContractDialog] = useState(false);
+  const [showChangeBlockedDialog, setShowChangeBlockedDialog] = useState(false);
   const [isUnmaskPopupOpen, setIsUnmaskPopupOpen] = useState(false);
   const [unmaskingData, setUnmaskingData] = useState<UnmaskingData | null>(null);
 
@@ -69,6 +75,10 @@ const LineInformation = () => {
         (contract) => contract.contractId === state.selectedContractIds[selectedCustomerId],
       ) || null,
   );
+
+  const { setServiceModifiable, setIsRollbackAvailable, setPreviousService, setInitialStates } =
+    useModifyServiceStore();
+
   // 현재 활성화된 탭 정보 가져오기
   const customerTabs = useCustomerStore(
     (state) => state.customerTabs[selectedCustomerId] || { activeTab: -1, tabs: [] },
@@ -80,13 +90,13 @@ const LineInformation = () => {
   );
 
   // 고객 계약 정보 조회
-  const { data: customerContractdata } = useCustomerContractQuery(selectedCustomerId, {
+  const { data: customerContractData } = useCustomerContractQuery(selectedCustomerId, {
     enabled: isServiceModificationTabActive && !!selectedCustomerId,
   });
 
   useEffect(() => {
     if (
-      !customerContractdata ||
+      !customerContractData ||
       !isServiceModificationTabActive ||
       selectedCustomerId !== customerId
     )
@@ -98,7 +108,7 @@ const LineInformation = () => {
     const alreadyContracts = getCustomerContracts(customerId);
     if (selectedContractId && alreadyContracts.length > 0) return;
 
-    const contracts = customerContractdata.contracts;
+    const contracts = customerContractData.contracts;
     const transformedContracts = contracts.map(transformContractToStoreFormat);
 
     // 전화번호로 조회한 고객이면 조회한 고객 store에 contractId 존재
@@ -124,7 +134,7 @@ const LineInformation = () => {
       // 계약이 없는 경우
       setShowNoContractDialog(true);
     }
-  }, [customerContractdata, customerId]);
+  }, [customerContractData, customerId]);
 
   const handleContextMenu = (event: React.MouseEvent, data: UnmaskingData) => {
     event.preventDefault();
@@ -151,6 +161,72 @@ const LineInformation = () => {
     }
   };
 
+  const selectedContractId = useCurrentServiceStore(
+    (state) => state.selectedContractIds[selectedCustomerId] || '',
+  );
+
+  // 요금제 변경 가능 여부 확인 API 호출
+  const { data: modifiableData, isLoading } = useCheckServiceModifiableQuery(selectedContractId);
+
+  // 요금제 변경 가능 여부와 현재 서비스 정보 설정
+  useEffect(() => {
+    if (
+      !isLoading &&
+      selectedCustomerId &&
+      selectedContractId &&
+      modifiableData &&
+      isServiceModificationTabActive
+    ) {
+      setServiceModifiable(selectedCustomerId, selectedContractId, modifiableData.isModifiable);
+      setIsRollbackAvailable(
+        selectedCustomerId,
+        selectedContractId,
+        modifiableData.isRollbackAvailable || false,
+      );
+
+      if (modifiableData.isRollbackAvailable && modifiableData.previousService) {
+        const prevService: Service = {
+          serviceId: modifiableData.previousService.serviceId,
+          serviceName: modifiableData.previousService.serviceName || '이전 요금제',
+          serviceValue: modifiableData.previousService.serviceValue || 0,
+          serviceValueType: modifiableData.previousService.serviceValueType || '원정액',
+          releaseDate: '',
+        };
+        setPreviousService(selectedCustomerId, selectedContractId, prevService);
+        setInitialStates(
+          selectedCustomerId,
+          selectedContractId,
+          true,
+          modifiableData.isModifiable,
+          prevService,
+        );
+      } else {
+        setPreviousService(selectedCustomerId, selectedContractId, null);
+        setInitialStates(
+          selectedCustomerId,
+          selectedContractId,
+          false,
+          modifiableData.isModifiable,
+          null,
+        );
+      }
+
+      if (!modifiableData.isModifiable) {
+        setShowChangeBlockedDialog(true);
+      }
+    }
+  }, [
+    isLoading,
+    modifiableData,
+    selectedCustomerId,
+    selectedContractId,
+    setServiceModifiable,
+    setIsRollbackAvailable,
+    setPreviousService,
+    setInitialStates,
+    isServiceModificationTabActive,
+  ]);
+
   return (
     <>
       <ContractServiceDialog
@@ -159,6 +235,13 @@ const LineInformation = () => {
         content='사용중인 회선이 없으므로, 상품변경이 불가합니다.'
         onClose={handleCloseDialog}
         data-testid='service-search-no-contract-dialog'
+      />
+      <ContractServiceDialog
+        open={showChangeBlockedDialog}
+        title='요금제변경 불가 알림'
+        content='요금제 변경은 월 1회만 가능합니다. \n현재 당월에는 변경이 불가능하니, 다음 달에 다시 시도해 주세요.'
+        onClose={()=>setShowChangeBlockedDialog(false)}
+        data-testid='service-search-change-blocked-dialog'
       />
 
       <Typography variant='h3' sx={{ mr: 2, fontWeight: 700, fontSize: '1.1rem' }}>
@@ -232,7 +315,7 @@ const LineInformation = () => {
       <ContractServiceList
         open={isServiceListOpen}
         onClose={() => setIsServiceListOpen(false)}
-        contracts={customerContractdata?.contracts || []}
+        contracts={customerContractData?.contracts || []}
       />
 
       {isUnmaskPopupOpen && customerContract && unmaskingData && (
