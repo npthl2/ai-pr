@@ -10,8 +10,8 @@ import {
   ButtonContainer,
 } from './ModificationRequest.styled';
 import { RegistrationStatusType } from '@constants/RegistrationConstants';
-import ModificationStatusMessage from './modification/components/ModificationStatusMessage';
 import { useRegistrationStatus } from '@hooks/useRegistrationStatus';
+
 import Button from '@components/Button';
 import useMenuStore from '@stores/MenuStore';
 import { MainMenu } from '@constants/CommonConstant';
@@ -19,6 +19,7 @@ import { AdditionalServicesContainer } from './ModificationRequest.styled';
 import AdditionalServicesInfo from './summary/AdditionalServicesInfo';
 import TotalPriceInfo from './summary/TotalPriceInfo';
 import { Divider } from '@mui/material';
+import StatusMessage from '@pages/registration/components/StatusMessage';
 
 const ModificationRequest = () => {
   // 변경 전 서비스 정보 가져오기
@@ -98,9 +99,10 @@ const ModificationRequest = () => {
   return (
     <ModificationRequestContainer data-testid='modification-request'>
       <ContentContainer>
-        <ModificationStatusMessage
+        <StatusMessage
           status={registrationData?.status as RegistrationStatusType}
           customerName={registrationData?.customerName || ''}
+          type='MODIFICATION'
         />
         <TitleContainer>
           <PageTitle>상품 변경정보 요약</PageTitle>

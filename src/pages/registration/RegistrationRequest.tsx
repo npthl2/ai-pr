@@ -187,6 +187,7 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
         <StatusMessage
           status={registrationData?.status as RegistrationStatusType}
           customerName={registrationData?.customerName || ''}
+          type='REGISTRATION'
         />
 
         <SectionContainer>
