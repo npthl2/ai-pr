@@ -184,12 +184,13 @@ const RegistrationRequest = ({ contractTabId }: RegistrationRequestProps) => {
   return (
     <RegistrationRequestContainer>
       <ContentContainer>
-        <StatusMessage
-          status={registrationData?.status as RegistrationStatusType}
-          customerName={registrationData?.customerName || ''}
-          type='REGISTRATION'
-        />
-
+        {registrationData?.status && (
+          <StatusMessage
+            status={registrationData?.status as RegistrationStatusType}
+            customerName={registrationData?.customerName || ''}
+            type='REGISTRATION'
+          />
+        )}
         <SectionContainer>
           <Box
             sx={{
