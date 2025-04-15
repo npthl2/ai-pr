@@ -40,11 +40,9 @@ const ServiceModification = () => {
     }
   }, [createModifyServiceInfo, selectedCustomerId, selectedContractId]);
 
-  if (isSaveRequested) {
-    return <ModificationRequest />;
-  }
-
-  return (
+  return isSaveRequested ? (
+    <ModificationRequest />
+  ) : (
     <Box
       sx={{
         height: '100%',
