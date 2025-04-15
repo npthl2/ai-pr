@@ -99,12 +99,13 @@ const ModificationRequest = () => {
   return (
     <ModificationRequestContainer data-testid='modification-request'>
       <ContentContainer>
-      {registrationData?.status && (
-        <StatusMessage
-          status={registrationData?.status as RegistrationStatusType}
-          customerName={registrationData?.customerName || ''}
-          type='MODIFICATION'
-        />)}
+        {registrationData?.status && (
+          <StatusMessage
+            status={registrationData?.status as RegistrationStatusType}
+            customerName={registrationData?.customerName || ''}
+            type='MODIFICATION'
+          />
+        )}
         <TitleContainer>
           <PageTitle>상품 변경정보 요약</PageTitle>
         </TitleContainer>

@@ -12,7 +12,7 @@ describe('StatusMessage 컴포넌트', () => {
     const status = REGISTRATION_STATUS.PENDING;
 
     // When: 컴포넌트를 렌더링하면
-    render(<StatusMessage status={status} customerName={customerName} type='REGISTRATION'/>);
+    render(<StatusMessage status={status} customerName={customerName} type='REGISTRATION' />);
 
     // Then: 처리중 메시지와 이미지가 표시되어야 함
     expect(screen.getByText(`${customerName} 고객님의 가입이 처리중입니다.`)).toBeInTheDocument();
@@ -25,7 +25,7 @@ describe('StatusMessage 컴포넌트', () => {
     const status = REGISTRATION_STATUS.COMPLETED;
 
     // When: 컴포넌트를 렌더링하면
-    render(<StatusMessage status={status} customerName={customerName} type='REGISTRATION'/>);
+    render(<StatusMessage status={status} customerName={customerName} type='REGISTRATION' />);
 
     // Then: 완료 메시지와 이미지가 표시되어야 함
     expect(
@@ -40,7 +40,7 @@ describe('StatusMessage 컴포넌트', () => {
     const status = REGISTRATION_STATUS.FAILED;
 
     // When: 컴포넌트를 렌더링하면
-    render(<StatusMessage status={status} customerName={customerName} type='REGISTRATION'/>);
+    render(<StatusMessage status={status} customerName={customerName} type='REGISTRATION' />);
 
     // Then: 실패 메시지가 표시되어야 함
     expect(screen.getByText(`${customerName} 고객님의 가입을 실패하였습니다.`)).toBeInTheDocument();
