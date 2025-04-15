@@ -20,60 +20,48 @@ import AdditionalServicesInfo from './summary/AdditionalServicesInfo';
 import TotalPriceInfo from './summary/TotalPriceInfo';
 import { Divider } from '@mui/material';
 
-interface ModificationRequestProps {
-  contractTabId: string;
-}
-
-const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
+const ModificationRequest = () => {
   // 변경 전 서비스 정보 가져오기
-  const getCurrentService = useCurrentServiceStore((state) => state.getCurrentService);
   const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
+  const selectedContractId = useCurrentServiceStore(
+    (state) => state.selectedContractIds[selectedCustomerId] || '',
+  );
+  const beforeServiceInfo =
+    useCurrentServiceStore((state) => state.getCurrentService(selectedCustomerId)) || null;
+  const beforeAdditionalServices = beforeServiceInfo?.additionalService || [];
 
-  const beforeService = getCurrentService?.(selectedCustomerId);
-  const beforeAdditionalServices = beforeService?.additionalService || [];
-
-  const beforeServiceValue = beforeService?.serviceValue || 0;
+  const beforeServiceValue = beforeServiceInfo?.serviceValue || 0;
   const beforeAdditionalServicesValue = beforeAdditionalServices.reduce(
     (sum, service) => sum + (service.serviceValue || 0),
     0,
   );
 
-  // 변경 후 서비스 정보 가져오기
-  const getModifyServiceInfo = useModifyServiceStore((state) => state.getModifyServiceInfo);
-  const afterService = getModifyServiceInfo(selectedCustomerId);
+  // 변경 후 서비스 가져오기
 
-  const selectedService = afterService?.selectedService;
-
-  const currentAdditionalServices = afterService?.currentAdditionalServices || [];
-  const selectedAdditionalServices = afterService?.selectedAdditionalServices || [];
-  const removedCurrentAdditionalServices = afterService?.removedCurrentAdditionalServices || [];
-
-  // 제거된 부가서비스를 제외한 유지할 현재 부가서비스
-  const currentServicesToKeep = currentAdditionalServices.filter(
-    (currentService) =>
-      !removedCurrentAdditionalServices.some(
-        (removed) => removed.serviceId === currentService.serviceId,
-      ),
+  const getRequestedModificationInfo = useModifyServiceStore(
+    (state) => state.getRequestedModificationInfo,
   );
+  const requestServiceInfo = getRequestedModificationInfo(selectedCustomerId, selectedContractId);
 
-  // 최종 부가서비스 목록 (제거된 항목 제외, 추가된 항목 포함)
-  // TODO 부모 컴포넌트에서 계산 한 내역을 store에 저장하고 바로 사용함으로서 로직 제거 가능
-  const afterAdditionalServices = [...currentServicesToKeep, ...selectedAdditionalServices];
+  const requestService = requestServiceInfo?.service || null;
+  const requestAdditionalServices = requestServiceInfo?.additionalServices || [];
 
-  const afterServiceValue = selectedService?.serviceValue || beforeService?.serviceValue || 0;
-  const afterAdditionalServicesValue = afterAdditionalServices.reduce(
+  const requestServiceValue = requestService?.serviceValue || beforeServiceInfo?.serviceValue || 0;
+  const requestAdditionalServicesValue = requestAdditionalServices.reduce(
     (sum, service) => sum + (service.serviceValue || 0),
     0,
   );
 
   // 총 금액 (요금제 + 부가서비스)
   const totalBeforePrice = beforeServiceValue + beforeAdditionalServicesValue;
-  const totalAfterPrice = afterServiceValue + afterAdditionalServicesValue;
+  const totalAfterPrice = requestServiceValue + requestAdditionalServicesValue;
 
   // 상태 체크
-  const businessProcessId = useModifyServiceStore(
-    (state) => state.modifyServices[contractTabId]?.businessProcessId,
-  );
+
+  // 변경 후 서비스 정보 가져오기
+  const getModifyServiceInfo = useModifyServiceStore((state) => state.getModifyServiceInfo);
+  const modifyServiceInfo = getModifyServiceInfo(selectedCustomerId, selectedContractId);
+  const businessProcessId = modifyServiceInfo?.businessProcessId;
 
   const { data } = useRegistrationStatus({
     isRegistrationRequestMounted: true,
@@ -87,9 +75,8 @@ const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
   // 홈버튼 동작
   const setSelectedMainMenu = useMenuStore((state) => state.setSelectedMainMenu);
   const selectCustomer = useCustomerStore((state) => state.selectCustomer);
-  const removeModifyServiceInfoByContractId = useModifyServiceStore(
-    (state) => state.removeModifyServiceInfoByContractId,
-  );
+  const { removeModifyServiceInfo, removeRequestedModificationInfo } = useModifyServiceStore();
+  const { deleteCustomerServiceData } = useCurrentServiceStore();
 
   const { reset } = useCustomerStore();
 
@@ -103,10 +90,9 @@ const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
     // 모든 고객 탭 닫기 (CustomerStore의 reset 함수 호출)
     reset();
 
-    // 계약 ID로 서비스 변경 정보 삭제 (businessProcessId 사용)
-    if (businessProcessId) {
-      removeModifyServiceInfoByContractId(businessProcessId);
-    }
+    deleteCustomerServiceData(selectedCustomerId);
+    removeModifyServiceInfo(selectedCustomerId, selectedContractId);
+    removeRequestedModificationInfo(selectedCustomerId, selectedContractId);
   };
 
   return (
@@ -124,7 +110,7 @@ const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
           <AdditionalServicesContainer>
             {/* 현재 서비스 정보 */}
             <AdditionalServicesInfo
-              title={beforeService?.serviceName || '이전 서비스'}
+              title={beforeServiceInfo?.serviceName || '이전 서비스'}
               mainServiceValue={beforeServiceValue}
               additionalServices={beforeAdditionalServices.map((service) => ({
                 serviceName: service.serviceName,
@@ -135,9 +121,11 @@ const ModificationRequest = ({ contractTabId }: ModificationRequestProps) => {
             <Divider orientation='vertical' flexItem />
             {/* 변경될 서비스 정보 */}
             <AdditionalServicesInfo
-              title={selectedService?.serviceName || beforeService?.serviceName || ''}
-              mainServiceValue={selectedService?.serviceValue || beforeService?.serviceValue || 0}
-              additionalServices={afterAdditionalServices.map((service) => ({
+              title={requestService?.serviceName || beforeServiceInfo?.serviceName || ''}
+              mainServiceValue={
+                requestService?.serviceValue || beforeServiceInfo?.serviceValue || 0
+              }
+              additionalServices={requestAdditionalServices.map((service) => ({
                 serviceName: service.serviceName,
                 serviceValue: service.serviceValue || 0,
               }))}

@@ -15,7 +15,6 @@ export interface ServiceModificationModalProps {
   additionalServicesCount?: number; // 부가서비스 개수
   onClose: () => void;
   onConfirm?: () => void;
-  contractTabId?: string; // 계약 탭 ID 속성 추가
 }
 
 interface ModalFooterProps {
@@ -70,7 +69,6 @@ const ServiceModificationModal: React.FC<ServiceModificationModalProps> = ({
   additionalServicesCount,
   onClose,
   onConfirm,
-  contractTabId, // 계약 탭 ID 속성 추가
 }) => {
   const modalConfig = ServiceModificationModalConfig[type];
 
@@ -106,7 +104,6 @@ const ServiceModificationModal: React.FC<ServiceModificationModalProps> = ({
               additionalServicesCount,
               onClose,
               onConfirm,
-              contractTabId, // 계약 탭 ID 전달
             })}
           </Typography>
         </Box>

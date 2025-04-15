@@ -41,7 +41,7 @@ describe('KAN-43 메인화면 Floating 버튼 처리현황 퀵뷰', () => {
   });
 
   describe('KAN-43-2 부가서비스1 변경이 성공하고 부가서비스2 변경이 실패하고 부가서비스3 변경이 시도 되었을때.', () => {
-    before(() => {
+    beforeEach(() => {
       service.successWhenGetRegistrationStatus(
         userId,
         REGISTRATION_STATUS.COMPLETED,

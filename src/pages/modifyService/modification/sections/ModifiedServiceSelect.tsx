@@ -9,12 +9,14 @@ import {
   Service,
   useCheckServiceAgeRestrictionQuery,
 } from '@api/queries/modifyService/useModifyServiceQuery';
+import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import useModifyServiceStore from '@stores/ModifyServiceStore';
 import useCustomerStore from '@stores/CustomerStore';
 import Autocomplete from '@components/Autocomplete';
 // import Tooltip from '@components/Tooltip';
 import ServiceModificationBlockModal from '../components/ServiceModificationBlockModal';
 import { ServiceModificationModalType } from '../constants/modalConstants';
+import { ServicePlan } from '../../../../model/modifyService/ModifyServiceModel';
 import {
   RootContainer,
   ServiceRowContainer,
@@ -33,54 +35,37 @@ import {
   disabledTextFieldStyle,
 } from './ModifiedServiceSelect.styled';
 
-// 타입 정의: 서비스 플랜(요금제) 데이터 구조
-// 선택 가능한 서비스 항목의 데이터 형식을 정의합니다.
-export interface ServicePlan {
-  id: string; // 서비스 ID
-  name: string; // 서비스 이름 (표시용)
-  price: number; // 서비스 가격
-  releaseDate: string; // 출시일 (최신출시순 정렬을 위한 필드)
-}
-
-interface SelectServiceProps {
-  contractTabId: string;
-}
-
 /**
  * 서비스 선택 컴포넌트
  * 요금제 목록을 조회하고 사용자가 선택한 요금제를 Zustand 스토어에 저장합니다.
  */
-const SelectService = ({ contractTabId }: SelectServiceProps) => {
-  // Zustand 스토어에서 필요한 함수 가져오기
-  const { setSelectedService, revertToPreviousService, setRevertButtonClickedDate } =
-    useModifyServiceStore();
-
-  // 해당 계약 탭 ID에 대한 정보 가져오기
-  const modifyServiceInfo = useModifyServiceStore((state) =>
-    state.getModifyServiceInfo(contractTabId),
+const ModifiedServiceSelect = () => {
+  // 스토어에서 필요한 정보 가져오기
+  const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId) || '';
+  const selectedContractId = useCurrentServiceStore(
+    (state) => state.selectedContractIds[selectedCustomerId] || '',
   );
 
+  // Zustand 스토어에서 필요한 함수 가져오기
+  const {
+    getModifyServiceInfo,
+    setSelectedService,
+    revertToPreviousService,
+    setRevertButtonClickedDate,
+  } = useModifyServiceStore();
+
   // 계약 탭에 대한 정보가 없으면 기본값 제공
+  const modifyServiceInfo = getModifyServiceInfo(selectedCustomerId, selectedContractId);
   const selectedService = modifyServiceInfo?.selectedService || null;
   const isServiceModifiable = modifyServiceInfo?.isServiceModifiable || false;
   const previousService = modifyServiceInfo?.previousService || null;
   const isRollbackAvailable = modifyServiceInfo?.isRollbackAvailable || false;
 
-  // 고객 정보
-  const selectedCustomerId = useCustomerStore((state) => state.selectedCustomerId);
-  const customers = useCustomerStore((state) => state.customers);
-  const isCustomer = useCustomerStore((state) => state.isCustomer);
+  // 임시 선택된 서비스 정보 관리
+  const [tempSelectedService, setTempSelectedService] = useState<Service | null>(null);
 
-  // 현재 선택된 고객 찾기
-  const selectedCustomer = customers.find((c) => c.id === selectedCustomerId);
-  // 고객의 나이 정보 가져오기 (Customer 타입에서 age는 number 타입)
-  const customerAge =
-    selectedCustomer && isCustomer(selectedCustomer) ? String(selectedCustomer.age) : '';
-
-  // API에서 서비스 목록을 가져옵니다 (useServicesQuery 훅 사용)
   const { data: services = [] } = useServicesQuery();
 
-  // 서비스 데이터를 ServicePlan 형식으로 변환
   // API 응답 데이터를 컴포넌트에서 사용하기 적합한 형태로 매핑합니다.
   const servicePlans: ServicePlan[] = services.map((service: Service) => ({
     id: service.serviceId,
@@ -89,19 +74,11 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
     releaseDate: service.releaseDate || '1970-01-01', // 빈 문자열인 경우 기본값 제공
   }));
 
-  // 임시 선택된 서비스 정보 (확인 모달용)
-  const [tempSelectedService, setTempSelectedService] = useState<Service | null>(null);
-
-  // 모달 상태 관리
-  const [modalState, setModalState] = useState<{
-    open: boolean;
-    type: ServiceModificationModalType;
-    serviceName?: string;
-  }>({
-    open: false,
-    type: ServiceModificationModalType.CONFIRM_CHANGE,
-    serviceName: '',
-  });
+  // 고객 나이 확인
+  const { customers, isCustomer } = useCustomerStore();
+  const selectedCustomer = customers.find((customer) => customer.id === selectedCustomerId);
+  const customerAge =
+    selectedCustomer && isCustomer(selectedCustomer) ? String(selectedCustomer.age) : '';
 
   // 나이 제한을 위한 상태 관리
   const [serviceAgeCheckParams, setServiceAgeCheckParams] = useState<{
@@ -111,38 +88,6 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
     age: customerAge,
     serviceId: '',
   });
-
-  // 모달 열기 함수들
-  const openConfirmModal = (serviceName: string) => {
-    setModalState({
-      open: true,
-      type: ServiceModificationModalType.SERVICE_CHANGE,
-      serviceName,
-    });
-  };
-
-  const openAgeRestrictionModal = () => {
-    setModalState({
-      open: true,
-      type: ServiceModificationModalType.AGE_RESTRICTION,
-    });
-  };
-
-  // 모달 닫기 함수
-  const closeModal = () => {
-    setModalState((prev: typeof modalState) => ({ ...prev, open: false }));
-  };
-
-  // 요금제 변경 확인 처리 함수
-  const handleConfirmChange = () => {
-    // 요금제 변경 로직 처리
-    if (tempSelectedService) {
-      setSelectedService(contractTabId, tempSelectedService);
-    }
-
-    // 모달 닫기
-    closeModal();
-  };
 
   // 나이 제한 확인 쿼리
   const { data: ageRestrictionData, refetch } = useCheckServiceAgeRestrictionQuery(
@@ -157,7 +102,7 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
     newValue: NonNullable<string | ServicePlan> | (string | ServicePlan)[] | null,
   ) => {
     // 새로운 선택이 들어오면 먼저 이전 선택 초기화
-    setSelectedService(contractTabId, null);
+    setSelectedService(selectedCustomerId, selectedContractId, null);
     // 임시 선택된 서비스도 초기화
     setTempSelectedService(null);
 
@@ -184,24 +129,24 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
     }
   };
 
+  // 이전 요금제가 있고, 당일 변경되었으며, 요금제 변경이 불가능한 상태인 경우에만 되돌리기 버튼 표시
+  const showRevertButton = previousService && isRollbackAvailable && !isServiceModifiable;
+
   // 이전 요금제로 되돌리기 핸들러
   const handleRevertToPreviousService = () => {
-    revertToPreviousService(contractTabId);
+    revertToPreviousService(selectedCustomerId, selectedContractId);
     // 되돌리기 버튼 클릭 시점의 날짜 저장
-    setRevertButtonClickedDate(contractTabId, new Date().toISOString());
+    setRevertButtonClickedDate(selectedCustomerId, selectedContractId, new Date().toISOString());
   };
 
   // 나이 제한 확인 결과 처리
   useEffect(() => {
     if (ageRestrictionData && tempSelectedService) {
-      // 타입 확인 및 안전한 처리
-      const data = ageRestrictionData;
-
       // 실제 ServiceAgeCheckResponse 타입으로 처리
-      if ('isAvailable' in data) {
-        if (data.isAvailable) {
+      if ('isAvailable' in ageRestrictionData) {
+        if (ageRestrictionData.isAvailable) {
           if (tempSelectedService.serviceId === previousService?.serviceId) {
-            revertToPreviousService(contractTabId);
+            revertToPreviousService(selectedCustomerId, selectedContractId);
           } else {
             // 일반 요금제 변경인 경우 확인 모달 표시
             openConfirmModal(tempSelectedService.serviceName);
@@ -228,27 +173,54 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
     ? servicePlans.find((plan) => plan.id === selectedService.serviceId) || null
     : null;
 
-  // 요금제 변경 불가 시 표시할 툴팁 메시지
-  // const disabledTooltipMessage = '요금제 변경은 월 1회만 가능합니다. 다음 달에 다시 시도해 주세요.';
+  // 모달 상태 관리
+  const [modalState, setModalState] = useState<{
+    open: boolean;
+    type: ServiceModificationModalType;
+    serviceName?: string;
+  }>({
+    open: false,
+    type: ServiceModificationModalType.CONFIRM_CHANGE,
+    serviceName: '',
+  });
 
-  // 이전 요금제가 있고, 당일 변경되었으며, 요금제 변경이 불가능한 상태인 경우에만 되돌리기 버튼 표시
-  const showRevertButton = previousService && isRollbackAvailable && !isServiceModifiable;
+  // 모달 열기 함수들
+  const openConfirmModal = (serviceName: string) => {
+    setModalState({
+      open: true,
+      type: ServiceModificationModalType.SERVICE_CHANGE,
+      serviceName,
+    });
+  };
+
+  const openAgeRestrictionModal = () => {
+    setModalState({
+      open: true,
+      type: ServiceModificationModalType.AGE_RESTRICTION,
+    });
+  };
+
+  // 모달 닫기 함수
+  const closeModal = () => {
+    setModalState((prev: typeof modalState) => ({ ...prev, open: false }));
+  };
+
+  // 요금제 변경 확인 처리 함수
+  const handleConfirmModal = () => {
+    // 요금제 변경 로직 처리
+    if (tempSelectedService) {
+      setSelectedService(selectedCustomerId, selectedContractId, tempSelectedService);
+    }
+
+    // 모달 닫기
+    closeModal();
+  };
 
   return (
     <RootContainer>
       <ServiceRowContainer>
         <LeftSectionContainer>
-          {/* 제목 */}
-          <TitleTypography variant='subtitle1'>
-            변경할 요금제
-            {/* {!isServiceModifiable && (
-              <Tooltip title={disabledTooltipMessage} placement='right'>
-                <InfoIcon />
-              </Tooltip>
-            )} */}
-          </TitleTypography>
-
-          {/* Autocomplete 컴포넌트: 검색 가능한 드롭다운 선택 UI */}
+          <TitleTypography variant='subtitle1'>변경할 요금제</TitleTypography>
           <AutocompleteContainer>
             <Autocomplete
               fullWidth
@@ -257,8 +229,6 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
               freeSolo={false}
               multiple={false}
               getOptionLabel={(option) => {
-                // option은 string | ServicePlan 타입이지만
-                // freeSolo={false}로 설정하면 실제로는 항상 ServicePlan 타입입니다
                 return (option as ServicePlan).name;
               }}
               isOptionEqualToValue={(option, value) => {
@@ -313,7 +283,6 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
           </AutocompleteContainer>
         </LeftSectionContainer>
 
-        {/* 선택한 요금제의 요금 및 되돌리기 버튼 */}
         <PriceContainer>
           <PriceTypography variant='subtitle1' data-testid='selected-service-price'>
             {selectedService ? `${selectedService.serviceValue.toLocaleString()}원` : '0원'}
@@ -349,11 +318,10 @@ const SelectService = ({ contractTabId }: SelectServiceProps) => {
         type={modalState.type}
         serviceName={modalState.serviceName}
         onClose={closeModal}
-        onConfirm={handleConfirmChange}
-        contractTabId={contractTabId}
+        onConfirm={handleConfirmModal}
       />
     </RootContainer>
   );
 };
 
-export default SelectService;
+export default ModifiedServiceSelect;

@@ -27,6 +27,7 @@ import ServiceModification from '@pages/modifyService/ServiceModification';
 import NewContract from '@pages/registration/NewContract';
 import CustomerDetailContainer from '@pages/customer/detail/CustomerDetailContainer';
 import { useRegistration } from '@hooks/useRegistration';
+import useModifyServiceStore from '@stores/ModifyServiceStore';
 
 interface ContentsLayoutProps {
   customerId: string;
@@ -39,7 +40,9 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
   const { menuItems } = useMenuStore();
   const { handleBookmarkClick } = useBookmark();
   const { handleRemoveAllRegistrationInfo } = useRegistration();
-  const { deleteCustomerServiceData, resetAllData } = useCurrentServiceStore();
+  const { deleteCustomerServiceData } = useCurrentServiceStore();
+  const { removeModifyServiceInfoByCustomerId, removeRequestedModificationInfoByCustomerId } =
+    useModifyServiceStore();
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     if (customerId) {
@@ -63,6 +66,8 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
           handleRemoveAllRegistrationInfo(customerId);
         } else if (tabToClose.label === TabInfo.SERVICE_MODIFICATION.label) {
           deleteCustomerServiceData(customerId);
+          removeModifyServiceInfoByCustomerId(customerId);
+          removeRequestedModificationInfoByCustomerId(customerId);
         }
       }
     }
@@ -72,7 +77,9 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
     if (customerId) {
       removeCustomer(customerId);
       handleRemoveAllRegistrationInfo(customerId);
-      resetAllData();
+      deleteCustomerServiceData(customerId);
+      removeModifyServiceInfoByCustomerId(customerId);
+      removeRequestedModificationInfoByCustomerId(customerId);
     }
   };
 
@@ -160,7 +167,7 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
                     height: '100%',
                   }}
                 >
-                  <ServiceModification contractTabId={customerId} />
+                  <ServiceModification />
                 </Box>
               )}
             </>
