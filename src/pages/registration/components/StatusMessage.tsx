@@ -34,7 +34,7 @@ const StatusMessage = ({ status, customerName, type }: StatusMessageProps) => {
         실패사유:{' '}
         {type === 'MODIFICATION' ? (
           <>
-            <ErrorMessage>동일한 회선으로</ErrorMessage>를
+            <ErrorMessage>동일한 회선으로</ErrorMessage>
             <ErrorMessage> 처리중인 변경 건</ErrorMessage>이 있습니다.
           </>
         ) : (
