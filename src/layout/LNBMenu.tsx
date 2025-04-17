@@ -161,6 +161,7 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
         const existingTab = currentTabs.find((tab) => tab.label === newTab.label);
         if (existingTab) {
           setActiveTab(selectedCustomerId, existingTab.id);
+          setSelectedMainMenu(MainMenu.CUSTOMERS);
           return;
         }
 
