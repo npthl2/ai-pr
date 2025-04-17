@@ -71,7 +71,7 @@ const Login = () => {
       <LogoText theme={getTheme('light')}>KONNEX</LogoText>
       <FormContainer theme={getTheme('light')}>
         <TitleContainer>
-          <Typography variant='body1'>Welcome to KONNEXX</Typography>
+          <Typography variant='body1'>Welcome to KONNEX</Typography>
           <Typography variant='h1'>로그인</Typography>
         </TitleContainer>
         <LoginForm
