@@ -11,6 +11,7 @@ import {
   treeContainerStyle,
 } from './CustomerDetail.styled';
 import { boxStyle } from './CustomerDetail.styled';
+import { TabInfo } from '@constants/CommonConstant';
 
 const CustomerDetail = () => {
   const queryClient = useQueryClient();
@@ -30,8 +31,7 @@ const CustomerDetail = () => {
   }, []);
 
   useEffect(() => {
-    console.log('customerTabs', customerTabs);
-    if (customerTabs.activeTab === 0) {
+    if (customerTabs.activeTab === TabInfo.CUSTOMER_SEARCH.id) {
       queryClient.invalidateQueries({
         queryKey: ['customerContracts', customerId],
       });
