@@ -24,7 +24,12 @@ const LoginForm = ({ formData, isLoading, errors, onSubmit, onChange, onBlur }: 
   const [showPassword] = useState(false);
 
   return (
-    <>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
+      }}
+    >
       <FormFieldsContainer>
         <LoginIdContainer>
           <ContainerTitle theme={getTheme('light')}>ID</ContainerTitle>
@@ -69,8 +74,8 @@ const LoginForm = ({ formData, isLoading, errors, onSubmit, onChange, onBlur }: 
       </FormFieldsContainer>
       <LoginAlert error={errors} />
       <LoginButton
+        type='submit'
         variant='contained'
-        onClick={onSubmit}
         disabled={isLoading}
         fullWidth
         data-testid='login'
@@ -85,7 +90,7 @@ const LoginForm = ({ formData, isLoading, errors, onSubmit, onChange, onBlur }: 
       >
         {isLoading ? '로그인 중...' : '로그인'}
       </LoginButton>
-    </>
+    </form>
   );
 };
 
