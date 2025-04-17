@@ -171,6 +171,7 @@ const LNBMenu = ({ selectedMenu, onMenuSelect }: LNBMenuProps) => {
         });
         setCustomerTabs(selectedCustomerId, [...currentTabs, newTab]);
         setActiveTab(selectedCustomerId, newTab.id);
+        setSelectedMainMenu(MainMenu.CUSTOMERS);
       }
     } else {
       if (!selectedCustomerId || selectedCustomerId.includes('NEW_SUBSCRIPTION')) return;
