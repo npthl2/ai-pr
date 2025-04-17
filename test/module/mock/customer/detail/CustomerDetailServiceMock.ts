@@ -33,7 +33,7 @@ class CustomerDetailServiceMock {
         },
       },
     });
-  }  
+  }
 
   successWhenGetCustomerContracts() {
     cy.intercept('GET', '**/stg-be/v1/customers/*/contracts', {
@@ -45,7 +45,7 @@ class CustomerDetailServiceMock {
       },
     }).as('getCustomerContracts');
   }
-  
+
   successWhenGetContractIdByPhoneNumber() {
     cy.intercept('GET', '**/stg-be/v1/customers/*/contractId?phoneNumber=01098765432', {
       statusCode: 200,
@@ -56,7 +56,6 @@ class CustomerDetailServiceMock {
       },
     }).as('getContractIdByPhoneNumber');
   }
-
 }
 
 const successGetCustomerContracts = {
@@ -105,18 +104,24 @@ const successGetCustomerContracts = {
             serviceName: '넷플릭스 초이스 스페셜',
             serviceValueType: '유료',
             serviceValue: '110,000원',
+            validStartDatetime: '2024-01-01T00:00:00.000+00:00',
+            validEndDatetime: '2027-01-01T00:00:00.000+00:00',
           },
           {
             serviceType: '부가서비스',
             serviceName: '데이터안심옵션',
             serviceValueType: '무료',
             serviceValue: '0원',
+            validStartDatetime: '2024-01-01T00:00:00.000+00:00',
+            validEndDatetime: '2027-01-01T00:00:00.000+00:00',
           },
           {
             serviceType: '부가서비스',
             serviceName: '콜키퍼',
             serviceValueType: '유료',
             serviceValue: '10,000원',
+            validStartDatetime: '2024-01-01T00:00:00.000+00:00',
+            validEndDatetime: '2027-01-01T00:00:00.000+00:00',
           },
         ],
       },
@@ -187,18 +192,24 @@ const successGetCustomerContracts = {
             serviceName: '5G 프리미엄 요금제',
             serviceValueType: '유료',
             serviceValue: '130,000원',
+            validStartDatetime: '2024-02-01T00:00:00.000+00:00',
+            validEndDatetime: '2026-02-01T00:00:00.000+00:00',
           },
           {
             serviceType: '부가서비스',
             serviceName: '해외로밍 무제한',
             serviceValueType: '유료',
             serviceValue: '15,000원',
+            validStartDatetime: '2024-02-01T00:00:00.000+00:00',
+            validEndDatetime: '2026-02-01T00:00:00.000+00:00',
           },
           {
             serviceType: '부가서비스',
             serviceName: 'VIP 멤버십',
             serviceValueType: '무료',
             serviceValue: '0원',
+            validStartDatetime: '2024-02-01T00:00:00.000+00:00',
+            validEndDatetime: '2026-02-01T00:00:00.000+00:00',
           },
         ],
       },
@@ -269,12 +280,16 @@ const successGetCustomerContracts = {
             serviceName: '5G 기업전용 플랜',
             serviceValueType: '유료',
             serviceValue: '90,000원',
+            validStartDatetime: '2024-03-01T00:00:00.000+00:00',
+            validEndDatetime: '2025-03-01T00:00:00.000+00:00',
           },
           {
             serviceType: '부가서비스',
             serviceName: '클라우드 스토리지 1TB',
             serviceValueType: '유료',
             serviceValue: '9,900원',
+            validStartDatetime: '2024-03-01T00:00:00.000+00:00',
+            validEndDatetime: '2025-03-01T00:00:00.000+00:00',
           },
         ],
       },

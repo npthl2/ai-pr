@@ -37,6 +37,9 @@ export const ServiceTreeItem = ({ item, contractId, onPhoneSelect }: ServiceTree
     color: typeColor,
   };
 
+  const formattedStartDate = item.validStartDatetime.split('T')[0];
+  const formattedEndDate = item.validEndDatetime.split('T')[0];
+
   return (
     <StyledTreeItem
       key={item.id}
@@ -53,7 +56,7 @@ export const ServiceTreeItem = ({ item, contractId, onPhoneSelect }: ServiceTree
             {item.serviceName}
           </Typography>
           <Typography component='span' variant='body2' color='text.secondary'>
-            {item.date} -
+            {formattedStartDate} - {formattedEndDate}
           </Typography>
         </Box>
       }
