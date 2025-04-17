@@ -42,7 +42,6 @@ axiosInstance.interceptors.response.use(
       logout();
       openToast('다른 사용자가 로그인하여 로그아웃되었습니다.', 'error');
       window.location.href = '/login';
-      
     }
 
     return Promise.reject(error);
