@@ -104,5 +104,18 @@ describe('KAN-44 로그인 기능 테스트', () => {
         cy.get('[data-testid="logout-confirm-button"]').click(); // ✅ 로그아웃 확인 버튼 클릭
     });
 
+    it('KAN-44-7 동시 로그인 시, 로그아웃 처리 및 로그인 화면 이동 ', () => {
+        authMock.forceLogoutWhenConflict();
+
+        loginPage.inputId('user1');
+        loginPage.inputPw('new1234');
+        loginPage.clickLoginButton();
+
+        cy.wait('@forceLogoutWhenConflict');
+
+        cy.url().should('eq', `${Cypress.config().baseUrl}/login`);
+    });
+
+
     
 });
