@@ -52,8 +52,15 @@ export const useReactQuery = <
 
   if (isError && isErrorToast) {
     const errorStatus = (error as { response: { status: number } }).response?.status;
+    const errorCode = (error as { response: { status: number; data?: { errorCode?: string } } })
+      .response?.data?.errorCode;
     if (errorStatus !== 401) {
-      handleErrorMessage(error, openToast);
+      // 동시 로그인 에러인 경우
+      if (errorStatus === 403 && errorCode === 'CMN_SEC_LOGIN_ANOTHER_USER') {
+        openToast('다른 사용자가 로그인하여 로그아웃되었습니다.', 'error');
+      } else {
+        handleErrorMessage(error, openToast);
+      }
     }
   } else if (isSuccess && isErrorToast) {
     handleBusinessError(data, openToast);

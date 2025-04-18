@@ -1,15 +1,11 @@
 import useAuthStore from '@stores/AuthStore';
-import useToastStore from '@stores/ToastStore';
 import axios, { InternalAxiosRequestConfig } from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const baseURL = import.meta.env.VITE_API_URL;
 const xAuthorizationId = import.meta.env.VITE_X_AUTHORIZATION_ID;
 const xAuthorizationRole = import.meta.env.VITE_X_AUTHORIZATION_ROLE;
 const xClientIp = import.meta.env.VITE_X_CLIENT_IP;
 const isLocal = import.meta.env.DEV;
-
-const { openToast } = useToastStore.getState();
 
 // 토큰은 시큐어 쿠키에 저장되어있다고 가정하여 withCredentials 옵션을 추가함
 export const axiosInstance = axios.create({
@@ -29,7 +25,6 @@ axiosInstance.interceptors.response.use(
   },
   async (error) => {
     const { logout } = useAuthStore.getState();
-    const navigate = useNavigate();
 
     if (error.response?.status === 401) {
       logout();
@@ -42,11 +37,8 @@ axiosInstance.interceptors.response.use(
       error.response?.data?.errorCode === 'CMN_SEC_LOGIN_ANOTHER_USER'
     ) {
       logout();
-      navigate('/login');
-      openToast('다른 사용자가 로그인하여 로그아웃되었습니다.', 'error');
-
       setTimeout(() => {
-        window.location.reload();
+        window.location.href = '/login';
       }, 1500);
     }
 
