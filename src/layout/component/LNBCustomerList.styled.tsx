@@ -20,15 +20,17 @@ export const StyledTabList = styled(TabList)(({ theme }) => ({
     flexDirection: 'column',
     gap: '8px',
     height: '100%',
-    overflow: 'auto',
-    msOverflowStyle: 'none' /* IE and Edge */,
-    scrollbarWidth: 'none' /* Firefox */,
+    overflow: 'overlay',
     '&::-webkit-scrollbar': {
-      display: 'none' /* Chrome, Safari, Opera */,
+      width: '5px',
     },
-  },
-  '&::-webkit-scrollbar': {
-    display: 'none' /* Chrome, Safari, Opera */,
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: 'transparent',
+      borderRadius: '3px',
+    },
+    '&:hover::-webkit-scrollbar-thumb': {
+      backgroundColor: 'rgba(0, 0, 0, 0.08)',
+    },
   },
 
   '& .MuiTab-root': {
