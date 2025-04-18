@@ -1,5 +1,6 @@
 import { SUBSCRIPTION_MENUS } from '@constants/CommonConstant';
 import { create } from 'zustand';
+import { mountStoreDevtool } from 'simple-zustand-devtools';
 
 type MenuItem = {
   id: string;
@@ -56,4 +57,9 @@ const useMenuStore = create<MenuState>((set) => ({
     }));
   },
 }));
+
+if (import.meta.env.DEV) {
+  mountStoreDevtool('Menu Store', useMenuStore);
+}
+
 export default useMenuStore;
