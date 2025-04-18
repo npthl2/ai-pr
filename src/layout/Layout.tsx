@@ -92,7 +92,7 @@ const Layout = () => {
       <LayoutContainer>
         <Header>
           <Logo onClick={handleLogoClick}>
-            <h1>R & R</h1>
+            <h1>K O N N E X</h1>
           </Logo>
 
           {isAuthenticated && (

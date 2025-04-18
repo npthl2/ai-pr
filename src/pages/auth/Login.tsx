@@ -68,11 +68,11 @@ const Login = () => {
 
   return (
     <LoginContainer>
-      <LogoText theme={getTheme('light')}>R&R</LogoText>
+      <LogoText theme={getTheme('light')}>KONNEX</LogoText>
       <FormContainer theme={getTheme('light')}>
         <TitleContainer>
-          <Typography variant='body1'>Welcome to R&R!</Typography>
-          <Typography variant='h1'>Log in</Typography>
+          <Typography variant='body1'>Welcome to KONNEX</Typography>
+          <Typography variant='h1'>로그인</Typography>
         </TitleContainer>
         <LoginForm
           formData={formData}
