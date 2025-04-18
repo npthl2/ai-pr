@@ -2,7 +2,7 @@ const boxStyle = {
   width: '100%',
   height: '100%',
   gap: '14px',
-  padding: '24px 32px 24px 32px',
+  padding: '24px 32px 0px 32px',
   display: 'flex',
 };
 

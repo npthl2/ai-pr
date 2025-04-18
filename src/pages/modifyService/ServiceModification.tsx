@@ -147,7 +147,6 @@ const ServiceModification = () => {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        overflow: 'hidden',
       }}
     >
       <Container>

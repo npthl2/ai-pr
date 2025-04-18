@@ -14,17 +14,16 @@ export const TitleBox = styled(Box)(() => ({
 
 export const HomeContainer = styled(Box)(({ theme }) => ({
   width: '100%',
-  height: '100%',
+  minHeight: 'calc(100vh - 64px)',
   backgroundColor: theme.palette.grey[50],
   justifyItems: 'center',
 }));
 
 export const ContentWrapper = styled(Box)({
-  padding: '32px 40px 24px 40px',
+  padding: '18px 40px 24px 40px',
   gap: '20px',
   display: 'flex',
   flexDirection: 'column',
-  height: '899px',
   margin: '0 auto',
   maxWidth: '1528px',
   width: '100%',

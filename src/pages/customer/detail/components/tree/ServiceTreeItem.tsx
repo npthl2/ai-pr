@@ -12,6 +12,29 @@ interface ServiceTreeItemProps {
   onPhoneSelect: (contractId: string) => void;
 }
 
+// ISO 날짜 문자열에서 날짜 부분만 추출
+const formatDate = (isoDate: string | null | undefined): string => {
+  try {
+    return isoDate?.split('T')[0] || '';
+  } catch {
+    return '';
+  }
+};
+
+// 시작일과 종료일을 포맷팅. 시작일or종료일이 없으면 빈 문자열, 종료일이 계약중인 경우 종료일만 빈 문자열 반환
+const getDateDisplay = (
+  startDate: string | null | undefined,
+  endDate: string | null | undefined,
+): string => {
+  if (!startDate || !endDate) return '';
+
+  const formattedStart = formatDate(startDate);
+  const formattedEnd = formatDate(endDate) === CONTRACT_SERVICE_END_DATE ? '' : formatDate(endDate);
+
+  if (!formattedStart && !formattedEnd) return '';
+  return `${formattedStart} - ${formattedEnd}`;
+};
+
 export const ServiceTreeItem = ({ item, contractId, onPhoneSelect }: ServiceTreeItemProps) => {
   const getTypeColor = (type: string): string => {
     switch (type) {
@@ -40,12 +63,6 @@ export const ServiceTreeItem = ({ item, contractId, onPhoneSelect }: ServiceTree
     color: typeColor,
   };
 
-  const formattedStartDate = item.validStartDatetime.split('T')[0];
-  const formattedEndDate =
-    item.validEndDatetime.split('T')[0] === CONTRACT_SERVICE_END_DATE
-      ? ''
-      : item.validEndDatetime.split('T')[0];
-
   return (
     <StyledTreeItem
       key={item.id}
@@ -62,7 +79,7 @@ export const ServiceTreeItem = ({ item, contractId, onPhoneSelect }: ServiceTree
             {item.serviceName}
           </Typography>
           <Typography component='span' variant='body2' color='text.secondary'>
-            {formattedStartDate} - {formattedEndDate}
+            {getDateDisplay(item.validStartDatetime, item.validEndDatetime)}
           </Typography>
         </Box>
       }
