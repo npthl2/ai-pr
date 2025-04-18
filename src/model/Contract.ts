@@ -7,6 +7,8 @@ export interface ContractService {
   serviceName: string;
   serviceValueType: string;
   serviceValue: string;
+  validStartDatetime: string;
+  validEndDatetime: string;
 }
 
 export interface ContractData {

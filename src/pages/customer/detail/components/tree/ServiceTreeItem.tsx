@@ -1,7 +1,10 @@
 import { ServiceItem } from './types';
 import { StyledTreeItem } from './StyledTreeItem';
 import { Box, Typography } from '@mui/material';
-import { CONTRACT_SERVICE_TYPE_CODE } from '@pages/customer/detail/CustomerDetailConstant';
+import {
+  CONTRACT_SERVICE_TYPE_CODE,
+  CONTRACT_SERVICE_END_DATE,
+} from '@pages/customer/detail/CustomerDetailConstant';
 
 interface ServiceTreeItemProps {
   item: ServiceItem;
@@ -37,6 +40,12 @@ export const ServiceTreeItem = ({ item, contractId, onPhoneSelect }: ServiceTree
     color: typeColor,
   };
 
+  const formattedStartDate = item.validStartDatetime.split('T')[0];
+  const formattedEndDate =
+    item.validEndDatetime.split('T')[0] === CONTRACT_SERVICE_END_DATE
+      ? ''
+      : item.validEndDatetime.split('T')[0];
+
   return (
     <StyledTreeItem
       key={item.id}
@@ -53,7 +62,7 @@ export const ServiceTreeItem = ({ item, contractId, onPhoneSelect }: ServiceTree
             {item.serviceName}
           </Typography>
           <Typography component='span' variant='body2' color='text.secondary'>
-            {item.date} -
+            {formattedStartDate} - {formattedEndDate}
           </Typography>
         </Box>
       }

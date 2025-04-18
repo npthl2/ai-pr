@@ -77,7 +77,7 @@ class CustomerDetailPage {
   }
 
   clickSearchIcon() {
-    cy.get('[data-testid="search-icon"]').click();
+    cy.get('[data-testid="customer-detail-tree-search-icon"]').click();
   }
 
   assertSearchContract() {
