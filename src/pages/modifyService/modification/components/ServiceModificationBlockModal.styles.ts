@@ -60,9 +60,10 @@ export const styles = {
   },
   modalFooterWithCancel: {
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     width: '100%',
     mt: 2,
+    gap: '8px',
   },
   modalFooterWithoutCancel: {
     display: 'flex',
