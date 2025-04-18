@@ -44,7 +44,8 @@ export interface CustomerContract {
         serviceName: string;
         serviceValueType: string;
         serviceValue: string;
-        serviceStartDate: string;
+        validStartDatetime: string;
+        validEndDatetime: string;
       }[];
     };
     billingDetail: {

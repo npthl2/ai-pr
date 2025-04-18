@@ -89,7 +89,7 @@ export const SearchComponent = ({
               <InputAdornment position='end'>
                 <SearchIcon
                   onClick={handleSearch}
-                  data-testid='search-icon'
+                  data-testid='customer-detail-tree-search-icon'
                   sx={inputAdornmentStyles}
                 />
               </InputAdornment>

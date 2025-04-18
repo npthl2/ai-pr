@@ -32,6 +32,8 @@ export interface Service {
   serviceName: string;
   serviceValueType: string;
   serviceValue: string;
+  validStartDatetime: string;
+  validEndDatetime: string;
 }
 
 export interface ServiceItem {

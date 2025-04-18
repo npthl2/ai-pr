@@ -66,7 +66,8 @@ function mapToTree(data: CustomerContract) {
         id: uuidv4(),
         serviceType: service.serviceType,
         serviceName: service.serviceName,
-        date: getFirstPartOfEngagementDate(contractDetail.engagement.engagementDate),
+        validStartDatetime: service.validStartDatetime,
+        validEndDatetime: service.validEndDatetime,
       }));
     }
 
@@ -74,10 +75,6 @@ function mapToTree(data: CustomerContract) {
   });
   return Object.values(lobMap);
 }
-
-const getFirstPartOfEngagementDate = (str: string): string => {
-  return str.split('~')[0] || '';
-};
 
 export const customerContractsInfoData = (customerId: string, contractId: string) => {
   const { data } = useCustomerContractsQuery(customerId);
@@ -135,6 +132,8 @@ export function mapToInfo(data: ContractData): Info {
         serviceName: service.serviceName,
         serviceValueType: service.serviceValueType,
         serviceValue: service.serviceValue,
+        validStartDatetime: service.validStartDatetime,
+        validEndDatetime: service.validEndDatetime,
       })),
       remainingPayment: data.billingDetail.remainingPayment,
       remainingInstallment: data.billingDetail.remainingInstallment,

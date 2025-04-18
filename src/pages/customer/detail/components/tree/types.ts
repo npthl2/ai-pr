@@ -2,7 +2,8 @@ export interface ServiceItem {
   id: string;
   serviceType: string;
   serviceName: string;
-  date: string;
+  validStartDatetime: string;
+  validEndDatetime: string;
 }
 
 export interface PhoneItem {
