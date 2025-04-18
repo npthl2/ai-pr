@@ -17,12 +17,13 @@ export type EventData = {
 
 const ccaInboxOutboxTraceService = {
   findInboxOutbox(traceId: string): Promise<CommonResponse<EventData[]>> {
-    return baseService.get(`/cca-be/v1/inbox-outbox/findInboxOutbox?traceId=${encodeURIComponent(traceId)}`);
+    return baseService.get(
+      `/cca-be/v1/inbox-outbox/findInboxOutbox?traceId=${encodeURIComponent(traceId)}`,
+    );
   },
   recentOutbox(): Promise<CommonResponse<EventData[]>> {
     return baseService.get(`/cca-be/v1/inbox-outbox/recentOutbox`);
-  }
+  },
 };
-
 
 export default ccaInboxOutboxTraceService;
