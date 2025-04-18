@@ -52,7 +52,8 @@ export const useReactQuery = <
 
   if (isError && isErrorToast) {
     const errorStatus = (error as { response: { status: number } }).response?.status;
-    const errorCode = (error as { response: { status: number; data?: { errorCode?: string } } }).response?.data?.errorCode;
+    const errorCode = (error as { response: { status: number; data?: { errorCode?: string } } })
+      .response?.data?.errorCode;
     if (errorStatus !== 401) {
       // 동시 로그인 에러인 경우
       if (errorStatus === 403 && errorCode === 'CMN_SEC_LOGIN_ANOTHER_USER') {

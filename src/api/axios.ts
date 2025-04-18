@@ -7,7 +7,6 @@ const xAuthorizationRole = import.meta.env.VITE_X_AUTHORIZATION_ROLE;
 const xClientIp = import.meta.env.VITE_X_CLIENT_IP;
 const isLocal = import.meta.env.DEV;
 
-
 // 토큰은 시큐어 쿠키에 저장되어있다고 가정하여 withCredentials 옵션을 추가함
 export const axiosInstance = axios.create({
   baseURL,
