@@ -139,11 +139,9 @@ const ServiceModification = () => {
     setModalState((prev) => ({ ...prev, open: false }));
   };
 
-  if (isSaveRequested) {
-    return <ModificationRequest />;
-  }
-
-  return (
+  return isSaveRequested ? (
+    <ModificationRequest />
+  ) : (
     <Box
       sx={{
         height: '100%',
