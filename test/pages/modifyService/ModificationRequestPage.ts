@@ -4,7 +4,7 @@ class ModificationRequestPage {
   constructor() {}
 
   assertRegistrationPending() {
-    cy.get('[data-testid="modification-status-message"]')
+    cy.get('[data-testid="status-message"]')
       .contains('고객님의 상품 변경이 처리중입니다.')
       .should('be.visible');
   }
@@ -78,14 +78,14 @@ class ModificationRequestPage {
   }
 
   assertSuccessStatusVisible() {
-    cy.get('[data-testid="modification-status-message"]')
+    cy.get('[data-testid="status-message"]')
       .contains(`상품 변경이 처리 완료되었습니다.`)
       .should('be.visible');
   }
 
   // 실패 상태 확인
   assertFailStatusVisible() {
-    cy.get('[data-testid="modification-status-message"]')
+    cy.get('[data-testid="status-message"]')
       .contains(`상품 변경을 실패하였습니다.`)
       .should('be.visible');
   }

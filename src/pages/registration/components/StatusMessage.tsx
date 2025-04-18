@@ -3,53 +3,55 @@ import {
   PendingGifContainer,
   StatusMessage as StyledStatusMessage,
   CompletedGifContainer,
+  ErrorMessage,
 } from '../RegistrationRequest.styled';
 import { REGISTRATION_STATUS, RegistrationStatusType } from '@constants/RegistrationConstants';
+import { REGISTRATION_GIF_PATHS } from '@constants/RegistrationImagePath';
+import { STATUS_MESSAGES } from '@constants/RegistrationMessageTemplates';
+
+type MessageType = 'REGISTRATION' | 'MODIFICATION';
 
 interface StatusMessageProps {
   status: RegistrationStatusType;
   customerName: string;
+  type: MessageType;
   failReason?: string;
 }
 
-const StatusMessage = ({ status, customerName }: StatusMessageProps) => {
-  // 이미지 경로 정의
-  const pendingGifPath = '/images/Registration-Progressing.gif';
-  const completedGifPath = '/images/Registration-Completed.gif';
+const StatusMessage = ({ status, customerName, type }: StatusMessageProps) => {
+  const message = STATUS_MESSAGES[type][status].replace('{customerName}', customerName);
 
-  // 상태별 설정 정의
-  const statusConfig = {
-    [REGISTRATION_STATUS.PENDING]: {
-      message: `${customerName} 고객님의 가입이 처리중입니다.`,
-      gif: <PendingGifContainer src={pendingGifPath} alt='처리중' />,
-      failureReason: null,
-    },
-    [REGISTRATION_STATUS.COMPLETED]: {
-      message: `${customerName} 고객님의 가입이 처리 완료되었습니다.`,
-      gif: <CompletedGifContainer src={completedGifPath} alt='완료' />,
-      failureReason: null,
-    },
-    [REGISTRATION_STATUS.FAILED]: {
-      message: `${customerName} 고객님의 가입을 실패하였습니다.`,
-      gif: null, // 실패 시 GIF가 필요 없다면 null 처리
-      failureReason: (
-        <StyledStatusMessage>
-          실패사유: <span style={{ color: 'red' }}>가입한도</span>를
-          <span style={{ color: 'red' }}> 초과</span> 했습니다.
-        </StyledStatusMessage>
-      ),
-    },
-  };
+  const gif =
+    status === REGISTRATION_STATUS.PENDING ? (
+      <PendingGifContainer src={REGISTRATION_GIF_PATHS.PENDING} alt='처리중' />
+    ) : status === REGISTRATION_STATUS.COMPLETED ? (
+      <CompletedGifContainer src={REGISTRATION_GIF_PATHS.COMPLETED} alt='완료' />
+    ) : null;
 
-  const statusData = statusConfig[status];
+  const failureReason =
+    status === REGISTRATION_STATUS.FAILED ? (
+      <StyledStatusMessage>
+        실패사유:{' '}
+        {type === 'MODIFICATION' ? (
+          <>
+            <ErrorMessage>동일한 회선으로</ErrorMessage>
+            <ErrorMessage> 처리중인 변경 건</ErrorMessage>이 있습니다.
+          </>
+        ) : (
+          <>
+            <ErrorMessage>가입한도</ErrorMessage>를<ErrorMessage> 초과</ErrorMessage> 했습니다.
+          </>
+        )}
+      </StyledStatusMessage>
+    ) : null;
 
-  return statusData ? (
+  return (
     <StatusMessageContainer>
-      <StyledStatusMessage data-testid='status-message'>{statusData.message}</StyledStatusMessage>
-      {statusData.gif}
-      {statusData.failureReason}
+      <StyledStatusMessage data-testid='status-message'>{message}</StyledStatusMessage>
+      {gif}
+      {failureReason}
     </StatusMessageContainer>
-  ) : null;
+  );
 };
 
 export default StatusMessage;

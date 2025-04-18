@@ -66,25 +66,25 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
 
       serviceSearchPage.getServiceInfoChangeButton().click();
 
-      // 모달이 표시되는지 확인
-      page.assertModalVisible();
+      // 다이얼로그 표시되는지 확인
+      page.assertDialogVisible();
 
-      // 모달 내용(요금제 변경) 확인
-      page.assertModalContentVisible('요금제 변경은 월 1회만 가능합니다.');
+      // 다이얼로그 내용 확인
+      page.assertDialogContentVisible('요금제 변경은 월 1회만 가능합니다.');
     });
 
     it('KAN-22-1-2 요금제 변경 박스가 비활성화되어야 한다', () => {
       service.failWhenCheckServiceModifiable();
       // 요금제/부가서비스 변경버튼 클릭
       serviceSearchPage.getServiceInfoChangeButton().click();
-      // 모달이 표시되는지 확인
-      page.assertModalVisible();
 
-      // 모달 내용(요금제 변경) 확인
-      page.assertModalContentVisible('요금제 변경은 월 1회만 가능합니다.');
+      page.assertDialogVisible();
+
+      // 다이얼로그 내용 확인
+      page.assertDialogContentVisible('요금제 변경은 월 1회만 가능합니다.');
 
       // 확인 버튼 클릭
-      page.clickModalConfirmButton();
+      page.clickDialogConfirmButton();
 
       // 요금제 선택 박스가 비활성화되어 있는지 확인
       page.assertServiceSelectBoxDisabled();
@@ -97,11 +97,10 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
       // 요금제/부가서비스 변경버튼 클릭
       serviceSearchPage.getServiceInfoChangeButton().click();
 
-      // 모달이 표시되는지 확인
-      page.assertModalVisible();
+      page.assertDialogVisible();
 
       // 확인 버튼 클릭
-      page.clickModalConfirmButton();
+      page.clickDialogConfirmButton();
 
       // 되돌리기 버튼이 표시되는지 확인
       page.assertRevertButtonVisible();
@@ -114,11 +113,10 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
       // 요금제/부가서비스 변경버튼 클릭
       serviceSearchPage.getServiceInfoChangeButton().click();
 
-      // 모달이 표시되는지 확인
-      page.assertModalVisible();
+      page.assertDialogVisible();
 
       // 확인 버튼 클릭
-      page.clickModalConfirmButton();
+      page.clickDialogConfirmButton();
 
       // 되돌리기 버튼이 표시되는지 확인
       page.assertRevertButtonVisible();
@@ -150,7 +148,7 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
       customerSearch.typePhoneNumber('01098765432');
       customerSearch.clickSearch();
 
-  service.successWhenCheckServiceModifiable();
+      service.successWhenCheckServiceModifiable();
 
       // 요금제/부가서비스 변경버튼 클릭
       serviceSearchPage.getServiceInfoChangeButton().click();
@@ -421,12 +419,12 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
       // 요금제/부가서비스 변경버튼 클릭
       serviceSearchPage.getServiceInfoChangeButton().click();
 
-      cy.wait(500)
+      cy.wait(500);
       // 이름으로 정렬 클릭
       page.clickAdditionalServiceNameSort();
       page.assertTopAdditionalServiceIs('5G 1 Giga 충전 부가서비스');
 
-      cy.wait(500)
+      cy.wait(500);
       // 요금으로 정렬 클릭
       page.clickAdditionalServicePriceSort();
       page.assertTopAdditionalServiceIs('스마트 라이프 부가서비스');
@@ -499,7 +497,7 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
     });
 
     it('KAN-22-3-15 선택된 부가서비스가 없을 경우 빈 리스트가 보여야 한다', () => {
-            service.noAgeRestrictionWhenCheckServiceAgeRestriction();
+      service.noAgeRestrictionWhenCheckServiceAgeRestriction();
       service.successWhenGetAdditionalServices();
 
       // 요금제/부가서비스 변경버튼 클릭
@@ -632,7 +630,7 @@ describe('KAN-22 요금제/부가서비스 변경', () => {
       cy.wait(500);
       // 초기화 버튼 클릭
       page.clickResetButton();
-      
+
       // 부가서비스가 초기화되었는지 확인
       page.assertAdditionalServiceInList('LTE 3 Giga 충전 부가서비스');
     });

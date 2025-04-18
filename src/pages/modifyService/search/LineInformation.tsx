@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 import { LineInfoDetailsContainer, ServiceLabel, ServiceValue } from './LineInformation.styled';
 import useCurrentServiceStore from '@stores/CurrentServiceStore';
 import useCustomerStore from '@stores/CustomerStore';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import ContractServiceList from './ContractServiceList';
 import ContractServiceDialog from './ContractServiceDialog';
 import { useCustomerContractQuery } from '@api/queries/contract/useCustomerContractQuery';
@@ -12,6 +12,7 @@ import { CustomerContract } from '@model/Contract';
 import Unmasking from '@pages/unmasking/Unmasking';
 import useMemberStore from '@stores/MemberStore';
 import { Customer } from '@model/Customer';
+import { useCheckModifiable } from '@hooks/modifyService/useCheckModifiable';
 
 interface MaskedTarget {
   maskingType: string;
@@ -50,6 +51,7 @@ const LineInformation = () => {
 
   const [isServiceListOpen, setIsServiceListOpen] = useState(false);
   const [showNoContractDialog, setShowNoContractDialog] = useState(false);
+  const [showChangeBlockedDialog, setShowChangeBlockedDialog] = useState(false);
   const [isUnmaskPopupOpen, setIsUnmaskPopupOpen] = useState(false);
   const [unmaskingData, setUnmaskingData] = useState<UnmaskingData | null>(null);
 
@@ -69,6 +71,7 @@ const LineInformation = () => {
         (contract) => contract.contractId === state.selectedContractIds[selectedCustomerId],
       ) || null,
   );
+
   // 현재 활성화된 탭 정보 가져오기
   const customerTabs = useCustomerStore(
     (state) => state.customerTabs[selectedCustomerId] || { activeTab: -1, tabs: [] },
@@ -80,13 +83,13 @@ const LineInformation = () => {
   );
 
   // 고객 계약 정보 조회
-  const { data: customerContractdata } = useCustomerContractQuery(selectedCustomerId, {
+  const { data: customerContractData } = useCustomerContractQuery(selectedCustomerId, {
     enabled: isServiceModificationTabActive && !!selectedCustomerId,
   });
 
   useEffect(() => {
     if (
-      !customerContractdata ||
+      !customerContractData ||
       !isServiceModificationTabActive ||
       selectedCustomerId !== customerId
     )
@@ -98,7 +101,7 @@ const LineInformation = () => {
     const alreadyContracts = getCustomerContracts(customerId);
     if (selectedContractId && alreadyContracts.length > 0) return;
 
-    const contracts = customerContractdata.contracts;
+    const contracts = customerContractData.contracts;
     const transformedContracts = contracts.map(transformContractToStoreFormat);
 
     // 전화번호로 조회한 고객이면 조회한 고객 store에 contractId 존재
@@ -124,7 +127,7 @@ const LineInformation = () => {
       // 계약이 없는 경우
       setShowNoContractDialog(true);
     }
-  }, [customerContractdata, customerId]);
+  }, [customerContractData, customerId]);
 
   const handleContextMenu = (event: React.MouseEvent, data: UnmaskingData) => {
     event.preventDefault();
@@ -151,6 +154,22 @@ const LineInformation = () => {
     }
   };
 
+  const selectedContractId = useCurrentServiceStore(
+    (state) => state.selectedContractIds[selectedCustomerId] || '',
+  );
+
+  const handleBlocked = useCallback(() => {
+    setShowChangeBlockedDialog(true);
+  }, []);
+
+  // 커스텀 훅 호출
+  useCheckModifiable(
+    selectedCustomerId,
+    selectedContractId,
+    isServiceModificationTabActive,
+    handleBlocked,
+  );
+
   return (
     <>
       <ContractServiceDialog
@@ -159,6 +178,14 @@ const LineInformation = () => {
         content='사용중인 회선이 없으므로, 상품변경이 불가합니다.'
         onClose={handleCloseDialog}
         data-testid='service-search-no-contract-dialog'
+      />
+      <ContractServiceDialog
+        open={showChangeBlockedDialog}
+        title='요금제변경 불가 알림'
+        content={
+          '요금제 변경은 월 1회만 가능합니다. \n 현재 당월에는 변경이 불가능하니, 다음 달에 다시 시도해 주세요.'
+        }
+        onClose={() => setShowChangeBlockedDialog(false)}
       />
 
       <Typography variant='h3' sx={{ mr: 2, fontWeight: 700, fontSize: '1.1rem' }}>
@@ -232,7 +259,7 @@ const LineInformation = () => {
       <ContractServiceList
         open={isServiceListOpen}
         onClose={() => setIsServiceListOpen(false)}
-        contracts={customerContractdata?.contracts || []}
+        contracts={customerContractData?.contracts || []}
       />
 
       {isUnmaskPopupOpen && customerContract && unmaskingData && (
