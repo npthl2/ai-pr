@@ -4,14 +4,18 @@ import { Box } from '@mui/material';
 import Information from './components/information/Information';
 import { SearchComponent } from './components/search/SearchComponent';
 import useCustomerStore from '@stores/CustomerStore';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   boxContainerStyle,
   informationContainerStyle,
   treeContainerStyle,
 } from './CustomerDetail.styled';
 import { boxStyle } from './CustomerDetail.styled';
+import { TabInfo } from '@constants/CommonConstant';
 
 const CustomerDetail = () => {
+  const queryClient = useQueryClient();
+
   const [selectedContractId, setSelectedContractId] = useState<string>('');
   const [includeCancelled, setIncludeCancelled] = useState<boolean>(false);
   const [filteredContractId, setFilteredContractId] = useState<string | null>(null);
@@ -20,10 +24,19 @@ const CustomerDetail = () => {
     state.customers.find((c) => c.id === state.selectedCustomerId),
   ) as { id: string; contractId?: string } | undefined;
   const customerId = selectedCustomer?.id || '';
+  const customerTabs = useCustomerStore((state) => state.customerTabs[customerId]);
 
   useEffect(() => {
     initializeContractId();
   }, []);
+
+  useEffect(() => {
+    if (customerTabs.activeTab === TabInfo.CUSTOMER_SEARCH.id) {
+      queryClient.invalidateQueries({
+        queryKey: ['customerContracts', customerId],
+      });
+    }
+  }, [customerTabs]);
 
   const initializeContractId = () => {
     const contractId = selectedCustomer?.contractId;
