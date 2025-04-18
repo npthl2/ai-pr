@@ -149,7 +149,9 @@ const ContentsLayout = ({ customerId }: ContentsLayoutProps) => {
         </ContentHeader>
         <ContentsBG>
           {currentTab?.id === TabInfo.NEW_SUBSCRIPTION.id ? (
-            <NewContract contractTabId={customerId} />
+            <Box sx={{ height: '100%' }}>
+              <NewContract contractTabId={customerId} />
+            </Box>
           ) : (
             <>
               <Box

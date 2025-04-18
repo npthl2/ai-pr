@@ -48,6 +48,7 @@ const CustomerLayout = () => {
         sx={{
           display: displayMode === MainMenu.HOME ? 'block' : 'none',
           height: '100%',
+          overflow: 'auto',
         }}
       >
         <Home />

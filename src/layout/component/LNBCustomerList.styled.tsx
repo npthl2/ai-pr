@@ -11,11 +11,24 @@ export const LNBCustomerListContainer = styled(Box)({
 export const StyledTabList = styled(TabList)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
+  maxHeight: 'calc(100vh - 200px)',
   '& .MuiTabs-indicator': {
     display: 'none',
   },
   '& .MuiTabs-flexContainer': {
+    display: 'flex',
+    flexDirection: 'column',
     gap: '8px',
+    height: '100%',
+    overflow: 'auto',
+    msOverflowStyle: 'none' /* IE and Edge */,
+    scrollbarWidth: 'none' /* Firefox */,
+    '&::-webkit-scrollbar': {
+      display: 'none' /* Chrome, Safari, Opera */,
+    },
+  },
+  '&::-webkit-scrollbar': {
+    display: 'none' /* Chrome, Safari, Opera */,
   },
 
   '& .MuiTab-root': {

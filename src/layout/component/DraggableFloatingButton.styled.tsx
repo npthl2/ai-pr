@@ -4,14 +4,14 @@ import { styled } from '@mui/material/styles';
 
 export const HistoryWrapper = styled(Box)({
   position: 'fixed',
-  right: -321,
+  right: 0,
   display: 'flex',
   alignItems: 'flex-start',
-  transform: 'translateX(0)',
+  width: '360px',
+  transform: 'translateX(296px)',
   transition: 'transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms',
-  zIndex: 2,
   '&.show': {
-    transform: 'translateX(-320px)',
+    transform: 'translateX(0)',
   },
 });
 
@@ -23,8 +23,7 @@ export const FloatingButton = styled(Fab)(({ theme }) => ({
   backgroundColor: theme.palette.primary.light,
   boxShadow: theme.shadows[3],
   minHeight: 'auto',
-  marginRight: -8,
-  zIndex: 0,
+  zIndex: 1000,
   cursor: 'grab',
   '&:active': {
     cursor: 'grabbing',

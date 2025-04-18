@@ -3,12 +3,9 @@ import { Box } from '@mui/material';
 
 export const LayoutContainer = styled(Box)({
   width: '100%',
-  minWidth: '1580px',
-  maxWidth: '2560px',
   margin: '0 auto',
   display: 'flex',
   flexDirection: 'column',
-  overflow: 'hidden',
 });
 
 export const Header = styled(Box)(({ theme }) => ({

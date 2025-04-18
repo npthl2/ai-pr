@@ -18,8 +18,7 @@ import { REGISTRATION_EVENT_TYPE } from '@constants/RegistrationConstants';
 
 const DraggableFloatingButton = () => {
   const [showHistory, setShowHistory] = useState(false);
-
-  const [positionY, setPositionY] = useState(0);
+  const [positionY, setPositionY] = useState(-396);
   const [isDragging, setIsDragging] = useState(false);
   const nodeRef = useRef(null);
 
@@ -108,15 +107,15 @@ const DraggableFloatingButton = () => {
   return (
     <Draggable
       nodeRef={nodeRef}
-      position={{ x: 0, y: positionY }}
+      position={{ x: 4, y: positionY }}
       onDrag={handleDrag}
       onStop={handleDragStop}
       axis='y'
       handle='.drag-handle'
-      bounds={{ top: -window.innerHeight + 400, bottom: 0 }}
+      bounds={{ top: -window.innerHeight + 100, bottom: -296 }}
     >
-      <Box ref={nodeRef}>
-        <HistoryWrapper className={showHistory ? 'show' : ''} style={{ bottom: 80 }}>
+      <Box ref={nodeRef} sx={{ position: 'fixed', right: 0, bottom: 0, zIndex: 1000 }}>
+        <HistoryWrapper className={showHistory ? 'show' : ''}>
           <FloatingButton
             onClick={handleOpen}
             size='large'
