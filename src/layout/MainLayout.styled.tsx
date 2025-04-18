@@ -3,9 +3,9 @@ import { styled } from '@mui/material/styles';
 
 export const MainContainer = styled(Box)({
   display: 'flex',
-  width: '100%',
+  minWidth: '1720px',
+  maxWidth: '2560px',
   height: 'calc(100vh - 64px)',
-  overflow: 'hidden',
 });
 
 export const MainContent = styled(Box)({

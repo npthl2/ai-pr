@@ -26,7 +26,7 @@ export const SummaryItem = styled(Box)({
   justifyContent: 'space-between',
   alignItems: 'center',
   minHeight: 26,
-  padding: '6px 0',
+  padding: '4px 0',
 });
 
 export const ButtonContainer = styled(Box)({

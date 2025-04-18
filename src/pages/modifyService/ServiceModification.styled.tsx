@@ -14,7 +14,6 @@ export const Container = styled(Box)(({ theme }: { theme: Theme }) => ({
   borderColor: theme.palette.grey[200],
   display: 'flex',
   flexDirection: 'column',
-  overflow: 'hidden',
 }));
 
 // 컨텐츠 컨테이너 스타일
@@ -24,7 +23,6 @@ export const ContentContainer = styled(Box)(() => ({
   display: 'flex',
   flexDirection: 'column',
   gap: 12,
-  overflow: 'hidden',
 }));
 
 // 회선 정보 컨테이너 스타일
@@ -43,8 +41,6 @@ export const ServicesContainer = styled(Box)(({ theme }: { theme: Theme }) => ({
   display: 'flex',
   width: '100%',
   flex: 1,
-  overflow: 'hidden',
-  minHeight: 0,
   border: `1px solid ${theme.palette.grey[200]}`,
   borderRadius: 8,
 }));
@@ -57,7 +53,8 @@ export const CurrentServiceContainer = styled(Box)(({ theme }: { theme: Theme })
   gap: 12,
   padding: 16,
   backgroundColor: theme.palette.grey[50],
-  overflow: 'hidden',
+  borderTopLeftRadius: 8,
+  borderBottomLeftRadius: 8,
   borderRight: `1px solid ${theme.palette.grey[200]}`,
 }));
 

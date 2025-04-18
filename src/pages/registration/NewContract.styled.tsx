@@ -5,6 +5,7 @@ export const Container = styled(Box)({
   flexDirection: 'column',
   height: '100%',
   padding: 24,
+  overflow: 'auto',
 });
 
 export const ContentWrapper = styled(Box)({
