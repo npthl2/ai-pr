@@ -15,12 +15,12 @@ export type EventData = {
   payload: string | null; 
 };
 
-const cttInboxOutboxTraceService = {
+const stgInboxOutboxTraceService = {
   findInboxOutbox(traceId: string): Promise<CommonResponse<EventData[]>> {
     return baseService.get(
-      `/ctt-be/v1/inbox-outbox/findInboxOutbox?traceId=${encodeURIComponent(traceId)}`,
+      `/stg-be/v1/inbox-outbox/findInboxOutbox?traceId=${encodeURIComponent(traceId)}`,
     );
   },
 };
 
-export default cttInboxOutboxTraceService;
+export default stgInboxOutboxTraceService;
