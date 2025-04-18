@@ -1,6 +1,7 @@
 import useAuthStore from '@stores/AuthStore';
 import useToastStore from '@stores/ToastStore';
 import axios, { InternalAxiosRequestConfig } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const baseURL = import.meta.env.VITE_API_URL;
 const xAuthorizationId = import.meta.env.VITE_X_AUTHORIZATION_ID;
@@ -28,6 +29,7 @@ axiosInstance.interceptors.response.use(
   },
   async (error) => {
     const { logout } = useAuthStore.getState();
+    const navigate = useNavigate();
 
     if (error.response?.status === 401) {
       logout();
@@ -40,8 +42,12 @@ axiosInstance.interceptors.response.use(
       error.response?.data?.errorCode === 'CMN_SEC_LOGIN_ANOTHER_USER'
     ) {
       logout();
+      navigate('/login');
       openToast('다른 사용자가 로그인하여 로그아웃되었습니다.', 'error');
-      window.location.href = '/login';
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     }
 
     return Promise.reject(error);
