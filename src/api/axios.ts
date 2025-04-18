@@ -40,8 +40,8 @@ axiosInstance.interceptors.response.use(
       error.response?.data?.errorCode === 'CMN_SEC_LOGIN_ANOTHER_USER'
     ) {
       logout();
-      openToast('다른 사용자가 로그인하여 로그아웃되었습니다.', 'error');
       window.location.href = '/login';
+      openToast('다른 사용자가 로그인하여 로그아웃되었습니다.', 'error');
     }
 
     return Promise.reject(error);

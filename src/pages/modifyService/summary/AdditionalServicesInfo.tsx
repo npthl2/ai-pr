@@ -65,7 +65,7 @@ const AdditionalServicesInfo = ({
         </SectionTitle>
 
         {/* 테이블 헤더 - 고정 위치 */}
-        <Table size='small' stickyHeader sx={{ tableLayout: 'fixed' }}>
+        <Table size='small' stickyHeader sx={{ tableLayout: 'auto', width: '100%' }}>
           <TableHead>
             <TableRowCustom variant='head'>
               <TableCell sx={{ fontWeight: '600', color: 'text.secondary' }}>
@@ -84,7 +84,7 @@ const AdditionalServicesInfo = ({
 
         {/* 테이블 본문 - 스크롤 가능 */}
         <ScrollableTableContainer data-testid={`${testId}-additional-service-list`}>
-          <Table size='small' sx={{ tableLayout: 'fixed' }}>
+          <Table size='small' sx={{ tableLayout: 'auto', width: '100%' }}>
             <TableBody>
               {additionalServices.map((service, index) => (
                 <TableRowCustom key={index}>
@@ -106,7 +106,7 @@ const AdditionalServicesInfo = ({
         </ScrollableTableContainer>
 
         {/* 합계 행 - 고정 위치 */}
-        <Table size='small' sx={{ tableLayout: 'fixed' }}>
+        <Table size='small' sx={{ tableLayout: 'auto', width: '100%' }}>
           <TableHead>
             <TableRowCustom sx={{ backgroundColor: '#DEE5EE' }}>
               <TableCell sx={{ fontWeight: 'bold' }}>합계</TableCell>
