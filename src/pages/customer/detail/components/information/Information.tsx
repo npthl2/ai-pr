@@ -34,7 +34,7 @@ const Information = ({ customerId, contractId }: InformationProps) => {
       <Box
         data-testid='information'
         sx={{
-          gap: '24px',
+          gap: '12px',
           borderRadius: '8px',
           display: 'flex',
           flexDirection: 'column', // 세로 방향으로 정렬

@@ -3,7 +3,7 @@ import { Box, styled } from '@mui/material';
 export const TreeContainer = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.grey[200]}`,
   borderRadius: '4px',
-  minHeight: '706px',
+  height: '100%',
 }));
 
 export const TreeHeader = styled(Box)(({}) => ({

@@ -11,11 +11,26 @@ export const LNBCustomerListContainer = styled(Box)({
 export const StyledTabList = styled(TabList)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
+  maxHeight: 'calc(100vh - 200px)',
   '& .MuiTabs-indicator': {
     display: 'none',
   },
   '& .MuiTabs-flexContainer': {
+    display: 'flex',
+    flexDirection: 'column',
     gap: '8px',
+    height: '100%',
+    overflow: 'overlay',
+    '&::-webkit-scrollbar': {
+      width: '5px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: 'transparent',
+      borderRadius: '3px',
+    },
+    '&:hover::-webkit-scrollbar-thumb': {
+      backgroundColor: 'rgba(0, 0, 0, 0.08)',
+    },
   },
 
   '& .MuiTab-root': {
