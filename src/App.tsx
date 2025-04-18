@@ -29,6 +29,7 @@ import Board from '@pages/test/board/Board';
 import RegistBoard from '@pages/test/board/component/RegistBoard';
 import MemoAndHistoryPanel from '@pages/memoAndSendHistory/MemoAndSendHistoryPanel';
 import Login from '@pages/auth/Login';
+import InboxOutbox from '@pages/auth/InboxOutbox.tsx';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path='/login' element={<Login />} />
+              <Route path='/InboxOutbox' element={<InboxOutbox />} />
               <Route element={<Layout />}>
                 <Route path='example'>
                   <Route path='nestedDialog' element={<NestedDialogExample />} />
