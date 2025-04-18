@@ -12,7 +12,7 @@ export type EventData = {
   publishedTime: string | null;
   trPsSeq: number;
   message: string | null;
-  payload: string | null; 
+  payload: string | null;
 };
 
 const admInboxOutboxTraceService = {
