@@ -78,8 +78,8 @@ const FlowDiagram: FC<{
                 key={event.id}
                 style={{
                   ...cardStyle,
-                  background: event.status === 'MESSAGE_CONSUME' ? '#ffebee' : '#f5faff',
-                  borderLeft: `5px solid ${event.status === 'MESSAGE_CONSUME' ? '#d32f2f' : '#1976d2'}`,
+                  background: ['READY_TO_PROCESS', 'MESSAGE_CONSUME', 'PROCESS_ERROR'].includes(event.status) ? '#ffebee' : '#f5faff',
+                  borderLeft: `5px solid ${['READY_TO_PROCESS', 'MESSAGE_CONSUME', 'PROCESS_ERROR'].includes(event.status) ? '#d32f2f' : '#1976d2'}`,
                   cursor: event.message || event.payload ? 'pointer' : 'default',
                 }}
                 onDoubleClick={() => {
