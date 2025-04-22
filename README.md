@@ -217,3 +217,16 @@ npm run test:smoke
 # cypress open
 npm run cypress:open 
 ```
+
+### Local 계정 및 권한 설정
+.env.local
+```
+VITE_HTTPS=false
+VITE_APP_NAME=rnr-fe-local
+VITE_HOST=localhost
+VITE_PORT=5173
+VITE_X_AUTHORIZATION_ID=S-0001
+VITE_X_AUTHORIZATION_ROLE=ROLE_ADMIN
+VITE_X_CLIENT_IP=127.0.0.1
+VITE_GW=
+```
