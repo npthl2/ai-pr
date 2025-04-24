@@ -22,7 +22,7 @@ const setupOTelSDK = () => {
   );
 
   const traceExporter = new OTLPTraceExporter({
-    url: 'https://rnr.kubepia.net/v1/traces',
+    url: 'https://konnex.kubepia.net/v1/traces',
     // url: 'https://' + import.meta.env.VITE_HOST + '/v1/traces',
     headers: {},
   });
