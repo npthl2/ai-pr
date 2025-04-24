@@ -4,6 +4,16 @@ import ccaInboxOutboxTraceService from '@api/services/ccaInboxOutboxTraceService
 import stgInboxOutboxTraceService from '@api/services/stgInboxOutboxTraceService';
 import admInboxOutboxTraceService from '@api/services/admInboxOutboxTraceService';
 
+// UTC → 한국시간 변환 함수
+const toKoreanTime = (utcString: string | null): string => {
+  if (!utcString) return '-';
+  const date = new Date(utcString);
+  return date.toLocaleString('ko-KR', {
+    timeZone: 'Asia/Seoul',
+    hour12: false,
+  });
+};
+
 // 이벤트 데이터 인터페이스 정의
 interface EventData {
   eventType: string;
@@ -78,8 +88,14 @@ const FlowDiagram: FC<{
                 key={event.id}
                 style={{
                   ...cardStyle,
-                  background: ['READY_TO_PROCESS', 'MESSAGE_CONSUME', 'PROCESS_ERROR'].includes(event.status) ? '#ffebee' : '#f5faff',
-                  borderLeft: `5px solid ${['READY_TO_PROCESS', 'MESSAGE_CONSUME', 'PROCESS_ERROR'].includes(event.status) ? '#d32f2f' : '#1976d2'}`,
+                  background: ['READY_TO_PROCESS', 'MESSAGE_CONSUME', 'PROCESS_ERROR'].includes(event.status)
+                    ? '#ffebee'
+                    : '#f5faff',
+                  borderLeft: `5px solid ${
+                    ['READY_TO_PROCESS', 'MESSAGE_CONSUME', 'PROCESS_ERROR'].includes(event.status)
+                      ? '#d32f2f'
+                      : '#1976d2'
+                  }`,
                   cursor: event.message || event.payload ? 'pointer' : 'default',
                 }}
                 onDoubleClick={() => {
@@ -97,16 +113,24 @@ const FlowDiagram: FC<{
                   Status: <b>{event.status}</b>
                 </div>
                 {event.receptionDatetime && (
-                  <div style={{ fontSize: '12px' }}>Received: {event.receptionDatetime}</div>
+                  <div style={{ fontSize: '12px' }}>
+                    Received: {toKoreanTime(event.receptionDatetime)}
+                  </div>
                 )}
                 {event.processDatetime && (
-                  <div style={{ fontSize: '12px' }}>Processed: {event.processDatetime}</div>
+                  <div style={{ fontSize: '12px' }}>
+                    Processed: {toKoreanTime(event.processDatetime)}
+                  </div>
                 )}
                 {event.requestTime && (
-                  <div style={{ fontSize: '12px' }}>Requested: {event.requestTime}</div>
+                  <div style={{ fontSize: '12px' }}>
+                    Requested: {toKoreanTime(event.requestTime)}
+                  </div>
                 )}
                 {event.publishedTime && (
-                  <div style={{ fontSize: '12px' }}>Published: {event.publishedTime}</div>
+                  <div style={{ fontSize: '12px' }}>
+                    Published: {toKoreanTime(event.publishedTime)}
+                  </div>
                 )}
               </div>
             ))}
@@ -128,11 +152,9 @@ const InboxOutbox: FC = () => {
     null,
   );
 
-  // 서비스에서 내려주는 EventData[] 에 systemName 을 붙이는 헬퍼
   const withSystem = (arr: Omit<EventData, 'systemName'>[], sys: string): EventData[] =>
     arr.map((item) => ({ ...item, systemName: sys }));
 
-  // 최근 100건 조회
   const fetchRecent = async () => {
     try {
       const res = await ccaInboxOutboxTraceService.recentOutbox();
@@ -147,7 +169,6 @@ const InboxOutbox: FC = () => {
     fetchRecent();
   }, []);
 
-  // 검색 및 하단 플로우 조회
   const handleSearch = async (id?: string) => {
     const trace = id ?? traceId;
     if (!trace) return;
@@ -181,7 +202,6 @@ const InboxOutbox: FC = () => {
     <div style={{ padding: 20 }}>
       <h2 style={{ color: '#1976d2', marginBottom: 16 }}>최신 outbox 조회</h2>
 
-      {/* 상단 최근 100건 그리드 */}
       {recentData.length > 0 && (
         <div
           style={{
@@ -194,38 +214,40 @@ const InboxOutbox: FC = () => {
         >
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead style={{ background: '#f0f4ff' }}>
-              <tr>
-                {['Request Time', 'Published Time', 'Event Type', 'Trace ID', 'Status'].map(
-                  (col) => (
-                    <th
-                      key={col}
-                      style={{ padding: 8, border: '1px solid #ccc', textAlign: 'left' }}
-                    >
-                      {col}
-                    </th>
-                  ),
-                )}
-              </tr>
+            <tr>
+              {['Request Time', 'Published Time', 'Event Type', 'Trace ID', 'Status'].map(
+                (col) => (
+                  <th
+                    key={col}
+                    style={{ padding: 8, border: '1px solid #ccc', textAlign: 'left' }}
+                  >
+                    {col}
+                  </th>
+                ),
+              )}
+            </tr>
             </thead>
             <tbody>
-              {recentData.map((evt) => (
-                <tr
-                  key={evt.id}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => {
-                    setTraceId(evt.traceId);
-                    handleSearch(evt.traceId);
-                  }}
-                >
-                  <td style={{ padding: 8, border: '1px solid #ccc' }}>{evt.requestTime || '-'}</td>
-                  <td style={{ padding: 8, border: '1px solid #ccc' }}>
-                    {evt.publishedTime || '-'}
-                  </td>
-                  <td style={{ padding: 8, border: '1px solid #ccc' }}>{evt.eventType}</td>
-                  <td style={{ padding: 8, border: '1px solid #ccc' }}>{evt.traceId}</td>
-                  <td style={{ padding: 8, border: '1px solid #ccc' }}>{evt.status}</td>
-                </tr>
-              ))}
+            {recentData.map((evt) => (
+              <tr
+                key={evt.id}
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  setTraceId(evt.traceId);
+                  handleSearch(evt.traceId);
+                }}
+              >
+                <td style={{ padding: 8, border: '1px solid #ccc' }}>
+                  {toKoreanTime(evt.requestTime)}
+                </td>
+                <td style={{ padding: 8, border: '1px solid #ccc' }}>
+                  {toKoreanTime(evt.publishedTime)}
+                </td>
+                <td style={{ padding: 8, border: '1px solid #ccc' }}>{evt.eventType}</td>
+                <td style={{ padding: 8, border: '1px solid #ccc' }}>{evt.traceId}</td>
+                <td style={{ padding: 8, border: '1px solid #ccc' }}>{evt.status}</td>
+              </tr>
+            ))}
             </tbody>
           </table>
         </div>
@@ -233,7 +255,6 @@ const InboxOutbox: FC = () => {
 
       <h2 style={{ color: '#1976d2', marginBottom: 16 }}>호출 관계도 조회</h2>
 
-      {/* 검색 필드 */}
       <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
         <input
           type='text'
@@ -257,11 +278,9 @@ const InboxOutbox: FC = () => {
         </button>
       </div>
 
-      {/* 로딩 / 에러 */}
       {loading && <p>조회 중...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      {/* 플로우 다이어그램 (스크롤) */}
       {flowData.length > 0 && (
         <div style={{ maxHeight: 500, overflowY: 'auto', paddingRight: 10 }}>
           <FlowDiagram
@@ -276,7 +295,6 @@ const InboxOutbox: FC = () => {
         </div>
       )}
 
-      {/* 메시지/페이로드 팝업 */}
       {popup && (
         <div
           style={{
